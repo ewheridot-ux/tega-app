@@ -936,6 +936,44 @@ button.g-chips{border:0;background:none;padding:0;text-align:left;font-family:in
 .gl-rir{font-size:12px;color:var(--good);font-weight:700;align-self:center;margin-left:auto}
 .gl-row.warm .gl-sn{background:color-mix(in srgb,var(--warn) 30%,var(--card2));color:var(--warn)}.gl-row.maxs .gl-sn{background:var(--bad);color:#fff;font-size:9px}
 .gl-tt b{font-size:22px!important}
+/* b159 extras */
+.co-open{margin-top:8px;border:0;background:var(--card2);color:var(--fg);border-radius:99px;padding:7px 12px;font-size:12.5px;font-weight:700;font-family:inherit}
+.co-sheet{display:flex!important;flex-direction:column;height:min(78vh,640px)}
+.co-list{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:6px 2px;-webkit-overflow-scrolling:touch}
+.co-m{max-width:86%;padding:10px 13px;border-radius:18px;font-size:14.5px;line-height:1.4;overflow-wrap:anywhere}
+.co-m.u{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:6px}
+.co-m.a{align-self:flex-start;background:var(--card2);border-bottom-left-radius:6px}
+.co-typing{display:flex;gap:4px}.co-typing i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:coDot 1s infinite}.co-typing i:nth-child(2){animation-delay:.15s}.co-typing i:nth-child(3){animation-delay:.3s}
+@keyframes coDot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+.co-sugg{display:grid;gap:8px;margin-top:6px}.co-sugg button{border:0;background:var(--card2);color:var(--fg);text-align:left;padding:12px 14px;border-radius:14px;font-size:14px;font-family:inherit}
+.co-f{display:flex;gap:8px;align-items:center}.co-f .inp{flex:1;min-width:0}.co-f .btn{flex:none}
+.co-clear{border:0;background:none;color:var(--muted);font-size:12px;font-family:inherit;align-self:center}
+.cc{background:linear-gradient(160deg,#17171c,#0b0b0d);color:#fff;border-radius:22px;padding:14px;display:grid;gap:10px}
+.cc-imgs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cc-i{position:relative;aspect-ratio:1;border-radius:14px;background:#1d1d22 center/cover;max-width:100%}
+.cc-i .x{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.55);color:#fff}
+.cc-add{display:grid;place-items:center;align-content:center;color:rgba(255,255,255,.6);font-size:26px;cursor:pointer;border:1.5px dashed rgba(255,255,255,.18)}.cc-add span{font-size:12px}
+.cc-name{font-size:34px;font-weight:800;letter-spacing:.02em;margin-top:4px}.cc-agency{color:rgba(255,255,255,.6);font-size:13px;margin-top:-8px}
+.cc-meas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.cc-meas div{display:grid}.cc-meas small{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5)}.cc-meas b{font-size:15px}
+.cc-stats{display:flex;gap:18px}.cc-stats div{display:grid}.cc-stats b{font-size:22px}.cc-stats small{color:rgba(255,255,255,.55);font-size:11.5px}
+.cc-cl{display:flex;flex-wrap:wrap;gap:6px}.cc-cl span{font-size:12px;padding:4px 9px;border-radius:99px;background:rgba(255,255,255,.08)}
+.oc{width:100%;display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:12px;align-items:center;border:0;background:var(--card2);color:var(--fg);border-radius:16px;padding:10px;text-align:left;font-family:inherit}
+.oc-th{width:48px;height:48px;border-radius:12px;background:var(--card) center/cover;display:grid;place-items:center;color:var(--grillz);font-size:20px}
+.oc-t{display:grid;gap:2px;min-width:0}.oc-t small{color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.oc-t em{font-style:normal;color:var(--warn);font-weight:700}
+.oc-r{display:grid;justify-items:end;gap:4px}.oc-st{font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:99px;background:var(--card)}
+.oc-st.s-delivered,.oc-st.s-closed{color:var(--good)}.oc-st.s-in-production{color:var(--grillz)}.oc-st.s-deposit{color:var(--accent2)}
+.o-flow{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}.o-flow button{flex:none;border:0;background:var(--card2);color:var(--muted);border-radius:99px;padding:7px 11px;font-size:12px;font-weight:700;font-family:inherit}.o-flow button.on{background:var(--grillz);color:#fff}
+.o-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.o-grid label{display:grid;gap:4px;font-size:11.5px;color:var(--muted)}.o-grid .wide{grid-column:1/-1}
+.o-paid{border:0;border-radius:12px;padding:11px;background:var(--card2);color:var(--fg);font-weight:700;font-family:inherit}.o-paid.on{background:color-mix(in srgb,var(--good) 25%,var(--card2));color:var(--good)}
+.o-imgs{display:flex;gap:6px;flex-wrap:wrap}.o-imgs span,.o-add{width:72px;height:72px;border-radius:12px;background:var(--card2) center/cover}.o-add{display:grid;place-items:center;font-size:24px;color:var(--muted);cursor:pointer;border:1.5px dashed var(--line)}
+.cap-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:4px}.cap-grid button{border:0;background:var(--card2);color:var(--fg);border-radius:16px;padding:14px 6px;display:grid;gap:4px;justify-items:center;font-size:12.5px;font-weight:600;font-family:inherit}.cap-grid span{font-size:24px}
+.prep-r{display:flex;justify-content:space-between;align-items:center;gap:10px;border:0;background:var(--card2);color:var(--fg);border-radius:14px;padding:11px 13px;text-align:left;font-family:inherit;width:100%}.prep-r span:first-child{display:grid;gap:2px;min-width:0}.prep-r small{color:var(--muted);font-size:12px}
+.prep-n{font-weight:800;font-variant-numeric:tabular-nums;color:var(--warn)}.prep-n.ok{color:var(--good)}
+button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text-align:left}
+.rc-btn{width:100%;justify-content:center;margin-top:-4px}
+.rc-img{height:140px;border-radius:12px;background:var(--card2) center/contain no-repeat}
+.feel.sleep button{padding:10px 2px}
+.sl-bars{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:3px;height:96px;align-items:end}.sl-bars div{height:100%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr auto;gap:1px;align-items:end}.sl-bars i{display:block;border-radius:3px 3px 1px 1px}.sl-bars i.e{background:var(--accent2)}.sl-bars i.s{background:var(--accent)}.sl-bars small{grid-column:1/-1;text-align:center;font-size:9.5px;color:var(--muted)}
 </style>
 
 <div class="app" id="app"></div>
@@ -945,7 +983,7 @@ button.g-chips{border:0;background:none;padding:0;text-align:left;font-family:in
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b158';
+const BUILD='b159';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -1249,7 +1287,7 @@ const streaks = () => ({ daily:dailyStreak(), review:weekStreak(reviewDone), gym
 function allKRs(){ const out=[]; for(const q of Object.values(S.quarters)) for(const o of q.objectives) for(const k of o.krs) out.push(k); for(const y of Object.values(S.years)) for(const o of y.objectives) for(const k of o.krs) out.push(k); return out; }
 function computeXP(){
   let xp=0;
-  for (const [dk,d] of Object.entries(S.days)) { const t=d.top3.filter(x=>x.done).length, h=Object.values(d.habits).filter(Boolean).length, base=t*XP.top3 + h*XP.habit + (h>=S.habits.length && S.habits.length? XP.dayBonus:0) + (d.checkin?XP.checkin:0); xp += base + rareXp(dk, base) + rpgAdj(dk, base); }
+  for (const [dk,d] of Object.entries(S.days)) { const t=d.top3.filter(x=>x.done).length, h=Object.values(d.habits).filter(Boolean).length, base=t*XP.top3 + h*XP.habit + (h>=habitNeed(d) && S.habits.length? XP.dayBonus:0) + (d.checkin?XP.checkin:0); xp += base + rareXp(dk, base) + rpgAdj(dk, base); }
   xp += S.wins.length*XP.win;
   xp += (S.art||[]).length*ART_XP + gtrXP();
   for (const [w,wk] of Object.entries(S.weeks)) { xp += Object.values(wk.inits||{}).filter(Boolean).length*XP.init + (wk.review?.done? XP.review+(+wk.review.bonus||0):0); }
@@ -1897,7 +1935,7 @@ function dOrders(){
   return `
   <div class="card sec"><div class="hdr"><h2>Orders</h2><span class="sub">${D.orders.length} total · delivered = revenue</span></div>
     <div class="tchips">${OSTAGES.map(([k,l])=>{ const c=D.orders.filter(o=>o.status===k).length; return `<button class="${c?'':'full'}" style="cursor:default">${l} <span class="num">${c}</span></button>`; }).join('')}</div>
-    ${OSTAGES.filter(([k])=>D.orders.some(o=>o.status===k)).map(([k,l])=>`<div class="tag" style="margin:14px 0 6px">${l} · ${D.orders.filter(o=>o.status===k).length}</div><div class="stack">${D.orders.filter(o=>o.status===k).map(ocard).join('')}</div>`).join('')||'<div class="empty" style="margin-top:10px">No orders yet. The first one usually comes from someone you already work with.</div>'}
+    ${OSTAGES.filter(([k])=>D.orders.some(o=>o.status===k)).map(([k,l])=>`<div class="tag" style="margin:14px 0 6px">${l} · ${D.orders.filter(o=>o.status===k).length}</div><div class="stack">${D.orders.filter(o=>o.status===k).map(oCard).join('')}</div>`).join('')||'<div class="empty" style="margin-top:10px">No orders yet. The first one usually comes from someone you already work with.</div>'}
     ${infold('oadd','New order','',`<form class="inline" onsubmit="return dAddOrder(event)"><input class="inp" placeholder="who (name / IG)" required><input class="inp" placeholder="spec — teeth, metal, finish" required><input class="inp num" type="number" placeholder="price $" style="max-width:100px" required><input class="inp" type="date" style="max-width:150px"><button class="btn sm">+ Order</button></form>`)}
     ${infold('ohelp','Who to ask first','',`<div class="help">First customers, in order of warmth: models, photographers and stylists you already work with (founder's price; one free set for a shoot) → friends of friends from Instagram → TikTok DMs. 50% deposit on order, 50% before shipping. Every deposit is Schedule C income — same 32.2% rule.</div>`)}
   </div>
@@ -1955,7 +1993,7 @@ const trackSelect = (val, onchange) => `<select onchange="${onchange}"><option v
 
 function render(){
   _mVer++;
-  refreshToday(); releaseEvo();
+  refreshToday(); releaseEvo(); try { travelTick(); } catch(e){}
   const xp=computeXP(), lvl=levelFor(xp), st=streaks();
   const app=document.getElementById('app');
   const nav = [['today','Today'],['goals','Goals'],['model','Modeling'],['datum','Datum'],['gym','Gym'],['money','Money'],['evolve','Me']];
@@ -1968,9 +2006,10 @@ function render(){
     <div class="topbar">
       <div class="brand"><div class="pfp-sm" style="--ringc:${ringCss(lvl)}" onclick="go('today')">${pfpMini(stg)}</div></div>
       <div class="wordmark">Tega.exe</div>
-      <div class="right"><span class="sync ${dbStatus==='cloud'?'on':''}" id="sync" onclick="syncInfo()" style="padding:10px 6px;cursor:pointer"><i></i></span><button class="iconbtn" onclick="toggleTheme()" title="Theme">◐</button></div>
+      <div class="right"><span class="sync ${dbStatus==='cloud'?'on':''}" id="sync" onclick="syncInfo()" style="padding:10px 6px;cursor:pointer"><i></i></span><button class="iconbtn" onclick="capOpen()" title="Quick capture" aria-label="Quick capture">＋</button><button class="iconbtn" onclick="toggleTheme()" title="Theme">◐</button></div>
     </div>
     <div class="pills">
+      ${S.travel&&S.travel.on?`<span class="pill" style="cursor:pointer" onclick="travelSheet()">✈️ ${esc(S.travel.city||'Away')}</span>`:''}
       <span class="pill fire">🔥 <span class="num">${st.daily}</span>&nbsp;day streak${shieldsLeft()?` · 🛡️${shieldsLeft()}`:''}</span>
       <span class="pill" style="cursor:pointer" onclick="levelScene(${lvl})" title="Replay level-up">Lv ${lvl} · ${titleOf(lvl)}</span>
       ${(()=>{ const se=season(); return `<span class="pill" style="cursor:pointer;box-shadow:inset 0 0 0 1.5px ${se.c}" onclick="stMode='journey';go('evolve');render()" title="Season ${se.no} · ${se.name}">${se.ic} ${se.left}d</span>`; })()}
@@ -2055,14 +2094,14 @@ let petLine = null, petT=0;
 function petAvatar(){ const d=ensureDay(curDay); if(curDay===TODAY && !d.checkin){ openCheckin(); return; } d.pets=(d.pets||0)+1; const el=document.querySelector('.avatar'); if(el){ el.classList.remove('bounce'); void el.offsetWidth; el.classList.add('bounce'); } petLine = (d.pets<=5) ? QUOTES.pet[(d.pets*7+parseInt(TODAY.slice(-2)))%QUOTES.pet.length] : QUOTES.petDone[(d.pets+parseInt(TODAY.slice(-2)))%QUOTES.petDone.length]; commit({skipXp:true}); clearTimeout(petT); petT=setTimeout(()=>{petLine=null; const q=document.getElementById('quip'); if(q&&view==='today') q.textContent=voiceLine(moodFor(curDay),curDay);},2500); }
 /* morning check-in */
 let ciStep=0, ciFeel=null;
-function openCheckin(){ ciStep=0; ciFeel=null; renderCheckin(); }
+function openCheckin(){ ciStep=0; ciFeel=null; ciSleep=null; renderCheckin(); }
 function renderCheckin(){
   let m=document.getElementById('ci'); if(!m){ m=document.createElement('div'); m.id='ci'; document.body.appendChild(m); }
   const d=ensureDay(TODAY), hr=new Date().getHours(), greet = hr<12?'Morning':hr<17?'Afternoon':'Evening';
   const y=S.days[addDays(TODAY,-1)]; const carry = y? y.top3.filter(t=>t.text.trim()&&!t.done) : [];
   const lvl=levelFor(computeXP());
   const steps=[
-    `<h2 style="font-size:22px">${greet}, Tega.</h2><div class="sub" style="margin-bottom:12px">${esc(pick(QUOTES.morning,hr))}</div><div class="tag" style="margin-bottom:8px">How's the energy?</div><div class="feel">${[['😴','Running on empty'],['😐','Meh'],['🙂','Alright'],['💪','Ready'],['🔥','Locked in']].map(([e,l],i)=>`<button class="${ciFeel===i?'on':''}" onclick="ciFeel=${i};renderCheckin()"><span>${e}</span><small>${l}</small></button>`).join('')}</div>${ciFeel!==null?`<div class="quip" style="margin-top:10px">“${esc(['Low battery is fine. Pick the smallest Top 3 you\'ve ever written.','Meh days are where streaks are made. Keep it light.','Alright is enough. Three real things.','Then let\'s make it count — money one first.','Don\'t waste it. Big swing today.'][ciFeel])}”</div>`:''}`,
+    `<h2 style="font-size:22px">${greet}, Tega.</h2><div class="sub" style="margin-bottom:12px">${esc(pick(QUOTES.morning,hr))}</div><div class="tag" style="margin-bottom:8px">How's the energy?</div><div class="feel">${[['😴','Running on empty'],['😐','Meh'],['🙂','Alright'],['💪','Ready'],['🔥','Locked in']].map(([e,l],i)=>`<button class="${ciFeel===i?'on':''}" onclick="ciFeel=${i};renderCheckin()"><span>${e}</span><small>${l}</small></button>`).join('')}</div><div class="tag" style="margin:14px 0 8px">Sleep last night</div><div class="feel sleep">${SLEEP.map((l,i)=>`<button class="${ciSleep===i?'on':''}" onclick="ciSleep=${i};renderCheckin()"><small>${l}</small></button>`).join('')}</div>${ciFeel!==null?`<div class="quip" style="margin-top:10px">“${esc(['Low battery is fine. Pick the smallest Top 3 you\'ve ever written.','Meh days are where streaks are made. Keep it light.','Alright is enough. Three real things.','Then let\'s make it count — money one first.','Don\'t waste it. Big swing today.'][ciFeel])}”</div>`:''}`,
     `<h2 style="font-size:22px">Today's Top 3</h2><div class="sub" style="margin-bottom:10px">Each one pushes a track. If none touch money (📸 ⚙️ 🔥), rewrite one.</div>${carry.length?`<button class="btn ghost sm" style="margin-bottom:8px" onclick="ciCarry()">↩ Carry over ${carry.length} unfinished from yesterday</button>`:''}<div class="stack">${d.top3.map((t,i)=>`<div class="t3"><div class="n">${i+1}</div><input type="text" placeholder="${['The money one','The build one','The life one'][i]}" value="${esc(t.text)}" onchange="S.days[TODAY].top3[${i}].text=this.value;commit({skipXp:true})">${trackSelect(t.track,`S.days[TODAY].top3[${i}].track=this.value;commit({skipXp:true})`)}</div>`).join('')}</div>`,
     `<h2 style="font-size:22px">Lock it in.</h2><div class="sub" style="margin-bottom:10px">One tap. +25 vibe, +15 XP, and he's yours for the day.</div><div class="row" style="gap:12px;align-items:center"><div class="avatar" style="cursor:default">${avatarSVG(stageOf(lvl),'hype',110,S.evo||{})}</div><div><div class="quip">“${esc(pick(QUOTES.checkin,hr))}”</div><div class="sub" style="margin-top:6px">${d.top3.filter(t=>t.text.trim()).length}/3 written · energy ${ciFeel!==null?['😴','😐','🙂','💪','🔥'][ciFeel]:'—'}</div></div></div>`,
   ];
@@ -2071,7 +2110,7 @@ function renderCheckin(){
 }
 function ciCarry(){ const d=ensureDay(TODAY); const y=S.days[addDays(TODAY,-1)]; const carry=y.top3.filter(t=>t.text.trim()&&!t.done); let i=0; for(const t of d.top3){ if(!t.text.trim() && carry[i]){ t.text=carry[i].text; t.track=carry[i].track; i++; } } commit({skipXp:true}); renderCheckin(); }
 function closeCheckin(){ const m=document.getElementById('ci'); if(m) m.remove(); }
-function finishCheckin(){ const d=ensureDay(TODAY); d.checkin={at:new Date().toTimeString().slice(0,5),feel:ciFeel}; closeCheckin(); commit(); confetti(); toast('☀️ Checked in. +15 XP');  if (S.voiceAuto && sampleLib && !(S.voice&&S.voice.d===TODAY)) voiceGen(true); }
+function finishCheckin(){ const d=ensureDay(TODAY); d.checkin={at:new Date().toTimeString().slice(0,5),feel:ciFeel}; if (ciSleep!==null) d.checkin.sleep=ciSleep; closeCheckin(); commit(); confetti(); toast('☀️ Checked in. +15 XP');  if (S.voiceAuto && sampleLib && !(S.voice&&S.voice.d===TODAY)) voiceGen(true); }
 
 /* ---------- evolution choice ---------- */
 let evoSnooze = false;
@@ -2095,7 +2134,7 @@ function checkEvo(){ if(evoSnooze) return; const l=pendingEvo(); if(l && !docume
 /* ---------- TODAY ---------- */
 /* ---------- home: one-job top card, next-up strip, collapsed extras ---------- */
 let homeOpen = {inits:false, tracks:false};
-function dayXpFor(k){ const d=S.days[k]; let x=questsDoneOn(k).reduce((s,q)=>s+(QSIZE[q.size]?.xp||0),0) + S.wins.filter(w=>w.d===k).length*XP.win; if(d){ const h=Object.values(d.habits||{}).filter(Boolean).length; const base=d.top3.filter(t=>t.done).length*XP.top3 + h*XP.habit + (S.habits.length&&h>=S.habits.length?XP.dayBonus:0) + (d.checkin?XP.checkin:0); x += base + rareXp(k, base) + rpgAdj(k, base); } return x; }
+function dayXpFor(k){ const d=S.days[k]; let x=questsDoneOn(k).reduce((s,q)=>s+(QSIZE[q.size]?.xp||0),0) + S.wins.filter(w=>w.d===k).length*XP.win; if(d){ const h=Object.values(d.habits||{}).filter(Boolean).length; const base=d.top3.filter(t=>t.done).length*XP.top3 + h*XP.habit + (S.habits.length&&h>=habitNeed(d)?XP.dayBonus:0) + (d.checkin?XP.checkin:0); x += base + rareXp(k, base) + rpgAdj(k, base); } return x; }
 function nextUp(){
   const M=S.money, C=M.checks, d=S.days[TODAY], dow=parseD(TODAY).getDay(), hr=new Date().getHours();
   const strip=(ic,title,sub,act,tone,hold)=>`<button class="nextup sec" ${hold?`data-hold="${hold}"`:''} onclick="${act}" style="${tone?`box-shadow:inset 3px 0 0 ${tone}`:''}"><span class="nu-ic">${ic}</span><span class="nu-t"><b>${title}</b><small>${sub}</small></span><span class="nu-go">›</span></button>`;
@@ -2106,6 +2145,9 @@ function nextUp(){
   if (todo){ const n=openMoves(todo).length; return strip('💵',`${money0(todo.amt)} landed · ${n} move${n===1?'':'s'}`,`Tax Buffer first: ${money0(todo.split.tax)}`,"moneyTab='waterfall';go('money')",'var(--good)'); }
   const late=C.filter(c=>!c.got && c.d<TODAY).sort((a,b)=>a.d.localeCompare(b.d))[0];
   if (late) return strip('⏳',`${money0(late.amt)} check is ${daysBetween(late.d,TODAY)}d late`,`expected ${nice(late.d)} · ${esc(late.note||'')}`,"moneyTab='waterfall';go('money')",'var(--warn)');
+  { const U=prepUpcoming(1).filter(e=>prepDone(e)<prepList(e).length); if (U.length && (U[0].start===TODAY ? hr<12 : hr>=12)) { const e=U[0]; return strip('📸',`${esc(e.c)} ${e.start===TODAY?'today':'tomorrow'}`,`Prep ${prepDone(e)}/${prepList(e).length} · tap for checklist`,`prepOpen('${e.id}')`,'var(--modeling)'); } }
+  { const ac=awayCity(); if (ac && !(S.travel&&S.travel.on) && (S.travel||{}).dismiss!==TODAY) return `<div class="sr-strip sec"><button class="nextup" onclick="travelSheet();setTimeout(()=>{const i=document.getElementById('tr-city'); if(i&&!i.value) i.value=${JSON.stringify(ac).replace(/"/g,'&quot;')};},40)" style="box-shadow:inset 3px 0 0 var(--accent2)"><span class="nu-ic">✈️</span><span class="nu-t"><b>In ${esc(ac)} today?</b><small>Travel mode: hotel gym, paused habits</small></span><span class="nu-go">›</span></button><button class="mm-dis" aria-label="Dismiss" onclick="T_().dismiss=TODAY;commit({skipXp:true})">✕</button></div>`; }
+  if (dow===0 && hr>=12 && S.buddy && S.buddy.name && S.buddy.sent!==THIS_WEEK) return strip('👊',`Send your week to ${esc(S.buddy.name.split(' ')[0])}`,'One tap · card + text','buddySend()','var(--accent)');
   const fnc=formNeedsClips(); if (fnc) return strip('🎬',`Form ${fnc} — refresh your clips`,'Your videos still show your old look','formSheet()','var(--gold)');
   const pe=pendingEvo(); if (pe) return strip('🧬',`Evolution ready — Lv ${evoLevel(pe)}`,'Pick your path',`openEvo(${pe})`,'var(--gold)');
   const dlo=dlAll().filter(x=>!x.done && x.src!=='check'), dlLate=dlo.find(x=>x.d<TODAY), dlx=dlo.find(x=>x.d>=TODAY), dl=dlx?[dlx.d,dlx.text]:null, dd=dl?daysBetween(TODAY,dl[0]):99;
@@ -3049,13 +3091,13 @@ function vToday(){
       <form class="inline" onsubmit="return addWin(event)"><input class="inp" id="winInput" maxlength="140" placeholder="e.g. sent 3 proposals · went to gym when I didn't want to" autocomplete="off"><button class="btn">+ Win</button></form>
       <div class="stack" style="margin-top:8px">${S.wins.filter(x=>x.d===curDay).map(x=>`<div class="check on" style="cursor:default"><div class="box">★</div><div class="txt" style="text-decoration:none;color:var(--fg)">${esc(x.text)}</div><button class="x" onclick="delWin('${x.id}')">✕</button></div>`).join('')}</div>`;
   const habitsBlock = `<div class="tag" style="margin:14px 0 8px">Habits · ${hdone}/${S.habits.length}${hdone===S.habits.length&&hdone?' · perfect day +15':''}</div>
-      <div class="hrow">${S.habits.map(h=>{ const road=h.id==='datum'&&awayOn(curDay); return `<button class="hdot ${d.habits[h.id]?'on':''}" onclick="${road&&!d.habits[h.id]?'roadOpen()':`toggleHabit('${h.id}')`}" aria-pressed="${!!d.habits[h.id]}" aria-label="${esc(h.name)}"><i>${road?'✈️':h.icon}</i><small>${road?'Datum · road':esc(h.name)}</small></button>`; }).join('')}</div>`;
+      <div class="hrow">${S.habits.filter(h=>!travelPaused(d).includes(h.id)).map(h=>{ const road=h.id==='datum'&&awayOn(curDay); return `<button class="hdot ${d.habits[h.id]?'on':''}" onclick="${road&&!d.habits[h.id]?'roadOpen()':`toggleHabit('${h.id}')`}" aria-pressed="${!!d.habits[h.id]}" aria-label="${esc(h.name)}"><i>${road?'✈️':h.icon}</i><small>${road?'Datum · road':esc(h.name)}</small></button>`; }).join('')}</div>`;
   return `
   <div class="hero sec" style="grid-template-columns:minmax(0,1fr);gap:16px">
     <div class="lvl">
       <div class="avwrap">${isToday?shadowPeek():''}<div class="avatar ringed ${isToday&&!d.checkin?'wants':''}" style="--ringc:conic-gradient(from 0deg,transparent ${Math.round(pctLvl*100)}%,var(--card2) 0),${ringCss(lvl)}" onclick="petAvatar()" title="${isToday&&!d.checkin?'Start the day':`${Math.round(pctLvl*100)}% to Lv ${lvl+1}`}">${charAnim(120)||avWait(120)||avatarSVG(stg, mood, 120, S.evo||{})}<span class="lvlpip num" onclick="event.stopPropagation();go('evolve')">${lvl}</span>${idleEmote(mood,isToday,d)}</div></div>
       <div style="flex:1;min-width:0">
-        <div class="quip say" id="quip" role="button" tabindex="0" style="cursor:pointer;transition:opacity .12s" onclick="voiceNext('${mood}','${curDay}')" title="Tap for another line">${esc(petLine||voiceLine(mood, curDay))}</div>
+        <div class="quip say" id="quip" role="button" tabindex="0" style="cursor:pointer;transition:opacity .12s" onclick="voiceNext('${mood}','${curDay}')" title="Tap for another line">${esc(petLine||voiceLine(mood, curDay))}</div>${isToday?`<button class="co-open" onclick="coachOpen()">💬 Ask Tega</button>`:''}
         <div class="sub" style="margin-top:8px;font-weight:600">${isToday?(hr<12?'Morning':hr<17?'Afternoon':'Tonight')+', Tega':niceLong(curDay)}</div>
         <div class="row" style="margin-top:10px;gap:8px;align-items:center;flex-wrap:nowrap"><span class="tag">Vibe</span><div class="vibe" style="max-width:none"><b style="width:${vibe}%;background:${vibe>=75?'var(--good)':vibe>=35?'var(--accent2)':vibe>=18?'var(--warn)':'var(--bad)'}"></b></div><span class="sub num">${vibe}</span></div>
         <div class="wkdots" aria-label="This week">${dots.map(k=>`<button class="${dayActive(k)?'on':''} ${k===curDay?'cur':''}" ${k>TODAY?'disabled':''} onclick="curDay='${k}';render()" aria-label="${nice(k)}${dayActive(k)?', active':''}">${parseD(k).toLocaleDateString('en-US',{weekday:'narrow'})}</button>`).join('')}</div>
@@ -3772,12 +3814,14 @@ function mBook(E, P){
 }
 function vModel(){
   if (mcpLib && !mTried && mState().syncDay!==TODAY) setTimeout(()=>mSync(false),0);
-  if (!['now','clients','book','content'].includes(mTab)) mTab='now';
+  if (!['now','clients','book','content','card'].includes(mTab)) mTab='now';
   const mSeg=t=>`<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${t.map(([k,l])=>`<button class="${mTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px" onclick="mTab='${k}';render()">${l}</button>`).join('')}</div>`;
-  if (mTab==='content') return mSeg([['now','Bookings'],['clients','Clients'],['book','Book'],['content','Content']]) + vContent();
+  const MT5=[['now','Bookings'],['clients','Clients'],['book','Book'],['card','Card'],['content','Content']];
+  if (mTab==='content') return mSeg(MT5) + vContent();
+  if (mTab==='card') return mSeg(MT5) + mCardView();
   const E=mAll(), P=mPipe(), jobs=E.filter(e=>e.t==='job'&&e.s!=='cancelled'), days=jobs.reduce((a,j)=>a+j.days,0), ck=jobs.filter(j=>/calvin/i.test(j.c)).reduce((a,j)=>a+j.days,0);
   const first=jobs.map(j=>j.start).filter(Boolean).sort()[0]||'';
-  const tabs=[['now','Bookings'],['clients','Clients'],['book','Book'],['content','Content']];
+  const tabs=[['now','Bookings'],['clients','Clients'],['book','Book'],['card','Card'],['content','Content']];
   return `<div class="mm-hero sec">
       <div class="row between"><span class="tag">Modeling · since ${first.slice(0,4)}</span><span class="row" style="gap:6px"><button class="btn ghost sm" onclick="mAddOpen()">+ Add</button>${mcpLib?`<button class="btn ghost sm" ${mBusy?'disabled':''} onclick="mSync(true)">${mBusy?'…':'↻'}</button>`:''}</span></div>
       <div class="mm-big"><b class="num">${days}</b><span>days on set<br><em>${ck} for Calvin Klein</em></span></div>
@@ -3786,7 +3830,7 @@ function vModel(){
       <form id="mmadd" hidden class="mm-add" onsubmit="return mAddSave(event)"><select class="inp" name="t">${Object.entries(MT).filter(([k])=>k!=='selftape'&&k!=='travel').map(([k,[l]])=>`<option value="${k}">${l}</option>`).join('')}</select><input class="inp" name="c" placeholder="Client" required><input class="inp" name="p" placeholder="What (e-com, campaign…)"><input class="inp" type="date" name="d1" value="${TODAY}"><input class="inp" type="date" name="d2" title="Last day (optional)"><input class="inp" name="r" placeholder="Rate e.g. 5k"><input class="inp" name="loc" placeholder="Where"><button class="btn">Save</button></form>
     </div>
     <div class="seg sec" style="display:flex;width:100%;overflow:hidden">${tabs.map(([k,l])=>`<button class="${mTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px" onclick="mTab='${k}';render()">${l}</button>`).join('')}</div>
-    ${mTab==='now'?mNow(E,P)+mHistory(E,P):mTab==='clients'?mClients(E):mBook(E,P)}`;
+    ${mTab==='now'?prepCard()+mNow(E,P)+mHistory(E,P):mTab==='clients'?mClients(E):mBook(E,P)}`;
 }
 function mMeas(k,v){ mState().meas[k]=v.trim(); commit({skipXp:true}); }
 function mDel(id){ const M=mState(); M.add=M.add.filter(x=>x.id!==id); commit({skipXp:true}); }
@@ -5313,7 +5357,7 @@ function vetAdd(ev){ ev.preventDefault(); const f=ev.target, g=k=>f.querySelecto
 function dCasters(){ const C=cstCRM(), HC=C.hidden||{}, all=vetAll().filter(c=>!HC[c.id]), drop=all.filter(c=>c.k==='drop'), mail=all.filter(c=>c.k==='mail');
   return `<div class="card sec"><span class="tag">Casters</span><h2 style="font-size:22px;margin:4px 0 4px">Checked, not searched</h2>
     <div class="sub" style="font-size:12.5px">Every shop here casts jewelry and takes outside waxes. Grillz are usually <b>sterling silver (.925)</b>; drop-off is back in 1–2 days, mail-in in 1–2 weeks.</div>
-    <form class="ct-add" style="margin-top:10px" onsubmit="return cstWhere(event)"><input class="inp" placeholder="your address or ZIP (for directions)" value="${esc(C.where||'')}" autocomplete="postal-code"><button class="btn sm">Set</button></form></div>
+    <form class="ct-add" style="margin-top:10px" onsubmit="return cstWhere(event)"><input class="inp" placeholder="your address or ZIP (for directions)" value="${esc(C.where||'')}" autocomplete="postal-code"><button class="btn sm">Set</button></form>${isNative()?'<button class="btn ghost sm" style="margin-top:8px" onclick="cstLocate()">📍 Use my location</button>':''}</div>
   ${(C.jobs||[]).some(j=>!j.back)?`<div class="help sec" style="padding:0 6px">🔥 Out now: ${(C.jobs||[]).filter(j=>!j.back).map(j=>`${esc(j.pid)} at ${esc(j.caster)} · day ${daysBetween(j.sent,TODAY)}`).join(' · ')}</div>`:''}
   <div class="card sec"><div class="hdr"><h2>🚶 Drop off · Chicago</h2><span class="sub">Jewelers Row</span></div><div class="stack" style="gap:8px">${drop.map(vetCard).join('')}</div></div>
   <div class="card sec"><div class="hdr"><h2>📦 Mail in · from anywhere</h2><span class="sub">use these in NY</span></div><div class="stack" style="gap:8px">${mail.map(vetCard).join('')}</div></div>
@@ -6032,9 +6076,209 @@ function gFinish(){ const g=G_(), L=g.live; if(!L) return; const x0=computeXP();
 function gDelSession(id){ const g=G_(), s=g.sessions.find(x=>x.id===id); if(!s) return; g.trash.push({...s, deletedAt:TODAY}); g.sessions=g.sessions.filter(x=>x.id!==id); gLogOpen=null; commit({skipXp:true}); toast('Deleted · restore below'); }
 function gRestore(id){ const g=G_(), s=g.trash.find(x=>x.id===id); if(!s) return; const {deletedAt,discarded,restEnd,restLen,...y}=s; if (discarded){ y.t1=y.t1||Date.now(); y.ex=y.ex.map(e=>({...e, sets:e.sets.filter(z=>z.ok)})).filter(e=>e.sets.length); y.prs=[]; } g.sessions.push(y); g.trash=g.trash.filter(x=>x.id!==id); commit({skipXp:true}); toast('Restored'); }
 
+
+/* ===================== App extras · b159: coach, comp card, orders, capture, travel, prep, receipts, sleep, buddy ===================== */
+const isNative = () => !!(window.claude && window.claude.native);
+const SLEEP = ['<5h','5–6h','6–7h','7–8h','8h+'];
+let ciSleep = null;
+
+/* ---------- 1. Talk to Tega (coach chat) ---------- */
+function coachData(){ const out=[], T=TODAY; const tryp=f=>{ try { const v=f(); if (v) out.push(v); } catch(e){} };
+  tryp(()=>`Today is ${niceLong(T)}. Level ${levelFor(computeXP())}, ${dailyStreak()}-day streak.`);
+  tryp(()=>{ const d=S.days[T]; return `Check-in: ${d&&d.checkin?`done, energy ${d.checkin.feel}/4${d.checkin.sleep!=null?`, slept ${SLEEP[d.checkin.sleep]}`:''}`:'not yet'}. Top 3: ${d?d.top3.filter(t=>t.text.trim()).map(t=>(t.done?'[done] ':'')+t.text).join('; ')||'not set':'not set'}.`; });
+  tryp(()=>`Money: ONE Management owes him ${money0(mOwed(mPipe()))}. Tax buffer holds ${money0(S.money.s.taxBufNow||0)}. Expected checks: ${S.money.checks.filter(c=>!c.got).slice(0,3).map(c=>`${money0(c.amt)} on ${c.d}`).join(', ')||'none'}.`);
+  tryp(()=>{ const up=mAll().filter(e=>e.start>=T&&!['cancelled','released','declined','nobook'].includes(e.s)).sort((a,b)=>a.start.localeCompare(b.start)).slice(0,5); return `Bookings ahead: ${up.map(e=>`${e.t} for ${e.c} on ${e.start}${e.loc?' in '+e.loc:''}`).join('; ')||'none'}.`; });
+  tryp(()=>`Deadlines in the next 2 weeks: ${dlAll().filter(x=>!x.done&&x.d<=addDays(T,14)).slice(0,6).map(x=>`${x.text} (${x.d})`).join('; ')||'none'}.`);
+  tryp(()=>S.gym&&S.gym.setup&&S.gym.setup.done?`Gym: ${gWeekCount()}/${G_().setup.days} workouts this week, goal ${GGOAL[G_().setup.goal].n}. Last workout: ${(G_().sessions.slice(-1)[0]||{}).name||'none yet'}.`:'');
+  tryp(()=>{ const D=ensureDatum(); return `Datum (grillz): pieces ${D.prototypes.map(p=>`${p.id} ${p.name} (${p.status})`).join(', ')||'none'}; open orders ${D.orders.filter(o=>!['delivered','closed'].includes(o.status)).length}.`; });
+  tryp(()=>`Posts this week: ${weekRecap(THIS_WEEK).posts} of 2.`);
+  tryp(()=>`Key results: ${allKRs().filter(k=>k.target).slice(0,10).map(k=>`${k.text.replace(/\s*\([^)]*\)/,'')} ${k.current||0}/${k.target}`).join('; ')}.`);
+  tryp(()=>S.travel&&S.travel.on?`Travel mode is on${S.travel.city?' in '+S.travel.city:''}.`:'');
+  return out.join('\n'); }
+let coachBusy=false;
+function C_(){ return (S.coach ||= {msgs:[]}); }
+function coachOpen(){ gSheet(coachHTML()); const s=document.querySelector('#g-sheet .g-sheet'); if (s) s.classList.add('co-sheet'); setTimeout(()=>{ const l=document.getElementById('co-list'); if(l) l.scrollTop=l.scrollHeight; },30); }
+function coachHTML(){ const M=C_().msgs.slice(-30), sugg=['What should I focus on today?','Can I afford a NY trip this month?','Write 3 captions for my next post','Plan my week around my bookings'];
+  return `<div class="row" style="gap:10px;align-items:center;flex-wrap:nowrap">${pfpMini(stageOf(levelFor(computeXP())))}<div style="min-width:0"><h2 class="g-sh-t" style="margin:0">Talk to Tega</h2><small class="sub">Knows your money, bookings, gym & Datum</small></div></div>
+  <div class="co-list" id="co-list">${M.length?M.map(m=>`<div class="co-m ${m.r}">${esc(m.t).replace(/\n/g,'<br>')}</div>`).join(''):`<div class="co-sugg">${sugg.map(s=>`<button onclick="coachSend(${JSON.stringify(s).replace(/"/g,'&quot;')})">${s}</button>`).join('')}</div>`}${coachBusy?'<div class="co-m a co-typing"><i></i><i></i><i></i></div>':''}</div>
+  <form class="co-f" onsubmit="event.preventDefault();coachSend(document.getElementById('co-in').value)"><input id="co-in" class="inp" placeholder="Ask anything…" autocomplete="off" enterkeyhint="send"><button class="btn" aria-label="Send">↑</button></form>
+  ${M.length?`<button class="co-clear" onclick="C_().msgs=[];commit({skipXp:true});coachOpen()">Clear chat</button>`:''}`; }
+async function coachSend(t){ t=String(t||'').trim(); if(!t||coachBusy) return; const C=C_(); C.msgs.push({r:'u',t,at:Date.now()}); coachBusy=true; coachOpen();
+  if (!sampleLib){ C.msgs.push({r:'a',t:'I need the AI connection for this one — it works in the app and inside Claude.'}); coachBusy=false; commit({skipXp:true}); coachOpen(); return; }
+  const hist=C.msgs.slice(-12).map(m=>(m.r==='u'?'Tega: ':'You: ')+m.t).join('\n');
+  const prompt=`You are the voice of Tega.exe, Tega's personal life-OS app. Tega is a young fashion model (Calvin Klein regular, agency ONE Management, based in Chicago, works in NY too), starting a handmade grillz business called Datum, posting content, lifting 3x a week to stay lean for modeling, and getting his money in order (32.2% of income goes to a tax buffer). Talk like a smart, funny friend who knows his life: direct, casual, confident, short — under 90 words unless he asks for something long like captions or a plan. Use his real numbers below. Don't lecture. If the app can do what he asks, tell him where to tap (tabs: Today, Goals, Modeling, Datum, Gym, Money, Me; ＋ button at the top for quick capture).\n\nHis data right now:\n${coachData()}\n\nConversation so far:\n${hist}\n\nReply as JSON: {"reply": "your message"}`;
+  try { const r=await sampleLib.json(prompt); const rep=(r&&(r.reply||(r.value&&r.value.reply)||r.text))||'…'; C.msgs.push({r:'a',t:String(rep),at:Date.now()}); }
+  catch(e){ C.msgs.push({r:'a',t:'Couldn’t reach the coach right now. Try again in a sec.'}); }
+  C.msgs=C.msgs.slice(-60); coachBusy=false; commit({skipXp:true}); if (document.getElementById('co-list')) coachOpen(); }
+
+/* ---------- 2. Comp card (Modeling → Card) ---------- */
+const MEAS_KEYS=[['height','Height'],['chest','Chest'],['waist','Waist'],['hips','Hips'],['inseam','Inseam'],['suit','Suit'],['shoe','Shoe'],['hair','Hair'],['eyes','Eyes']];
+function mCard(){ const M=mState(); M.meas ||= {}; return (M.card ||= {imgs:[], name:'', agency:''}); }
+function mCardStats(){ const E=mAll(), jobs=E.filter(e=>e.t==='job'&&!['cancelled','released','declined','nobook'].includes(e.s)); const cnt={}; for (const j of jobs) cnt[j.c]=(cnt[j.c]||0)+j.days; return {days:jobs.reduce((a,j)=>a+j.days,0), clients:Object.entries(cnt).sort((a,b)=>b[1]-a[1]).map(([c])=>c)}; }
+function mCardView(){ const K=mCard(), M=mState(), st=mCardStats();
+  return `<div class="cc sec"><div class="cc-imgs">${[0,1,2,3].map(i=>K.imgs[i]?`<div class="cc-i" style="background-image:url('${BLOBURL}${K.imgs[i]}')"><button class="x" onclick="mCardDel(${i})" aria-label="Remove photo">✕</button></div>`:`<label class="cc-i cc-add">＋<span>Photo</span><input type="file" accept="image/*" hidden onchange="mCardUp(${i},this)"></label>`).join('')}</div>
+    <div class="cc-name">${esc(K.name||'TEGA')}</div><div class="cc-agency">${esc(K.agency||'ONE Management')}</div>
+    <div class="cc-meas">${MEAS_KEYS.filter(([k])=>M.meas[k]).map(([k,l])=>`<div><small>${l}</small><b>${esc(M.meas[k])}</b></div>`).join('')||'<div class="help">Add measurements in Modeling → Book.</div>'}</div>
+    <div class="cc-stats"><div><b class="num">${st.days}</b><small>days on set</small></div><div><b class="num">${st.clients.length}</b><small>clients</small></div></div>
+    ${st.clients.length?`<div class="cc-cl">${st.clients.slice(0,8).map(c=>`<span>${esc(c)}</span>`).join('')}</div>`:''}</div>
+  <div class="row sec" style="gap:8px"><button class="btn" onclick="mCardSave()">Save card</button><button class="btn ghost" onclick="mCardCopy()">Copy text</button></div>
+  <div class="card sec" style="display:grid;gap:10px"><label class="g-q"><span>Name on card</span><input class="inp" value="${esc(K.name)}" placeholder="TEGA" onchange="mCard().name=this.value.trim();commit({skipXp:true})"></label><label class="g-q"><span>Agency / contact</span><input class="inp" value="${esc(K.agency)}" placeholder="ONE Management · @yourhandle" onchange="mCard().agency=this.value.trim();commit({skipXp:true})"></label></div>`; }
+async function mCardUp(i, input){ const f=input.files&&input.files[0]; input.value=''; if(!f) return; if (!benchAssets) return toast('Photo upload isn’t available here'); toast('Uploading…');
+  try { const b=typeof artShrink==='function'?await artShrink(f):f; const r=await benchAssets.upload(b, b.type?undefined:{type:'image/jpeg'}); mCard().imgs[i]=r.id; commit({skipXp:true}); toast('Added'); } catch(e){ toast('Upload failed — try again'); } }
+function mCardDel(i){ const K=mCard(); (K.old ||= []).push(K.imgs[i]); K.imgs[i]=null; commit({skipXp:true}); }
+function mCardText(){ const K=mCard(), M=mState(), st=mCardStats(); return `${K.name||'TEGA'} · ${K.agency||'ONE Management'}\n${MEAS_KEYS.filter(([k])=>M.meas[k]).map(([k,l])=>`${l} ${M.meas[k]}`).join(' · ')}\n${st.days} days on set${st.clients.length?' · '+st.clients.slice(0,6).join(', '):''}`; }
+function mCardCopy(){ const t=mCardText(); try { navigator.clipboard.writeText(t).then(()=>toast('Copied'),()=>gSheet(`<h2 class="g-sh-t">Copy this</h2><textarea class="inp" style="min-height:140px">${esc(t)}</textarea>`)); } catch(e){ gSheet(`<h2 class="g-sh-t">Copy this</h2><textarea class="inp" style="min-height:140px">${esc(t)}</textarea>`); } }
+async function mCardSave(){ const K=mCard(), M=mState(), st=mCardStats(), c=document.createElement('canvas'); c.width=1080; c.height=1500; const x=c.getContext('2d');
+  x.fillStyle='#0b0b0d'; x.fillRect(0,0,1080,1500);
+  const load=id=>new Promise(res=>{ if(!id) return res(null); const im=new Image(); im.crossOrigin='anonymous'; im.onload=()=>res(im); im.onerror=()=>res(null); im.src=BLOBURL+id; });
+  const ims=await Promise.all([0,1,2,3].map(i=>load(K.imgs[i])));
+  ims.forEach((im,i)=>{ const X=40+(i%2)*510, Y=40+Math.floor(i/2)*510, W=490, H=490; x.fillStyle='#1c1c20'; x.fillRect(X,Y,W,H); if(im){ const s=Math.max(W/im.width,H/im.height), w=im.width*s, h=im.height*s; x.save(); x.beginPath(); x.rect(X,Y,W,H); x.clip(); x.drawImage(im,X+(W-w)/2,Y+(H-h)/2,w,h); x.restore(); } });
+  x.fillStyle='#fff'; x.font='800 96px Inter, sans-serif'; x.fillText((K.name||'TEGA').toUpperCase(),40,1160); x.fillStyle='rgba(255,255,255,.6)'; x.font='500 34px Inter, sans-serif'; x.fillText(K.agency||'ONE Management',44,1215);
+  const ms=MEAS_KEYS.filter(([k])=>M.meas[k]); x.font='600 30px Inter, sans-serif'; ms.forEach(([k,l],i)=>{ const X=44+(i%3)*340, Y=1290+Math.floor(i/3)*70; x.fillStyle='rgba(255,255,255,.5)'; x.fillText(l.toUpperCase(),X,Y); x.fillStyle='#fff'; x.fillText(String(M.meas[k]),X+(l.length>5?150:130),Y); });
+  x.fillStyle='rgba(255,255,255,.5)'; x.font='500 28px Inter, sans-serif'; x.fillText(`${st.days} days on set${st.clients.length?' · '+st.clients.slice(0,4).join(' · '):''}`,44,1470);
+  const blob=await new Promise(r=>c.toBlob(r,'image/png'));
+  try { if (!dlLib) throw 0; await dlLib.save({filename:'tega-comp-card.png', data:blob}); toast('Card saved'); }
+  catch(e){ gSheet(`<h2 class="g-sh-t">Your comp card</h2><img src="${c.toDataURL('image/png')}" alt="Comp card" style="width:100%;border-radius:14px"><div class="help">Press and hold the image to save it.</div>`); } }
+
+/* ---------- 3. Datum orders: clients, impressions, deposits, ready message ---------- */
+const O_NEXT={inquiry:'deposit',deposit:'in-production','in-production':'delivered',delivered:'closed'};
+function oBal(o){ return Math.max(0,(+o.price||0)-(+o.deposit||0)-(o.paid?Math.max(0,(+o.price||0)-(+o.deposit||0)):0)); }
+function oCard(o){ const st=OSTAGES.find(s=>s[0]===o.status)||OSTAGES[0], img=(o.imgs||[])[0];
+  return `<button class="oc" onclick="oSheet('${o.id}')"><span class="oc-th" ${img?`style="background-image:url('${BLOBURL}${img}')"`:''}>${img?'':'◆'}</span><span class="oc-t"><b>${esc(o.who)}</b><small>${esc(o.spec||'')}${o.metal?' · '+esc(o.metal):''}</small><small>${o.due?'due '+nice(o.due)+' · ':''}${oBal(o)?`<em>${money0(oBal(o))} due</em>`:'paid'}</small></span><span class="oc-r"><b class="num">${money0(o.price)}</b><span class="oc-st s-${o.status}">${st[1]}</span></span></button>`; }
+function oSheet(id){ const o=ensureDatum().orders.find(x=>x.id===id); if(!o) return; o.imgs ||= [];
+  const set=(f,num)=>`onchange="oSet('${o.id}','${f}',${num?'+this.value||0':'this.value.trim()'})"`;
+  gSheet(`<span class="tag">Order · ${nice(o.opened||TODAY)}</span><h2 class="g-sh-t">${esc(o.who)}</h2>
+    <div class="o-flow">${OSTAGES.map(([k,l])=>`<button class="${o.status===k?'on':''}" onclick="dSetOrder('${o.id}','status','${k}');oSheet('${o.id}')">${l}</button>`).join('')}</div>
+    <div class="o-grid"><label>Name / IG<input class="inp" value="${esc(o.who)}" ${set('who')}></label><label>Phone<input class="inp" inputmode="tel" value="${esc(o.phone||'')}" ${set('phone')}></label>
+      <label class="wide">What they want<input class="inp" value="${esc(o.spec||'')}" placeholder="6 top, open face, polished" ${set('spec')}></label>
+      <label>Metal<input class="inp" value="${esc(o.metal||'')}" placeholder="sterling .925" ${set('metal')}></label><label>Due<input class="inp" type="date" value="${o.due||''}" ${set('due')}></label>
+      <label>Price $<input class="inp" inputmode="decimal" value="${o.price||''}" ${set('price',1)}></label><label>Deposit paid $<input class="inp" inputmode="decimal" value="${o.deposit||''}" ${set('deposit',1)}></label></div>
+    <button class="o-paid ${o.paid?'on':''}" onclick="oSet('${o.id}','paid',${!o.paid});oSheet('${o.id}')">${o.paid?'✓ Balance paid':'Mark balance paid'} · ${money0(Math.max(0,(+o.price||0)-(+o.deposit||0)))}</button>
+    <div class="g-sh-sec">Impressions & photos</div><div class="o-imgs">${o.imgs.map((m,i)=>`<span style="background-image:url('${BLOBURL}${m}')"></span>`).join('')}<label class="o-add">＋<input type="file" accept="image/*" hidden onchange="oPhoto('${o.id}',this)"></label></div>
+    <label class="g-q" style="margin-top:6px"><span>Notes</span><textarea class="inp" ${set('note')} placeholder="mold notes, fit, pickup plans">${esc(o.note||'')}</textarea></label>
+    <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn" onclick="oReady('${o.id}')">💬 Ready message</button>${o.status!=='closed'?`<button class="btn ghost" onclick="dSetOrder('${o.id}','status','${O_NEXT[o.status]||'closed'}');oSheet('${o.id}')">Next stage ›</button>`:''}</div>`); }
+function oSet(id,f,v){ const o=ensureDatum().orders.find(x=>x.id===id); if(!o) return; o[f]=v; commit({skipXp:true}); }
+async function oPhoto(id,input){ const f=input.files&&input.files[0]; input.value=''; if(!f) return; if (!benchAssets) return toast('Photo upload isn’t available here'); toast('Uploading…');
+  try { const b=typeof artShrink==='function'?await artShrink(f):f; const r=await benchAssets.upload(b, b.type?undefined:{type:'image/jpeg'}); const o=ensureDatum().orders.find(x=>x.id===id); (o.imgs ||= []).push(r.id); commit({skipXp:true}); oSheet(id); } catch(e){ toast('Upload failed — try again'); } }
+function oReady(id){ const o=ensureDatum().orders.find(x=>x.id===id); if(!o) return; const first=String(o.who).split(/[\s@]/).filter(Boolean)[0]||'';
+  const bal=Math.max(0,(+o.price||0)-(+o.deposit||0)), t=o.status==='inquiry'||o.status==='deposit'
+    ? `Hey ${first}! Locked in your ${o.spec||'grill'}${o.metal?' in '+o.metal:''}. ${o.price?`Total is ${money0(o.price)}, ${money0(Math.round((+o.price||0)/2))} deposit to start.`:''} I'll keep you posted — Datum`
+    : `Hey ${first}, your ${o.spec||'grill'} is ready 🔥${bal&&!o.paid?` Balance is ${money0(bal)}.`:''} When works for pickup? — Datum`;
+  const ph=String(o.phone||'').replace(/[^\d+]/g,'');
+  gSheet(`<span class="tag">Message ${esc(o.who)}</span><textarea class="inp" id="o-msg" style="min-height:120px">${esc(t)}</textarea>
+    <div class="row" style="gap:8px;margin-top:8px">${ph?`<a class="btn" href="sms:${ph}&body=${encodeURIComponent(t)}">Text ${esc(ph)}</a>`:''}<button class="btn ghost" onclick="const v=document.getElementById('o-msg').value;try{navigator.clipboard.writeText(v).then(()=>toast('Copied'),()=>{})}catch(e){}">Copy</button></div>
+    <div class="help">${ph?'If texting doesn’t open, copy and paste it into Messages or IG.':'Add their phone on the order to text straight from here.'}</div>`); }
+
+/* ---------- 4. Quick capture + deep links (Siri Shortcuts: tegaexe://win?text=…) ---------- */
+function capOpen(){ const D=ensureDatum(), act=D.prototypes.filter(p=>!['complete','failed'].includes(p.status));
+  gSheet(`<span class="tag">Quick capture</span><h2 class="g-sh-t">What happened?</h2>
+    <form class="co-f" onsubmit="event.preventDefault();capWin(this.querySelector('input').value)"><input class="inp" placeholder="★ Log a win…" enterkeyhint="done"><button class="btn">Add</button></form>
+    <form class="co-f" onsubmit="event.preventDefault();capIdea(this.querySelector('input').value)"><input class="inp" placeholder="💡 Content idea…" enterkeyhint="done"><button class="btn">Add</button></form>
+    <div class="cap-grid">
+      <button onclick="gSheetClose();receiptOpen()"><span>🧾</span>Receipt</button>
+      <button onclick="gSheetClose();${act.length===1?`benchStart('${act[0].id}');go('datum')`:`dView='bench';go('datum')`}"><span>🔥</span>Bench session</button>
+      <button onclick="gSheetClose();dView='bench';go('datum')"><span>📷</span>Bench photo</button>
+      <button onclick="gSheetClose();go('gym');setTimeout(()=>{ if (G_().setup.done) gStart(); },60)"><span>💪</span>Workout</button>
+      <button onclick="gSheetClose();travelSheet()"><span>✈️</span>Travel ${S.travel&&S.travel.on?'on':'mode'}</button>
+      <button onclick="gSheetClose();coachOpen()"><span>💬</span>Ask Tega</button>
+    </div>`); setTimeout(()=>document.querySelector('#g-sheet input')?.focus(),60); }
+function capWin(t){ t=String(t||'').trim(); if(!t) return; S.wins.push({id:uid(),d:TODAY,text:t.slice(0,200)}); gSheetClose(); commit(); toast('★ Win logged'); window.native?.haptic?.(); }
+function capIdea(t){ t=String(t||'').trim(); if(!t) return; (S.ideas ||= []).push({id:uid(), text:t.slice(0,140), d:TODAY, done:''}); gSheetClose(); commit({skipXp:true}); toast('💡 Idea saved'); }
+window.tegaDeepLink = function(url){ try { const u=new URL(url), what=(u.host||u.pathname.replace(/^\/+/,'')).toLowerCase(), q=u.searchParams.get('text')||'';
+  if (what==='win') return q?capWin(q):capOpen(); if (what==='idea') return q?capIdea(q):capOpen();
+  if (what==='coach') return coachOpen(); if (what==='receipt') return receiptOpen(); if (what==='gym'){ go('gym'); return; }
+  if (what==='bench'){ const act=ensureDatum().prototypes.filter(p=>!['complete','failed'].includes(p.status)); if (act.length===1) benchStart(act[0].id); dView='bench'; go('datum'); return; }
+  capOpen(); } catch(e){ capOpen(); } };
+window.addEventListener('hashchange', ()=>{ const h=location.hash.slice(1); if (['capture','coach','receipt'].includes(h)){ ({capture:capOpen,coach:coachOpen,receipt:receiptOpen})[h](); } });
+
+/* ---------- 5. Travel mode ---------- */
+function T_(){ return (S.travel ||= {on:false, city:'', pause:['datum','guitar']}); }
+function travelPaused(d){ return d&&d.travel ? (T_().pause||[]) : []; }
+function habitNeed(d){ const p=travelPaused(d); return S.habits.filter(h=>!p.includes(h.id)).length; }
+function travelTick(){ const T=T_(); if (T.on){ const d=ensureDay(TODAY); if (!d.travel){ d.travel=T.city||'away'; } } }
+function travelSheet(){ const T=T_(), g=S.gym&&S.gym.profiles?S.gym.profiles:[];
+  gSheet(`<span class="tag">✈️ Travel mode</span><h2 class="g-sh-t">${T.on?'You’re away':'Going somewhere?'}</h2>
+    <div class="help">Pauses habits that don’t travel, switches your gym to the hotel setup, and keeps your streak fair.</div>
+    <label class="g-q"><span>Where</span><input class="inp" id="tr-city" value="${esc(T.city||'')}" placeholder="New York"></label>
+    <div class="g-sh-sec">Pause while away</div><div class="g-opts">${S.habits.map(h=>`<button class="${(T.pause||[]).includes(h.id)?'on':''}" onclick="travelPause('${h.id}')">${h.icon} ${esc(h.name)}</button>`).join('')}</div>
+    ${g.length>1?`<div class="g-sh-sec">Gym while away</div><div class="g-opts">${g.map(p=>`<button class="${(T.prof||g.find(x=>x.id!=='main')?.id)===p.id?'on':''}" onclick="T_().prof='${p.id}';travelSheet()">${esc(p.name)}</button>`).join('')}</div>`:''}
+    <button class="btn" style="margin-top:12px;width:100%;justify-content:center" onclick="travelSet(${!T.on})">${T.on?'I’m back home':'Turn on travel mode'}</button>`); }
+function travelPause(id){ const T=T_(), P=T.pause||[]; T.pause=P.includes(id)?P.filter(x=>x!==id):P.concat(id); commit({skipXp:true}); travelSheet(); }
+function travelSet(on){ const T=T_(), city=(document.getElementById('tr-city')||{}).value; if (city!=null) T.city=city.trim(); T.on=on;
+  if (S.gym && S.gym.profiles){ if (on){ T.prevProf=S.gym.prof; const p=T.prof||(S.gym.profiles.find(x=>x.id!=='main')||{}).id; if (p){ S.gym.prof=p; S.gym.plan=null; } } else if (T.prevProf){ S.gym.prof=T.prevProf; S.gym.plan=null; } }
+  if (on){ T.since=TODAY; ensureDay(TODAY).travel=T.city||'away'; } else { const d=S.days[TODAY]; if (d && d.travel && T.since===TODAY) delete d.travel; }
+  gSheetClose(); commit({skipXp:true}); toast(on?`✈️ Travel mode on${T.city?' · '+T.city:''}`:'🏠 Welcome back'); }
+function awayCity(){ try { const e=mAll().find(e=>e.d.includes(TODAY)&&!['cancelled','released','declined','nobook'].includes(e.s)&&e.loc&&!/chicago|chi\b|il\b/i.test(e.loc)); return e?e.loc:''; } catch(err){ return ''; } }
+
+/* ---------- 6. Shoot-day prep + calendar ---------- */
+const PREP_BASE=['Confirm call time & address','Line-up / haircut','Skin: cleanse + moisturize','Nails clean & short','Sleep 8 hours','Pack ID, charger, comp card','Neutral underwear + plain tee','Leave 20 min early','Water + a snack'];
+function prepList(e){ const L=PREP_BASE.slice(); if (e.t==='casting'||e.t==='test') L.splice(6,0,'Digitals outfit: fitted black tee & jeans'); if (e.loc && !/chicago/i.test(e.loc)) L.push('Travel booked & hotel confirmed'); return L; }
+function prepUpcoming(days=7){ try { return mAll().filter(e=>['job','casting','fitting','test'].includes(e.t)&&!['cancelled','released','declined','nobook'].includes(e.s)&&e.start>=TODAY&&e.start<=addDays(TODAY,days)).sort((a,b)=>a.start.localeCompare(b.start)); } catch(err){ return []; } }
+function prepDone(e){ const P=(S.prep ||= {})[e.id]||{}; return prepList(e).filter((_,i)=>P[i]).length; }
+function prepOpen(id){ const e=mAll().find(x=>x.id===id); if(!e) return; const L=prepList(e), P=((S.prep ||= {})[id] ||= {});
+  gSheet(`<span class="tag">${esc((MT[e.t]||[e.t])[0]||e.t)} · ${e.start===TODAY?'today':e.start===addDays(TODAY,1)?'tomorrow':nice(e.start)}</span><h2 class="g-sh-t">${esc(e.c)}</h2>
+    <div class="sub" style="font-size:13px">${e.loc?'📍 '+esc(e.loc)+' · ':''}${e.d.length>1?`${e.d.length} days`:''}${e.p?' · '+esc(e.p):''}</div>
+    <div class="stack" style="gap:6px;margin-top:6px">${L.map((t,i)=>`<button class="check ${P[i]?'on':''}" onclick="prepTick('${id}',${i})"><div class="box">${P[i]?'✓':''}</div><div class="txt">${esc(t)}</div></button>`).join('')}</div>
+    <div class="row" style="gap:8px;margin-top:10px"><button class="btn" onclick="icsSave('${id}')">📅 Add to Calendar</button>${e.loc?`<a class="btn ghost" href="https://maps.apple.com/?q=${encodeURIComponent(e.loc)}" target="_blank" rel="noopener">Directions</a>`:''}</div>`); }
+function prepTick(id,i){ const P=((S.prep ||= {})[id] ||= {}); P[i]=!P[i]; commit({skipXp:true}); prepOpen(id); }
+function prepCard(){ const U=prepUpcoming(7); if(!U.length) return ''; return `<div class="card sec"><div class="hdr"><h2>Next 7 days</h2><span class="sub">tap to prep</span></div><div class="stack" style="gap:6px">${U.map(e=>{ const L=prepList(e), n=prepDone(e); return `<button class="prep-r" onclick="prepOpen('${e.id}')"><span><b>${esc(e.c)}</b><small>${esc((MT[e.t]||[e.t])[0]||e.t)} · ${e.start===TODAY?'today':e.start===addDays(TODAY,1)?'tomorrow':nice(e.start)}${e.loc?' · '+esc(e.loc):''}</small></span><span class="prep-n ${n===L.length?'ok':''}">${n}/${L.length}</span></button>`; }).join('')}</div></div>`; }
+async function icsSave(id){ const e=mAll().find(x=>x.id===id); if(!e) return; const ds=d=>d.replace(/-/g,''), end=addDays(e.d[e.d.length-1]||e.start,1), uidv=`${id}@tega.exe`;
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Tega.exe//EN','BEGIN:VEVENT',`UID:${uidv}`,`DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').slice(0,15)}Z`,`DTSTART;VALUE=DATE:${ds(e.start)}`,`DTEND;VALUE=DATE:${ds(end)}`,`SUMMARY:${((MT[e.t]||[e.t])[0]||e.t)} · ${e.c}`.replace(/[,;]/g,' '),e.loc?`LOCATION:${e.loc.replace(/[,;]/g,' ')}`:'',`DESCRIPTION:${(e.p||'').replace(/[,;\n]/g,' ')} — Tega.exe`,'BEGIN:VALARM','TRIGGER:-PT12H','ACTION:DISPLAY','DESCRIPTION:Prep for tomorrow','END:VALARM','END:VEVENT','END:VCALENDAR'].filter(Boolean).join('\r\n');
+  const blob=new Blob([ics],{type:'text/calendar'});
+  try { if (!dlLib) throw 0; await dlLib.save({filename:`${e.c.replace(/\W+/g,'-')}-${e.start}.ics`, data:blob}); toast('Open it to add to Calendar'); }
+  catch(err){ toast('Calendar export isn’t available here'); } }
+// reminders the iPhone app schedules (the night before each booking)
+window.tegaReminders = function(){ const out=[]; prepUpcoming(14).forEach((e,i)=>{ const [y,m,d]=addDays(e.start,-1).split('-').map(Number), at=new Date(y,m-1,d,20,0,0); if (at>new Date()) out.push({id:5000+i, title:`Tomorrow: ${e.c}`, body:`${((MT[e.t]||[e.t])[0]||e.t)}${e.loc?' · '+e.loc:''} · open your prep checklist`, at}); }); return out; };
+
+/* ---------- 7. Receipt scanner (Money) ---------- */
+let rcDraft=null;
+function receiptOpen(){ rcDraft=null; gSheet(`<span class="tag">🧾 Receipt</span><h2 class="g-sh-t">Snap a receipt</h2><div class="help">${isNative()?'Claude reads the amount, store and date for you.':'Add the photo, then fill in the amount.'} It’s filed as a write-off.</div>
+  <label class="btn" style="justify-content:center;margin-top:8px">📷 Take or choose photo<input type="file" accept="image/*" capture="environment" hidden onchange="receiptFile(this)"></label>
+  <button class="btn ghost" style="justify-content:center" onclick="rcDraft={d:TODAY,cat:'datum'};receiptForm()">Type it in instead</button>`); }
+function rcShrink(file){ return new Promise((res,rej)=>{ const im=new Image(), url=URL.createObjectURL(file); im.onload=()=>{ const s=Math.min(1,1400/Math.max(im.width,im.height)), c=document.createElement('canvas'); c.width=Math.round(im.width*s); c.height=Math.round(im.height*s); c.getContext('2d').drawImage(im,0,0,c.width,c.height); URL.revokeObjectURL(url); c.toBlob(b=>res({blob:b, data:c.toDataURL('image/jpeg',.82).split(',')[1]}),'image/jpeg',.82); }; im.onerror=rej; im.src=url; }); }
+async function receiptFile(input){ const f=input.files&&input.files[0]; input.value=''; if(!f) return; gSheet(`<h2 class="g-sh-t">Reading receipt…</h2><div class="co-m a co-typing"><i></i><i></i><i></i></div>`);
+  rcDraft={d:TODAY, cat:'other'};
+  try { const sh=await rcShrink(f);
+    if (benchAssets){ try { const r=await benchAssets.upload(sh.blob,{type:'image/jpeg'}); rcDraft.img=r.id; } catch(e){} }
+    if (sampleLib && sampleLib.vision){ const cats=Object.keys(DCATS).join(', ');
+      const r=await sampleLib.vision(`Read this receipt. Return JSON {"vendor": string, "date": "YYYY-MM-DD" or null, "total": number (final amount paid), "category": one of [${cats}] — use "datum" for jewelry/dental/casting/wax/tools/supplies, "ride" for Uber/Lyft, "lodging" for hotels, "eats" for food delivery in NY, else "other", "business": true if it's plausibly a work expense for a model or a grillz maker}. Today is ${TODAY}.`, {media_type:'image/jpeg', data:sh.data});
+      const j=r||{}; Object.assign(rcDraft, {desc:j.vendor||'', amt:+j.total||'', d:/^\d{4}-\d{2}-\d{2}$/.test(j.date||'')?j.date:TODAY, cat:DCATS[j.category]?j.category:'other', biz:j.business!==false}); } }
+  catch(e){ toast('Couldn’t read it — fill it in'); }
+  receiptForm(); }
+function receiptForm(){ const R=rcDraft||{d:TODAY,cat:'other'};
+  gSheet(`<span class="tag">🧾 Receipt</span><h2 class="g-sh-t">Check it</h2>${R.img?`<div class="rc-img" style="background-image:url('${BLOBURL}${R.img}')"></div>`:''}
+    <div class="o-grid"><label class="wide">Store / what<input class="inp" id="rc-desc" value="${esc(R.desc||'')}" placeholder="Rio Grande jewelry supply"></label><label>Amount $<input class="inp" id="rc-amt" inputmode="decimal" value="${R.amt||''}"></label><label>Date<input class="inp" id="rc-d" type="date" value="${R.d||TODAY}"></label>
+    <label class="wide">Category<select class="inp" id="rc-cat">${Object.entries(DCATS).map(([k,l])=>`<option value="${k}" ${R.cat===k?'selected':''}>${l}</option>`).join('')}</select></label></div>
+    <button class="btn" style="margin-top:10px;width:100%;justify-content:center" onclick="receiptSave()">Save write-off</button>`); }
+function receiptSave(){ const desc=document.getElementById('rc-desc').value.trim(), amt=+document.getElementById('rc-amt').value||0, d=document.getElementById('rc-d').value||TODAY, cat=document.getElementById('rc-cat').value;
+  if (!amt) return toast('Add the amount'); S.money.budget.deductibles.push({id:uid(), txn:null, d, desc:desc||'Receipt', amt, acct:'receipt', cat, ok:true, note:'scanned', img:(rcDraft||{}).img}); rcDraft=null; gSheetClose(); commit(); toast(`🧾 ${money0(amt)} filed as a write-off`); }
+
+/* ---------- 8. Sleep & energy insights (Me → Progress) ---------- */
+function sleepCard(){ const days=[...Array(14)].map((_,i)=>addDays(TODAY,-13+i)), ck=k=>S.days[k]&&S.days[k].checkin;
+  const any=days.some(k=>ck(k)&&ck(k).sleep!=null); const all=Object.keys(S.days).filter(k=>ck(k)&&ck(k).sleep!=null);
+  const t3=k=>S.days[k].top3.filter(t=>t.done).length, gym=k=>S.days[k].habits&&S.days[k].habits.gym?1:0, avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+  const good=all.filter(k=>ck(k).sleep>=3), bad=all.filter(k=>ck(k).sleep<=1); let tip='';
+  if (good.length>=3&&bad.length>=3){ const a=avg(good.map(t3)), b=avg(bad.map(t3)), ga=avg(good.map(gym)), gb=avg(bad.map(gym)); tip=`After 7h+ sleep you finish <b>${a.toFixed(1)}</b> of your Top 3 vs <b>${b.toFixed(1)}</b> on short nights${ga>gb+.15?`, and you hit the gym ${Math.round((ga-gb)*100)}% more often`:''}.`; }
+  return `<div class="card sec"><div class="hdr"><h2>Sleep & energy</h2><span class="sub">last 14 days</span></div>
+    ${any?`<div class="sl-bars">${days.map(k=>{ const c=ck(k); return `<div title="${nice(k)}"><i class="e" style="height:${c?(c.feel+1)*18:0}%"></i><i class="s" style="height:${c&&c.sleep!=null?(c.sleep+1)*18:0}%"></i><small>${parseD(k).toLocaleDateString('en-US',{weekday:'narrow'})}</small></div>`; }).join('')}</div><div class="g-legend"><span style="--c:var(--accent2)">Energy</span><span style="--c:var(--accent)">Sleep</span></div>`:''}
+    <div class="help" style="margin-top:8px">${tip||'Log sleep in your morning check-in. After a week or two this shows how sleep changes your days.'}</div></div>`; }
+
+/* ---------- 9. Accountability buddy (Me → Settings) ---------- */
+function B_(){ return (S.buddy ||= {name:'', phone:''}); }
+function buddyCard(){ const B=B_(); return `<div class="card sec"><div class="hdr"><h2>Accountability buddy</h2><span class="sub">one person who sees your week</span></div>
+  <div class="o-grid"><label>Name<input class="inp" value="${esc(B.name)}" placeholder="Name" onchange="B_().name=this.value.trim();commit({skipXp:true})"></label><label>Phone<input class="inp" inputmode="tel" value="${esc(B.phone)}" placeholder="for texting" onchange="B_().phone=this.value.trim();commit({skipXp:true})"></label></div>
+  <button class="btn ghost sm" style="margin-top:10px" onclick="buddySend()" ${B.name?'':'disabled'}>Send this week’s card</button>${B.sent?`<div class="help" style="margin-top:6px">Last sent week ${String(B.sent).split('-W')[1]}.</div>`:''}</div>`; }
+function buddyText(){ const B=B_(), d=wkData(THIS_WEEK); return `${B.name?B.name.split(' ')[0]+', ':''}my week: showed up ${d.active}/${d.n} days, ${d.gym} gym, ${d.posts} posts, ${d.mDays} days on set. Hold me to it 👊`; }
+function buddySend(){ const B=B_(), t=buddyText(), ph=String(B.phone||'').replace(/[^\d+]/g,''); B.sent=THIS_WEEK; commit({skipXp:true});
+  try { srSaveCard(THIS_WEEK); } catch(e){}
+  gSheet(`<span class="tag">Send to ${esc(B.name)}</span><textarea class="inp" id="bd-msg" style="min-height:110px">${esc(t)}</textarea><div class="row" style="gap:8px;margin-top:8px">${ph?`<a class="btn" href="sms:${ph}&body=${encodeURIComponent(t)}">Text ${esc(B.name.split(' ')[0])}</a>`:''}<button class="btn ghost" onclick="try{navigator.clipboard.writeText(document.getElementById('bd-msg').value).then(()=>toast('Copied'),()=>{})}catch(e){}">Copy</button></div><div class="help">Your week card is saved too — attach it to the text.</div>`); }
+
+/* ---------- native-only helpers ---------- */
+async function cstLocate(){ if (!window.native || !window.native.locate) return toast('Location works in the app'); try { const p=await window.native.locate(); const C=cstCRM(); C.where=p; commit({skipXp:true}); toast('📍 Using your location'); } catch(e){ toast('Couldn’t get your location'); } }
+
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
-function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['waterfall','Waterfall'],['bills','Bills'],['budget','Budget'],['deduct','Write-offs']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div>`; }
+function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['waterfall','Waterfall'],['bills','Bills'],['budget','Budget'],['deduct','Write-offs']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
 let bSearch='', bCatF='', txOpen=null, txN=30;
 function txRows(m){ const q=bSearch.trim().toLowerCase(); return S.money.budget.txns.filter(t=>t.d.startsWith(m) && (!bCatF||t.cat===bCatF) && (!q||t.desc.toLowerCase().includes(q))); }
 function txListHtml(m){ const rows=txRows(m), show=rows.slice(0,txN);
@@ -6631,7 +6875,7 @@ function vCharacter(){
 let snapBusy=false;
 async function restoreSnap(){ if(!dbHandle){ toast('Cloud snapshots need the app signed in'); return; } if(snapBusy) return; snapBusy=true; try { const s=await dbHandle.doc('okr/auto-backup').get(); if(!s.exists){ toast('No cloud snapshot yet — the first one is taken within a week'); } else { const o=thaw(s.data()); if(!o||o.v!==2||!o.days) toast('The snapshot couldn\'t be read'); else { restorePending=o; render(); } } } catch(e){ toast('Couldn\'t reach the cloud snapshot just now'); } snapBusy=false; }
 function habitRestore(id,on){ if (on){ const h=(S.habitsOff||[]).find(h=>h.id===id); if(h){ S.habits.push(h); S.habitsOff=S.habitsOff.filter(x=>x.id!==id); } } else { const h=S.habits.find(h=>h.id===id); if(h){ (S.habitsOff ||= []).push(h); S.habits=S.habits.filter(x=>x.id!==id); } } commit({skipXp:true}); }
-function vSettings(){ return `<div class="card sec"><div class="hdr"><h2>Habits on Today</h2><span class="sub">${S.habits.length} shown</span></div>
+function vSettings(){ return buddyCard()+`<div class="card sec"><div class="hdr"><h2>Habits on Today</h2><span class="sub">${S.habits.length} shown</span></div>
     <div class="stack" style="gap:6px">${[...S.habits.map(h=>[h,1]),...(S.habitsOff||[]).map(h=>[h,0])].map(([h,on])=>`<div class="check ${on?'on':''}" onclick="habitRestore('${h.id}',${on?0:1})"><div class="box">${on?'✓':''}</div><div class="txt" style="text-decoration:none;color:var(--fg)">${h.icon} ${esc(h.name)}</div></div>`).join('')}</div>
     <div class="help" style="margin-top:8px">Hidden habits keep all their history.</div></div>${vBackup()}<div class="help sec" style="text-align:center">Tega.exe · build ${BUILD}</div>`; }
 function vBackup(){
@@ -6653,7 +6897,7 @@ function foldCards(html, order, openKey, subs={}){ const t=document.createElemen
 function vEvolve(){
   if (stMode==='art'){ stMode='progress'; ctTab='create'; setTimeout(()=>go('content'),0); }
   if (stMode==='backup') stMode='settings';
-  const body = stMode==='character' ? vCharacter() : stMode==='circle' ? vCircle() : stMode==='settings' ? vSettings() : stMode==='journey' ? vWorld() : foldCards(vStats()+tellsCard()+rivalCard(), ['Consistency','XP per week','Furthest behind','Your tells','Shadow','Money','Bench time','Records'], '', {Consistency:`${[...Array(30)].filter((_,i)=>dayActive(addDays(TODAY,-i))).length} of the last 30 days`, Records:`best streak ${bestDailyStreak()}`});
+  const body = stMode==='character' ? vCharacter() : stMode==='circle' ? vCircle() : stMode==='settings' ? vSettings() : stMode==='journey' ? vWorld() : foldCards(vStats()+sleepCard()+tellsCard()+rivalCard(), ['Consistency','XP per week','Furthest behind','Your tells','Shadow','Money','Bench time','Records'], '', {Consistency:`${[...Array(30)].filter((_,i)=>dayActive(addDays(TODAY,-i))).length} of the last 30 days`, Records:`best streak ${bestDailyStreak()}`});
   return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['progress','Progress'],['character','Character'],['circle','Circle'],['journey','World'],['settings','Settings']].map(([k,l])=>`<button class="${stMode===k?'on':''}" style="flex:1 1 auto;min-width:0;padding:9px 6px;font-size:12px;letter-spacing:-.01em" onclick="stMode='${k}';render();window.scrollTo(0,0)">${l}</button>`).join('')}</div>` + body;
 }
 function vTrophies(){ stMode='character'; return vEvolve(); }

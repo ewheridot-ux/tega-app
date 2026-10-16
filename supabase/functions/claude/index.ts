@@ -7,12 +7,13 @@ const cors = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors });
   try {
-    const { prompt, tier, json } = await req.json();
+    const { prompt, tier, json, image } = await req.json();
+    const content = image && image.data ? [{ type: 'image', source: { type: 'base64', media_type: image.media_type || 'image/jpeg', data: image.data } }, { type: 'text', text: prompt }] : prompt;
     if (!prompt || typeof prompt !== 'string') return new Response(JSON.stringify({ error: 'no prompt' }), { status: 400, headers: { ...cors, 'Content-Type': 'application/json' } });
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({ model: tier === 'quick' ? QUICK : MODEL, max_tokens: 2048, system: json ? 'Reply with only valid JSON. No prose, no code fences.' : undefined, messages: [{ role: 'user', content: prompt }] }),
+      body: JSON.stringify({ model: tier === 'quick' ? QUICK : MODEL, max_tokens: 2048, system: json ? 'Reply with only valid JSON. No prose, no code fences.' : undefined, messages: [{ role: 'user', content }] }),
     });
     const j = await r.json();
     if (!r.ok) return new Response(JSON.stringify({ error: j?.error?.message || 'claude error' }), { status: 502, headers: { ...cors, 'Content-Type': 'application/json' } });

@@ -7,3 +7,5 @@ export const Filesystem = { writeFile: log('writeFile') }; export const Director
 export const App = { addListener: () => ({}) };
 export const StatusBar = { setStyle: noop }; export const Style = { Dark: 'DARK' };
 export const SplashScreen = { hide: noop };
+export const Geolocation = { getCurrentPosition: async () => ({ coords: { latitude: 40.7128, longitude: -74.006 } }) };
+export const KeepAwake = { keepAwake: log('keepAwake'), allowSleep: log('allowSleep') };

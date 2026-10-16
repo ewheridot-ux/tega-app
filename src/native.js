@@ -9,6 +9,8 @@ import { Filesystem, Directory } from '@capacitor/filesystem';
 import { App } from '@capacitor/app';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
+import { Geolocation } from '@capacitor/geolocation';
+import { KeepAwake } from '@capacitor-community/keep-awake';
 
 const CFG = window.TEGA_CONFIG || {};
 const URL0 = (CFG.url || '').replace(/\/$/, '');
@@ -144,6 +146,7 @@ const downloads = {
 /* ---------------- Claude (via Edge Function, key stays on the server) ---------------- */
 const sample = {
   async json(prompt, opts) { const r = await api('POST', '/functions/v1/claude', { prompt, tier: (opts && opts.modelTier) || 'default', json: true }); return r && r.json !== undefined ? r.json : r; },
+  async vision(prompt, image, opts) { const r = await api('POST', '/functions/v1/claude', { prompt, image, tier: (opts && opts.modelTier) || 'default', json: true }); return r && r.json !== undefined ? r.json : r; },
   async text(prompt, opts) { const r = await api('POST', '/functions/v1/claude', { prompt, tier: (opts && opts.modelTier) || 'default', json: false }); return r && r.text; },
 };
 
@@ -174,6 +177,7 @@ window.native = {
     } catch (e) {}
   },
   syncReminders(st) { if (st) lastState = st; clearTimeout(remT); remT = setTimeout(syncReminders, 2500); },
+  async locate() { const p = await Geolocation.getCurrentPosition({ enableHighAccuracy: false, timeout: 10000 }); return `${p.coords.latitude.toFixed(4)},${p.coords.longitude.toFixed(4)}`; },
   haptic() { Haptics.impact({ style: ImpactStyle.Medium }).catch(() => {}); },
 };
 async function syncReminders() {
@@ -199,12 +203,18 @@ async function syncReminders() {
         if (c.got) continue; const d = at(c.d, 12); if (d > now && i < 10) list.push({ id: 4000 + i++, title: 'Check expected today', body: `$${Math.round(c.amt).toLocaleString()} ${c.note || ''}`.trim(), schedule: { at: d } });
       }
     } catch (e) {}
+    try { for (const r of (typeof window.tegaReminders === 'function' ? window.tegaReminders() : []).slice(0, 20)) list.push({ id: r.id, title: r.title, body: r.body, schedule: { at: r.at } }); } catch (e) {}
     const pend = await LocalNotifications.getPending();
-    const old = (pend.notifications || []).filter(n => n.id >= 2000 && n.id < 5000).map(n => ({ id: n.id }));
+    const old = (pend.notifications || []).filter(n => n.id >= 2000 && n.id < 6000).map(n => ({ id: n.id }));
     if (old.length) await LocalNotifications.cancel({ notifications: old });
     if (list.length) await LocalNotifications.schedule({ notifications: list });
   } catch (e) { console.warn('reminders', e); }
 }
+
+/* ---------------- deep links (tegaexe://win?text=…, Siri Shortcuts) + screen awake during a workout ---------------- */
+App.addListener('appUrlOpen', ({ url }) => { const go = () => window.tegaDeepLink ? window.tegaDeepLink(url) : setTimeout(go, 400); go(); });
+let awake = false;
+new MutationObserver(() => { const on = !!document.getElementById('g-live'); if (on !== awake) { awake = on; (on ? KeepAwake.keepAwake() : KeepAwake.allowSleep()).catch(() => {}); } }).observe(document.documentElement, { childList: true, subtree: true });
 
 /* ---------------- boot ---------------- */
 App.addListener('appStateChange', ({ isActive }) => { if (isActive) { for (const p of pollers) p.run(); window.native.syncReminders(); } });

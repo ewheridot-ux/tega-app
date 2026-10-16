@@ -9,6 +9,10 @@ set_str CFBundleDisplayName "Tega.exe"
 set_str NSCameraUsageDescription "Take photos of your pieces, art and progress."
 set_str NSPhotoLibraryUsageDescription "Add photos from your library to Datum, your art wall and your room."
 set_str NSPhotoLibraryAddUsageDescription "Save bench photos and cards to your Photos."
+set_str NSLocationWhenInUseUsageDescription "Find castings and casters near you."
 set_str UIUserInterfaceStyle "Dark"
+# tegaexe:// links for Siri Shortcuts and quick capture
+pb "Delete :CFBundleURLTypes"
+/usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes array" -c "Add :CFBundleURLTypes:0 dict" -c "Add :CFBundleURLTypes:0:CFBundleURLName string com.ewheridot.tegaexe" -c "Add :CFBundleURLTypes:0:CFBundleURLSchemes array" -c "Add :CFBundleURLTypes:0:CFBundleURLSchemes:0 string tegaexe" "$P"
 set_bool ITSAppUsesNonExemptEncryption false
 echo "Info.plist updated"
