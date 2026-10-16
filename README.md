@@ -22,11 +22,9 @@ The full Tega.exe life-OS (Today, Goals, Modeling, Datum, Gym, Money, Me) as a n
 3. App Store Connect → **Apps → + → New App**: iOS, name `Tega.exe`, bundle ID `com.ewheridot.tegaexe` (register it first under Certificates, Identifiers & Profiles if it isn't listed), SKU `tegaexe`.
 
 ### 3. GitHub secrets (repo → Settings → Secrets and variables → Actions)
+The public Supabase address, anon key and project ref live in `config/public.json`.
 | Secret | Value |
 |---|---|
-| `SUPABASE_URL` | Project URL |
-| `SUPABASE_ANON_KEY` | anon public key |
-| `SUPABASE_PROJECT_REF` | Reference ID |
 | `SUPABASE_ACCESS_TOKEN` | access token |
 | `SUPABASE_DB_PASSWORD` | database password |
 | `ANTHROPIC_API_KEY` | your Claude API key |
@@ -36,7 +34,7 @@ The full Tega.exe life-OS (Today, Goals, Modeling, Datum, Gym, Money, Me) as a n
 | `ASC_KEY_P8` | full text of the `.p8` file |
 
 ### 4. Run
-1. Actions → **Set up the cloud database** → Run workflow.
+1. Actions → **Set up the cloud database** → Run workflow (or change `ci/run-supabase`). Results are written to `ci/supabase-status.md`; iPhone builds report to `ci/ios-status.md`.
 2. Actions → **iPhone build → TestFlight** → Run workflow (it also runs on every push to `main`).
 3. Install **TestFlight** on your iPhone; the build appears there ~10–20 minutes after the workflow finishes.
 4. Open Tega.exe → **Create account** → your data moves over automatically.

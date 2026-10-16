@@ -10,7 +10,8 @@ fs.mkdirSync(www, { recursive: true });
 
 await build({ entryPoints: [path.join(root, 'src/native.js')], bundle: true, format: 'iife', target: ['safari15'], outfile: path.join(www, 'native.js'), minify: true });
 
-const cfg = { url: process.env.SUPABASE_URL || '', anon: process.env.SUPABASE_ANON_KEY || '' };
+const pub = JSON.parse(fs.readFileSync(path.join(root, 'config/public.json'), 'utf8'));
+const cfg = { url: process.env.SUPABASE_URL || pub.supabaseUrl || '', anon: process.env.SUPABASE_ANON_KEY || pub.supabaseAnonKey || '' };
 const app = fs.readFileSync(path.join(root, 'web/app.html'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'src/native.css'), 'utf8');
 const head = `<!doctype html><html><head><meta charset="utf-8">

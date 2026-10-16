@@ -3,8 +3,9 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['web/**', 'src/**', 'assets/**', 'scripts/**', 'capacitor.config.json', 'package.json', '.github/workflows/ios.yml']
+    paths: ['web/**', 'src/**', 'assets/**', 'scripts/**', 'config/**', 'capacitor.config.json', 'package.json', '.github/workflows/ios.yml']
 concurrency: { group: ios, cancel-in-progress: true }
+permissions: { contents: write }
 jobs:
   ios:
     runs-on: macos-15
@@ -19,21 +20,17 @@ jobs:
           B: ${{ secrets.ASC_KEY_ID }}
           C: ${{ secrets.ASC_ISSUER_ID }}
           D: ${{ secrets.ASC_KEY_P8 }}
-          E: ${{ secrets.SUPABASE_URL }}
-          F: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
-          missing=""; for v in A:APPLE_TEAM_ID B:ASC_KEY_ID C:ASC_ISSUER_ID D:ASC_KEY_P8 E:SUPABASE_URL F:SUPABASE_ANON_KEY; do k=${v%%:*}; n=${v#*:}; [ -z "${!k}" ] && missing="$missing $n"; done
-          if [ -n "$missing" ]; then echo "::error::Missing GitHub secrets:$missing"; exit 1; fi
-      - run: npm install --no-audit --no-fund
+          missing=""; for v in A:APPLE_TEAM_ID B:ASC_KEY_ID C:ASC_ISSUER_ID D:ASC_KEY_P8; do k=${v%%:*}; n=${v#*:}; [ -z "${!k}" ] && missing="$missing $n"; done
+          if [ -n "$missing" ]; then echo "Missing GitHub secrets:$missing" | tee -a "$RUNNER_TEMP/log.txt"; exit 1; fi
+      - run: npm install --no-audit --no-fund 2>&1 | tee -a "$RUNNER_TEMP/log.txt"
       - name: Build the app page
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-        run: npm run build
+        run: npm run build 2>&1 | tee -a "$RUNNER_TEMP/log.txt"
       - name: Create the iPhone project
         run: |
-          npx cap add ios --packagemanager SPM
-          npx cap sync ios
+          set -o pipefail
+          npx cap add ios --packagemanager SPM 2>&1 | tee -a "$RUNNER_TEMP/log.txt"
+          npx cap sync ios 2>&1 | tee -a "$RUNNER_TEMP/log.txt"
       - name: Icon and launch screen
         run: npx --yes @capacitor/assets@3 generate --ios --iconBackgroundColor '#000000' --splashBackgroundColor '#000000' --splashBackgroundColorDark '#000000'
       - name: App settings
@@ -56,7 +53,7 @@ jobs:
             -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/App.xcarchive" \
             -allowProvisioningUpdates -authenticationKeyPath "$KEYPATH" -authenticationKeyID "$KID" -authenticationKeyIssuerID "$ISS" \
             DEVELOPMENT_TEAM="$TEAM" CODE_SIGN_STYLE=Automatic CURRENT_PROJECT_VERSION=${{ github.run_number }} MARKETING_VERSION=1.0 \
-            archive | tail -40
+            archive 2>&1 | tee -a "$RUNNER_TEMP/log.txt" | tail -40; exit ${PIPESTATUS[0]}
       - name: Export
         env:
           TEAM: ${{ secrets.APPLE_TEAM_ID }}
@@ -65,10 +62,16 @@ jobs:
         run: |
           sed "s/TEAM_ID/$TEAM/" scripts/ExportOptions.plist > "$RUNNER_TEMP/ExportOptions.plist"
           xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/App.xcarchive" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath "$RUNNER_TEMP/out" \
-            -allowProvisioningUpdates -authenticationKeyPath "$KEYPATH" -authenticationKeyID "$KID" -authenticationKeyIssuerID "$ISS"
-          ls -la "$RUNNER_TEMP/out"
+            -allowProvisioningUpdates -authenticationKeyPath "$KEYPATH" -authenticationKeyID "$KID" -authenticationKeyIssuerID "$ISS" 2>&1 | tee -a "$RUNNER_TEMP/log.txt"; test -f "$RUNNER_TEMP/out/App.ipa"
       - name: Upload to TestFlight
         env:
           KID: ${{ secrets.ASC_KEY_ID }}
           ISS: ${{ secrets.ASC_ISSUER_ID }}
-        run: xcrun altool --upload-app -f "$RUNNER_TEMP/out/App.ipa" -t ios --apiKey "$KID" --apiIssuer "$ISS"
+        run: xcrun altool --upload-app -f "$RUNNER_TEMP/out/App.ipa" -t ios --apiKey "$KID" --apiIssuer "$ISS" 2>&1 | tee -a "$RUNNER_TEMP/log.txt"
+      - name: Report status to the repo
+        if: always()
+        run: |
+          { echo "# iPhone build #${{ github.run_number }} — ${{ job.status }}"; echo; date -u; echo; echo '```'; tail -120 "$RUNNER_TEMP/log.txt" 2>/dev/null; echo '```'; } > ci/ios-status.md
+          git config user.name "tega-ci"; git config user.email "ci@users.noreply.github.com"
+          git add ci/ios-status.md; git commit -m "ci: iPhone build #${{ github.run_number }} ${{ job.status }} [skip ci]" || true
+          git pull --rebase -q origin main || true; git push -q origin HEAD:main || true
