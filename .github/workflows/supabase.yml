@@ -1,0 +1,23 @@
+name: Set up the cloud database
+on: { workflow_dispatch: {} }
+jobs:
+  supabase:
+    runs-on: ubuntu-latest
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+      DBPASS: ${{ secrets.SUPABASE_DB_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with: { version: latest }
+      - name: Link project
+        run: supabase link --project-ref "$REF" -p "$DBPASS"
+      - name: Create tables and photo storage
+        run: supabase db push -p "$DBPASS"
+      - name: Deploy the Claude function
+        run: supabase functions deploy claude --project-ref "$REF"
+      - name: Save the Claude API key on the server
+        env:
+          KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: supabase secrets set ANTHROPIC_API_KEY="$KEY" --project-ref "$REF"

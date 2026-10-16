@@ -1,0 +1,11 @@
+{
+  "appId": "com.ewheridot.tegaexe",
+  "appName": "Tega.exe",
+  "webDir": "www",
+  "backgroundColor": "#000000",
+  "ios": { "contentInset": "never", "backgroundColor": "#000000", "scrollEnabled": true },
+  "plugins": {
+    "SplashScreen": { "launchAutoHide": false, "backgroundColor": "#000000", "showSpinner": false },
+    "LocalNotifications": { "iconColor": "#8b5cf6" }
+  }
+}

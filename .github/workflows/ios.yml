@@ -1,0 +1,74 @@
+name: iPhone build → TestFlight
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['web/**', 'src/**', 'assets/**', 'scripts/**', 'capacitor.config.json', 'package.json', '.github/workflows/ios.yml']
+concurrency: { group: ios, cancel-in-progress: true }
+jobs:
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Check secrets
+        env:
+          A: ${{ secrets.APPLE_TEAM_ID }}
+          B: ${{ secrets.ASC_KEY_ID }}
+          C: ${{ secrets.ASC_ISSUER_ID }}
+          D: ${{ secrets.ASC_KEY_P8 }}
+          E: ${{ secrets.SUPABASE_URL }}
+          F: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          missing=""; for v in A:APPLE_TEAM_ID B:ASC_KEY_ID C:ASC_ISSUER_ID D:ASC_KEY_P8 E:SUPABASE_URL F:SUPABASE_ANON_KEY; do k=${v%%:*}; n=${v#*:}; [ -z "${!k}" ] && missing="$missing $n"; done
+          if [ -n "$missing" ]; then echo "::error::Missing GitHub secrets:$missing"; exit 1; fi
+      - run: npm install --no-audit --no-fund
+      - name: Build the app page
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: npm run build
+      - name: Create the iPhone project
+        run: |
+          npx cap add ios --packagemanager SPM
+          npx cap sync ios
+      - name: Icon and launch screen
+        run: npx --yes @capacitor/assets@3 generate --ios --iconBackgroundColor '#000000' --splashBackgroundColor '#000000' --splashBackgroundColorDark '#000000'
+      - name: App settings
+        run: bash scripts/ios-config.sh
+      - name: App Store Connect key
+        env:
+          KEY: ${{ secrets.ASC_KEY_P8 }}
+          KID: ${{ secrets.ASC_KEY_ID }}
+        run: |
+          mkdir -p ~/.appstoreconnect/private_keys
+          printf '%s' "$KEY" > ~/.appstoreconnect/private_keys/AuthKey_$KID.p8
+          echo "KEYPATH=$HOME/.appstoreconnect/private_keys/AuthKey_$KID.p8" >> $GITHUB_ENV
+      - name: Archive
+        env:
+          TEAM: ${{ secrets.APPLE_TEAM_ID }}
+          KID: ${{ secrets.ASC_KEY_ID }}
+          ISS: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release \
+            -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            -allowProvisioningUpdates -authenticationKeyPath "$KEYPATH" -authenticationKeyID "$KID" -authenticationKeyIssuerID "$ISS" \
+            DEVELOPMENT_TEAM="$TEAM" CODE_SIGN_STYLE=Automatic CURRENT_PROJECT_VERSION=${{ github.run_number }} MARKETING_VERSION=1.0 \
+            archive | tail -40
+      - name: Export
+        env:
+          TEAM: ${{ secrets.APPLE_TEAM_ID }}
+          KID: ${{ secrets.ASC_KEY_ID }}
+          ISS: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          sed "s/TEAM_ID/$TEAM/" scripts/ExportOptions.plist > "$RUNNER_TEMP/ExportOptions.plist"
+          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/App.xcarchive" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath "$RUNNER_TEMP/out" \
+            -allowProvisioningUpdates -authenticationKeyPath "$KEYPATH" -authenticationKeyID "$KID" -authenticationKeyIssuerID "$ISS"
+          ls -la "$RUNNER_TEMP/out"
+      - name: Upload to TestFlight
+        env:
+          KID: ${{ secrets.ASC_KEY_ID }}
+          ISS: ${{ secrets.ASC_ISSUER_ID }}
+        run: xcrun altool --upload-app -f "$RUNNER_TEMP/out/App.ipa" -t ios --apiKey "$KID" --apiIssuer "$ISS"

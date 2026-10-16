@@ -1,0 +1,8 @@
+node_modules/
+www/
+ios/
+android/
+test/*.png
+test/native.test.js
+test/_build.mjs
+.DS_Store
