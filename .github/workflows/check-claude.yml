@@ -1,0 +1,19 @@
+name: Check the Claude coach
+on:
+  workflow_dispatch:
+  push: { branches: [main], paths: ['ci/run-check'] }
+permissions: { contents: write }
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ask the coach a question
+        run: |
+          URL=$(python3 -c "import json;print(json.load(open('config/public.json'))['supabaseUrl'])")
+          ANON=$(python3 -c "import json;print(json.load(open('config/public.json'))['supabaseAnonKey'])")
+          curl -sS -m 60 "$URL/functions/v1/claude" -H "Authorization: Bearer $ANON" -H "apikey: $ANON" -H "Content-Type: application/json" \
+            -d '{"prompt":"Reply with JSON {\"reply\": \"<one short hype line for a model who lifts>\"}","tier":"quick","json":true}' > "$RUNNER_TEMP/out.txt" || true
+          { echo "# Claude coach check — $(date -u)"; echo; echo '```'; head -c 600 "$RUNNER_TEMP/out.txt"; echo; echo '```'; } > ci/claude-check.md
+          git config user.name "tega-ci"; git config user.email "ci@users.noreply.github.com"
+          git add ci/claude-check.md; git commit -m "ci: coach check [skip ci]" || true; git pull --rebase -q origin main || true; git push -q origin HEAD:main || true
