@@ -23,27 +23,25 @@ if not os.path.exists('sprites/base.png'):
     if not r: sys.exit(1)
     img(r['image']).save('sprites/base.png'); log('base ok', r.get('usage'))
 base = Image.open('sprites/base.png').convert('RGBA')
-# 2) animations: submit all, then poll
+# 2) animations, one at a time (free tier = 1 concurrent job)
 jobs = {}
+def wait(mid, jid):
+    t0 = time.time()
+    while time.time() - t0 < 600:
+        time.sleep(6)
+        j = requests.get(f'{B}/background-jobs/{jid}', headers=H, timeout=60).json(); st = j.get('status')
+        if st == 'completed':
+            lr = j.get('last_response') or {}; fr = [img(x) for x in (lr.get('images') or lr.get('frames') or [])]
+            if not fr: log('no frames', mid, json.dumps(lr)[:500]); return
+            w, h = fr[0].size; sheet = Image.new('RGBA', (w * len(fr), h))
+            for i, f in enumerate(fr): sheet.paste(f, (i * w, 0))
+            sheet.save(f'sprites/{mid}.png'); log('done', mid, len(fr), 'frames'); return
+        if st == 'failed': log('FAILED', mid, json.dumps(j)[:600]); return
+    log('timeout', mid)
 for m in plan:
     if os.path.exists(f"sprites/{m['id']}.png"): continue
     r = post('/animate-with-text-v3', {'first_frame': b64(base), 'action': m['action'], 'frame_count': m['frames'], 'enhance_prompt': True})
-    if r: jobs[m['id']] = r['background_job_id']; log('submitted', m['id'], r.get('usage'))
-    time.sleep(1)
-t0 = time.time()
-while jobs and time.time() - t0 < 2400:
-    time.sleep(8)
-    for mid, jid in list(jobs.items()):
-        j = requests.get(f'{B}/background-jobs/{jid}', headers=H, timeout=60).json()
-        st = j.get('status')
-        if st == 'completed':
-            lr = j.get('last_response') or {}; ims = lr.get('images') or lr.get('frames') or []
-            fr = [img(x) for x in ims]
-            if not fr: log('no frames', mid, json.dumps(lr)[:500]); del jobs[mid]; continue
-            w, h = fr[0].size; sheet = Image.new('RGBA', (w * len(fr), h))
-            for i, f in enumerate(fr): sheet.paste(f, (i * w, 0))
-            sheet.save(f'sprites/{mid}.png'); log('done', mid, len(fr), 'frames', w, h); del jobs[mid]
-        elif st == 'failed': log('FAILED', mid, json.dumps(j)[:600]); del jobs[mid]
+    if r: log('submitted', m['id']); wait(m['id'], r['background_job_id'])
 log('left', list(jobs))
 man = {m['id']: {'frames': m['frames'], 'ms': m['ms'], 'loop': m['loop']} for m in plan if os.path.exists(f"sprites/{m['id']}.png")}
 json.dump(man, open('sprites/manifest.json', 'w'), indent=1)
