@@ -1,0 +1,26 @@
+name: Daily sync → app
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['ci/feed/feed.bin', 'ci/run-feed']
+concurrency: { group: feed, cancel-in-progress: false }
+permissions: { contents: write }
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -q pynacl requests
+      - name: Ingest
+        env:
+          SUPA_SERVICE: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPA_URL: https://rlgoetbrlrsdijtlwnsb.supabase.co
+        run: python scripts/feed_ingest.py
+      - name: Save
+        if: always()
+        run: |
+          git config user.name "tega-ci"; git config user.email "ci@users.noreply.github.com"
+          git add ci/feed/pubkey.txt ci/feed/chase.json ci/feed/status.md 2>/dev/null || true
+          git commit -qm "ci: feed [skip ci]" || true; git pull --rebase -q origin main || true; git push -q origin HEAD:main || true

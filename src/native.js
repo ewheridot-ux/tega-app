@@ -181,6 +181,32 @@ const sample = {
   async text(prompt, opts) { const r = await api('POST', '/functions/v1/claude', { prompt, tier: (opts && opts.modelTier) || 'default', json: false }); return r && r.text; },
 };
 
+
+/* ---------------- connectors on the phone: answered from the daily cloud sync (feed/latest) ---------------- */
+// The Claude version calls Gmail / bank / Instagram directly. The phone app gets the same answers from a feed
+// that a daily scheduled sync writes, so all the existing sync code just works.
+let feedCache = null, feedAt = 0;
+async function feedCalls() { if (!feedCache || Date.now() - feedAt > 60000) { const row = await getDoc('feed/latest'); feedCache = row && row.data && row.data.calls; feedAt = Date.now(); } return feedCache; }
+const mcpFeed = {
+  native: true,
+  async callTool(server, tool, input = {}) {
+    const C = await feedCalls(); if (!C) throw { code: 'no_feed' };
+    let v;
+    if (server === 'Gmail' && tool === 'search_threads') v = /posh|partiful/i.test(input.query || '') ? C.gmail_social : C.gmail_agency;
+    else if (server === 'Era Context' && tool === 'accounts__list_financial_accounts') v = C.era_accounts;
+    else if (server === 'Era Context' && tool === 'transactions__search_transactions') {
+      let t = ((C.era_tx || {}).transactions || []).slice();
+      if (input.period_start) t = t.filter(x => x.date >= input.period_start); if (input.period_end) t = t.filter(x => x.date <= input.period_end);
+      if (input.direction === 'credit') t = t.filter(x => x.amount > 0); if (input.direction === 'debit') t = t.filter(x => x.amount < 0);
+      if (input.min_amount != null) t = t.filter(x => x.amount >= input.min_amount); if (input.max_amount != null) t = t.filter(x => x.amount <= input.max_amount);
+      t = t.slice(0, input.limit || 50); v = { transactions: t, total_results: t.length };
+    }
+    else if (tool === 'instagram_insights') v = (C.ig || {})[String(input.fields || '')];
+    if (v === undefined || v === null) throw { code: 'no_feed' };
+    return { payload: v };
+  },
+};
+
 window.claude = {
   native: true,
   async use(cap) {
@@ -189,7 +215,8 @@ window.claude = {
     if (cap === 'assets') return assets;
     if (cap === 'downloads') return downloads;
     if (cap === 'sample') return sample;
-    return null; // 'mcp' (Gmail, Era, Instagram, Yelp) lives in the Claude version for now
+    if (cap === 'mcp') return mcpFeed;
+    return null;
   },
 };
 

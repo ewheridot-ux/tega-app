@@ -7527,7 +7527,12 @@ function autoCloseWorkout(){ const g=S.gym; if (!g||!g.live||Date.now()-g.live.t
     if (n) { if (!autoCloseWorkout.q){ autoCloseWorkout.q=1; setTimeout(()=>{ try { gFinish(); autoNote('gym','Closed a workout left open'); } catch(e){} autoCloseWorkout.q=0; },0); } }
     else { g.trash ||= []; g.trash.push({...g.live, d:g.live.d||TODAY, deletedAt:TODAY, discarded:1}); g.live=null; autoNote('gym','Cleared an empty workout left open'); } } catch(e){ console.warn('autoclose',e); } }
 function autoToday(){ const L=(S.autoLog||[]).filter(x=>x.d===TODAY); if (!L.length) return ''; return `<div class="auto-l">✦ ${L.map(x=>esc(x.msg)).join(' · ')}</div>`; }
-function runAutos(){ for (const f of [autoCloseWorkout, autoCarry, autoHabits, autoDeduct, autoTop3]) { try { f(); } catch(e){ console.warn('auto',f.name,e); } } }
+// chase ONE: once a month, when the oldest unpaid job is 9+ months old, a draft is queued for the daily sync to put in Gmail
+function autoChase(){ try { const st=stmtNow(), P=mPipe(), E=mAll(), un=E.filter(e=>P[e.id]&&P[e.id].stage==='invoiced').sort((a,b)=>a.start.localeCompare(b.start)), old=un[0];
+  if (!old || daysBetween(old.start,TODAY)<270) { S.chaseQ=null; return; }
+  const body=`Hi Roza and Jawahar,\n\nPer my financial statement dated ${nice(st.asOf)}, ${st.asOf.slice(0,4)}, my account balance is ${money0(st.balance)}. The oldest unpaid job is ${old.c} on ${parseD(old.start).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}, and ${un.length} jobs are still outstanding.\n\nCould you share a payment schedule for the remaining balance? Since I'm modeling full time, consistent payments twice a month would really help.\n\nThank you,\nTega`;
+  S.chaseQ={key:TODAY.slice(0,7), to:['roza@onemanagement.com','JC@onemanagement.com'], subject:'Payment schedule for outstanding jobs', body}; } catch(e){} }
+function runAutos(){ for (const f of [autoCloseWorkout, autoCarry, autoHabits, autoDeduct, autoTop3, autoChase]) { try { f(); } catch(e){ console.warn('auto',f.name,e); } } }
 
 /* ===================== phone sync (b185): Apple Health, location, iPhone Calendar ===================== */
 const NS_CITIES=[['Chicago',41.88,-87.63],['New York',40.71,-74.0],['Los Angeles',34.05,-118.24],['London',51.51,-0.13],['Milan',45.46,9.19],['Indianapolis',39.77,-86.16],['Miami',25.76,-80.19],['Paris',48.86,2.35],['Atlanta',33.75,-84.39]];
