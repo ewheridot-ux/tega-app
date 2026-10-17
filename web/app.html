@@ -1001,6 +1001,25 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 .a-mr{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.a-mr span{font-size:12px;padding:4px 8px;border-radius:99px;border:1px solid var(--rc);display:flex;gap:5px}.a-mr b{color:var(--rc)}
 .a-loot{margin:12px 0 0;text-align:left}.a-lr{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:4px 0}
 .a-ml{font-style:normal;font-weight:900}
+
+/* live workout v2 */
+#g-live{background:radial-gradient(120% 60% at 50% 0%,color-mix(in srgb,#2a5cff 14%,var(--bg)),var(--bg) 60%)}
+.gl-hud{padding:8px 16px 10px;display:grid;gap:7px;border-bottom:1px solid var(--line)}
+.gl-seg{display:flex;gap:2px}.gl-seg i{flex:1;height:6px;border-radius:2px;background:color-mix(in srgb,var(--fg) 12%,transparent)}.gl-seg i.w{flex:.6}.gl-seg i.on{background:var(--mc);box-shadow:0 0 6px var(--mc)}
+.gl-boss{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}.gl-boss i{flex:1;height:5px;border-radius:3px;background:color-mix(in srgb,var(--fg) 10%,transparent);overflow:hidden}.gl-boss b{display:block;height:100%;background:linear-gradient(90deg,#ff4f6d,#ff9a3d);transition:width .5s}
+.gl-hr{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}.gl-hr b{color:var(--fg)}
+.gl-ex{position:relative;border-left:3px solid var(--mc);transition:opacity .2s,transform .2s}
+.gl-ex.act{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--mc) 70%,transparent),0 0 26px color-mix(in srgb,var(--mc) 22%,transparent)}
+.gl-ex.idle:not(.done){opacity:.72}
+.gl-clr{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:var(--card);border-left:3px solid var(--mc)}.gl-clr>span:not(.g-th){flex:1;min-width:0;display:grid}.gl-clr b{font-size:14px}.gl-clr small{font-size:11px;letter-spacing:.06em;color:var(--good);font-weight:700}.gl-clr em{font-style:normal;color:var(--good);font-weight:900}
+.gl-row.nx{background:color-mix(in srgb,var(--mc) 12%,transparent);border-radius:12px;outline:1.5px solid color-mix(in srgb,var(--mc) 55%,transparent)}.gl-row.nx .gl-ok{border-color:var(--mc);animation:glPulse 1.6s ease-in-out infinite}
+@keyframes glPulse{50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--mc) 25%,transparent)}}
+.gl-pop{position:absolute;left:50%;top:170px;transform:translateX(-50%);font-weight:900;font-size:26px;color:#ff9a3d;text-shadow:0 2px 12px rgba(255,120,60,.55);pointer-events:none;animation:glUp 1.2s ease-out forwards;z-index:5;font-variant-numeric:tabular-nums}.gl-pop.crit{color:#ffd23d;font-size:34px;text-shadow:0 0 18px rgba(255,210,60,.8)}
+@keyframes glUp{0%{opacity:0;transform:translate(-50%,10px) scale(.8)}15%{opacity:1;transform:translate(-50%,0) scale(1.1)}100%{opacity:0;transform:translate(-50%,-50px) scale(1)}}
+.gl-rest{grid-template-columns:auto minmax(0,1fr);align-items:center;gap:14px;background:linear-gradient(160deg,#0a1222,#0d1b33);color:#e8f3ff;border:1px solid rgba(124,200,255,.4)}
+.gl-rest[hidden]{display:none!important}
+.gl-rr{position:relative;width:76px;height:76px;display:grid;place-items:center}.gl-ring{position:absolute;inset:0;transform:rotate(-90deg)}.gl-ring circle{fill:none;stroke-width:5}.gl-ring .bg{stroke:rgba(255,255,255,.1)}.gl-ring .fg{stroke:#7cc8ff;stroke-dasharray:100;stroke-linecap:round;transition:stroke-dashoffset .5s linear}.gl-rr b{font-size:19px;position:relative}
+.gl-rn{display:grid;gap:2px;min-width:0}.gl-rn small{font-size:10px;letter-spacing:.18em;color:#7cc8ff;font-weight:800}.gl-rn b{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gl-rn .btn.ghost{color:#e8f3ff;border-color:rgba(124,200,255,.3)}
 </style>
 
 <div class="app" id="app"></div>
@@ -1010,7 +1029,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b164';
+const BUILD='b165';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -6046,41 +6065,58 @@ function gAdd(where,x){ const L=where==='plan'?gPlan().ex:G_().live.ex; L.push({
 
 /* ---------- live workout ---------- */
 let gTick=null;
-function gStart(){ const g=G_(); if (!g.live){ const P=gPlan(); g.live={id:'w'+uid(), d:TODAY, t0:Date.now(), name:P.name, mode:P.mode, ex:P.ex.map(e=>({x:e.x, grp:e.grp, max:e.max, sets:e.sets.map(s=>({w:s.w, r:s.r, t:s.t||'n', ok:false}))})), restEnd:0}; gSaveLive(); } gLiveOpen(); }
+function gStart(){ const g=G_(); if (!g.live){ glOpen={}; const P=gPlan(); g.live={id:'w'+uid(), d:TODAY, t0:Date.now(), name:P.name, mode:P.mode, ex:P.ex.map(e=>({x:e.x, grp:e.grp, max:e.max, sets:e.sets.map(s=>({w:s.w, r:s.r, t:s.t||'n', ok:false}))})), restEnd:0}; gSaveLive(); } gLiveOpen(); }
 function gSaveLive(){ clearTimeout(gSaveLive.t); gSaveLive.t=setTimeout(()=>commit({skipXp:true}),250); }
 function gLiveOpen(){ let m=document.getElementById('g-live'); if(!m){ m=document.createElement('div'); m.id='g-live'; document.body.appendChild(m); } document.body.classList.add('g-noscroll'); gLiveRender(); clearInterval(gTick); gTick=setInterval(gLiveTick,500); }
 function gLiveClose(){ document.getElementById('g-live')?.remove(); document.body.classList.remove('g-noscroll'); clearInterval(gTick); render(); }
 function gPrevTxt(x){ const H=gHist(x), l=H[H.length-1]; if(!l) return ''; const X=GX[x]; return l.sets.map(z=>X.k==='t'||X.k==='stretch'?z.r+'s':X.k==='cardio'?z.r+' min':(z.w?gShowW(z.w)+'×':'')+z.r).join(', '); }
+/* ---------- live workout: dungeon HUD, focus card, damage pops, rest ring ---------- */
+let glOpen={};
+const glDmg = (x,z) => { const X=GX[x]; if (!X||X.k==='cardio'||X.k==='stretch') return 0; return Math.round(X.base ? z.w*z.r : z.r*gBodyLb()*.5); };
+function glActive(L){ const i=L.ex.findIndex(e=>e.sets.some(z=>!z.ok)); return i<0?L.ex.length-1:i; }
+function glNext(L){ for (const e of L.ex){ let n=0; for (const z of e.sets){ if (z.t!=='w') n++; if (!z.ok){ const X=GX[e.x]; return `${X.n} · ${z.t==='w'?'warm-up':'set '+n} · ${X.k==='cardio'?z.r+' min':(!X.base?'':gShowW(z.w)+' '+gU()+' × ')+z.r+(X.k==='t'||X.k==='stretch'?'s':'')}`; } } } return 'Last set done. Hit Finish.'; }
+function glPop(txt, crit){ const m=document.getElementById('g-live'); if(!m) return; const d=document.createElement('div'); d.className='gl-pop'+(crit?' crit':''); d.textContent=txt; m.appendChild(d); setTimeout(()=>d.remove(),1300); }
+function glHud(L){ let dmg=0, ok=0, all=0, prs=0; const segs=[];
+  L.ex.forEach(e=>{ const b=gBest(e.x); let top=0; e.sets.forEach(z=>{ all++; if (z.ok){ ok++; dmg+=glDmg(e.x,z); if (GX[e.x]?.base) top=Math.max(top,g1rm(z.w,z.r)); } segs.push(`<i class="${z.ok?'on':''} ${z.t==='w'?'w':''}" style="--mc:${GMC[GX[e.x]?.p[0]]||'#7cc8ff'}"></i>`); }); if (b.e && top>b.e+.01) prs++; });
+  let B=null; try { B=aBoss(); } catch(e){} const hp=B?Math.max(0,B.hp-dmg-prs*B.max*.05):0;
+  return `<div class="gl-hud"><div class="gl-seg">${segs.join('')}</div>
+    ${B?`<div class="gl-boss"><span>🗿</span><i><b style="width:${Math.round(hp/B.max*100)}%"></b></i><span class="num">${Math.round(gShowW(hp)/1000*10)/10}k HP</span></div>`:''}
+    <div class="gl-hr"><span>⚔️ <b class="num">${Math.round(gShowW(dmg)).toLocaleString()}</b> dmg</span><span>${prs?`💥 <b class="num">${prs}</b> crit${prs>1?'s':''}`:`<b class="num">${ok}/${all}</b> sets`}</span><span>✨ <b class="num">+${25+prs*10}</b> XP</span></div></div>`; }
 function gLiveRender(){ const m=document.getElementById('g-live'), L=G_().live; if(!m||!L) return; const sc=m.querySelector('.gl-body')?.scrollTop||0;
   const done=L.ex.reduce((a,e)=>a+e.sets.filter(z=>z.ok).length,0), all=L.ex.reduce((a,e)=>a+e.sets.length,0);
+  const act=glActive(L), act2=L.ex[act]?.grp; let nxSet=false;
   let prevGrp=null; const cards=L.ex.map((e,i)=>{ const X=GX[e.x], prev=gPrevTxt(e.x), t=X.k==='t'||X.k==='stretch', cardio=X.k==='cardio', bw=!X.base, gs=e.grp&&e.grp!==prevGrp, ge=e.grp&&L.ex[i+1]?.grp!==e.grp; prevGrp=e.grp; let n=0;
-    return `${gs?`<div class="gl-ss"><span>🔗 Superset</span>`:''}<div class="gl-ex ${e.sets.every(z=>z.ok)?'done':''} ${e.grp?'in-ss':''}">
+    const fin=e.sets.every(z=>z.ok), isAct=i===act||(act2&&e.grp===act2), mc=GMC[X.p[0]]||'#7cc8ff';
+    if (fin && !glOpen[i]) return `${gs?`<div class="gl-ss"><span>🔗 Superset</span>`:''}<button class="gl-ex gl-clr" style="--mc:${mc}" onclick="glOpen[${i}]=1;gLiveRender()">${gThumb(e.x)}<span><b>${esc(X.n)}</b><small>CLEARED · ${e.sets.filter(z=>z.t!=='w').length} sets${glDmg(e.x,e.sets[0])?` · ${Math.round(gShowW(e.sets.reduce((a,z)=>a+glDmg(e.x,z),0))).toLocaleString()} dmg`:''}</small></span><em>✓</em></button>${ge?'</div>':''}`;
+    return `${gs?`<div class="gl-ss"><span>🔗 Superset</span>`:''}<div class="gl-ex ${fin?'done':''} ${e.grp?'in-ss':''} ${isAct?'act':'idle'}" style="--mc:${mc}">
     <div class="gl-eh"><button class="gl-en" onclick="gExInfo('${e.x}')">${gThumb(e.x)}<span><b>${esc(X.n)}${e.max?' <em class="g-max">MAX EFFORT</em>':''}</b><small>${X.side?'per side · ':''}${prev?`last: ${prev}`:X.p.map(p=>GMUS[p]).join(' · ')}</small></span></button><button class="g-ic" onclick="gExMenu('live',${i})" aria-label="More">⋯</button></div>
     ${!cardio?`<button class="gl-restchip" onclick="gRestEdit('${e.x}')">⏱ Rest ${gFmt(gRestFor(e.x))}</button>`:''}${G_().notes[e.x]?`<div class="gl-note">📝 ${esc(G_().notes[e.x])}</div>`:''}
     <div class="gl-sets"><div class="gl-row gl-hd"><span>Set</span><span>${cardio||t||bw?'':gU()}</span><span>${cardio?'min':t?'sec':'reps'}</span><span></span></div>
-    ${e.sets.map((z,j)=>{ const lab=z.t==='w'?'W':z.t==='max'?'MAX':String(++n); return `<div class="gl-row ${z.ok?'ok':''} ${z.t==='w'?'warm':''} ${z.t==='max'?'maxs':''}"><span class="gl-sn">${lab}</span>
+    ${e.sets.map((z,j)=>{ const lab=z.t==='w'?'W':z.t==='max'?'MAX':String(++n); const nx=isAct&&!z.ok&&!nxSet; if (nx) nxSet=true; return `<div class="gl-row ${z.ok?'ok':''} ${z.t==='w'?'warm':''} ${z.t==='max'?'maxs':''} ${nx?'nx':''}"><span class="gl-sn">${lab}</span>
       ${t||bw||cardio?`<span class="gl-bw">${bw&&!t&&!cardio?'BW':''}</span>`:`<span class="gl-st"><button onclick="gAdj(${i},${j},'w',-1)">−</button><input inputmode="decimal" value="${gShowW(z.w)}" onchange="gIn(${i},${j},'w',this.value)"><button onclick="gAdj(${i},${j},'w',1)">+</button></span>`}
       <span class="gl-st"><button onclick="gAdj(${i},${j},'r',-1)">−</button><input inputmode="numeric" value="${z.r}" onchange="gIn(${i},${j},'r',this.value)"><button onclick="gAdj(${i},${j},'r',1)">+</button></span>
       <button class="gl-ok" onclick="gTick1(${i},${j})" aria-label="Set done">${z.ok?'✓':''}</button></div>`; }).join('')}
     ${e.max?`<div class="gl-note">🔥 Max effort: on the MAX set, do as many clean reps as you can. It recalibrates your weights.</div>`:''}
-    <div class="row" style="gap:6px"><button class="btn ghost sm" onclick="gSetAdd(${i})">+ Set</button>${e.sets.length>1?`<button class="btn ghost sm" onclick="gSetDel(${i})">− Set</button>`:''}${e.rir!=null?`<span class="gl-rir">RiR ${e.rir===4?'4+':e.rir}</span>`:''}</div></div></div>${ge?'</div>':''}`; }).join('');
-  m.innerHTML=`<div class="gl-top"><button class="gl-min" onclick="gDiscardAsk()" aria-label="Discard">✕</button><div class="gl-tt"><b id="gl-clock" class="num">0:00</b><small>${esc(L.name)} · ${done}/${all} sets</small></div><button class="gl-min" onclick="gLiveClose()" aria-label="Minimize">⌄</button><button class="gl-min" onclick="gAddSheet('live')" aria-label="Add exercise">＋</button><button class="btn sm gl-fin" onclick="gFinishAsk()">Finish</button></div>
+    <div class="row" style="gap:6px">${fin&&glOpen[i]?`<button class="btn ghost sm" onclick="delete glOpen[${i}];gLiveRender()">Collapse</button>`:''}<button class="btn ghost sm" onclick="gSetAdd(${i})">+ Set</button>${e.sets.length>1?`<button class="btn ghost sm" onclick="gSetDel(${i})">− Set</button>`:''}${e.rir!=null?`<span class="gl-rir">RiR ${e.rir===4?'4+':e.rir}</span>`:''}</div></div></div>${ge?'</div>':''}`; }).join('');
+  m.innerHTML=`<div class="gl-top"><button class="gl-min" onclick="gDiscardAsk()" aria-label="Discard">✕</button><div class="gl-tt"><b id="gl-clock" class="num">0:00</b><small>${esc(L.name)} · ${done}/${all} sets</small></div><button class="gl-min" onclick="gLiveClose()" aria-label="Minimize">⌄</button><button class="gl-min" onclick="gAddSheet('live')" aria-label="Add exercise">＋</button><button class="btn sm gl-fin" onclick="gFinishAsk()">Finish</button></div>${glHud(L)}
   <div class="gl-body">${cards}<button class="btn ghost" style="width:100%;justify-content:center;margin:6px 0 100px" onclick="gAddSheet('live')">+ Add exercise</button></div>
-  <div class="gl-rest" id="gl-rest" hidden><div class="gl-rbar"><i id="gl-rfill"></i></div><div class="row between"><button class="btn ghost sm" onclick="gRest(-15)">−15</button><div style="text-align:center"><small class="sub">Rest</small><b id="gl-rtime" class="num" style="display:block">0:00</b></div><button class="btn ghost sm" onclick="gRest(15)">+15</button><button class="btn sm" onclick="gRest(0,true)">Skip</button></div></div>`;
+  <div class="gl-rest" id="gl-rest" hidden><div class="gl-rr"><svg viewBox="0 0 64 64" class="gl-ring"><circle cx="32" cy="32" r="28" class="bg"/><circle cx="32" cy="32" r="28" class="fg" id="gl-rfill" pathLength="100"/></svg><b id="gl-rtime" class="num">0:00</b></div>
+    <div class="gl-rn"><small>RECOVERING · NEXT</small><b>${esc(glNext(L))}</b><div class="row" style="gap:6px;margin-top:6px"><button class="btn ghost sm" onclick="gRest(-15)">−15</button><button class="btn ghost sm" onclick="gRest(15)">+15</button><button class="btn sm" onclick="gRest(0,true)">Skip</button></div></div></div>`;
   m.querySelector('.gl-body').scrollTop=sc; gLiveTick(); }
 function gLiveTick(){ const L=G_().live; if(!L) return; const c=document.getElementById('gl-clock'); if (c) c.textContent=gFmt((Date.now()-L.t0)/1000);
   const r=document.getElementById('gl-rest'), left=(L.restEnd-Date.now())/1000; if (!r) return;
-  if (left>0){ r.hidden=false; document.getElementById('gl-rtime').textContent=gFmt(Math.ceil(left)); document.getElementById('gl-rfill').style.width=Math.max(0,Math.min(100,left/(L.restLen||60)*100))+'%'; }
+  if (left>0){ r.hidden=false; document.getElementById('gl-rtime').textContent=gFmt(Math.ceil(left)); document.getElementById('gl-rfill').style.strokeDashoffset=String(100-Math.max(0,Math.min(100,left/(L.restLen||60)*100))); }
   else { if (!r.hidden && L.restEnd){ L.restEnd=0; try { navigator.vibrate && navigator.vibrate([120,80,120]); } catch(e){} toast('Rest done — next set'); } r.hidden=true; } }
 function gRest(d, skip){ const L=G_().live; if(!L) return; if (skip) L.restEnd=0; else { L.restEnd=Math.max(Date.now(), L.restEnd)+d*1000; L.restLen=Math.max(L.restLen||60,(L.restEnd-Date.now())/1000); } window.native?.restAlarm?.(L.restEnd); gSaveLive(); gLiveTick(); }
 function gRestEdit(x){ const cur=gRestFor(x); gSheet(`<span class="tag">Rest timer</span><h2 class="g-sh-t">${esc(GX[x].n)}</h2><div class="g-opts">${[30,45,60,75,90,120,150,180,240].map(s=>`<button class="${cur===s?'on':''}" onclick="G_().rest['${x}']=${s};gSheetClose();gSaveLive();gLiveRender()">${gFmt(s)}</button>`).join('')}</div>`); }
 function gAdj(i,j,f,dir){ const L=G_().live, z=L.ex[i].sets[j], X=GX[L.ex[i].x]; if (f==='w'){ const step=gU()==='kg'?2.5*2.2046:(X.inc||5); z.w=Math.max(0, Math.round((z.w+dir*step)*10)/10); } else z.r=Math.max(0, z.r+dir*(X.k==='t'||X.k==='stretch'?5:1));
   for (let k=j+1;k<L.ex[i].sets.length;k++){ const q=L.ex[i].sets[k]; if (!q.ok && q.t===z.t) q[f]=z[f]; } gSaveLive(); gLiveRender(); }
 function gIn(i,j,f,v){ const L=G_().live, z=L.ex[i].sets[j]; z[f]= f==='w' ? Math.max(0,gFromU(v)) : Math.max(0,parseInt(v)||0); for (let k=j+1;k<L.ex[i].sets.length;k++){ const q=L.ex[i].sets[k]; if (!q.ok && q.t===z.t) q[f]=z[f]; } gSaveLive(); }
-function gTick1(i,j){ const L=G_().live, e=L.ex[i], z=e.sets[j]; z.ok=!z.ok;
+function gTick1(i,j){ const L=G_().live, e=L.ex[i], z=e.sets[j]; const wasBest=GX[e.x]?.base?gBest(e.x).e:0; z.ok=!z.ok; let pop=null;
+  if (z.ok){ const d=glDmg(e.x,z), crit=wasBest && GX[e.x].base && z.t!=='w' && g1rm(z.w,z.r)>wasBest+.01; if (d||crit) pop=[crit?`CRIT! ${Math.round(gShowW(d)).toLocaleString()}`:`−${Math.round(gShowW(d)).toLocaleString()}`, crit]; try { window.native?.haptic?.(); } catch(_){} }
   if (z.ok){ const nextInGrp=e.grp && L.ex[i+1]?.grp===e.grp; const rest=GX[e.x].k==='cardio'?0:z.t==='w'?45:gRestFor(e.x); if (!nextInGrp && rest){ L.restEnd=Date.now()+rest*1000; L.restLen=rest; } else L.restEnd=0;
     const ex=e.grp?L.ex.filter(q=>q.grp===e.grp):[e]; if (ex.every(q=>q.sets.every(s=>s.ok)) && gLift(e.x) && e.rir==null) setTimeout(()=>gRirAsk(e.grp?L.ex.indexOf(ex[ex.length-1]):i),350); }
-  window.native?.restAlarm?.(G_().live&&G_().live.restEnd); gSaveLive(); gLiveRender(); }
+  window.native?.restAlarm?.(G_().live&&G_().live.restEnd); gSaveLive(); gLiveRender(); if (pop) glPop(pop[0],pop[1]); }
 function gRirAsk(i){ const e=G_().live.ex[i]; if(!e) return; gSheet(`<span class="tag">${esc(GX[e.x].n)}</span><h2 class="g-sh-t">How many more reps did you have left?</h2><div class="help">On your hardest set. It tunes your next workout.</div>
   <div class="g-rir">${[[0,'0','Failure'],[1,'1','Near failure'],[2,'2','Challenging'],[3,'3','Moderate'],[4,'4+','Easy']].map(([v,l,s])=>`<button class="${e.rir===v?'on':''}" onclick="G_().live.ex[${i}].rir=${v};gSheetClose();gSaveLive();gLiveRender()"><b>${l}</b><small>${s}</small></button>`).join('')}</div>`); }
 function gWarmAdd(i){ const e=G_().live.ex[i], w=(e.sets.find(z=>z.t!=='w')||e.sets[0]).w; e.sets.unshift({w:gRound(e.x,w*.5), r:8, t:'w', ok:false}); gSheetClose(); gSaveLive(); gLiveRender(); }
