@@ -986,7 +986,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b161';
+const BUILD='b162';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -4136,7 +4136,7 @@ function vContent(){
         <button class="btn" style="width:100%;justify-content:center;margin-top:12px" onclick="openLog('post')">📱 Log a post</button></div>
       <div class="card sec"><div class="hdr"><h2>In the works</h2><span class="sub">${live.length}</span></div>${live.length?live.map(ideaRow).join(''):`<div class="empty">Nothing in progress. Move an idea to Script from the Ideas tab.</div>`}</div>
       ${feed.length?`<div class="card sec"><div class="hdr"><h2>From your week</h2><span class="sub">post what you're already doing</span></div>${feed.map(f=>{ const P=PILLARS.find(p=>p[0]===f.p); return `<div class="ct-feed"><span class="ct-pl" style="--c:${P[3]}">${P[2]}</span><div style="flex:1;min-width:0"><b>${esc(f.t)}</b><small>${esc(f.why)}</small></div><button class="btn sm" onclick="ideaQuick(${JSON.stringify(f.t).replace(/"/g,'&quot;')},'${f.p}')">+ idea</button><button class="mm-dis" onclick="ideaSkip(${JSON.stringify(f.t).replace(/"/g,'&quot;')})" aria-label="Skip">✕</button></div>`; }).join('')}</div>`:''}
-      <div class="card sec"><div class="hdr"><h2>Pillar mix</h2><span class="sub">last 30 days · ${tot} post${tot===1?'':'s'}</span></div>
+      <div class="card sec"><div class="hdr"><h2>Pillar mix</h2><span class="sub">last 30 days · ${tot} post${tot===1?'':'s'}</span></div><div class="sub" style="font-size:12px;margin:-4px 0 8px">Wrong pillar? Tap the post under Posted ↓</div>
         <div class="ct-mix">${PILLARS.map(([k,l,ic,c])=>`<i style="flex:${byP[k]||0};background:${c}"></i>`).join('')||''}${tot?'':'<i style="flex:1;background:var(--card2)"></i>'}</div>
         <div class="ct-leg">${PILLARS.map(([k,l,ic,c])=>`<span><i style="background:${c}"></i>${ic} ${l} <b class="num">${byP[k]||0}</b></span>`).join('')}</div>
         ${tot&&!byP.datum?`<div class="help" style="margin-top:8px">No Datum posts this month — a bench clip counts toward both content and the grillz track.</div>`:''}</div>${postedCard()}`;
@@ -6297,11 +6297,12 @@ function postedCard(){ const L=(S.logs||[]).filter(l=>l.kind==='post').sort((a,b
 function postEdit(id){ const l=(S.logs||[]).find(x=>x.id===id); if(!l) return; const opts=LOGK.post.opts.includes(l.a)?LOGK.post.opts:[l.a,...LOGK.post.opts];
   gSheet(`<h2 class="g-sh-t">${PICON[l.a]||'📱'} Post</h2><div class="stack" style="gap:8px">
     <div class="row" style="gap:8px;flex-wrap:nowrap"><select id="pe-a" class="inp" style="flex:1;min-width:0">${opts.map(o=>`<option ${o===l.a?'selected':''}>${esc(o)}</option>`).join('')}</select><input id="pe-d" class="inp" type="date" style="flex:1;min-width:0" value="${l.d}" max="${TODAY}"></div>
+    <select id="pe-p" class="inp" style="width:100%">${PILLARS.map(([k,l,ic])=>`<option value="${k}" ${k===(l.pillar||pillarOf(l.a||''))?'selected':''}>${ic} ${l}</option>`).join('')}</select>
     <input id="pe-b" class="inp" placeholder="Link" inputmode="url" value="${esc(l.b||'')}">
     <div class="row" style="gap:8px;flex-wrap:nowrap"><input id="pe-v" class="inp" style="flex:1;min-width:0" type="number" inputmode="numeric" placeholder="Views" value="${l.views||''}"><input id="pe-l" class="inp" style="flex:1;min-width:0" type="number" inputmode="numeric" placeholder="Likes" value="${l.likes||''}"></div>
     <div class="row" style="gap:8px">${safeUrl(l.b)?`<a class="btn ghost sm" href="${esc(safeUrl(l.b))}" target="_blank" rel="noopener">Open</a>`:''}<button class="btn ghost sm danger" id="pe-del" onclick="postDel('${id}')">Delete</button><span style="flex:1"></span><button class="btn sm" onclick="postSave('${id}')">Save</button></div></div>`); }
 function postSave(id){ const l=(S.logs||[]).find(x=>x.id===id); if(!l) return; const v=x=>document.getElementById(x).value.trim(), oldLink=l.b;
-  l.a=v('pe-a')||l.a; const d=v('pe-d'); if(d) l.d=d>TODAY?TODAY:d; l.b=v('pe-b'); l.views=+v('pe-v')||0; l.likes=+v('pe-l')||0; delete l.auto;
+  l.a=v('pe-a')||l.a; l.pillar=v('pe-p')||l.pillar; const d=v('pe-d'); if(d) l.d=d>TODAY?TODAY:d; l.b=v('pe-b'); l.views=+v('pe-v')||0; l.likes=+v('pe-l')||0; delete l.auto;
   if (l.a==='Instagram collab' && S.ig){ const P=(S.ig.posts||[]).find(p=>p.collab&&(p.link===oldLink.split('?')[0]||p.link===l.b.split('?')[0])); if(P){ P.ts=l.d; P.views=l.views; P.likes=l.likes; if(safeUrl(l.b)) P.link=l.b.split('?')[0]; } }
   gSheetClose(); commit({skipXp:true}); toast('Saved'); }
 let peArmed=0;
@@ -6971,13 +6972,14 @@ function openLog(kind){ lgKind=kind; const K=LOGK[kind]; let m=document.getEleme
   m.className='modal'; m.innerHTML=`<div class="card"><div class="row between" style="margin-bottom:12px"><h2 style="font-size:20px">${K.icon} Log ${K.label.toLowerCase()}</h2><button class="x" onclick="closeLog()" aria-label="Close">✕</button></div>
     <form onsubmit="return addLog(event)" class="stack" style="gap:10px">
       ${K.opts?`<select id="lgA" class="inp" style="width:100%">${K.opts.map(o=>`<option>${o}</option>`).join('')}</select>`:`<input id="lgA" class="inp" style="font-size:17px;padding:14px 16px" placeholder="${K.a}" autocomplete="off">`}
+      ${kind==='post'?`<select id="lgP" class="inp" style="width:100%">${PILLARS.map(([k,l,ic])=>`<option value="${k}" ${k===('model')?'selected':''}>${ic} ${l}</option>`).join('')}</select>`:''}
       <input id="lgB" class="inp" placeholder="${K.b}" autocomplete="off" ${kind==='outreach'?'':'inputmode="url"'}>
       <input id="lgD" class="inp" type="date" value="${TODAY}" max="${TODAY}">
       <button class="btn" type="submit" style="width:100%;padding:14px">Add</button></form></div>`;
   if(!K.opts) try{ document.getElementById('lgA').focus({preventScroll:true}); }catch(e){} }
 function closeLog(){ document.getElementById('lg')?.remove(); }
 function addLog(e){ e.preventDefault(); const a=document.getElementById('lgA').value.trim(), b=document.getElementById('lgB').value.trim(), d=document.getElementById('lgD').value||TODAY; if(!a){ document.getElementById('lgA').focus(); return false; }
-  (S.logs ||= []).push({id:uid(), d: d>TODAY?TODAY:d, kind:lgKind, a, b});
+  const pl=document.getElementById('lgP')?.value; (S.logs ||= []).push({id:uid(), d: d>TODAY?TODAY:d, kind:lgKind, a, b, ...(lgKind==='post'&&pl?{pillar:pl}:{})});
   if (lgKind==='post'){ const h=S.habits.find(h=>/post/i.test(h.name)); if(h) ensureDay(d>TODAY?TODAY:d).habits[h.id]=true;
     if (a==='Instagram collab'){ const G=S.ig||(S.ig=thaw(IG_SEED)); const link=safeUrl(b)?b.split('?')[0]:'collab-'+uid(); G.posts=[{ts:d>TODAY?TODAY:d,type:'COLLAB',collab:1,cap:'Collab post',link,views:0,reach:0,likes:0,comments:0,saves:0,shares:0},...(G.posts||[]).filter(x=>x.link!==link)]; } }
   closeLog(); commit(); toast(`${LOGK[lgKind].icon} ${LOGK[lgKind].label} logged`); return false; }
