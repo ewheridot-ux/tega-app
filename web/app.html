@@ -1267,6 +1267,11 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 @keyframes aScan{from{background-position:0 -100%}to{background-position:0 200%}}
 [data-skin="arise"] .a-sys{position:relative;overflow:hidden}
 [data-skin="arise"] .a-sys::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(140,220,255,.08),transparent) 0 0/100% 40% no-repeat;animation:aScan 5s linear infinite}
+/* b179: recovery ring % centered in the ring */
+.fb-mus button{position:relative}
+.fb-mus i{width:46px;height:46px}
+.fb-mus b{position:absolute;left:0;right:0;top:10px;height:46px;margin:0!important;display:grid;place-items:center;font-size:11.5px;line-height:1;letter-spacing:-.02em;text-align:center}
+.fb-mus small{margin-top:2px}
 </style>
 
 <div class="app" id="app"></div>
@@ -1276,7 +1281,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b178';
+const BUILD='b179';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -1500,7 +1505,7 @@ async function initDb(){
       const r = thaw(s.data());
       if ((r.updatedAt||0) > (S.updatedAt||0)) {
         if (richness(r) === 0 && richness(S) >= 3) { S.updatedAt = Date.now(); saveLocal(); scheduleDbWrite(); return; } // a blank copy from another device never wins
-        S = migrate(r); lastProg = snapshotProgress(); saveLocal(); render(); toast('Synced from another device');
+        S = migrate(r); _mVer++; try { deriveAll(); } catch(e){} lastProg = snapshotProgress(); saveLocal(); render(); toast('Synced from another device');
       }
     }, e => { dbStatus = 'error'; renderSync(); });
   } catch(e) { dbStatus = 'local'; renderSync(); }
@@ -1533,18 +1538,23 @@ function applyDeposit(id, dep){ sprPlay('money');
   pendingToast = `💵 ${money0(amt)} landed. Move ${money0(amt*S.money.s.taxRate)} to Tax Buffer today.`;
 }
 let lastProg = null; // progress as of the last commit/load — the baseline celebrateDiff compares against
-function commit(opts={}){
-  _mVer++;
+// every derived link between sections, in one place: runs on every change and when another device's copy arrives
+function deriveAll(){
   try { syncDatumDeductibles(S); } catch(e){}
+  try { twinSync(); } catch(e){ console.warn('twins',e); }
   try { syncLogKRs(); } catch(e){}
   try { syncDataKRs(); } catch(e){}
   try { rpgSync(); } catch(e){}
   try { cstTaskSync(); } catch(e){}
   try { syncChecksFromStmt(); } catch(e){}
   try { syncYearKRs(); } catch(e){}
-  try { wkAutoLink(); syncSrcKRs(); syncWeekGoals(); } catch(e){ console.warn('goals sync',e); }
+  try { wkAutoLink(); wkAutoLink2(); syncSrcKRs(); syncWeekGoals(); } catch(e){ console.warn('goals sync',e); }
   try { recordBuckets(); } catch(e){}
-  recordMem(); recordSeason();
+  try { recordMem(); recordSeason(); } catch(e){}
+}
+function commit(opts={}){
+  _mVer++;
+  deriveAll();
   try { window.native?.syncReminders?.(S); } catch(e){}
   const before = opts.skipXp ? null : (lastProg || snapshotProgress());
   if (!before) evalBadges();
@@ -6070,7 +6080,7 @@ function gPlan(force){ const g=G_(); const P=g.plan;
     g.plan={d:TODAY, n, prof:g.prof, mode, muscles:mus||null, mods:mods||null}; const xs=gGenerate(TODAY+':'+n+':'+g.prof+':'+mode, mode, mus, mods&&mods.mins); g.plan.ex=gBuild(xs); g.plan.name=gName(xs); }
   return g.plan; }
 function gRegen(patch){ const g=G_(); gPlan(); Object.assign(g.plan, patch||{}); gPlan(true); commit({skipXp:true}); }
-function gWeekCount(wk){ wk=wk||isoWeek(TODAY); return new Set(G_().sessions.filter(s=>isoWeek(s.d)===wk).map(s=>s.d)).size; }
+function gWeekCount(wk){ wk=wk||isoWeek(TODAY); const ds=new Set(G_().sessions.filter(s=>isoWeek(s.d)===wk).map(s=>s.d)); for (const [k,d] of Object.entries(S.days||{})) if (d&&d.habits&&d.habits.gym&&isoWeek(k)===wk) ds.add(k); return ds.size; }
 function gWeekStreak(){ const g=G_(); let n=0, w=isoWeek(TODAY); if (gWeekCount(w)<g.setup.days) w=weekShift(w,-1); while (gWeekCount(w)>=g.setup.days && n<200){ n++; w=weekShift(w,-1); } return n; }
 function gymXP(){ try { const g=S.gym; if(!g) return 0; return (g.sessions||[]).reduce((a,s)=>a+25+(s.prs||[]).length*10,0)+aQuestXP(); } catch(e){ return 0; } }
 function gCal(s){ const hrs=Math.max(((s.t1||s.t0)-s.t0)/36e5, s.ex.reduce((a,e)=>a+e.sets.length,0)*1.6/60), kg=gBodyLb()/2.2046; const cardio=s.ex.filter(e=>GX[e.x]?.k==='cardio').reduce((a,e)=>a+e.sets.reduce((b,z)=>b+z.r,0),0)/60; return Math.round(5*kg*Math.max(0,hrs-cardio)+8*kg*cardio); }
@@ -6665,6 +6675,14 @@ const KSRC = [
   ['People','events','Hangouts / events','🎉','',(a,b)=>{ try { return socAll().filter(e=>e.d>=a&&e.d<=b).length; } catch(e){ return null; } }],
   ['People','people','New people met','🙋','',(a,b)=>((S.circle||{}).people||[]).filter(p=>p.first>=a&&p.first<=b).length],
 ];
+// b179: bench sessions as a count, overall and per weekday ("Bench day Monday")
+const DAYN=['sun','mon','tue','wed','thu','fri','sat'], DAYL={sun:'Sundays',mon:'Mondays',tue:'Tuesdays',wed:'Wednesdays',thu:'Thursdays',fri:'Fridays',sat:'Saturdays'};
+const benchSessions=(a,b,dw)=>{ const ds=new Set(); for (const p of ensureDatum().prototypes) for (const l of (p.log||[])) if (l.kind==='session'&&l.d>=a&&l.d<=b&&(dw==null||parseD(l.d).getDay()===dw)) ds.add(dw==null?ds.size+':'+l.d:l.d); return ds.size; };
+if (!KSRC.some(x=>x[1]==='benchn')){ KSRC.push(['Datum','benchn','Bench sessions','🔨','',(a,b)=>benchSessions(a,b)]); DAYN.forEach((d,i)=>KSRC.push(['Datum','bench:'+d,'Bench sessions on '+DAYL[d],'🔨','',(a,b)=>benchSessions(a,b,i)])); }
+// b179: link weekly goals to tracked data as they're added (once per goal, so unlinking sticks)
+function wkAutoLink2(){ const R=[[/bench day (mon|tue|wed|thu|fri|sat|sun)/i,m=>'bench:'+m[1].toLowerCase(),()=>1],[/(\d+)?\s*bench sessions?|bench session/i,()=>'benchn',m=>+m[1]||1],[/paid orders?\D{0,3}(\d+)/i,()=>'orders',m=>+m[1]||1],[/(\d+) (?:client )?outreach|reach out to (\d+)/i,()=>'outreach',m=>+(m[1]||m[2])||1],[/(\d+) (?:upwork )?proposals?/i,()=>'proposals',m=>+m[1]||1],[/gym (?:×|x)?\s*(\d+)|(\d+) gym/i,()=>'gym',m=>+(m[1]||m[2])||1],[/(\d+) posts?\b/i,()=>'posts',m=>+m[1]||1]];
+  const L=[...(S.weeklyTemplate||[]), ...(ensureWeek(THIS_WEEK).extra||[])];
+  for (const i of L){ if (i.src || i.srcTried) continue; i.srcTried=1; for (const [re,src,n] of R){ const m=re.exec(i.text||''); if (!m) continue; i.src=src(m); i.target=n(m); break; } } }
 function ksrcAll(){ const hab=(S.habits||[]).filter(h=>h.id!=='gym').map(h=>['Habits','habit:'+h.id,`${h.name} (days)`,h.icon,'',(a,b)=>dCount(a,b,d=>d.habits?.[h.id])]); return KSRC.concat(hab); }
 const ksrc = key => ksrcAll().find(s=>s[1]===key);
 function srcVal(key,a,b){ const s=ksrc(key); if(!s) return null; if (s[6] && b<TODAY) return null; try { const v=s[5](a,b); return v===null||v===undefined||isNaN(v)?null:+v; } catch(e){ return null; } }
@@ -6979,6 +6997,28 @@ function pxwLoop(now){ requestAnimationFrame(pxwLoop); if (!pxOn()) return; if (
 requestAnimationFrame(pxwLoop);
 
 function baseSkin(){ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(typeof S!=='undefined'&&S&&S.skin)||'crt'; }
+
+/* ===================== twins (b179): the same to-do in two places stays in sync ===================== */
+// A deadline, a weekly goal, today's Top 3, a quest and a quarterly key result that say the same thing are one item.
+// Tick it anywhere and every twin ticks; untick it and they untick.
+const twinWords=t=>[...krWords(t), ...((String(t||'').replace(/\([^)]*\)/g,' ').match(/\b[A-Z]{2,3}\b/g)||[]).map(x=>x.toLowerCase()))];
+function twinItems(){ const L=[], add=(key,kind,text,get,set)=>{ const w=twinWords(text); if (w.length) L.push({key,kind,text,w:new Set(w),get,set}); };
+  for (const o of (S.quarters?.[THIS_Q]?.objectives||[])) for (const k of o.krs||[]){ if (k.src || krDataKey(k) || !(+k.target>=1 && +k.target<=3)) continue;
+    add('kr:'+k.id,'kr',k.text,()=>!!krHit(k),v=>{ k.current = v ? +k.target : (+k.target===1 ? 0 : Math.min(+k.current||0, +k.target-1)); }); }
+  const wk=week(THIS_WEEK); for (const i of weekInits(THIS_WEEK)) if (!i.src) add('wk:'+i.id,'wk',i.text,()=>!!(week(THIS_WEEK).inits||{})[i.id],v=>{ ensureWeek(THIS_WEEK).inits[i.id]=v; });
+  for (const x of (S.dl||[])) add('dl:'+x.id,'dl',x.text,()=>!!x.done,v=>{ x.done = v ? TODAY : ''; });
+  for (const x of (S.quests||[])) add('qs:'+x.id,'qs',x.text,()=>!!x.done,v=>{ x.done = v ? TODAY : ''; });
+  const d=S.days?.[TODAY]; if (d) (d.top3||[]).forEach((t,i)=>{ if ((t.text||'').trim()) add('t3:'+TODAY+':'+i,'t3',t.text,()=>!!ensureDay(TODAY).top3[i].done,v=>{ ensureDay(TODAY).top3[i].done=v; }); });
+  return L; }
+function twinMatch(a,b){ if (a.kind===b.kind && a.kind!=='t3') return false; if (a.kind==='kr'&&b.kind==='kr') return false;
+  let n=0; for (const w of a.w) if (b.w.has(w)) n++; const m=Math.min(a.w.size,b.w.size);
+  return (n>=2 && n>=Math.ceil(m*.6)) || (m===1 && n===1 && Math.max(a.w.size,b.w.size)<=2 && [...a.w][0].length>=6); }
+function twinsOf(key){ const L=twinItems(), x=L.find(i=>i.key===key); return x ? L.filter(y=>y!==x && twinMatch(x,y)) : []; }
+function twinSync(){ const L=twinItems(), prev=S.twinSeen, now={}; for (const x of L) now[x.key]=x.get();
+  if (!prev){ for (const x of L) if (now[x.key]) for (const y of L) if (y!==x && !y.get() && twinMatch(x,y)) y.set(true); }
+  else { const changed=L.filter(x=>(x.key in prev) && prev[x.key]!==now[x.key]), touched=new Set(changed.map(x=>x.key));
+    for (const x of changed) for (const y of L){ if (y===x || touched.has(y.key) || !twinMatch(x,y)) continue; if (y.get()!==now[x.key]){ y.set(now[x.key]); touched.add(y.key); } } }
+  S.twinSeen={}; for (const x of L) S.twinSeen[x.key]=x.get(); }
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
 function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['waterfall','Waterfall'],['bills','Bills'],['budget','Budget'],['deduct','Write-offs']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
