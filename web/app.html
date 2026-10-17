@@ -977,6 +977,10 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 .pd .pd-list{display:grid;gap:4px;margin-top:8px}
 .pd-row{display:grid;grid-template-columns:22px auto minmax(0,1fr) auto;align-items:center;gap:8px;width:100%;padding:8px 10px;border:0;border-radius:var(--r2);background:var(--card2);color:var(--fg);font:inherit;font-size:13px;text-align:left}
 .pd-row small{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pd-row em{font-style:normal;font-size:12px;color:var(--muted);white-space:nowrap}
+.kr-src{display:flex;gap:6px;margin-top:2px}.kr-src select{flex:1;min-width:0;padding:6px 8px;font-size:13px}.kr-src input{width:70px;padding:6px 8px;font-size:13px}
+.kr-add{display:grid;gap:6px;margin-top:10px}
+.wk-ed{display:grid;gap:6px;padding:10px;border-radius:var(--r2);background:var(--card2)}.wk-ed .inp{padding:8px 10px;font-size:14px;background:var(--card);text-align:left}.wk-tr{width:64px!important;flex:none;padding-left:8px!important;padding-right:4px!important}.wk-n{width:62px!important;flex:none}
+.wk-pg{font-size:12px;font-weight:700;padding:2px 7px;border-radius:99px;background:var(--card2);margin-right:4px}.wk-pg.ok{color:var(--good)}
 </style>
 
 <div class="app" id="app"></div>
@@ -986,7 +990,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b162';
+const BUILD='b163';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -1238,7 +1242,7 @@ function applyDeposit(id, dep){
   for (const c of S.money.checks) { if (c.got) continue; const dd = Math.abs(daysBetween(c.d, d)); if (dd > 25) continue; const score = dd + Math.abs(c.amt - amt)/100; if (score < bestScore) { best = c; bestScore = score; } }
   if (best) { best.got = true; best.gotOn = d; best.d = d; best.amt = amt; best.note = (best.note||'') + ' · auto-detected'; }
   else S.money.checks.push({id:uid(), d, amt, note:(dep.desc||'deposit') + ' · auto-detected', got:true, gotOn:d});
-  const q = S.quarters[quarterOf(d)]; const kr = q?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)); if (kr) kr.current++;
+  const q = S.quarters[quarterOf(d)]; const kr = q?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)&&!k.src); if (kr) kr.current++;
   S.wins.push({id:uid(), d, text:`💵 ${money0(amt)} landed from ONE — move ${money0(amt*S.money.s.taxRate)} to Tax Buffer`});
   pendingToast = `💵 ${money0(amt)} landed. Move ${money0(amt*S.money.s.taxRate)} to Tax Buffer today.`;
 }
@@ -1252,6 +1256,7 @@ function commit(opts={}){
   try { cstTaskSync(); } catch(e){}
   try { syncChecksFromStmt(); } catch(e){}
   try { syncYearKRs(); } catch(e){}
+  try { wkAutoLink(); syncSrcKRs(); syncWeekGoals(); } catch(e){ console.warn('goals sync',e); }
   try { recordBuckets(); } catch(e){}
   recordMem(); recordSeason();
   try { window.native?.syncReminders?.(S); } catch(e){}
@@ -1722,8 +1727,8 @@ const phasePct = n => { const D=ensureDatum(), p=DPHASES[n-1], t=D.phases[n]?.ta
 function syncDatumKRs(){ // Datum numbers → quarter KRs
   const q=S.quarters[THIS_Q]; if(!q) return; const o=q.objectives.find(o=>o.track==='grillz'); if(!o) return;
   const D=ensureDatum(); const paid=D.orders.filter(o=>['deposit','in-production','delivered','closed'].includes(o.status)).length;
-  const k1=o.krs.find(k=>/paid orders/i.test(k.text)); if(k1) k1.current=paid;
-  const k2=o.krs.find(k=>/revenue/i.test(k.text)); if(k2) k2.current=Math.round(dRevenue());
+  const k1=o.krs.find(k=>/paid orders/i.test(k.text)&&!k.src); if(k1) k1.current=paid;
+  const k2=o.krs.find(k=>/revenue/i.test(k.text)&&!k.src); if(k2) k2.current=Math.round(dRevenue());
   const k3=o.krs.find(k=>/own set/i.test(k.text)); if(k3 && D.prototypes.some(p=>p.status==='complete')) k3.current=1;
 }
 
@@ -3138,7 +3143,7 @@ function vToday(){
     ${benchCard()}
   <details class="card sec fold" ${homeOpen.inits?'open':''} ontoggle="homeOpen.inits=this.open"><summary><span>This week's initiatives</span><span class="sub num">${initsDone}/${inits.length} ›</span></summary>
     <div style="margin-top:12px">${bar(weekPct(w),'var(--accent2)')}
-    <div class="stack" style="margin-top:10px">${inits.map(i=>`<div class="check ${wk.inits[i.id]?'on':''}" onclick="toggleInit('${w}','${i.id}')"><div class="box">${wk.inits[i.id]?'✓':''}</div><div class="txt">${esc(i.text)}</div><div class="side">${tIcon(i.track)}</div></div>`).join('')}</div>
+    <div class="stack" style="margin-top:10px">${inits.map(i=>`<div class="check ${wk.inits[i.id]?'on':''}" onclick="toggleInit('${w}','${i.id}')"><div class="box">${wk.inits[i.id]?'✓':''}</div><div class="txt">${esc(i.text)}</div><div class="side">${wkSide(w,i)}${tIcon(i.track)}</div></div>`).join('')}</div>
     <div class="row" style="margin-top:12px"><button class="btn ghost sm" onclick="go('week')">Open the week →</button></div></div></details>
   <details class="card sec fold" ${homeOpen.tracks?'open':''} ontoggle="homeOpen.tracks=this.open"><summary><span>${THIS_Q} tracks</span><span class="sub num">${Math.round(qPct*100)}% ›</span></summary>
     <div class="help" style="margin:12px 0 10px">A <b>track</b> is one lane of your life. Every objective, weekly initiative and Top 3 item is tagged with the lane it pushes, so you can see which one is starving. At least one Top 3 item has to be a money lane (📸 ⚙️ 🔥).</div>
@@ -3185,22 +3190,17 @@ function vWeek(){
   if (mode==='plan'){
     if (w>=THIS_WEEK && !wk.movesAt) { applyMoves(w); setTimeout(()=>commit({skipXp:true}),0); }
     const list=inits.filter(i=>!wkTrack||i.track===wkTrack), open=list.filter(i=>!wk.inits[i.id]), done=list.filter(i=>wk.inits[i.id]);
-    const row=i=>`<div class="check ${wk.inits[i.id]?'on':''}" onclick="toggleInit('${w}','${i.id}')"><div class="box">${wk.inits[i.id]?'✓':''}</div><div class="txt">${esc(i.text)}</div><div class="side">${tIcon(i.track)}${S.weeklyTemplate.find(x=>x.id===i.id)?'':' · once'}</div></div>`;
+    const row=i=>`<div class="check ${wk.inits[i.id]?'on':''}" onclick="toggleInit('${w}','${i.id}')"><div class="box">${wk.inits[i.id]?'✓':''}</div><div class="txt">${esc(i.text)}</div><div class="side">${wkSide(w,i)}${tIcon(i.track)}${S.weeklyTemplate.find(x=>x.id===i.id)?'':' · once'}</div></div>`;
     const carry=(week(pw).extra||[]).filter(i=>!week(pw).inits[i.id] && !(wk.extra||[]).some(x=>x.text===i.text)).length;
     return head + `
   ${one?`<div class="check sec ${wk.oneDone?'on':''}" onclick="toggleOne('${w}')" style="background:var(--card);padding:14px 16px"><div class="box">${wk.oneDone?'✓':''}</div><div class="txt" style="text-decoration:none;color:var(--fg)"><div class="tag">This week's one thing</div><b style="${wk.oneDone?'text-decoration:line-through;color:var(--muted)':''}">${esc(one)}</b></div></div>`:''}
   <div class="card sec">
-    <div class="hdr"><h2>This week's moves</h2><span class="row" style="gap:6px"><span class="sub">${open.length} to go</span>${w>=THIS_WEEK?`<button class="btn ghost sm" onclick="applyMoves('${w}',true);commit({skipXp:true})">↻</button>`:''}</span></div>
+    <div class="hdr"><h2>This week's goals</h2><span class="row" style="gap:6px"><span class="sub">${open.length} to go</span>${w>=THIS_WEEK&&!wkEdit?`<button class="btn ghost sm" onclick="applyMoves('${w}',true);commit({skipXp:true})" aria-label="Refresh suggestions">↻</button>`:''}<button class="btn ${wkEdit?'':'ghost'} sm" onclick="wkEdit=!wkEdit;render()">${wkEdit?'Done':'Edit'}</button></span></div>${wkEdit?wkEditHTML(w):`
     <div class="sub" style="font-size:12px;margin:-4px 0 8px">Picked from OKRs behind pace, deadlines and your calendar. Ticking one counts toward its OKR.</div>
     <div class="tchips">${TRACKS.filter(t=>sug[t.key]).map(t=>{ const x=sug[t.key]; return `<button class="${wkTrack===t.key?'on':''} ${x.n===x.of?'full':''}" onclick="wkTrack=wkTrack==='${t.key}'?null:'${t.key}';render()" aria-label="${t.name} ${x.n} of ${x.of}">${t.icon} <span class="num">${x.n}/${x.of}</span></button>`; }).join('')}</div>
     <div class="stack" style="margin-top:10px">${open.map(row).join('')||`<div class="empty">${list.length?'All done here.':'No initiatives on this track.'}</div>`}</div>
     ${done.length?`<details style="margin-top:12px"><summary>${done.length} done</summary><div class="stack" style="margin-top:8px">${done.map(row).join('')}</div></details>`:''}
-    ${carry?`<button class="btn ghost sm" style="margin-top:12px" onclick="carryOver('${w}')">↩ Carry over ${carry} unfinished from last week</button>`:''}
-    <details style="margin-top:12px"><summary>Edit initiatives</summary>
-      <div class="help" style="margin:6px 0">The template repeats every week. "This week only" adds one just for this week.</div>
-      <div class="stack">${S.weeklyTemplate.map(i=>`<div class="row" style="flex-wrap:nowrap"><span style="flex:1;min-width:0;font-size:13px">${tIcon(i.track)} ${esc(i.text)}</span><button class="x" onclick="delTemplate('${i.id}')">✕</button></div>`).join('')}</div>
-      <form class="inline" style="margin-top:8px" onsubmit="return addInit(event,'${w}')"><select class="inp" id="niTrack" style="width:auto">${TRACKS.map(t=>`<option value="${t.key}">${t.icon}</option>`).join('')}</select><input class="inp" id="niText" placeholder="new initiative" required><select class="inp" id="niScope" style="width:auto"><option value="tpl">every week</option><option value="wk">this week only</option></select><button class="btn sm">Add</button></form>
-    </details>
+    ${carry?`<button class="btn ghost sm" style="margin-top:12px" onclick="carryOver('${w}')">↩ Carry over ${carry} unfinished from last week</button>`:''}`}
   </div>
   <div class="card sec">
     <div class="hdr"><h2>Daily grid</h2><span class="sub">tap a day to open it</span></div>
@@ -3232,7 +3232,7 @@ function okrBanner(q,Q){ const [,qe]=qRange(q), nq=qShift(q,1), left=daysBetween
   const next = q===THIS_Q && left<=21 && !S.quarters[nq] ? `<button class="card sec okr-ban" onclick="openOkrSug('${nq}')"><span>💡</span><span><b>Plan ${nq}</b><small>Suggested OKRs from where you are now · ${left} days left in ${q}</small></span><i>›</i></button>` : '';
   return next + `<div class="row sec" style="gap:6px"><button class="btn ghost sm" onclick="openOkrSug('${q}')">💡 Suggested OKRs for ${q}</button>${q===THIS_Q&&!S.quarters[nq]&&!next?`<button class="btn ghost sm" onclick="openOkrSug('${nq}')">Plan ${nq}</button>`:''}</div>`; }
 function krDue(k, q){ if (k.due) return k.due; const m=/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+(\d{1,2})\b/.exec(k.text||''); if(!m) return ''; const md='-'+pad(MON3.indexOf(m[1])+1)+'-'+pad(+m[2]), y=+q.slice(0,4), d=y+md; return d<qRange(q)[0] ? (y+1)+md : d; }
-const krAuto = k => /posts published|weeks with 2 posts|proposals sent|outreach|checks received/i.test(k.text||'') || !!krDataKey(k);
+const krAuto = k => !!k.src || /posts published|weeks with 2 posts|proposals sent|outreach|checks received/i.test(k.text||'') || !!krDataKey(k);
 const krHit = k => k.target && k.current>=k.target;
 function vQuarter(){
   const q=curQ, Q=S.quarters[q], [qs,qe]=qRange(q);
@@ -3249,10 +3249,11 @@ function vQuarter(){
   const kr = (o,k) => { const hit=krHit(k), due=krDue(k,q), dd=due?daysBetween(TODAY,due):null, args=`'q','${q}','${o.id}','${k.id}'`;
     const dueLab = due&&!hit ? `<span class="krdue" style="${dd<0?'color:var(--bad)':dd<=7?'color:var(--warn)':''}">${dd<0?`${-dd}d late`:dd===0?'due today':dd<=7?`due in ${dd}d`:nice(due)}</span>` : '';
     const name = qEdit ? `<input class="inp" style="padding:6px 10px;font-size:14px" value="${esc(k.text)}" onchange="setKr(${args},'text',this.value)">` : `<span class="krn">${esc(k.text)}</span>`;
-    if (k.target===1) return `<div class="krl ${hit?'hit':''}"><button class="krbox ${hit?'on':''}" onclick="setKr(${args},'current',${hit?0:1})" aria-label="${hit?'Undo':'Mark done'}">${hit?'✓':''}</button><div class="krt">${name}${dueLab}</div>${qEdit?`<button class="x" onclick="delKr(${args})">✕</button>`:''}</div>`;
+    const ed = qEdit ? `<div class="kr-src" style="grid-column:1/-1"><select class="inp" onchange="setKrSrc(${args},this.value)" aria-label="Updates from">${srcOpts(k.src)}</select><span class="sub" style="font-size:12px;align-self:center">goal</span><input class="inp num" type="number" min="1" value="${k.target}" onchange="setKr(${args},'target',this.value)" aria-label="Target"></div>` : '';
+    if (k.target===1) return `<div class="krl ${hit?'hit':''}"><button class="krbox ${hit?'on':''}" onclick="setKr(${args},'current',${hit?0:1})" aria-label="${hit?'Undo':'Mark done'}">${hit?'✓':''}</button><div class="krt">${name}${dueLab}</div>${qEdit?`<button class="x" onclick="delKr(${args})">✕</button>`:''}${ed}</div>`;
     if (hit && !qEdit) return `<div class="krl hit"><span class="krbox on">✓</span><div class="krt">${name}</div><span class="sub num">${k.unit==='$'?money0(k.current):k.current}</span></div>`;
-    return `<div class="krl"><div class="krt">${name}<span class="row" style="gap:6px;flex-wrap:nowrap">${krAuto(k)?'<span class="krauto">auto</span>':''}${dueLab}</span>${bar(krPct(k),tColor(o.track))}${krMeta(k,q)}</div>
-      <div class="krc">${qEdit?`<button class="btn ghost sm" onclick="bumpKr(${args},-1)" aria-label="Minus one">−</button>`:''}<input class="krv num" type="number" inputmode="decimal" value="${k.current}" onchange="setKr(${args},'current',this.value)" aria-label="Current value"><span class="sub num">/ ${k.unit==='$'?money0(k.target):k.target}</span><button class="btn sm" onclick="bumpKr(${args},1)" aria-label="Plus one">+</button>${qEdit?`<button class="x" onclick="delKr(${args})">✕</button>`:''}</div></div>`; };
+    return `<div class="krl"><div class="krt">${name}<span class="row" style="gap:6px;flex-wrap:nowrap">${k.src?`<span class="krauto" title="Updates from ${esc(srcLab(k.src))}">🔗 ${esc((ksrc(k.src)||[])[2]||'auto')}</span>`:krAuto(k)?'<span class="krauto">auto</span>':''}${dueLab}</span>${bar(krPct(k),tColor(o.track))}${krMeta(k,q)}</div>
+      <div class="krc">${qEdit?`<button class="btn ghost sm" onclick="bumpKr(${args},-1)" aria-label="Minus one">−</button>`:''}<input class="krv num" type="number" inputmode="decimal" value="${k.current}" onchange="setKr(${args},'current',this.value)" aria-label="Current value"><span class="sub num">/ ${k.unit==='$'?money0(k.target):k.target}</span><button class="btn sm" onclick="bumpKr(${args},1)" aria-label="Plus one">+</button>${qEdit?`<button class="x" onclick="delKr(${args})">✕</button>`:''}</div>${ed}</div>`; };
   return nav + okrBanner(q,Q) + `
   <div class="card sec">
     ${Q.theme?`<div class="tag" style="margin-bottom:4px">${esc(Q.theme)}</div>`:''}<div class="row between" style="align-items:baseline"><h2 class="num">${Math.round(total*100)}%</h2><span class="sub">${Math.round(elapsed*100)}% of the quarter gone</span></div>
@@ -3269,7 +3270,7 @@ function vQuarter(){
         ${o.krs.filter(k=>qEdit||!krHit(k)||k.target===1).map(k=>kr(o,k)).join('')}
         ${!qEdit?o.krs.filter(k=>krHit(k)&&k.target!==1).map(k=>kr(o,k)).join(''):''}
         ${o.krs.length?'':'<div class="empty">No key results yet. Tap Edit to add one.</div>'}
-        ${qEdit?`<form class="inline" style="margin-top:10px" onsubmit="return addKr(event,'q','${q}','${o.id}')"><input class="inp" placeholder="new key result" required><input class="inp" type="number" placeholder="target" style="max-width:90px" value="1" min="1"><button class="btn sm">Add</button></form>`:''}
+        ${qEdit?`<form class="kr-add" onsubmit="return addKr(event,'q','${q}','${o.id}')"><div class="row" style="gap:6px;flex-wrap:nowrap"><input class="inp" style="flex:1;min-width:0" placeholder="new key result" required><input class="inp num" type="number" placeholder="target" style="width:76px" value="1" min="1"></div><div class="row" style="gap:6px;flex-wrap:nowrap"><select class="inp" style="flex:1;min-width:0">${srcOpts('')}</select><button class="btn sm">Add</button></div></form>`:''}
       </div>`:''}</div>`; }).join('') || `<div class="card sec"><div class="empty">${qBehind?'Nothing behind pace. Keep the load.':'No objectives yet.'}</div></div>`}
   ${qAdd?`<div class="card sec"><div class="row between" style="margin-bottom:8px"><h3>Add an objective</h3><button class="x" onclick="qAdd=false;render()">✕</button></div><form class="stack" onsubmit="qAdd=false;return addObj(event,'q','${q}')"><select class="inp" name="track">${TRACKS.map(t=>`<option value="${t.key}">${t.icon} ${t.name}</option>`).join('')}</select><input class="inp" name="title" placeholder="objective — the outcome, not the task" required><button class="btn">Add objective</button></form></div>`:`<button class="btn ghost sm sec" style="width:100%;justify-content:center" onclick="qAdd=true;render()">＋ Add an objective</button>`}
   <button class="card sec qc-ban ${rv.closed?'done':''}" onclick="openQClose('${q}')"><span>🏁</span><span><b>${rv.closed?'Chapter closed · relive it':'Quarter Close'}</b><small>${rv.closed?nice(rv.closed):lastWeek?'it’s time — the victory lap for this chapter':`opens the last week of ${q} · peek any time`}</small></span><i>›</i></button>
@@ -3284,10 +3285,10 @@ const objStore = (kind,key) => kind==='q' ? S.quarters[key] : S.years[key];
 function setObjTitle(kind,key,oid,v){ const o=objStore(kind,key).objectives.find(o=>o.id===oid); if(o) o.title=v; commit({skipXp:true}); }
 function delObj(kind,key,oid){ const st=objStore(kind,key); if(!st._confirm||st._confirm!==oid){ st._confirm=oid; toast('Tap ✕ again to delete the objective'); setTimeout(()=>{delete st._confirm;},3000); return; } delete st._confirm; st.objectives=st.objectives.filter(o=>o.id!==oid); commit({skipXp:true}); }
 function addObj(e,kind,key){ e.preventDefault(); const f=e.target; objStore(kind,key).objectives.push({id:uid(),track:f.track.value,title:f.title.value.trim(),krs:[]}); commit({skipXp:true}); return false; }
-function setKr(kind,key,oid,kid,f,v){ const o0=objStore(kind,key).objectives.find(o=>o.id===oid), k=o0?.krs.find(k=>k.id===kid); if(!k) return; if(f==='current'){ v=Math.max(0,+v||0); const was=k.current; k.current=v; if (o0.track==='grillz' && k.target===1) dFromKR(k, v>=1); if (kind==='y') k.auto=0; commit(); if(k.target && was<k.target && v>=k.target){ toast(`🎯 KR hit: ${k.text}`); confetti(); } } else { k[f]=v; commit({skipXp:true}); } }
+function setKr(kind,key,oid,kid,f,v){ const o0=objStore(kind,key).objectives.find(o=>o.id===oid), k=o0?.krs.find(k=>k.id===kid); if(!k) return; if(f==='current'){ v=Math.max(0,+v||0); const was=k.current; k.current=v; if (k.src) k.base=v-(+k.srcN||0); if (o0.track==='grillz' && k.target===1) dFromKR(k, v>=1); if (kind==='y') k.auto=0; commit(); if(k.target && was<k.target && v>=k.target){ toast(`🎯 KR hit: ${k.text}`); confetti(); } } else { k[f]= f==='target' ? Math.max(1,+v||1) : v; commit({skipXp:true}); } }
 function bumpKr(kind,key,oid,kid,n){ const k=objStore(kind,key).objectives.find(o=>o.id===oid)?.krs.find(k=>k.id===kid); if(k) setKr(kind,key,oid,kid,'current',k.current+n); }
 function delKr(kind,key,oid,kid){ const o=objStore(kind,key).objectives.find(o=>o.id===oid); if(o) o.krs=o.krs.filter(k=>k.id!==kid); commit({skipXp:true}); }
-function addKr(e,kind,key,oid){ e.preventDefault(); const [t,n]=e.target.querySelectorAll('input'); const o=objStore(kind,key).objectives.find(o=>o.id===oid); if(o&&t.value.trim()) o.krs.push({id:uid(),text:t.value.trim(),target:Math.max(1,+n.value||1),current:0,unit:''}); commit({skipXp:true}); return false; }
+function addKr(e,kind,key,oid){ e.preventDefault(); const [t,n]=e.target.querySelectorAll('input'), sel=e.target.querySelector('select'); const o=objStore(kind,key).objectives.find(o=>o.id===oid); if(o&&t.value.trim()){ const k={id:uid(),text:t.value.trim(),target:Math.max(1,+n.value||1),current:0,unit:''}; if (sel){ if (sel.value){ k.src=sel.value; k.base=0; if (ksrc(sel.value)?.[4]==='$') k.unit='$'; } else k.srcOff=1; } o.krs.push(k); } commit({skipXp:true}); return false; }
 function setQReview(q,k,v){ S.quarters[q].review ||= {}; S.quarters[q].review[k]=v; commit({skipXp:true}); }
 function closeQuarter(q){ const r=S.quarters[q].review ||= {}; r.closed = r.closed ? '' : TODAY; commit(); }
 function newQuarter(q){ const prev=S.quarters[qShift(q,-1)]; S.quarters[q]={objectives:(prev?prev.objectives:[]).map(o=>({id:uid(),track:o.track,title:o.title,krs:o.krs.map(k=>({id:uid(),text:k.text,target:k.target,current:0,unit:k.unit}))})),review:{}}; curQ=q; commit({skipXp:true}); toast('Copied last quarter — now rewrite the ones that were wrong.'); }
@@ -3308,10 +3309,11 @@ function vYear(){
       <div class="row between" style="margin-bottom:6px">${trackChip(o.track)}<span class="row"><span class="chip">${p>=1?'✅ done':p>=.6?'🟢 on track':p>=.3?'🟡 at risk':'⚪ early'}</span><button class="x" onclick="delObj('y','${y}','${o.id}')">✕</button></span></div>
       <h3><input style="background:transparent;border:0;width:100%;outline:none;font:inherit;padding:0" value="${esc(o.title)}" onchange="setObjTitle('y','${y}','${o.id}',this.value)"></h3>
       ${bar(p,tColor(o.track))}
-      <details class="yr-d"><summary>${o.krs.filter(k=>k.target&&k.current>=k.target).length}/${o.krs.length} key results${o.krs.some(k=>k.auto)?' · some count themselves':''}</summary>
+      <details class="yr-d"><summary>${o.krs.filter(k=>k.target&&k.current>=k.target).length}/${o.krs.length} key results${o.krs.some(k=>k.auto||k.src)?' · some count themselves':''}</summary>
       <div style="margin-top:8px">${o.krs.map(k=>`<div class="kr ${k.target&&k.current>=k.target?'hit':''}"><div class="t"><input value="${esc(k.text)}" onchange="setKr('y','${y}','${o.id}','${k.id}','text',this.value)"></div>
-        <div class="ctl">${k.target===1?`<button class="btn sm ${k.current>=1?'good':'ghost'}" onclick="setKr('y','${y}','${o.id}','${k.id}','current',${k.current>=1?0:1})">${k.current>=1?'✓ done':'mark done'}</button>`:`<input class="mini num" type="number" value="${k.current}" onchange="setKr('y','${y}','${o.id}','${k.id}','current',this.value)"><span class="num">/ ${k.unit==='$'?money0(k.target):k.target}${k.unit&&k.unit!=='$'?' '+esc(k.unit):''}</span>`}<button class="x" onclick="delKr('y','${y}','${o.id}','${k.id}')">✕</button></div></div>`).join('')}</div>
-      <form class="inline" style="margin-top:8px" onsubmit="return addKr(event,'y','${y}','${o.id}')"><input class="inp" placeholder="new key result" required><input class="inp" type="number" placeholder="target" style="max-width:90px" value="1" min="1"><button class="btn ghost sm">+</button></form></details>
+        <div class="ctl">${k.target===1?`<button class="btn sm ${k.current>=1?'good':'ghost'}" onclick="setKr('y','${y}','${o.id}','${k.id}','current',${k.current>=1?0:1})">${k.current>=1?'✓ done':'mark done'}</button>`:`<input class="mini num" type="number" value="${k.current}" onchange="setKr('y','${y}','${o.id}','${k.id}','current',this.value)"><span class="num">/</span><input class="mini num" type="number" min="1" value="${k.target}" onchange="setKr('y','${y}','${o.id}','${k.id}','target',this.value)" aria-label="Target">`}<button class="x" onclick="delKr('y','${y}','${o.id}','${k.id}')">✕</button></div>
+        <div class="kr-src" style="grid-column:1/-1"><select class="inp" onchange="setKrSrc('y','${y}','${o.id}','${k.id}',this.value)" aria-label="Updates from">${srcOpts(k.src)}</select></div></div>`).join('')}</div>
+      <form class="kr-add" onsubmit="return addKr(event,'y','${y}','${o.id}')"><div class="row" style="gap:6px;flex-wrap:nowrap"><input class="inp" style="flex:1;min-width:0" placeholder="new key result" required><input class="inp num" type="number" placeholder="target" style="width:76px" value="1" min="1"></div><div class="row" style="gap:6px;flex-wrap:nowrap"><select class="inp" style="flex:1;min-width:0">${srcOpts('')}</select><button class="btn ghost sm">Add</button></div></form></details>
     </div>`;}).join('')}
     <div class="card flat"><h3>Add an objective</h3><form class="stack" onsubmit="return addObj(event,'y','${y}')"><select class="inp" name="track">${TRACKS.map(t=>`<option value="${t.key}">${t.icon} ${t.name}</option>`).join('')}</select><input class="inp" name="title" placeholder="objective" required><button class="btn">Add objective</button></form></div>
   </div>`;
@@ -4068,7 +4070,7 @@ function krDataCount(key,q){ const [a,b]=qRange(q), cur=q===THIS_Q, inQ=k=>k>=a&
   if (key==='sets') return D.prototypes.filter(p=>p.status==='complete').length;
   if (key==='followers'){ const tot=src=>{ const h=(src&&src.hist)||{}, ks=Object.keys(h).filter(inQ).sort(); return ks.length?[h[ks[0]],h[ks[ks.length-1]]]:null; }; const i=tot(S.ig), t=tot(S.tk); if(!i&&!t) return null; return Math.max(0,((i?i[1]-i[0]:0)+(t?t[1]-t[0]:0))); }
   return null; }
-function syncDataKRs(){ for (const [q,Q] of Object.entries(S.quarters||{})) for (const o of Q.objectives||[]) for (const k of o.krs||[]){ const key=krDataKey(k); if(!key) continue; const n=krDataCount(key,q); if(n===null||n===undefined) continue; k.autoN ||= {}; const was=k.autoN[key]; if (was===undefined) k.current=Math.max(+k.current||0,n); else if (n!==was) k.current=Math.max(0,(+k.current||0)+n-was); k.autoN[key]=n; } }
+function syncDataKRs(){ for (const [q,Q] of Object.entries(S.quarters||{})) for (const o of Q.objectives||[]) for (const k of o.krs||[]){ if (k.src) continue; const key=krDataKey(k); if(!key) continue; const n=krDataCount(key,q); if(n===null||n===undefined) continue; k.autoN ||= {}; const was=k.autoN[key]; if (was===undefined) k.current=Math.max(+k.current||0,n); else if (n!==was) k.current=Math.max(0,(+k.current||0)+n-was); k.autoN[key]=n; } }
 function krCredit(src, text, track, on){
   S.krCred ||= {};
   if (!on){ const c=S.krCred[src]; if(!c) return; for (const o of S.quarters[c.q]?.objectives||[]) for (const k of o.krs) if (k.id===c.kid) k.current=Math.max(0,(+k.current||0)-c.add); delete S.krCred[src]; return; }
@@ -4076,7 +4078,7 @@ function krCredit(src, text, track, on){
   const words=new Set(krWords(text)); if(!words.size) return;
   let best=null;
   for (const o of S.quarters[THIS_Q]?.objectives||[]) for (const k of o.krs||[]){
-    if (krDataKey(k) || /checks received|posts published|weeks with 2 posts|proposals sent|outreach/i.test(k.text)) continue;
+    if (k.src || krDataKey(k) || /checks received|posts published|weeks with 2 posts|proposals sent|outreach/i.test(k.text)) continue;
     if (k.target && (+k.current||0)>=k.target) continue;
     const kw=krWords(k.text), hit=kw.filter(w=>words.has(w)), same=track&&o.track===track;
     const ok = hit.length>=2 || (hit.length===1 && (hit[0].length>=5 ? (kw.length<=3 || same) : (kw.length<=2 && same)));
@@ -4457,7 +4459,7 @@ function weekMoves(w){
 function applyMoves(w, force){ const wk=ensureWeek(w); if (wk.movesAt && !force) return; for (const m of weekMoves(w)) if (!weekInits(w).some(i=>i.text.toLowerCase()===m.text.toLowerCase())) wk.extra.push({id:uid(), track:m.track, text:m.text, gen:1}); wk.movesAt=TODAY; }
 function syncYearKRs(){ try {
   for (const [y,Y] of Object.entries(S.years||{})){ const qs=Object.keys(S.quarters||{}).filter(q=>q.startsWith(y));
-    for (const o of Y.objectives||[]) for (const k of o.krs||[]){ let v=null;
+    for (const o of Y.objectives||[]) for (const k of o.krs||[]){ if (k.src) continue; let v=null;
       const dk=krDataKey(k)||(/journal/i.test(k.text)?'journal':/gym/i.test(k.text)&&/session/i.test(k.text)?'gym':null);
       if (dk){ const vals=qs.map(q=>krDataCount(dk,q)).filter(x=>x!=null); if (vals.length) v=['orders','revenue','sets','followers'].includes(dk)?Math.max(...vals):vals.reduce((a,b)=>a+b,0); }
       else if (/modeling income/i.test(k.text)) { const m=/\((\w{3})[–-](\w{3})\)/.exec(k.text), MM={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12}; const from=m?`${y}-${String(MM[m[1]]||1).padStart(2,'0')}-01`:`${y}-01-01`; v=Math.round(stmtReceived(y).filter(r=>r.d>=from).reduce((a,r)=>a+r.amt,0)); }
@@ -6310,6 +6312,104 @@ function postDel(id){ const b=document.getElementById('pe-del'); if(Date.now()-p
   const l=(S.logs||[]).find(x=>x.id===id); S.logs=(S.logs||[]).filter(x=>x.id!==id);
   if (l && l.a==='Instagram collab' && S.ig) S.ig.posts=(S.ig.posts||[]).filter(p=>!(p.collab&&p.ts===l.d&&(!l.b||p.link===l.b.split('?')[0])));
   gSheetClose(); commit({skipXp:true}); toast('Post removed'); }
+
+/* ===================== Goals that fill themselves: every KR and weekly goal can point at a real source in the app ===================== */
+const yRange = y => [y+'-01-01', y+'-12-31'];
+const wRange = w => { const d=weekDays(w); return [d[0], d[6]]; };
+const dCount = (a,b,f) => Object.entries(S.days||{}).filter(([k,d])=>k>=a&&k<=b&&f(d,k)).length;
+const pillarPosts = (a,b,p) => (S.logs||[]).filter(l=>l.kind==='post'&&l.d>=a&&l.d<=b&&(!p||(l.pillar||pillarOf(l.a||''))===p)).length;
+function liveBookings(){ let E=[]; try{ E=mAll(); }catch(e){} return E.filter(e=>!['cancelled','released','declined','nobook'].includes(e.s)); }
+// level:true = a balance or total that only means something "now" (frozen once the period is over)
+const KSRC = [
+  ['Content','posts','Posts (any)','📱','',(a,b)=>pillarPosts(a,b)],
+  ['Content','posts:model','Modeling posts','📸','',(a,b)=>pillarPosts(a,b,'model')],
+  ['Content','posts:datum','Datum posts','◆','',(a,b)=>pillarPosts(a,b,'datum')],
+  ['Content','posts:art','Art & music posts','🎨','',(a,b)=>pillarPosts(a,b,'art')],
+  ['Content','posts:life','Life posts','🌀','',(a,b)=>pillarPosts(a,b,'life')],
+  ['Content','weeks2','Weeks with 2+ posts','🗓','',(a,b)=>{ const pw={}; for (const l of (S.logs||[])) if (l.kind==='post'&&l.d>=a&&l.d<=b) pw[isoWeek(l.d)]=(pw[isoWeek(l.d)]||0)+1; return Object.values(pw).filter(n=>n>=2).length; }],
+  ['Content','followers','Followers gained','📈','',(a,b)=>{ const tot=src=>{ const h=(src&&src.hist)||{}, ks=Object.keys(h).filter(k=>k>=a&&k<=b).sort(); return ks.length?h[ks[ks.length-1]]-h[ks[0]]:null; }; const i=tot(S.ig), t=tot(S.tk); return i===null&&t===null?null:Math.max(0,(i||0)+(t||0)); }],
+  ['Content','igfollowers','Instagram followers','👥','',()=>igData().followers||0,1],
+  ['Modeling','outreach','Outreach logged','🤝','',(a,b)=>(S.logs||[]).filter(l=>l.kind==='outreach'&&l.d>=a&&l.d<=b).length],
+  ['Modeling','proposals','Proposals sent','📨','',(a,b)=>(S.logs||[]).filter(l=>l.kind==='proposal'&&l.d>=a&&l.d<=b).length],
+  ['Modeling','setdays','Days on set','🎬','',(a,b)=>liveBookings().filter(e=>e.t==='job').reduce((s,e)=>s+e.d.filter(k=>k>=a&&k<=b&&k<=TODAY).length,0)],
+  ['Modeling','booked','Booked ($)','💼','$',(a,b)=>liveBookings().filter(e=>e.t==='job').reduce((s,e)=>s+(e.rn||0)*e.d.filter(k=>k>=a&&k<=b).length,0)],
+  ['Modeling','castings','Castings / fittings / tests','🎭','',(a,b)=>liveBookings().filter(e=>['casting','selftape','test','fitting'].includes(e.t)&&e.d.some(k=>k>=a&&k<=b&&k<=TODAY)).length],
+  ['Modeling','checks','Checks received','💵','',(a,b)=>((S.money||{}).checks||[]).filter(c=>c.got&&(c.gotOn||c.d)>=a&&(c.gotOn||c.d)<=b).length],
+  ['Modeling','income','Modeling income ($)','💰','$',(a,b)=>{ let t=0; for (let y=+a.slice(0,4); y<=+b.slice(0,4); y++) try { t+=stmtReceived(String(y)).filter(r=>r.d>=a&&r.d<=b).reduce((s,r)=>s+r.amt,0); } catch(e){} return Math.round(t); }],
+  ['Datum','benchhrs','Bench hours','⏱','h',(a,b)=>{ let m=0; for (const p of ensureDatum().prototypes) for (const l of (p.log||[])) if (l.kind==='session'&&l.d>=a&&l.d<=b) m+=+l.mins||0; return Math.round(m/6)/10; }],
+  ['Datum','orders','Paid orders','🧾','',(a,b)=>ensureDatum().orders.filter(o=>['deposit','in-production','delivered','closed'].includes(o.status)&&(!o.opened||(o.opened>=a&&o.opened<=b))).length],
+  ['Datum','revenue','Datum revenue ($)','💎','$',()=>Math.round(dRevenue()),1],
+  ['Datum','sets','Sets finished','🦷','',()=>ensureDatum().prototypes.filter(p=>p.status==='complete').length,1],
+  ['Days','gym','Gym workouts','💪','',(a,b)=>{ const ds=new Set(((S.gym||{}).sessions||[]).map(s=>s.d).filter(k=>k>=a&&k<=b)); for (const [k,d] of Object.entries(S.days||{})) if (k>=a&&k<=b&&d.habits?.gym) ds.add(k); return ds.size; }],
+  ['Days','checkins','Check-ins','☀️','',(a,b)=>dCount(a,b,d=>d.checkin)],
+  ['Days','top3','Top 3 items done','✅','',(a,b)=>Object.entries(S.days||{}).filter(([k])=>k>=a&&k<=b).reduce((s,[,d])=>s+(d.top3||[]).filter(t=>t.done).length,0)],
+  ['Days','top3days','Days with all Top 3 done','🔥','',(a,b)=>dCount(a,b,d=>(d.top3||[]).length&&d.top3.every(t=>t.done&&t.text))],
+  ['Days','wins','Wins logged','★','',(a,b)=>(S.wins||[]).filter(x=>x.d>=a&&x.d<=b).length],
+  ['Days','reviews','Sunday Reviews done','🔁','',(a,b)=>Object.entries(S.weeks||{}).filter(([w,x])=>x.review?.done&&addDays(weekMonday(w),6)>=a&&addDays(weekMonday(w),6)<=b).length],
+  ['Days','guitar','Guitar minutes','🎸','',(a,b)=>Math.round(gtr().log.filter(l=>l.d>=a&&l.d<=b).reduce((s,l)=>s+(+l.mins||0),0))],
+  ['Money','budgetweeks','Weeks under spending budget','🧮','',(a,b)=>{ const wb=S.money.s.flexPerCheck/2, tx=S.money.budget?.txns||[], ws=[...new Set(Object.keys(S.days||{}).concat(tx.map(t=>t.d)).filter(k=>k>=a&&k<=b&&k<TODAY).map(isoWeek))].filter(w=>addDays(weekMonday(w),6)<TODAY); return ws.filter(w=>{ const days=weekDays(w); return tx.filter(t=>days.includes(t.d)&&isSpendTx(t)).reduce((s,t)=>s-t.amt,0)<=wb; }).length; }],
+  ['Money','ef','Emergency fund ($)','🛟','$',()=>Math.round(+S.money.s.efNow||0),1],
+  ['Money','tax','Tax Buffer ($)','🏛','$',()=>Math.round(+S.money.s.taxBufNow||0),1],
+  ['Money','roth','Roth this year ($)','🌱','$',()=>Math.round(+S.money.s.rothYtd||0),1],
+  ['Money','cush','Cushion ($)','🛋','$',()=>Math.round(+S.money.s.cushNow||0),1],
+  ['Money','house','House fund ($)','🏠','$',()=>Math.round(+S.money.s.houseNow||0),1],
+  ['Money','writeoffs','Write-offs logged ($)','🧾','$',(a,b)=>Math.round(((S.money.budget||{}).deductibles||[]).filter(x=>(x.d||x.date||'')>=a&&(x.d||x.date||'')<=b).reduce((s,x)=>s+(+x.amt||0),0))],
+  ['People','events','Hangouts / events','🎉','',(a,b)=>{ try { return socAll().filter(e=>e.d>=a&&e.d<=b).length; } catch(e){ return null; } }],
+  ['People','people','New people met','🙋','',(a,b)=>((S.circle||{}).people||[]).filter(p=>p.first>=a&&p.first<=b).length],
+];
+function ksrcAll(){ const hab=(S.habits||[]).filter(h=>h.id!=='gym').map(h=>['Habits','habit:'+h.id,`${h.name} (days)`,h.icon,'',(a,b)=>dCount(a,b,d=>d.habits?.[h.id])]); return KSRC.concat(hab); }
+const ksrc = key => ksrcAll().find(s=>s[1]===key);
+function srcVal(key,a,b){ const s=ksrc(key); if(!s) return null; if (s[6] && b<TODAY) return null; try { const v=s[5](a,b); return v===null||v===undefined||isNaN(v)?null:+v; } catch(e){ return null; } }
+const srcLab = key => { const s=ksrc(key); return s?`${s[3]} ${s[2]}`:''; };
+function srcOpts(cur){ const all=ksrcAll(), groups=[...new Set(all.map(s=>s[0]))];
+  return `<option value="">✋ I update it myself</option>`+groups.map(g=>`<optgroup label="${g}">${all.filter(s=>s[0]===g).map(s=>`<option value="${s[1]}" ${s[1]===cur?'selected':''}>${s[3]} ${esc(s[2])}</option>`).join('')}</optgroup>`).join(''); }
+// old KRs were matched by their wording; give them a visible, editable source instead
+function legacySrc(t){ t=t||''; const dk=krDataKey({text:t}); const map={journal:'habit:journal', datumdays:'habit:datum', datumposts:'posts:datum'};
+  if (dk) return map[dk]||dk;
+  return /weeks with 2 posts/i.test(t)?'weeks2':/posts published/i.test(t)?'posts':/proposals sent/i.test(t)?'proposals':/outreach/i.test(t)?'outreach':/checks received/i.test(t)?'checks':/modeling income/i.test(t)?'income':/journal (days|entries)/i.test(t)?'habit:journal':/gym session/i.test(t)?'gym':/bench hours/i.test(t)?'benchhrs':/emergency fund/i.test(t)&&/\$|fund/i.test(t)?'ef':null; }
+function krLink(k, a, b, yr){ if (k.src || k.srcOff) return; const s=legacySrc(k.text); if(!s) return;
+  if (s==='income'){ const m=/\((\w{3})[–-](\w{3})\)/.exec(k.text||''), MM={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12}; if (m&&MM[m[1]]) k.from=a.slice(0,4)+'-'+String(MM[m[1]]).padStart(2,'0')+'-01'; }
+  const n=srcVal(s, k.from&&k.from>a?k.from:a, b); k.src=s; k.base = Math.max(0,(+k.current||0)-(n||0)); if (ksrc(s)?.[4]==='$') k.unit='$'; }
+function krPull(k,a,b){ if(!k.src) return; const n=srcVal(k.src, k.from&&k.from>a?k.from:a, b); if (n===null) return; if (k.base==null) k.base=Math.max(0,(+k.current||0)-n); k.srcN=n; k.current=Math.max(0,Math.round(((+k.base||0)+n)*10)/10); }
+function syncSrcKRs(){
+  for (const [q,Q] of Object.entries(S.quarters||{})){ const [a,b]=qRange(q); for (const o of Q.objectives||[]) for (const k of o.krs||[]){ krLink(k,a,b,false); krPull(k,a,b); } }
+  for (const [y,Y] of Object.entries(S.years||{})){ const [a,b]=yRange(y); for (const o of Y.objectives||[]) for (const k of o.krs||[]){ krLink(k,a,b,true); krPull(k,a,b); } }
+}
+function setKrSrc(kind,key,oid,kid,v){ const k=objStore(kind,key).objectives.find(o=>o.id===oid)?.krs.find(k=>k.id===kid); if(!k) return;
+  delete k.base; delete k.srcN; delete k.from; if (v){ k.src=v; delete k.srcOff; if (ksrc(v)?.[4]==='$') k.unit='$'; } else { delete k.src; k.srcOff=1; }
+  commit({skipXp:true}); if (v) toast(`🔗 Now counts ${srcLab(v)}`); }
+
+/* ---------- weekly goals: same idea, counted over the week ---------- */
+const wkTargetOf = i => Math.max(1, +i.target||1);
+function wkProg(w,i){ if(!i.src) return null; const [a,b]=wRange(w); return srcVal(i.src,a,b); }
+function syncWeekGoals(){ const ws=[THIS_WEEK]; const pw=weekShift(THIS_WEEK,-1); if (!(week(pw).review||{}).done) ws.push(pw);
+  for (const w of ws){ const L=weekInits(w).filter(i=>i.src); if(!L.length) continue; const wk=ensureWeek(w); wk.prog ||= {}; wk.autoT ||= {};
+    for (const i of L){ const n=wkProg(w,i); if (n===null) continue; wk.prog[i.id]=n; const hit=n>=wkTargetOf(i);
+      if (hit && !wk.inits[i.id]){ wk.inits[i.id]=true; wk.autoT[i.id]=1; krCredit('in:'+w+':'+i.id, i.text, i.track, true); }
+      else if (!hit && wk.autoT[i.id] && wk.inits[i.id]){ wk.inits[i.id]=false; delete wk.autoT[i.id]; krCredit('in:'+w+':'+i.id, i.text, i.track, false); } } } }
+// first time: link the default weekly goals that obviously map to something the app already tracks
+function wkAutoLink(){ if (S.wkSrcV) return; S.wkSrcV=1; const R=[[/reach out to (\d+)/i,'outreach'],[/(\d+)-hr datum|datum .*session/i,'benchhrs'],[/post (tue|\d)/i,'posts'],[/send (\d+) upwork proposals|(\d+) proposals/i,'proposals'],[/log business expenses/i,'habit:expense'],[/journal (\d+)/i,'habit:journal'],[/gym ×?(\d+)/i,'gym'],[/(\d+) hangout|hangout or event/i,'events']];
+  for (const i of S.weeklyTemplate||[]){ if (i.src) continue; for (const [re,src] of R){ const m=re.exec(i.text||''); if(!m) continue; const num=+((m.slice(1).find(x=>/^\d+$/.test(x||'')))||0); i.src=src; i.target = src==='posts'?2 : src==='benchhrs'?(num||2) : num||1; break; } } }
+let wkEdit=false;
+function wkFind(w,id){ return (S.weeklyTemplate||[]).find(i=>i.id===id) || (ensureWeek(w).extra||[]).find(i=>i.id===id); }
+function setInit(w,id,f,v){ const i=wkFind(w,id); if(!i) return; if (f==='target') v=Math.max(1,+v||1); if (f==='src' && !v) { delete i.src; delete i.target; } else i[f]=v; if (f==='src'&&v&&!i.target) i.target=1; commit({skipXp:true}); }
+let wkDelArm=null;
+function delInit(w,id){ if (wkDelArm!==id){ wkDelArm=id; toast('Tap ✕ again to remove'); setTimeout(()=>{ if(wkDelArm===id) wkDelArm=null; },3000); return; } wkDelArm=null;
+  if ((S.weeklyTemplate||[]).some(i=>i.id===id)) S.weeklyTemplate=S.weeklyTemplate.filter(i=>i.id!==id); else { const wk=ensureWeek(w); wk.extra=wk.extra.filter(i=>i.id!==id); } commit({skipXp:true}); }
+function addInit2(e,w){ e.preventDefault(); const f=e.target, text=f.t.value.trim(); if(!text) return false; const it={id:uid(), track:f.tr.value, text}; if (f.src.value){ it.src=f.src.value; it.target=Math.max(1,+f.n.value||1); } if (f.sc.value==='tpl') S.weeklyTemplate.push(it); else ensureWeek(w).extra.push(it); commit({skipXp:true}); return false; }
+function wkEditHTML(w){ const tplIds=new Set((S.weeklyTemplate||[]).map(i=>i.id)), list=weekInits(w);
+  return `<div class="help" style="margin:2px 0 10px">Link a goal to something the app tracks and it ticks itself when you hit the number.</div>
+  <div class="stack" style="gap:8px">${list.map(i=>`<div class="wk-ed">
+    <div class="row" style="gap:6px;flex-wrap:nowrap"><input class="inp" style="flex:1;min-width:0" value="${esc(i.text)}" onchange="setInit('${w}','${i.id}','text',this.value)"><button class="x" onclick="delInit('${w}','${i.id}')" aria-label="Remove">✕</button></div>
+    <div class="row" style="gap:6px;flex-wrap:nowrap"><select class="inp wk-tr" onchange="setInit('${w}','${i.id}','track',this.value)" aria-label="Track">${TRACKS.map(t=>`<option value="${t.key}" ${t.key===i.track?'selected':''}>${t.icon}</option>`).join('')}</select><select class="inp" style="flex:1;min-width:0" onchange="setInit('${w}','${i.id}','src',this.value)" aria-label="Updates from">${srcOpts(i.src)}</select>${i.src?`<input class="inp wk-n num" type="number" min="1" value="${wkTargetOf(i)}" onchange="setInit('${w}','${i.id}','target',this.value)" aria-label="Target">`:''}</div>
+    <div class="sub" style="font-size:11px">${tplIds.has(i.id)?'Every week':'This week only'}</div></div>`).join('')}</div>
+  <form class="wk-ed" style="margin-top:10px" onsubmit="return addInit2(event,'${w}')">
+    <input class="inp" name="t" placeholder="new weekly goal" required>
+    <div class="row" style="gap:6px;flex-wrap:nowrap"><select class="inp wk-tr" name="tr" aria-label="Track">${TRACKS.map(t=>`<option value="${t.key}">${t.icon}</option>`).join('')}</select><select class="inp" name="src" style="flex:1;min-width:0" aria-label="Updates from">${srcOpts('')}</select><input class="inp wk-n num" name="n" type="number" min="1" value="1" aria-label="Target"></div>
+    <select class="inp" name="sc"><option value="tpl">Every week</option><option value="wk">This week only</option></select>
+    <button class="btn sm" style="width:100%;justify-content:center">Add goal</button></form>`; }
+function wkSide(w,i){ if (!i.src) return ''; const n=(week(w).prog||{})[i.id] ?? wkProg(w,i) ?? 0, t=wkTargetOf(i); return `<span class="wk-pg num ${n>=t?'ok':''}" title="${esc(srcLab(i.src))}">${Math.round(n*10)/10}/${t}</span>`; }
+
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
 function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['waterfall','Waterfall'],['bills','Bills'],['budget','Budget'],['deduct','Write-offs']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
@@ -6454,7 +6554,7 @@ function detectDeposits(txs, keyAcct){
     if (hit){ if (Math.abs(hit.amt-amt)>2) hit.expAmt=hit.amt; hit.amt=amt; hit.got=true; hit.gotOn=d; hit.verified=true; hit.note=(hit.note||'')+' · ✓ bank'; }
     else { hit={id:uid(), d, amt, note:'1 Model Management · from bank', got:true, gotOn:d, verified:true, unsched:true}; M.checks.push(hit); M.checks.sort((a,b)=>a.d.localeCompare(b.d)); }
     hit.split=splitFor(hit); hit.done={}; delete hit.dismissed;
-    const kr=S.quarters[quarterOf(d)]?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)); if(kr) kr.current++;
+    const kr=S.quarters[quarterOf(d)]?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)&&!k.src); if(kr) kr.current++;
     S.wins.push({id:uid(), d:TODAY, text:`💵 ${money0(amt)} landed (from bank) — move ${money0(hit.split.tax)} to Tax Buffer`}); n++;
   }
   return n;
@@ -6596,15 +6696,15 @@ async function verifyLanded(id){
     const used = S.money.checks.filter(x=>x.got && x.id!==id); // a deposit already claimed by another check can't be claimed twice
     const list = ((r?.payload?.transactions)||[]).filter(t => !used.some(x => Math.abs(x.amt-(+t.amount))<=2 && Math.abs(daysBetween(x.gotOn||x.d, (t.date||t.transaction_date||'').slice(0,10)))<=2));
     const hit = list.find(t => Math.abs((+t.amount) - c.amt) <= 2) || list[0];
-    if (hit){ c.got=true; c.gotOn=(hit.date||hit.transaction_date||TODAY).slice(0,10); c.amt=+hit.amount||c.amt; c.verified=true; c.note=(c.note||'')+' · ✓ bank'; const q=S.quarters[THIS_Q]; const kr=q?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)); if(kr) kr.current++; S.wins.push({id:uid(),d:TODAY,text:`💵 ${money0(c.amt)} landed (verified) — move ${money0(c.amt*S.money.s.taxRate)} to Tax Buffer`}); unverifiedId=null; commit(); confetti(); toast(`Verified: ${money0(c.amt)} hit Bank of America on ${nice(c.gotOn)}. Move ${money0(c.amt*S.money.s.taxRate)} to Tax Buffer.`); }
+    if (hit){ c.got=true; c.gotOn=(hit.date||hit.transaction_date||TODAY).slice(0,10); c.amt=+hit.amount||c.amt; c.verified=true; c.note=(c.note||'')+' · ✓ bank'; const q=S.quarters[THIS_Q]; const kr=q?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)&&!k.src); if(kr) kr.current++; S.wins.push({id:uid(),d:TODAY,text:`💵 ${money0(c.amt)} landed (verified) — move ${money0(c.amt*S.money.s.taxRate)} to Tax Buffer`}); unverifiedId=null; commit(); confetti(); toast(`Verified: ${money0(c.amt)} hit Bank of America on ${nice(c.gotOn)}. Move ${money0(c.amt*S.money.s.taxRate)} to Tax Buffer.`); }
     else { unverifiedId=id; render(); toast(`No deposit near ${money0(c.amt)} in Bank of America between ${nice(from)} and ${nice(to)} — not marked.`); }
   } catch(e){
     const code=e?.code||''; unverifiedId=id; render();
     toast(code==='server_not_connected' ? 'Finance connector isn\'t attached to this view — mark anyway if you\'ve seen it' : code==='needs_reauth' ? 'Bank connection needs re-login in the connector — mark anyway for now' : code==='not_granted' ? 'You declined the bank check — mark anyway if you\'ve seen it' : 'Couldn\'t reach the bank just now — try again or mark anyway');
   }
 }
-function markGot(id, manual=false){ const c=S.money.checks.find(c=>c.id===id); c.got=true; c.gotOn=TODAY; c.verified=false; unverifiedId=null; const q=S.quarters[THIS_Q]; const kr=q?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)); if(kr) kr.current++; commit(); toast(`Logged ${money0(c.amt)}. Move ${money0(c.amt*S.money.s.taxRate)} to Tax Buffer today.`); }
-function unGot(id){ const c=S.money.checks.find(c=>c.id===id); if (c.unsched){ S.money.checks=S.money.checks.filter(x=>x.id!==id); } c.got=false; delete c.gotOn; delete c.split; delete c.done; delete c.dismissed; if (c.expAmt){ c.amt=c.expAmt; delete c.expAmt; } c.verified=false; c.note=(c.note||'').replace(' · ✓ bank',''); const q=S.quarters[THIS_Q]; const kr=q?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)); if(kr&&kr.current>0) kr.current--; commit({skipXp:true}); }
+function markGot(id, manual=false){ const c=S.money.checks.find(c=>c.id===id); c.got=true; c.gotOn=TODAY; c.verified=false; unverifiedId=null; const q=S.quarters[THIS_Q]; const kr=q?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)&&!k.src); if(kr) kr.current++; commit(); toast(`Logged ${money0(c.amt)}. Move ${money0(c.amt*S.money.s.taxRate)} to Tax Buffer today.`); }
+function unGot(id){ const c=S.money.checks.find(c=>c.id===id); if (c.unsched){ S.money.checks=S.money.checks.filter(x=>x.id!==id); } c.got=false; delete c.gotOn; delete c.split; delete c.done; delete c.dismissed; if (c.expAmt){ c.amt=c.expAmt; delete c.expAmt; } c.verified=false; c.note=(c.note||'').replace(' · ✓ bank',''); const q=S.quarters[THIS_Q]; const kr=q?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)&&!k.src); if(kr&&kr.current>0) kr.current--; commit({skipXp:true}); }
 function addCheck(e){ e.preventDefault(); const [d,a,n]=e.target.querySelectorAll('input'); S.money.checks.push({id:uid(),d:d.value,amt:+a.value,note:n.value.trim()||'manual',got:false}); commit({skipXp:true}); return false; }
 function addTaxPaid(e){ e.preventDefault(); const [d,a]=e.target.querySelectorAll('input'); const who=e.target.querySelector('select').value; S.money.taxPaid.push({id:uid(),d:d.value,who,amt:+a.value}); commit(); return false; }
 function delTaxPaid(id){ S.money.taxPaid=S.money.taxPaid.filter(p=>p.id!==id); commit({skipXp:true}); }
@@ -6966,7 +7066,7 @@ function logCounts(q){ const [a,b]=qRange(q), L=(S.logs||[]).filter(l=>l.d>=a&&l
 // the log moves the matching key results by the difference since last time, so hand edits to a KR are kept
 function syncLogKRs(){ if(!(S.logs||[]).length && !S.logSynced) return; S.logSynced=true;
   for (const [q,Q] of Object.entries(S.quarters||{})){ const c=logCounts(q);
-    for (const o of Q.objectives||[]) for (const k of o.krs||[]){ const key=/weeks with 2 posts/i.test(k.text)?'weeks2':/posts published/i.test(k.text)?'post':/proposals sent/i.test(k.text)?'proposal':/outreach/i.test(k.text)?'outreach':null; if(!key) continue; const n=c[key], was=k.logN||0; if(n!==was){ k.current=Math.max(0,(+k.current||0)+n-was); k.logN=n; } } } }
+    for (const o of Q.objectives||[]) for (const k of o.krs||[]){ if (k.src) continue; const key=/weeks with 2 posts/i.test(k.text)?'weeks2':/posts published/i.test(k.text)?'post':/proposals sent/i.test(k.text)?'proposal':/outreach/i.test(k.text)?'outreach':null; if(!key) continue; const n=c[key], was=k.logN||0; if(n!==was){ k.current=Math.max(0,(+k.current||0)+n-was); k.logN=n; } } } }
 let lgKind=null;
 function openLog(kind){ lgKind=kind; const K=LOGK[kind]; let m=document.getElementById('lg'); if(!m){ m=document.createElement('div'); m.id='lg'; m.addEventListener('click',e=>{ if(e.target===m) closeLog(); }); document.body.appendChild(m); }
   m.className='modal'; m.innerHTML=`<div class="card"><div class="row between" style="margin-bottom:12px"><h2 style="font-size:20px">${K.icon} Log ${K.label.toLowerCase()}</h2><button class="x" onclick="closeLog()" aria-label="Close">✕</button></div>
