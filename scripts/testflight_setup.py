@@ -15,8 +15,13 @@ try:
     apps = api('GET', f'/v1/apps?filter[bundleId]={BID}')
     if not apps or not apps['data']: log('App not found in App Store Connect'); raise SystemExit
     app = apps['data'][0]['id']; log('App:', apps['data'][0]['attributes']['name'], app)
-    b = api('GET', f'/v1/builds?filter[app]={app}&sort=-uploadedDate&limit=5') or {'data': []}
-    for x in b['data']: a = x['attributes']; log('Build', a['version'], a['processingState'], a.get('uploadedDate'))
+    b = api('GET', f'/v1/builds?filter[app]={app}&sort=-uploadedDate&limit=12&include=buildBetaDetail') or {'data': []}
+    det = {x['id']: x['attributes'] for x in b.get('included', []) if x['type'] == 'buildBetaDetails'}
+    for x in b['data']:
+        a = x['attributes']; d = det.get(((x.get('relationships') or {}).get('buildBetaDetail') or {}).get('data', {}).get('id', ''), {})
+        log('Build', a['version'], a['processingState'], 'expired' if a.get('expired') else '', 'enc=' + str(a.get('usesNonExemptEncryption')), 'internal=' + str(d.get('internalBuildState')), a.get('uploadedDate'))
+        if a['processingState'] == 'VALID' and a.get('usesNonExemptEncryption') is None:
+            r = api('PATCH', f"/v1/builds/{x['id']}", {'data': {'type': 'builds', 'id': x['id'], 'attributes': {'usesNonExemptEncryption': False}}}); log('  set export compliance:', bool(r))
     g = api('GET', f'/v1/betaGroups?filter[app]={app}&limit=50') or {'data': []}
     grp = next((x for x in g['data'] if x['attributes'].get('isInternalGroup')), None)
     if grp: log('Internal group exists:', grp['attributes']['name'])
