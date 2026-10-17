@@ -1084,6 +1084,8 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 .skin-pick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.skin-pick button{padding:14px 10px;border-radius:12px;border:2px solid var(--line);background:var(--card2);display:grid;gap:4px;text-align:left}
 .skin-pick button.on{border-color:var(--accent)}
 .skin-pick small{color:var(--muted);font-size:12px}
+.px-c{position:absolute;pointer-events:none;image-rendering:pixelated;image-rendering:crisp-edges;z-index:1}
+.px-on .px-src{opacity:0!important}
 </style>
 
 <div class="app" id="app"></div>
@@ -1093,7 +1095,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b167';
+const BUILD='b168';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -6622,6 +6624,34 @@ function aLoot(s){ try { const B=aBoss(), h=B.hits.find(x=>x.sid===s.id), st=aSt
     ${B.dead?`<div class="a-lr"><span>Boss</span><b>DEFEATED · ${MON3[+B.m.slice(5)-1]}</b></div>`:`<div class="a-lr"><span>Boss HP left</span><b class="num">${Math.round(gShowW(B.hp)).toLocaleString()}</b></div>`}
     <div class="a-lr"><span>Daily quest</span><b>${q.n}/${q.L.length}</b></div><div class="a-lr"><span>Rank</span><b style="color:${ARCOL[st.rank]}">${st.rank} · STR ${st.STR}</b></div></div>`; } catch(e){ return ''; } }
 
+
+/* ===================== pixel character: redraws the avatar / room media at low resolution, scaled up with hard pixels ===================== */
+const PX_SEL='.av-stack .av-still, .av-stack video, .pfp-v, video.anim, .room-art';
+function pxOn(){ try { return document.documentElement.getAttribute('data-skin')==='crt' && (S ? S.pxChar!==false : true); } catch(e){ return false; } }
+const pxItems=new Set(); let pxT=0, pxLast=0;
+function pxAttach(m){ if (m.controls) return; if (m._px){ if (!m._px.isConnected || m.nextElementSibling!==m._px) m.insertAdjacentElement('afterend', m._px); pxItems.add(m); return; } const c=document.createElement('canvas'); c.className='px-c'; c.setAttribute('aria-hidden','true'); m._px=c; m.classList.add('px-src'); m.insertAdjacentElement('afterend', c); pxItems.add(m); }
+function pxDetach(m){ try { m._px?.remove(); } catch(e){} m._px=null; m.classList.remove('px-src'); pxItems.delete(m); }
+function pxScan(){ const on=pxOn(); document.documentElement.classList.toggle('px-on', on);
+  if (!on){ for (const m of [...pxItems]) pxDetach(m); return; }
+  for (const m of document.querySelectorAll(PX_SEL)) pxAttach(m);
+  for (const m of [...pxItems]) if (!m.isConnected) pxDetach(m); }
+function pxDraw(m){ const c=m._px; if(!c) return; const op=m.offsetParent; if(!op){ c.style.display='none'; return; }
+  const W=m.offsetWidth, H=m.offsetHeight; if (!W||!H){ c.style.display='none'; return; }
+  const isV=m.tagName==='VIDEO', ready=isV ? (m.readyState>=2 && (!m.classList.contains('av-v') || m.classList.contains('on'))) : (m.complete && m.naturalWidth>0);
+  c.style.display=ready?'block':'none'; if(!ready) return;
+  Object.assign(c.style,{left:m.offsetLeft+'px', top:m.offsetTop+'px', width:W+'px', height:H+'px', borderRadius:getComputedStyle(m).borderRadius});
+  const cols = W<=56 ? 22 : W<=140 ? 44 : 64, rows=Math.max(1,Math.round(cols*H/W));
+  if (c.width!==cols) c.width=cols; if (c.height!==rows) c.height=rows;
+  const nw=isV?m.videoWidth:m.naturalWidth, nh=isV?m.videoHeight:m.naturalHeight; if(!nw||!nh) return;
+  const fit=getComputedStyle(m).objectFit, ar=W/H, nar=nw/nh; let sx=0,sy=0,sw=nw,sh=nh;
+  if (fit==='cover'){ if (nar>ar){ sw=nh*ar; sx=(nw-sw)/2; } else { sh=nw/ar; const pos=parseFloat((getComputedStyle(m).objectPosition.split(' ')[1])||'50')/100; sy=(nh-sh)*(isNaN(pos)?.5:pos); } }
+  const x=c.getContext('2d'); x.imageSmoothingEnabled=true; x.clearRect(0,0,cols,rows); try { x.filter='contrast(1.12) saturate(1.25)'; } catch(e){}
+  try { x.drawImage(m,sx,sy,sw,sh,0,0,cols,rows); } catch(e){} }
+function pxLoop(t){ requestAnimationFrame(pxLoop); if (!pxItems.size) return; if (t-pxLast<66) return; pxLast=t; for (const m of pxItems) pxDraw(m); }
+requestAnimationFrame(pxLoop);
+new MutationObserver(()=>{ clearTimeout(pxT); pxT=setTimeout(pxScan,60); }).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['data-skin']});
+function pxToggle(){ S.pxChar = S.pxChar===false; commit({skipXp:true}); pxScan(); }
+
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
 function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['waterfall','Waterfall'],['bills','Bills'],['budget','Budget'],['deduct','Write-offs']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
@@ -7221,7 +7251,7 @@ function vCharacter(){
 let snapBusy=false;
 async function restoreSnap(){ if(!dbHandle){ toast('Cloud snapshots need the app signed in'); return; } if(snapBusy) return; snapBusy=true; try { const s=await dbHandle.doc('okr/auto-backup').get(); if(!s.exists){ toast('No cloud snapshot yet — the first one is taken within a week'); } else { const o=thaw(s.data()); if(!o||o.v!==2||!o.days) toast('The snapshot couldn\'t be read'); else { restorePending=o; render(); } } } catch(e){ toast('Couldn\'t reach the cloud snapshot just now'); } snapBusy=false; }
 function habitRestore(id,on){ if (on){ const h=(S.habitsOff||[]).find(h=>h.id===id); if(h){ S.habits.push(h); S.habitsOff=S.habitsOff.filter(x=>x.id!==id); } } else { const h=S.habits.find(h=>h.id===id); if(h){ (S.habitsOff ||= []).push(h); S.habits=S.habits.filter(x=>x.id!==id); } } commit({skipXp:true}); }
-function vSettings(){ const sk=document.documentElement.getAttribute('data-skin')||'classic'; return `<div class="card sec"><div class="hdr"><h2>Look</h2></div><div class="skin-pick"><button class="${sk==='crt'?'on':''}" onclick="skinSet('crt')"><b>Night CRT</b><small>pixel arcade · neon</small></button><button class="${sk!=='crt'?'on':''}" onclick="skinSet('classic')"><b>Classic</b><small>clean · ◐ light/dark</small></button></div></div>`+buddyCard()+`<div class="card sec"><div class="hdr"><h2>Habits on Today</h2><span class="sub">${S.habits.length} shown</span></div>
+function vSettings(){ const sk=document.documentElement.getAttribute('data-skin')||'classic'; return `<div class="card sec"><div class="hdr"><h2>Look</h2></div><div class="skin-pick"><button class="${sk==='crt'?'on':''}" onclick="skinSet('crt')"><b>Night CRT</b><small>pixel arcade · neon</small></button><button class="${sk!=='crt'?'on':''}" onclick="skinSet('classic')"><b>Classic</b><small>clean · ◐ light/dark</small></button></div>${sk==='crt'?`<button class="check ${S.pxChar!==false?'on':''}" style="margin-top:10px;width:100%" onclick="pxToggle()"><div class="box">${S.pxChar!==false?'✓':''}</div><div class="txt">Pixel character<br><small class="sub">your avatar, clips and room in 8-bit</small></div></button>`:''}</div>`+buddyCard()+`<div class="card sec"><div class="hdr"><h2>Habits on Today</h2><span class="sub">${S.habits.length} shown</span></div>
     <div class="stack" style="gap:6px">${[...S.habits.map(h=>[h,1]),...(S.habitsOff||[]).map(h=>[h,0])].map(([h,on])=>`<div class="check ${on?'on':''}" onclick="habitRestore('${h.id}',${on?0:1})"><div class="box">${on?'✓':''}</div><div class="txt" style="text-decoration:none;color:var(--fg)">${h.icon} ${esc(h.name)}</div></div>`).join('')}</div>
     <div class="help" style="margin-top:8px">Hidden habits keep all their history.</div></div>${vBackup()}<div class="help sec" style="text-align:center">Tega.exe · build ${BUILD}</div>`; }
 function vBackup(){
