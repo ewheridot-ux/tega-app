@@ -983,7 +983,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b159';
+const BUILD='b160';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -2443,7 +2443,13 @@ const IG_SEED={at:'2026-10-05',user:'organic_tega',followers:1316,follows:1158,m
   daily:[['2026-09-06',2,2,1,0],['2026-09-07',4,60,0,0],['2026-09-08',4,30,3,1],['2026-09-09',4,17,0,0],['2026-09-10',291,386,0,16],['2026-09-11',139,232,0,6],['2026-09-12',181,440,1,8],['2026-09-13',88,256,0,5],['2026-09-14',4,32,1,0],['2026-09-15',3,47,0,0],['2026-09-16',2,22,3,0],['2026-09-17',1,1,0,0],['2026-09-18',542,780,1,11],['2026-09-19',692,913,0,3],['2026-09-20',2,52,0,0],['2026-09-21',1,10,1,0],['2026-09-22',115,149,0,2],['2026-09-23',46,102,1,0],['2026-09-24',1,4,0,0],['2026-09-25',0,7,1,0],['2026-09-26',3,16,0,0],['2026-09-27',106,219,0,3],['2026-09-28',57,79,0,0],['2026-09-29',1,20,0,0],['2026-09-30',3,15,0,0],['2026-10-01',4,20,0,0],['2026-10-02',2,8,1,0],['2026-10-03',0,1,0,0],['2026-10-04',2,11,0,0],['2026-10-05',2,8,0,0]],
   posts:[{ts:'2026-07-30',type:'FEED',cap:'Pt.✌🏿 📸: @thejesuscosta',link:'https://www.instagram.com/p/DbbrT6XiZy1/',views:2979,reach:1134,likes:141,comments:10,saves:0,shares:2},{ts:'2026-07-24',type:'FEED',cap:'📸: @thejesuscosta',link:'https://www.instagram.com/p/DbMZ5HuCez0/',views:2233,reach:726,likes:115,comments:7,saves:1,shares:0}],
   hist:{'2026-10-05':1316}};
-let igBusy=false, igErr='', igTried=false;
+let igBusy=false, igErr='', igTried=false, igLastTry=0;
+// a post found on Instagram/TikTok counts toward "posts this week" without logging it by hand
+function autoLogPosts(posts, plat){ const since=addDays(TODAY,-14), L=(S.logs ||= []), norm=u=>String(u||'').replace(/[?#].*$/,'').replace(/\/$/,''); let n=0;
+  for (const p of posts||[]){ if (!p.ts||p.ts<since||p.ts>TODAY||p.collab) continue; const ln=norm(p.link);
+    if (L.some(l=>l.kind==='post'&&(norm(l.b)===ln||(l.d===p.ts&&(l.a===plat||!l.b))))) continue;
+    L.push({id:uid(), d:p.ts, kind:'post', a:plat, b:p.link||'', auto:1}); const h=S.habits.find(h=>/post/i.test(h.name)); if(h) ensureDay(p.ts).habits[h.id]=true; n++; }
+  return n; }
 const igData = () => S.ig || IG_SEED;
 function igRows(p){ let hit=null; const walk=(o,dep)=>{ if(hit||!o||typeof o!=='object'||dep>5) return; if (Array.isArray(o.requested_field_ids) && Array.isArray(o.data)){ hit=o; return; } for (const v of Object.values(o)) walk(v,dep+1); }; walk(p,0); if(!hit) return null; const ids=hit.requested_field_ids; return hit.data.slice(1).map(r=>Object.fromEntries(ids.map((id,i)=>[id,r[i]]))); }
 async function igQuery(fields, range, extra){ const r=await mcpLib.callTool(IG_SRV,'instagram_insights',{ds_id:'IGI',ds_accounts:IG_ACCT,fields,date_range_type:range,timezone:'America/New_York',...(extra||{})}); const rows=igRows(r&&r.payload!==undefined?r.payload:r); if(!rows) throw {code:'no_rows'}; return rows; }
@@ -2457,8 +2463,9 @@ async function igRefresh(manual){
     const hist=old.hist||{}; hist[TODAY]=n(p.followers_count);
     const byLink={}; for (const x of (old.posts||[])) byLink[x.link]=x;
     for (const m of posts) byLink[m.media_permalink]={ts:String(m.timestamp||'').slice(0,10),type:m.media_product_type||'',cap:String(m.media_caption||'').replace(/\s+/g,' ').slice(0,90),link:m.media_permalink,views:n(m.media_views),reach:n(m.media_reach),likes:n(m.media_like_count),comments:n(m.media_comments_count),saves:n(m.media_saved),shares:n(m.media_shares)};
-    S.ig={at:TODAY,user:p.username||old.user,followers:n(p.followers_count),follows:n(p.follows_count),media:n(p.media_count),daily:daily.map(d=>[String(d.date).slice(0,10),n(d.reach),n(d.profile_views),n(d.follower_count),n(d.accounts_engaged)]).sort((a,b)=>a[0]<b[0]?-1:1),posts:Object.values(byLink).filter(x=>x.link).sort((a,b)=>a.ts<b.ts?1:-1).slice(0,40),hist,aud:old.aud,stories:old.stories,stAt:old.stAt};
+    S.ig={at:TODAY,t:Date.now(),user:p.username||old.user,followers:n(p.followers_count),follows:n(p.follows_count),media:n(p.media_count),daily:daily.map(d=>[String(d.date).slice(0,10),n(d.reach),n(d.profile_views),n(d.follower_count),n(d.accounts_engaged)]).sort((a,b)=>a[0]<b[0]?-1:1),posts:Object.values(byLink).filter(x=>x.link).sort((a,b)=>a.ts<b.ts?1:-1).slice(0,40),hist,aud:old.aud,stories:old.stories,stAt:old.stAt};
     let tkOk=true; try { await tkPull(); } catch(e2){ tkOk=false; }
+    try { autoLogPosts(S.ig.posts,'Instagram'); if (S.tk) autoLogPosts(S.tk.posts,'TikTok'); } catch(e4){}
     try { await Promise.all([igAudPull(), igStoriesPull()]); } catch(e3){}
     igBusy=false; commit({skipXp:true}); if (manual) toast(tkOk?'Instagram and TikTok updated':'Instagram updated. TikTok didn’t respond.');
   } catch(e){ igBusy=false; const c=e&&e.code; igErr = c==='server_not_connected'||c==='needs_reauth' ? 'Supermetrics isn’t reachable. Reconnect it in Claude’s connector settings.' : c==='not_granted' ? 'Allow the Supermetrics connector to refresh.' : c==='tool_error' ? 'Supermetrics returned an error. The trial may have ended or Instagram needs signing in again.' : 'Couldn’t refresh just now. Showing the last saved numbers.'; if (view==='content') render(); }
@@ -4109,7 +4116,7 @@ function ctWeek(){
 }
 function vContent(){
   const ig=igStats(), tk=tkStats(), I=(S.ideas||[]).map(x=>({...x, st:ideaStage(x), p:x.pillar||pillarOf(x.text)}));
-  if (mcpLib && !igTried && (igData().at!==TODAY || tkData().at!==TODAY)) setTimeout(()=>igRefresh(false),0);
+  if (mcpLib && !igBusy && Date.now()-(igData().t||0)>20*60e3 && Date.now()-igLastTry>20*60e3){ igLastTry=Date.now(); setTimeout(()=>igRefresh(false),0); }
   const W=ctWeek(), streak=weekStreak(postWeek);
   const tabs=[['plan','Plan'],['ideas','Ideas'],['create','Create'],['stats','Stats']];
   const head=`<div class="ct-hero sec"><div class="row between"><span class="tag">Content · ${THIS_Q}</span>${mcpLib?`<button class="btn ghost sm" ${igBusy?'disabled':''} onclick="igRefresh(true)">${igBusy?'…':'↻'}</button>`:''}</div>
@@ -6924,7 +6931,7 @@ function backupCard(){
 /* ---------- activity log: posts, proposals, outreach → feed the quarter's goals ---------- */
 const safeUrl = u => { u=(u||'').trim(); return /^https?:\/\//i.test(u) ? u : ''; };
 const LOGK = {
-  post:{label:'Post', icon:'📱', a:'Platform', opts:['TikTok','Instagram','YouTube','Other'], b:'Link (optional)'},
+  post:{label:'Post', icon:'📱', a:'Platform', opts:['TikTok','Instagram','Instagram collab','YouTube','Other'], b:'Link (optional)'},
   proposal:{label:'Proposal', icon:'📨', a:'Client or job', b:'Link (optional)'},
   outreach:{label:'Outreach', icon:'🤝', a:'Who you contacted', b:'Note (optional)'},
 };
@@ -6945,7 +6952,8 @@ function openLog(kind){ lgKind=kind; const K=LOGK[kind]; let m=document.getEleme
 function closeLog(){ document.getElementById('lg')?.remove(); }
 function addLog(e){ e.preventDefault(); const a=document.getElementById('lgA').value.trim(), b=document.getElementById('lgB').value.trim(), d=document.getElementById('lgD').value||TODAY; if(!a){ document.getElementById('lgA').focus(); return false; }
   (S.logs ||= []).push({id:uid(), d: d>TODAY?TODAY:d, kind:lgKind, a, b});
-  if (lgKind==='post'){ const h=S.habits.find(h=>/post/i.test(h.name)); if(h) ensureDay(d>TODAY?TODAY:d).habits[h.id]=true; }
+  if (lgKind==='post'){ const h=S.habits.find(h=>/post/i.test(h.name)); if(h) ensureDay(d>TODAY?TODAY:d).habits[h.id]=true;
+    if (a==='Instagram collab'){ const G=S.ig||(S.ig=thaw(IG_SEED)); const link=safeUrl(b)?b.split('?')[0]:'collab-'+uid(); G.posts=[{ts:d>TODAY?TODAY:d,type:'COLLAB',collab:1,cap:'Collab post',link,views:0,reach:0,likes:0,comments:0,saves:0,shares:0},...(G.posts||[]).filter(x=>x.link!==link)]; } }
   closeLog(); commit(); toast(`${LOGK[lgKind].icon} ${LOGK[lgKind].label} logged`); return false; }
 let lgDelArmed=null;
 function delLog(id){ if(lgDelArmed!==id){ lgDelArmed=id; toast('Tap ✕ again to remove'); setTimeout(()=>{ if(lgDelArmed===id) lgDelArmed=null; },3000); return; } lgDelArmed=null; S.logs=(S.logs||[]).filter(l=>l.id!==id); commit({skipXp:true}); }
