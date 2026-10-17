@@ -1,0 +1,15 @@
+[
+ {"id":"me_side","kind":"image","size":64,"view":"side","direction":"east","palette":1,"desc":"pixel art full body character, side view facing right, young Black man, short black hair, round black glasses, dark navy crew-neck t-shirt, black pants, white sneakers, standing relaxed, bold dark outline"},
+ {"id":"me_walk","kind":"anim","from":"me_side","frames":8,"action":"walking to the right, natural walk cycle, arms swinging"},
+ {"id":"me_work","kind":"anim","from":"me_side","frames":8,"action":"standing at a workbench working with his hands, tinkering with small tools, head slightly down"},
+ {"id":"me_look","kind":"anim","from":"me_side","frames":6,"action":"stops and admires a painting on the wall, hand on chin, slight nod"},
+ {"id":"me_stretch","kind":"anim","from":"me_side","frames":6,"action":"stretches both arms up over head, then relaxes"},
+ {"id":"vault","kind":"image","size":96,"desc":"pixel art boss monster: a round steel bank vault safe with one big glowing eye in the center of its door, heavy bolts around the rim, short mechanical arms, gold coins floating around it, front view, menacing, game boss sprite"},
+ {"id":"vault_idle","kind":"anim","from":"vault","frames":8,"action":"idle: the eye looks left and right, gold coins orbit around it, the vault gently bobs up and down"},
+ {"id":"vault_hit","kind":"anim","from":"vault","frames":6,"action":"gets hit hard: flashes white, shakes, sparks fly off, a crack appears on the door"},
+ {"id":"vault_dead","kind":"anim","from":"vault","frames":8,"action":"defeated: the vault door swings open and gold coins spill out onto the ground, the eye closes"},
+ {"id":"wyrm","kind":"image","size":96,"desc":"pixel art boss monster: a green serpent dragon wyrm coiled around a pile of gold coins, glowing eyes, forked tongue, front view, menacing, game boss sprite"},
+ {"id":"wyrm_idle","kind":"anim","from":"wyrm","frames":8,"action":"idle: slithers and sways in place, tongue flicks, coils shift"},
+ {"id":"wyrm_hit","kind":"anim","from":"wyrm","frames":6,"action":"gets hit hard: flinches back, flashes red, scales chip off"},
+ {"id":"wyrm_dead","kind":"anim","from":"wyrm","frames":8,"action":"defeated: collapses and shrinks down into a small harmless worm on the coin pile"}
+]
