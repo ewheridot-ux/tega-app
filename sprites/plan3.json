@@ -1,0 +1,6 @@
+[
+ {"id":"warden","kind":"image","size":96,"desc":"pixel art boss monster: The Iron Warden, a hulking iron golem dungeon boss built from riveted dark iron plates and cracked grey stone, glowing violet eyes, a glowing purple rune core in its chest, huge heavy fists with iron chains on the wrists, broad shoulders with spiked pauldrons, faint purple energy wisps, front view, menacing, detailed shading, game boss sprite"},
+ {"id":"warden_idle","kind":"anim","from":"warden","frames":8,"action":"idle: breathes heavily, shoulders rise and fall, the purple rune core pulses, eyes glow brighter and dimmer"},
+ {"id":"warden_hit","kind":"anim","from":"warden","frames":6,"action":"gets hit hard: flashes white, staggers back, stone chips and sparks fly off, a crack appears on its chest plate"},
+ {"id":"warden_dead","kind":"anim","from":"warden","frames":8,"action":"defeated: the purple glow fades out, cracks spread, it crumbles into a pile of iron plates and stones"}
+]
