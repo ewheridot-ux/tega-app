@@ -1097,7 +1097,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b169';
+const BUILD='b170';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -1340,7 +1340,7 @@ function watchInbox(db){
     if (changed) { commit(); if (pendingToast) { toast(pendingToast); confetti(); pendingToast = null; } }
   }, e => {});
 }
-function applyDeposit(id, dep){
+function applyDeposit(id, dep){ sprPlay('money');
   const amt = Math.abs(+dep.amt || 0), d = /^\d{4}-\d{2}-\d{2}$/.test(dep.d||'') ? dep.d : TODAY;
   if (!amt) return;
   // already marked by hand (same amount, landed within a few days)? then this deposit is accounted for
@@ -2465,7 +2465,7 @@ function rivalCard(slim){ const r=rival(), my=levelFor(r.mine), ahead=r.diff>=0,
     <div class="sub" style="margin-top:8px">${line}</div>${slim?'':`<div class="help" style="margin-top:8px">The Shadow is you on schedule: he earns ${r.perDay} XP every day, no days off, and hits Lv ${MAXLVL} exactly five years after your first day (${nice(r.start)}).</div>`}</div>`; }
 /* ---------- level-up scene ---------- */
 function lvsClose(){ const m=document.getElementById('lvs'); if(!m || Date.now()-(+m.dataset.at||0)<900) return; m.remove(); }
-function levelScene(lvl){
+function levelScene(lvl){ sprPlay('levelup');
   let m=document.getElementById('lvs'); if(!m){ m=document.createElement('div'); m.id='lvs'; document.body.appendChild(m); }
   const evo=lvl%5===0 && lvl<MAXLVL, ri=ringIdxAt(lvl), bi=bgIdxAt(lvl), stage=stageOf(lvl), un=[];
   if (ri>=0) un.push(`<span class="chip"><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${RINGS[ri].css};margin-right:6px;vertical-align:-1px"></i>${esc(RINGS[ri].name)} ring</span>`);
@@ -3258,11 +3258,11 @@ function vToday(){
   </div></details>`;
 }
 function shiftDay(n){ const k=addDays(curDay,n); if(k>TODAY) return; curDay=k; render(); }
-function toggleTop3(i){ const d=ensureDay(curDay); if(!d.top3[i].text.trim()){ toast('Write it first'); return; } d.top3[i].done=!d.top3[i].done; krCredit('t3:'+curDay+':'+i, d.top3[i].text, d.top3[i].track, d.top3[i].done); commit(); if(d.top3.every(t=>t.done)) toast('Top 3 done. That\'s the day. 🔥'); }
+function toggleTop3(i){ const d=ensureDay(curDay); if(!d.top3[i].text.trim()){ toast('Write it first'); return; } d.top3[i].done=!d.top3[i].done; krCredit('t3:'+curDay+':'+i, d.top3[i].text, d.top3[i].track, d.top3[i].done); commit(); if(d.top3.every(t=>t.done)){ toast('Top 3 done. That\'s the day. 🔥'); sprPlay('hype'); } }
 function setTop3(i,v){ const d=ensureDay(curDay); d.top3[i].text=v; commit({skipXp:true}); }
 function setTop3Track(i,v){ const d=ensureDay(curDay); d.top3[i].track=v; commit({skipXp:true}); }
 function toggleHabit(h){ const d=ensureDay(curDay); d.habits[h]=!d.habits[h]; commit(); }
-function addWin(e){ e.preventDefault(); const inp=document.getElementById('winInput'); const t=inp.value.trim(); if(!t) return false; S.wins.push({id:uid(),d:curDay,text:t}); commit(); return false; }
+function addWin(e){ e.preventDefault(); sprPlay('hype'); const inp=document.getElementById('winInput'); const t=inp.value.trim(); if(!t) return false; S.wins.push({id:uid(),d:curDay,text:t}); commit(); return false; }
 function delWin(id){ S.wins=S.wins.filter(w=>w.id!==id); commit({skipXp:true}); }
 function toggleInit(w,id){ const wk=ensureWeek(w); wk.inits[id]=!wk.inits[id]; const it=weekInits(w).find(i=>i.id===id); if (it) krCredit('in:'+w+':'+id, it.text, it.track, wk.inits[id]); commit(); }
 
@@ -6203,7 +6203,7 @@ function gFinishAsk(){ const L=G_().live, n=L.ex.reduce((a,e)=>a+e.sets.filter(z
 function gFinish(){ const g=G_(), L=g.live; if(!L) return; const x0=computeXP(); const prs=[];
   for (const e of L.ex){ const X=GX[e.x], ok=e.sets.filter(z=>z.ok&&z.t!=='w'); if (!ok.length||!gLift(e.x)) continue; const b=gBest(e.x), top=Math.max(...ok.map(z=>X.base?g1rm(z.w,z.r):z.r)); if ((b.e||b.r) && top>(X.base?b.e:b.r)+.01) prs.push(e.x); }
   const s={id:L.id, d:L.d, t0:L.t0, t1:Date.now(), name:L.name, mode:L.mode, ex:L.ex.map(e=>({x:e.x, rir:e.rir, max:e.max, grp:e.grp, sets:e.sets.filter(z=>z.ok).map(z=>({w:z.w,r:z.r,t:z.t,ok:true}))})).filter(e=>e.sets.length), prs};
-  g.sessions.push(s); g.live=null; g.plan=null; const sp=GSPLIT[g.setup.split]; if (sp&&sp.days.length>1&&sp.days.includes(L.mode)) g.splitIdx=(sp.days.indexOf(L.mode)+1)%sp.days.length;
+  g.sessions.push(s); g.live=null; g.plan=null; sprPlay('flex'); const sp=GSPLIT[g.setup.split]; if (sp&&sp.days.length>1&&sp.days.includes(L.mode)) g.splitIdx=(sp.days.indexOf(L.mode)+1)%sp.days.length;
   const d=ensureDay(L.d); d.habits ||= {}; d.habits.gym=true;
   commit({skipXp:true}); const gain=computeXP()-x0; confetti();
   const mins=Math.round((s.t1-s.t0)/6e4);
@@ -6564,6 +6564,7 @@ function aQuest(k){ k=k||TODAY; const g=G_(), Q=aQday(k), su=g.setup, sess=g.ses
   L.push({k:'mob',t:'10 min stretch or mobility',auto:mins('stretch')>=8});
   L.push({k:'pro',t:`Protein · ${lean?Math.round(bw*.9):bw} g`});
   L.push({k:'h2o',t:'Water · 3 L'});
+  if (pen && k===TODAY && !Q.penSeen){ Q.penSeen=1; setTimeout(()=>sprPlay('missed'),400); }
   if (pen) L.push({k:'pen',t:'PENALTY · 10-min cardio finisher',auto:mins('cardio')>=10,pen:1});
   for (const x of L){ x.ok=!!(x.auto||Q.done[x.k]); }
   return {L, Q, all:L.every(x=>x.ok), n:L.filter(x=>x.ok).length}; }
@@ -6638,6 +6639,7 @@ function pxScan(){ const on=pxOn(); document.documentElement.classList.toggle('p
   for (const m of document.querySelectorAll(PX_SEL)) pxAttach(m);
   for (const m of [...pxItems]) if (!m.isConnected) pxDetach(m); }
 function pxDraw(m){ const c=m._px; if(!c) return; const op=m.offsetParent; if(!op){ c.style.display='none'; return; }
+  if (sprOn() && m.closest('.av-stack')){ if (m.tagName==='VIDEO'){ c.style.display='none'; return; } if (m.classList.contains('av-still') && sprDraw(m)) return; }
   const W=m.offsetWidth, H=m.offsetHeight; if (!W||!H){ c.style.display='none'; return; }
   const isV=m.tagName==='VIDEO', ready=isV ? (m.readyState>=2 && (!m.classList.contains('av-v') || m.classList.contains('on'))) : (m.complete && m.naturalWidth>0);
   c.style.display=ready?'block':'none'; if(!ready) return;
@@ -6655,6 +6657,56 @@ new MutationObserver(()=>{ clearTimeout(pxT); pxT=setTimeout(pxScan,60); }).obse
 // everything else that animates (raid bosses, the room, level-up art) goes through one SVG pixel filter
 (function(){ const mk=()=>{ if (document.getElementById('px-defs')) return; document.body.insertAdjacentHTML('beforeend', '<svg id="px-defs" width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="pxf" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB"><feFlood x="1" y="1" height="1" width="1"/><feComposite width="3" height="3"/><feTile result="t"/><feComposite in="SourceGraphic" in2="t" operator="in"/><feMorphology operator="dilate" radius="1.5"/></filter></svg>'); }; if (document.body) mk(); else document.addEventListener('DOMContentLoaded', mk); })();
 function pxToggle(){ S.pxChar = S.pxChar===false; commit({skipXp:true}); pxScan(); }
+
+
+/* ===================== pixel sprite moods: the avatar becomes a 64px sprite and the app animates it from your real day ===================== */
+const SPR={base:null, src:'', w:64, h:0, once:null, onceAt:0};
+function sprOn(){ return pxOn() && (S ? S.sprite!==false : true); }
+function sprPlay(name){ SPR.once=name; SPR.onceAt=performance.now(); }
+const SPR_FX={ idle:[6,140,1], hype:[8,90,0], flex:[8,110,0], tired:[6,260,1], levelup:[12,90,0], money:[8,110,0], locked:[4,160,1], missed:[6,150,0] };
+function sprMood(){ const now=performance.now();
+  if (SPR.once){ const [n,ms]=SPR_FX[SPR.once]; if (now-SPR.onceAt < n*ms*2) return SPR.once; SPR.once=null; }
+  try { if (G_().live || ensureDatum().session) return 'locked'; } catch(e){}
+  const h=new Date().getHours(), ci=S.days?.[TODAY]?.checkin; if ((ci && ci.feel!=null && ci.feel<=1) || h<5 || (R_&&R_().deb&&false)) return 'tired';
+  return 'idle'; }
+function sprBase(img){ const src=img.currentSrc||img.src; if (SPR.base && SPR.src===src) return SPR.base; if (!img.complete || !img.naturalWidth) return null;
+  const W=64, H=Math.round(64*img.offsetHeight/Math.max(1,img.offsetWidth)) || 80, c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+  const nw=img.naturalWidth, nh=img.naturalHeight, ar=W/H, nar=nw/nh; let sx=0,sy=0,sw=nw,sh=nh; if (nar>ar){ sw=nh*ar; sx=(nw-sw)/2; } else { sh=nw/ar; sy=(nh-sh)*.35; }
+  x.imageSmoothingEnabled=true; x.drawImage(img,sx,sy,sw,sh,0,0,W,H);
+  let d; try { d=x.getImageData(0,0,W,H); } catch(e){ return null; }
+  const p=d.data, q=v=>Math.round(v/36)*36; // posterize to a small palette, then ink the edges
+  for (let i=0;i<p.length;i+=4){ p[i]=Math.min(255,q(p[i])); p[i+1]=Math.min(255,q(p[i+1])); p[i+2]=Math.min(255,q(p[i+2])); }
+  const L=i=>p[i]*.3+p[i+1]*.59+p[i+2]*.11, o=new Uint8ClampedArray(p);
+  for (let y=1;y<H-1;y++) for (let xx=1;xx<W-1;xx++){ const i=(y*W+xx)*4, l=L(i); if (Math.abs(l-L(i+4))>70 || Math.abs(l-L(i+W*4))>70){ if (l<L(i+4)||l<L(i+W*4)){ o[i]=o[i+1]=o[i+2]=Math.max(0,l*.35); } } }
+  d.data.set(o); SPR.base=d; SPR.src=src; SPR.h=H; return d; }
+function sprFrame(ctx, base, mood, f){ const W=base.width, H=base.height; const out=ctx.createImageData(W,H), s=base.data, o=out.data;
+  const put=(x,y,r,g,b)=>{ if(x<0||y<0||x>=W||y>=H) return; const i=(y*W+x)*4; o[i]=r;o[i+1]=g;o[i+2]=b;o[i+3]=255; };
+  const blit=(dy,opts={})=>{ for (let y=0;y<H;y++){ const sy=y-dy-((opts.top&&y<H*opts.top)?opts.topDy||0:0) - ((opts.bottom&&y>=H*opts.bottom)?opts.botDy||0:0); for (let x=0;x<W;x++){ const syy=Math.max(0,Math.min(H-1,sy)), i=(y*W+x)*4, j=(syy*W+x)*4; let r=s[j],g=s[j+1],b=s[j+2];
+      if (opts.dim){ r*=opts.dim; g*=opts.dim; b*=opts.dim; } if (opts.gray){ const l=r*.3+g*.59+b*.11; r=r+(l-r)*opts.gray; g=g+(l-g)*opts.gray; b=b+(l-b)*opts.gray; } if (opts.tint){ r=r*.8+opts.tint[0]*.2; g=g*.8+opts.tint[1]*.2; b=b*.8+opts.tint[2]*.2; }
+      o[i]=r;o[i+1]=g;o[i+2]=b;o[i+3]=255; } } };
+  const star=(cx,cy,c)=>{ put(cx,cy,...c); put(cx-1,cy,...c); put(cx+1,cy,...c); put(cx,cy-1,...c); put(cx,cy+1,...c); };
+  const frame=(c,th)=>{ for (let t=0;t<th;t++) for (let x=0;x<W;x++){ put(x,t,...c); put(x,H-1-t,...c); } for (let t=0;t<th;t++) for (let y=0;y<H;y++){ put(t,y,...c); put(W-1-t,y,...c); } };
+  const glint=k=>{ const gy=Math.round(H*.40); for (let t=0;t<3;t++){ put(Math.round(W*.25)+k*7+t, gy-t, 255,255,255); } };
+  const Z=(x,y)=>{ const c=[200,230,255]; for (let i=0;i<3;i++){ put(x+i,y,...c); put(x+i,y+2,...c); } put(x+1,y+1,...c); };
+  switch(mood){
+    case 'idle': blit(0,{bottom:.62, botDy:(f===1||f===2)?-1:0}); if (f<3) glint(f); break;
+    case 'hype': { const b=[0,-2,-4,-5,-4,-2,-1,0][f]; blit(b,{tint:[255,240,140]}); const C=[255,240,120]; if (f>=3&&f<=6){ star(8,8+f,C); star(W-9,10+f,C); star(W-14,4+f,[120,255,200]); } break; }
+    case 'flex': { const b=[0,-1,-2,-3,-3,-3,-2,0][f]; blit(b); const c=[57,255,159]; if (f>=2&&f<=6){ for (let i=0;i<4;i++){ put(3+i,Math.round(H*.6)-i*2-f,...c); put(W-4-i,Math.round(H*.6)-i*2-f,...c); } } if (f>=5){ const dy=(f-5)*3; put(Math.round(W*.72),Math.round(H*.30)+dy,120,200,255); put(Math.round(W*.72),Math.round(H*.30)+dy+1,120,200,255); } break; }
+    case 'tired': { const nod=[0,1,2,2,1,0][f]; blit(0,{top:.62, topDy:nod, dim:.78}); Z(W-14+(f%2), 10-f); if (f>2) Z(W-9, 4-(f-3)); break; }
+    case 'levelup': { const dy=[0,1,2,-3,-6,-8,-8,-7,-5,-2,0,0][f]; blit(dy,{tint:f>=3&&f<=9?[120,255,200]:null}); if (f>=3&&f<=9) frame([57,255,159], f%2?2:1);
+      if (f>=6&&f<=10){ const r=(f-5)*6, cx=W/2, cy=H/2; for (let a=0;a<12;a++){ const an=a/12*Math.PI*2; star(Math.round(cx+Math.cos(an)*r), Math.round(cy+Math.sin(an)*r*1.2), a%2?[255,240,120]:[57,255,159]); } } break; }
+    case 'money': { blit(0,{tint:f>=4?[255,220,80]:null}); const cy=[2,10,18,24,24,22,24,24][f], cx=W-12, wdt=[3,3,3,3,1,3,1,3][f]; for (let y=-2;y<=2;y++) for (let x=-wdt;x<=wdt;x++) if (x*x/(wdt*wdt+.1)+y*y/4.4<=1) put(cx+x,cy+y,255,205,60); put(cx,cy,255,245,170); break; }
+    case 'locked': { blit(0,{top:.6, topDy:0}); frame(f%2?[77,216,255]:[57,255,159], f%2?1:2); break; }
+    case 'missed': { const dr=[0,1,2,3,3,3][f]; blit(0,{top:.6, topDy:dr, gray:Math.min(1,f*.25)}); if (f>=3&&f<=5){ const c=[200,210,220]; for (let i=0;i<f-1;i++) put(Math.round(W*.6)+i*2, Math.round(H*.58)-i, ...c); } break; }
+    default: blit(0);
+  }
+  ctx.putImageData(out,0,0); }
+function sprDraw(m){ const c=m._px; const base=sprBase(m); if (!base){ return false; } const mood=sprMood(), [n,ms,loop]=SPR_FX[mood]||SPR_FX.idle;
+  const t=performance.now(), f = loop ? Math.floor(t/ms)%n : Math.min(n-1, Math.floor((t-SPR.onceAt)/ms)%(n*2) < n ? Math.floor((t-SPR.onceAt)/ms)%n : n-1);
+  const W=m.offsetWidth, H=m.offsetHeight; c.style.display='block'; Object.assign(c.style,{left:m.offsetLeft+'px', top:m.offsetTop+'px', width:W+'px', height:H+'px', borderRadius:getComputedStyle(m).borderRadius});
+  if (c.width!==base.width) c.width=base.width; if (c.height!==base.height) c.height=base.height;
+  const key=mood+':'+f; if (c._k===key) return true; c._k=key; sprFrame(c.getContext('2d'), base, mood, f); return true; }
+function sprToggle(){ S.sprite = S.sprite===false; commit({skipXp:true}); }
 
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
@@ -7255,7 +7307,7 @@ function vCharacter(){
 let snapBusy=false;
 async function restoreSnap(){ if(!dbHandle){ toast('Cloud snapshots need the app signed in'); return; } if(snapBusy) return; snapBusy=true; try { const s=await dbHandle.doc('okr/auto-backup').get(); if(!s.exists){ toast('No cloud snapshot yet — the first one is taken within a week'); } else { const o=thaw(s.data()); if(!o||o.v!==2||!o.days) toast('The snapshot couldn\'t be read'); else { restorePending=o; render(); } } } catch(e){ toast('Couldn\'t reach the cloud snapshot just now'); } snapBusy=false; }
 function habitRestore(id,on){ if (on){ const h=(S.habitsOff||[]).find(h=>h.id===id); if(h){ S.habits.push(h); S.habitsOff=S.habitsOff.filter(x=>x.id!==id); } } else { const h=S.habits.find(h=>h.id===id); if(h){ (S.habitsOff ||= []).push(h); S.habits=S.habits.filter(x=>x.id!==id); } } commit({skipXp:true}); }
-function vSettings(){ const sk=document.documentElement.getAttribute('data-skin')||'classic'; return `<div class="card sec"><div class="hdr"><h2>Look</h2></div><div class="skin-pick"><button class="${sk==='crt'?'on':''}" onclick="skinSet('crt')"><b>Night CRT</b><small>pixel arcade · neon</small></button><button class="${sk!=='crt'?'on':''}" onclick="skinSet('classic')"><b>Classic</b><small>clean · ◐ light/dark</small></button></div>${sk==='crt'?`<button class="check ${S.pxChar!==false?'on':''}" style="margin-top:10px;width:100%" onclick="pxToggle()"><div class="box">${S.pxChar!==false?'✓':''}</div><div class="txt">Pixel character<br><small class="sub">your avatar, clips and room in 8-bit</small></div></button>`:''}</div>`+buddyCard()+`<div class="card sec"><div class="hdr"><h2>Habits on Today</h2><span class="sub">${S.habits.length} shown</span></div>
+function vSettings(){ const sk=document.documentElement.getAttribute('data-skin')||'classic'; return `<div class="card sec"><div class="hdr"><h2>Look</h2></div><div class="skin-pick"><button class="${sk==='crt'?'on':''}" onclick="skinSet('crt')"><b>Night CRT</b><small>pixel arcade · neon</small></button><button class="${sk!=='crt'?'on':''}" onclick="skinSet('classic')"><b>Classic</b><small>clean · ◐ light/dark</small></button></div>${sk==='crt'?`<button class="check ${S.pxChar!==false?'on':''}" style="margin-top:10px;width:100%" onclick="pxToggle()"><div class="box">${S.pxChar!==false?'✓':''}</div><div class="txt">Pixel character<br><small class="sub">your avatar, clips and room in 8-bit</small></div></button>${S.pxChar!==false?`<button class="check ${S.sprite!==false?'on':''}" style="margin-top:8px;width:100%" onclick="sprToggle()"><div class="box">${S.sprite!==false?'✓':''}</div><div class="txt">Sprite moods<br><small class="sub">idle · hype · flex · tired · level up · money · locked in · missed</small></div></button>`:''}`:''}</div>`+buddyCard()+`<div class="card sec"><div class="hdr"><h2>Habits on Today</h2><span class="sub">${S.habits.length} shown</span></div>
     <div class="stack" style="gap:6px">${[...S.habits.map(h=>[h,1]),...(S.habitsOff||[]).map(h=>[h,0])].map(([h,on])=>`<div class="check ${on?'on':''}" onclick="habitRestore('${h.id}',${on?0:1})"><div class="box">${on?'✓':''}</div><div class="txt" style="text-decoration:none;color:var(--fg)">${h.icon} ${esc(h.name)}</div></div>`).join('')}</div>
     <div class="help" style="margin-top:8px">Hidden habits keep all their history.</div></div>${vBackup()}<div class="help sec" style="text-align:center">Tega.exe · build ${BUILD}</div>`; }
 function vBackup(){
