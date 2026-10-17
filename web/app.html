@@ -852,7 +852,8 @@ video.anim,video.pfp-v{pointer-events:none}
 .g-ex-n{width:28px;height:28px;border-radius:9px;background:var(--card2);display:grid;place-items:center;font-size:13px;font-weight:700;flex:none}
 .g-ex-t{display:grid;gap:2px;min-width:0}.g-ex-t b{font-size:15px}.g-ex-t small{color:var(--muted);font-size:12.5px}
 .g-ic{border:0;background:var(--card2);color:var(--fg);width:38px;height:38px;border-radius:12px;font-size:17px;flex:none}
-.g-body{width:100%;max-width:360px;display:block;margin:6px auto 0}
+.g-body{width:100%;max-width:300px;display:block;margin:6px auto 0}.g-body .g-bl{font-size:80px;fill:var(--muted);font-weight:600}
+.fb-body{display:block;width:100%;border:0;background:var(--card);border-radius:18px;padding:12px 10px 6px;margin-bottom:10px}.fb-body .g-body{max-width:170px;margin:0 auto}.fb-mus b{font-size:11.5px}
 .g-bl{fill:var(--muted);font-size:10px;font-family:inherit}
 .g-legend{display:flex;justify-content:center;gap:14px;font-size:12px;color:var(--muted);margin-top:6px}.g-legend span::before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin-right:5px}
 .g-rr{display:grid;grid-template-columns:84px minmax(0,1fr) 40px 52px;align-items:center;gap:8px;font-size:13px}.g-rr small{color:var(--muted);font-size:11.5px;text-align:right}
@@ -1194,6 +1195,24 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 [data-skin="lab"] .bar{background:#dcebe7}[data-skin="lab"] .bar b{background:var(--accent)}
 [data-skin="lab"] .nav{background:#fff;box-shadow:0 6px 24px rgba(10,60,50,.14);border-radius:22px}
 [data-skin="lab"] .nav button.on{background:var(--accent);color:#fff}
+.g-th.g-ph{position:relative;overflow:hidden;background:#fff}
+.g-th.g-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.g-demo{position:relative;aspect-ratio:3/2;max-width:100%;border-radius:16px;overflow:hidden;background:#fff;margin:4px 0 2px}
+.g-demo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.g-demo img+img{animation:gDemo 2.4s steps(1) infinite}
+@keyframes gDemo{0%{opacity:0}50%{opacity:1}}
+[data-skin="crt"] .g-th.g-ph img,[data-skin="crt"] .g-demo img{image-rendering:auto}
+/* b177: emerald glow money */
+:root[data-skin="lab"]:not(#x){--bg:#05261e;--bg2:#0b3a2f;--card:#0b3a2f;--card2:#125043;--line:rgba(124,240,197,.14);--fg:#effff8;--muted:#94c7b6;--accent:#7cf0c5;--accent2:#4fbfa5;--good:#7cf0c5;--money:#7cf0c5;--warn:#ffc04d;--bad:#ff7a6b;--gold:#f2c94c;--shadow:0 10px 28px rgba(0,0,0,.35);color-scheme:dark}
+[data-skin="lab"] body{background:radial-gradient(100% 60% at 50% 0%,#0d4a3a,#05261e 70%) fixed #05261e}
+[data-skin="lab"] .card,[data-skin="lab"] .stat{background:#0b3a2f;border:1px solid var(--line)}
+[data-skin="lab"] .seg{background:#0b3a2f}[data-skin="lab"] .seg button.on{background:var(--accent);color:#04241b;box-shadow:none}
+[data-skin="lab"] .btn{background:var(--accent);color:#04241b}[data-skin="lab"] .btn.ghost{background:#125043;color:var(--fg)}
+[data-skin="lab"] .chip{background:#125043}[data-skin="lab"] .inp{background:#05261e;border-color:var(--line)}[data-skin="lab"] .bar{background:#125043}
+[data-skin="lab"] .nav{background:#0b3a2f;border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.4)}[data-skin="lab"] .nav button.on{background:var(--accent);color:#04241b}
+/* b177: Gym uses Apple's system font (SF Pro) on iPhone */
+[data-skin="fit"] body,[data-skin="fit"] button,[data-skin="fit"] input,[data-skin="fit"] select{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,system-ui,sans-serif}
+[data-skin="fit"] .fb-title,[data-skin="fit"] h1,[data-skin="fit"] h2{font-family:-apple-system-headline,-apple-system,BlinkMacSystemFont,"SF Pro Display",Inter,sans-serif;font-weight:800}
 </style>
 
 <div class="app" id="app"></div>
@@ -1203,7 +1222,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b176';
+const BUILD='b177';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -6015,7 +6034,9 @@ function vGym(){ const g=G_();
   const tabs=[['workout','Workout'],['recovery','Recovery'],['log','Log'],['results','Results'],['plan','My Plan']];
   const seg=`<div class="fb-tabs sec" role="tablist">${tabs.map(([k,l])=>`<button role="tab" aria-selected="${gTab===k}" class="${gTab===k?'on':''}" onclick="gTab='${k}';render()">${l}</button>`).join('')}</div>`;
   return seg + (gTab==='recovery'?gRecoveryView():gTab==='log'?gLogView():gTab==='results'?gResultsView():gTab==='plan'?gSetupView():gWorkoutView()); }
-function gThumb(x){ const X=GX[x], m=X.p[0], ic=X.k==='cardio'?'🫀':X.k==='stretch'?'🧘':GEQI[X.eq.find(e=>e!=='bench'&&e!=='rack')||X.eq[0]]||'💪'; return `<span class="g-th" style="--c:${GMC[m]||'#8d8d8d'}">${ic}</span>`; }
+const GXIMG=new Set(["abductor", "arnold", "band_apart", "band_curl", "band_row", "bb_bench", "bb_curl", "bb_row", "bench_dip", "bicycle", "bike", "bridge", "bulgarian", "bw_squat", "c_lat_raise", "cable_crunch", "cable_curl", "cable_fly", "cable_row", "calf_bw", "calf_db", "calf_m", "cg_bench", "chinup", "cs_row", "db_bench", "db_curl", "db_fly", "db_rdl", "db_row", "db_sp", "db_thrust", "dead_bug", "deadlift", "diamond", "dips", "face_pull", "goblet", "hammer", "hip_thrust", "hlr", "incl_bb", "incl_curl", "incl_db", "inv_row", "kb_swing", "kickback", "lat_raise", "leg_curl", "leg_ext", "leg_press", "lunge", "m_chest", "m_sp", "oh_ext", "ohp", "pec_deck", "pike_pu", "plank", "pulldown", "pullup", "pushdown", "pushup", "rdl", "rear_fly", "rope", "russian", "sa_pulldown", "side_plank", "skull", "sl_rdl", "squat", "st_abs", "st_chest", "st_glute", "st_ham", "st_lat", "st_quad", "st_shoulder", "st_tri", "stairs", "step_up", "treadmill"]);
+function gImg(x,f){ return 'ex/'+x+'_'+(f||0)+'.webp'; }
+function gThumb(x){ const X=GX[x], m=X.p[0], ic=X.k==='cardio'?'🫀':X.k==='stretch'?'🧘':GEQI[X.eq.find(e=>e!=='bench'&&e!=='rack')||X.eq[0]]||'💪'; return `<span class="g-th${GXIMG.has(x)?' g-ph':''}" style="--c:${GMC[m]||'#8d8d8d'}">${ic}${GXIMG.has(x)?`<img src="${gImg(x)}" alt="" loading="lazy" decoding="async" onerror="this.remove()">`:''}</span>`; }
 function gSetsTxt(e){ const X=GX[e.x], w=e.sets.filter(z=>z.t!=='w'), z=w[0]||e.sets[0]; if (X.k==='cardio') return `${z.r} min`; if (X.k==='stretch'||X.k==='t') return `${w.length} × ${z.r}s${X.side?' each side':''}`;
   const same=w.every(q=>q.r===z.r&&q.w===z.w); return `${w.length} × ${z.r}${same?'':'…'} reps · ${gWtxt(e.x,z.w)}${X.side?' · per side':''}`; }
 
@@ -6038,7 +6059,7 @@ function gWorkoutView(){ const g=G_(), P=gPlan(), R=gFatigue(), su=g.setup, wc=g
     <div class="fb-meta">${P.ex.length} exercises · ${sets} sets · ~${est} min</div>
     <div class="fb-pills"><button onclick="gModsSheet()">⏱ ${mins} min</button><button onclick="gModsSheet()">${GEQI.db} Equipment</button><button onclick="gMuscleSheet()">🎯 Target muscles</button><button onclick="gSwapMenu()">⇄ Swap</button></div>
     <div class="fb-sec"><span>Muscle recovery</span><button onclick="gTab='recovery';render()">See all ›</button></div>
-    <div class="fb-mus">${allM.slice(0,10).map(m=>`<button class="${mus.includes(m)?'on':''}" style="--c:${gRecCol(R[m].pct)};--p:${R[m].pct}" onclick="gMuscleSheet()"><i></i><b class="num">${R[m].pct}%</b><small>${GMUS[m]}</small></button>`).join('')}</div>
+    <button class="fb-body" onclick="gTab='recovery';render()" aria-label="Muscle recovery map">${gBodyMap(R,mus)}</button><div class="fb-mus">${allM.slice(0,10).map(m=>`<button class="${mus.includes(m)?'on':''}" style="--c:${gRecCol(R[m].pct)};--p:${R[m].pct}" onclick="gMuscleSheet()"><i></i><b class="num">${R[m].pct}%</b><small>${GMUS[m]}</small></button>`).join('')}</div>
     <div class="fb-sec"><span>Exercises</span><button onclick="gAddSheet('plan')" aria-label="Add exercise">＋</button></div>
     <div class="fb-list">${rows}</div>
     <div class="fb-week">${Array.from({length:su.days},(_,i)=>`<i class="${i<wc?'on':''}"></i>`).join('')}<span>${wc}/${su.days} this week${streak?` · 🔥 ${streak}-week streak`:''}</span></div>
@@ -6104,24 +6125,10 @@ function gRecoveryView(){ const R=gFatigue(); const rows=Object.keys(GMUS).sort(
 function gRecSheet(m){ const R=gFatigue(); gSheet(`<span class="tag">${GMUS[m]}</span><h2 class="g-sh-t">${R[m].pct}% recovered</h2><div class="help">Based on your last 7 days. Recovery usually takes 2–4 days after a hard session.</div>
   <button class="btn" style="margin-top:10px" onclick="G_().recOv['${m}']=Date.now();G_().plan=null;gSheetClose();commit({skipXp:true});toast('${GMUS[m]} marked recovered')">Mark as 100% recovered</button>
   ${G_().recOv[m]?`<button class="btn ghost sm" style="margin-top:6px" onclick="delete G_().recOv['${m}'];G_().plan=null;gSheetClose();commit({skipXp:true})">Undo override</button>`:''}`); }
-function gBodyMap(R){ const c=m=>gRecCol(R[m].pct), st='stroke="var(--bg)" stroke-width="1.5"';
-  const front=`<g><circle cx="60" cy="22" r="13" fill="var(--card2)"/><rect x="40" y="38" width="40" height="70" rx="14" fill="var(--card2)"/>
-    <ellipse cx="38" cy="46" rx="9" ry="8" fill="${c('shoulders')}" ${st}/><ellipse cx="82" cy="46" rx="9" ry="8" fill="${c('shoulders')}" ${st}/>
-    <path d="M44 44h15v20q-8 4-15-2z" fill="${c('chest')}" ${st}/><path d="M76 44h-15v20q8 4 15-2z" fill="${c('chest')}" ${st}/>
-    <ellipse cx="32" cy="66" rx="6" ry="13" fill="${c('biceps')}" ${st}/><ellipse cx="88" cy="66" rx="6" ry="13" fill="${c('biceps')}" ${st}/>
-    <rect x="29" y="82" width="7" height="22" rx="3.5" fill="var(--card2)"/><rect x="84" y="82" width="7" height="22" rx="3.5" fill="var(--card2)"/>
-    ${[0,1,2].map(r=>`<rect x="50" y="${68+r*12}" width="9" height="10" rx="2.5" fill="${c('abs')}" ${st}/><rect x="61" y="${68+r*12}" width="9" height="10" rx="2.5" fill="${c('abs')}" ${st}/>`).join('')}
-    <path d="M42 110h17l-2 50h-12z" fill="${c('quads')}" ${st}/><path d="M78 110h-17l2 50h12z" fill="${c('quads')}" ${st}/>
-    <path d="M46 164h10l-1 40h-8z" fill="var(--card2)"/><path d="M74 164h-10l1 40h8z" fill="var(--card2)"/></g>`;
-  const back=`<g transform="translate(130 0)"><circle cx="60" cy="22" r="13" fill="var(--card2)"/>
-    <ellipse cx="38" cy="46" rx="9" ry="8" fill="${c('shoulders')}" ${st}/><ellipse cx="82" cy="46" rx="9" ry="8" fill="${c('shoulders')}" ${st}/>
-    <path d="M44 40h32l-4 34q-12 10-24 0z" fill="${c('back')}" ${st}/><path d="M48 76h24l-2 28h-20z" fill="${c('back')}" ${st} opacity=".85"/>
-    <ellipse cx="32" cy="66" rx="6" ry="13" fill="${c('triceps')}" ${st}/><ellipse cx="88" cy="66" rx="6" ry="13" fill="${c('triceps')}" ${st}/>
-    <rect x="29" y="82" width="7" height="22" rx="3.5" fill="var(--card2)"/><rect x="84" y="82" width="7" height="22" rx="3.5" fill="var(--card2)"/>
-    <ellipse cx="51" cy="114" rx="10" ry="10" fill="${c('glutes')}" ${st}/><ellipse cx="69" cy="114" rx="10" ry="10" fill="${c('glutes')}" ${st}/>
-    <path d="M42 126h16l-2 36h-12z" fill="${c('hamstrings')}" ${st}/><path d="M78 126h-16l2 36h12z" fill="${c('hamstrings')}" ${st}/>
-    <ellipse cx="51" cy="180" rx="6" ry="15" fill="${c('calves')}" ${st}/><ellipse cx="69" cy="180" rx="6" ry="15" fill="${c('calves')}" ${st}/></g>`;
-  return `<svg viewBox="0 0 250 210" class="g-body" role="img" aria-label="Recovery map, front and back">${front}${back}<text x="60" y="208" text-anchor="middle" class="g-bl">Front</text><text x="190" y="208" text-anchor="middle" class="g-bl">Back</text></svg>`; }
+const GBODY={"f":[["chest","518 416 510 551 580 580 678 555 706 473 620 416"],["chest","298 465 314 555 408 580 482 551 478 420 376 420"],["abs","686 633 673 571 588 596 600 641 604 833 657 788 665 698"],["abs","339 784 331 718 310 633 322 571 408 592 392 633 392 837"],["abs","563 592 580 641 584 780 584 927 563 984 551 1041 514 1078 510 845 506 673 510 571"],["abs","437 588 486 571 490 673 486 845 482 1073 445 1037 408 914 408 784 412 645"],["biceps","167 682 180 714 229 661 290 539 278 494 204 559"],["biceps","714 494 702 547 763 661 816 718 829 690 788 555"],["triceps","694 555 694 616 759 727 776 702 755 673"],["triceps","224 694 298 555 298 608 229 731"],["","555 237 506 335 506 392 616 400 706 449 694 367 633 351 584 306"],["","290 449 302 371 363 351 412 302 445 245 490 339 486 392 380 396"],["shoulders","784 531 796 478 792 412 759 380 710 363 722 429 714 473"],["shoulders","282 473 212 531 200 478 204 408 245 371 286 371 269 433"],["","424 29 400 118 420 196 461 233 498 253 547 224 576 192 592 102 571 24 498 0"],["","527 1102 543 1249 600 1102 620 1000 649 943 600 927 567 1045"],["","478 1106 449 1253 420 1159 404 1131 396 1073 380 1024 347 939 396 922 416 992 437 1053"],["quads","347 988 371 1082 371 1278 343 1371 310 1327 294 1200 282 1114 294 1008 322 947"],["quads","633 1057 645 1000 669 947 702 1012 710 1118 682 1331 653 1376 624 1286 620 1114"],["quads","388 1294 384 1122 412 1184 445 1294 429 1351 400 1461 363 1465 355 1400"],["quads","596 1457 555 1290 608 1139 612 1302 641 1396 629 1465"],["quads","327 1384 265 1457 257 1367 257 1273 269 1143 294 1335"],["quads","718 1131 739 1241 739 1404 727 1457 665 1384 702 1335"],["","339 1400 347 1433 355 1473 363 1510 351 1567 298 1567 273 1527 273 1473 302 1441"],["","657 1400 722 1478 722 1522 698 1571 649 1567 629 1510"],["calves","714 1604 735 1535 767 1612 796 1678 784 1878 796 1955 747 1955"],["calves","249 1947 278 1649 282 1604 261 1543 249 1576 224 1616 208 1678 220 1882 208 1955"],["calves","727 1951 698 1592 653 1584 641 1624 641 1653 657 1771"],["calves","355 1584 359 1624 359 1669 351 1722 351 1767 322 1820 306 1873 269 1947 273 1878 282 1804 286 1755 290 1698 298 1641 302 1588"],["","61 886 102 751 147 702 163 743 192 735 45 976 0 1000"],["","845 698 833 735 800 731 951 984 1000 1004 935 894 898 763"],["","776 722 776 776 804 841 853 898 922 1012 947 996"],["","69 1012 135 906 188 841 216 771 212 718 49 988"]],"b":[["","506 0 460 9 409 55 404 128 451 200 557 200 591 136 596 47 557 13"],["back","447 217 477 217 472 383 477 647 383 532 353 409 311 366 391 332 438 272"],["back","523 217 557 217 566 272 609 328 689 366 647 404 617 532 523 647 532 383"],["shoulders","294 370 230 391 174 443 183 536 243 494 272 464"],["shoulders","711 370 783 396 826 447 817 536 749 489 723 451"],["back","311 387 281 489 285 553 340 753 472 711 472 664 366 540 336 413"],["back","689 387 719 494 715 562 660 753 528 711 528 664 634 545 664 417"],["triceps","268 498 179 557 145 723 166 817 217 638 268 557"],["triceps","736 502 821 557 860 732 834 821 779 630 732 557"],["triceps","268 583 268 685 230 753 191 774 226 655"],["triceps","728 583 770 647 804 774 766 753 728 689"],["back","477 728 345 770 353 834 494 1021 468 830"],["back","523 728 655 770 647 834 506 1021 532 838"],["","864 757 911 834 932 940 1000 1064 962 1043 881 894 843 838"],["","136 757 89 838 68 936 0 1064 38 1043 123 885 157 830"],["","813 796 774 779 791 847 911 1038 932 1089 945 1047"],["","187 796 221 779 209 843 94 1030 68 1085 51 1047"],["glutes","447 996 302 1085 298 1187 315 1260 472 1213 494 1149"],["glutes","553 991 511 1145 523 1209 681 1260 698 1191 694 1085"],["","481 1230 447 1230 413 1255 451 1443 485 1357 489 1294"],["","519 1226 557 1234 591 1260 549 1443 519 1362 511 1294"],["hamstrings","289 1221 311 1294 366 1260 353 1353 345 1502 294 1583 289 1468 277 1413 272 1315"],["hamstrings","715 1217 694 1289 638 1260 655 1366 664 1502 711 1583 715 1477 728 1421 736 1319"],["hamstrings","387 1255 443 1460 404 1668 362 1528 370 1353"],["hamstrings","617 1255 634 1362 643 1532 600 1668 562 1464"],["","345 1532 311 1591 336 1664 374 1626"],["","664 1536 630 1630 668 1664 694 1591"],["calves","294 1604 285 1672 247 1796 238 1928 255 1970 285 1932 298 1800 319 1711 319 1668"],["calves","374 1651 353 1677 332 1719 311 1804 302 1919 340 2000 387 1906 391 1689"],["calves","630 1651 613 1685 617 1906 664 1996 706 1919 689 1796 668 1702"],["calves","706 1604 723 1685 757 1791 766 1928 745 1966 723 1936 706 1796 681 1681"],["calves","285 1957 302 1957 336 2017 306 2200 285 2136 268 1983"],["calves","698 1957 719 1957 736 1983 719 2132 702 2196 672 2021"]]};
+function gBodyMap(R, hot){ const H=new Set(hot||[]), c=m=>m&&R[m]?gRecCol(R[m].pct):'var(--card2)';
+  const side=(L,dx)=>`<g transform="translate(${dx} 0)">${L.map(([m,p])=>`<polygon points="${p}" fill="${c(m)}" stroke="${H.has(m)?'var(--fg)':'var(--bg)'}" stroke-width="${H.has(m)?10:6}" stroke-linejoin="round"/>`).join('')}</g>`;
+  return `<svg viewBox="0 0 2100 2110" class="g-body" role="img" aria-label="Recovery map, front and back">${side(GBODY.f,0)}${side(GBODY.b,1100)}<text x="500" y="2100" text-anchor="middle" class="g-bl">Front</text><text x="1600" y="2100" text-anchor="middle" class="g-bl">Back</text></svg>`; }
 
 /* ---------- log ---------- */
 function gLogView(){ const g=G_(), S2=g.sessions.slice().sort((a,b)=>(b.d+b.t0).localeCompare(a.d+a.t0)), streak=gWeekStreak();
@@ -6227,7 +6234,7 @@ function gSheetClose(){ document.getElementById('g-sheet')?.remove(); }
 function gExInfo(x){ const X=GX[x]; if(!X) return; const H=gHist(x), b=gBest(x), pts=H.map(h=>Math.max(...h.sets.map(z=>X.base?g1rm(z.w,z.r):z.r))), sug=gSuggest(x).filter(z=>z.t!=='w');
   gSheet(`<div class="row" style="gap:10px;flex-wrap:nowrap;align-items:center">${gThumb(x)}<div><span class="tag">${X.p.map(m=>GMUS[m]).join(' · ')||(X.k==='cardio'?'Cardio':'')}${X.s.length?` <span class="sub">+ ${X.s.map(m=>GMUS[m]).join(', ')}</span>`:''}</span><h2 class="g-sh-t" style="margin:0">${esc(X.n)}</h2></div></div>
     <div class="sub" style="font-size:12.5px">${X.eq.map(e=>GEQ[e]).join(' + ')} · ${({c:'compound',i:'isolation',t:'timed hold',cardio:'cardio',stretch:'stretch'})[X.k]}${X.side?' · per side':''} · rest ${gRestFor(x)}s</div>
-    <div class="g-cue">${esc(X.cue)}</div>
+    ${GXIMG.has(x)?`<div class="g-demo"><img src="${gImg(x,0)}" alt="${esc(X.n)}, start" onerror="this.parentNode.remove()"><img src="${gImg(x,1)}" alt="${esc(X.n)}, finish" onerror="this.remove()"></div>`:''}<div class="g-cue">${esc(X.cue)}</div>
     <a class="btn ghost sm" href="https://www.youtube.com/results?search_query=${encodeURIComponent(X.n+' proper form')}" target="_blank" rel="noopener">▶ Watch how to do it</a>
     ${gLift(x)?`<div class="g-sh-sec">Recommended next time</div><div class="g-best" style="background:var(--card2)">${sug.length} × ${sug[0].r}${X.base?` @ ${gShowW(sug[0].w)} ${gU()}`:''}${gEst(x)?` · est. max ${gShowW(gEst(x))} ${gU()}`:''}</div>`:''}
     ${pts.length>1?`<div class="g-sh-sec">Progress</div>`+gChart(pts, v=>X.base?gShowW(v)+' '+gU()+' est. max':Math.round(v)+' reps'):''}

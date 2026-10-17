@@ -22,6 +22,8 @@ const head = `<!doctype html><html><head><meta charset="utf-8">
 <script src="native.js"></script>
 </head><body>`;
 fs.writeFileSync(path.join(www, 'index.html'), head + app + '</body></html>');
+if (fs.existsSync(path.join(root, 'web/ex'))) fs.cpSync(path.join(root, 'web/ex'), path.join(www, 'ex'), { recursive: true });
+fs.cpSync(path.join(root, 'fonts'), path.join(www, 'fonts'), { recursive: true });
 
 // one-time import bundle (the Claude version's data + files)
 const mig = path.join(root, 'migration');

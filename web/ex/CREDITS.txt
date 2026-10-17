@@ -1,0 +1,2 @@
+Exercise photos: free-exercise-db (github.com/yuhonas/free-exercise-db), public domain (Unlicense).
+Body map shapes: react-body-highlighter (github.com/giavinh79/react-body-highlighter), MIT License, Copyright (c) 2020 GV79.
