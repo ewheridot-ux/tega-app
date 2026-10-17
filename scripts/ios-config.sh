@@ -12,6 +12,9 @@ set_str NSPhotoLibraryAddUsageDescription "Save bench photos and cards to your P
 set_str NSLocationWhenInUseUsageDescription "Find castings and casters near you."
 set_str NSLocationAlwaysAndWhenInUseUsageDescription "Tega.exe only uses your location while you have the app open, to find castings and casters near you."
 set_str UIUserInterfaceStyle "Dark"
+# portrait only (iPhone and iPad)
+for K in UISupportedInterfaceOrientations "UISupportedInterfaceOrientations~ipad"; do pb "Delete :$K"; /usr/libexec/PlistBuddy -c "Add :$K array" -c "Add :$K:0 string UIInterfaceOrientationPortrait" "$P"; done
+set_bool UIRequiresFullScreen true
 # tegaexe:// links for Siri Shortcuts and quick capture
 pb "Delete :CFBundleURLTypes"
 /usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes array" -c "Add :CFBundleURLTypes:0 dict" -c "Add :CFBundleURLTypes:0:CFBundleURLName string com.ewheridot.tegaexe" -c "Add :CFBundleURLTypes:0:CFBundleURLSchemes array" -c "Add :CFBundleURLTypes:0:CFBundleURLSchemes:0 string tegaexe" "$P"
