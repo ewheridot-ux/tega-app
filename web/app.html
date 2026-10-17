@@ -1,5 +1,5 @@
 <title>Tega.exe</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;600;800&family=Rajdhani:wght@500;600;700&family=Unbounded:wght@500;700;800&family=Press+Start+2P&family=VT323&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;600;800&family=Rajdhani:wght@500;600;700&family=Unbounded:wght@500;700;800&family=Press+Start+2P&family=VT323&family=Archivo:wght@500;700;900&family=Space+Mono:wght@400;700&display=swap">
 <style>
 
 /* ===== tokens: dark-first (the brief: Threads / Cash App / Instagram) ===== */
@@ -1356,6 +1356,38 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 .dl-sheet{min-width:0}.dl-sheet>.hdr{margin:2px 40px 0 0}.dl-sheet .card{box-shadow:none}
 .hq-more .infold-b > .card{margin:8px 0;box-shadow:none}
 .litem b i{font-style:normal;color:var(--muted);font-size:.85em}
+
+/* b188 · Content · Viewfinder */
+:root[data-skin="vf"]:not(#x){--bg:#05070a;--bg2:#0b131a;--card:#0b141b;--card2:#122230;--line:rgba(77,216,255,.13);--fg:#e8f6ff;--muted:#7d93a3;--accent:#4dd8ff;--accent2:#ff3df2;--good:#4dd8ff;--warn:#ffc04d;--bad:#ff4d5e;--gold:#ffe14d;--r:8px;--r2:6px;--shadow:none;color-scheme:dark}
+[data-skin="vf"] body{background:#05070a;color:var(--fg);font-family:Archivo,Manrope,system-ui,sans-serif}
+[data-skin="vf"] h1,[data-skin="vf"] h2{font-family:Archivo,sans-serif;font-weight:900;letter-spacing:-.01em}
+[data-skin="vf"] .tag,[data-skin="vf"] .sub,[data-skin="vf"] .chip{font-family:'Space Mono',ui-monospace,monospace;letter-spacing:.06em}
+[data-skin="vf"] .card,[data-skin="vf"] .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:none}
+[data-skin="vf"] .seg{background:#0b131a;border-radius:6px}[data-skin="vf"] .seg button{font-family:'Space Mono',monospace;letter-spacing:.06em;text-transform:uppercase;font-size:11px!important}[data-skin="vf"] .seg button.on{background:var(--accent);color:#021018;box-shadow:none}
+[data-skin="vf"] .btn{background:var(--accent);color:#021018;border-radius:4px}[data-skin="vf"] .btn.ghost{background:transparent;border:1.5px solid #3a5466;color:var(--fg)}
+[data-skin="vf"] .inp{background:#05070a;border:1px solid #1a2a36;border-radius:4px}[data-skin="vf"] .chip{background:#122230}[data-skin="vf"] .bar{background:#122230}[data-skin="vf"] .bar b{background:var(--accent)}
+[data-skin="vf"] .nav{background:#0b131a;border:0;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.5)}[data-skin="vf"] .nav button{color:#5c7180}[data-skin="vf"] .nav button.on{background:var(--accent);color:#021018}
+[data-skin="vf"] .topbar .wordmark{filter:hue-rotate(0deg)}
+.vf-rec{display:flex;align-items:center;gap:10px;justify-content:space-between;font-family:'Space Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.08em;color:var(--muted);margin-bottom:10px}
+.vf-dot{display:flex;align-items:center;gap:6px;color:#ff4d5e}.vf-dot:before{content:'';width:9px;height:9px;border-radius:50%;background:#ff4d5e;animation:vfblink 1.4s steps(2) infinite}
+@keyframes vfblink{50%{opacity:.25}}
+.vf-sync{background:none;border:1px solid #1a2a36;color:var(--accent);border-radius:4px;min-width:36px;min-height:32px;font:inherit}
+.vf-frame{position:relative;border-radius:6px;background:linear-gradient(160deg,#0d1b26,#071018);padding:30px 26px 28px;display:flex;flex-direction:column;gap:12px;min-height:220px;justify-content:space-between;margin-bottom:12px}
+.vf-frame .c{position:absolute;width:24px;height:24px;border:0 solid #4dd8ff}.vf-frame .tl{left:10px;top:10px;border-left-width:2px;border-top-width:2px}.vf-frame .tr{right:10px;top:10px;border-right-width:2px;border-top-width:2px}.vf-frame .bl{left:10px;bottom:10px;border-left-width:2px;border-bottom-width:2px}.vf-frame .br{right:10px;bottom:10px;border-right-width:2px;border-bottom-width:2px}
+.vf-k{font-family:'Space Mono',ui-monospace,monospace;font-size:11px;color:#7d93a3;letter-spacing:.1em}
+.vf-t{font-family:Archivo,sans-serif;font-weight:900;font-size:30px;line-height:1.05;letter-spacing:-.01em;color:#e8f6ff;text-transform:none;overflow-wrap:anywhere}
+.vf-chips{display:flex;gap:6px;flex-wrap:wrap;font-family:'Space Mono',monospace;font-size:11px}.vf-chips span{padding:3px 7px}.vf-chips .o{border:1px solid #4dd8ff;color:#4dd8ff}
+.vf-btns{display:flex;gap:8px}.vf-btns button{flex:1;min-height:46px;border-radius:4px;font-family:Archivo,sans-serif;font-weight:700;font-size:14px;cursor:pointer}
+.vf-b1{border:0;background:#4dd8ff;color:#021018}.vf-b2{background:transparent;border:1.5px solid #3a5466;color:#e8f6ff}
+.vf-week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;font-family:'Space Mono',monospace;text-align:center;margin-bottom:12px}
+.vf-d{padding:7px 0;background:#0d1820;color:#5c7180;font-size:10px;display:flex;flex-direction:column;gap:2px;border-radius:2px}.vf-d b{font-size:14px;color:#9db2c0}
+.vf-d.on{background:#4dd8ff;color:#021018}.vf-d.on b{color:#021018}.vf-d.now{outline:1.5px solid #e8f6ff}.vf-d.now b{color:#e8f6ff}.vf-d.slot{box-shadow:inset 0 0 0 1.5px #4dd8ff;background:transparent}.vf-d.away{opacity:.45}
+.vf-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}.vf-tiles>div{padding:10px;background:#0d1820;display:flex;flex-direction:column;gap:2px;border-radius:2px;min-width:0}
+.vf-tiles small{font-family:'Space Mono',monospace;font-size:10px;color:#7d93a3;letter-spacing:.06em}.vf-tiles b{font-family:Archivo,sans-serif;font-size:20px;font-weight:700;color:#e8f6ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vf-tiles .bad{background:#1f0d12}.vf-tiles .bad small,.vf-tiles .bad b{color:#ff8a97}
+.vf-shot{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #1a2a36}.vf-shot:first-of-type{border-top:0}.vf-shot>i{width:8px;height:8px;flex:none}
+.vf-shot b{display:block;font-weight:600;font-size:14px;color:var(--fg)}.vf-shot small{display:block;font-family:'Space Mono',monospace;font-size:10.5px;color:#7d93a3;margin-top:2px}
+.vf-add{min-height:34px;padding:0 10px;border:1px solid #4dd8ff;background:transparent;color:#4dd8ff;font-family:'Space Mono',monospace;font-size:11px;border-radius:2px;flex:none}
 </style>
 
 <div class="app" id="app"></div>
@@ -1365,7 +1397,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b187';
+const BUILD='b188';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -2386,7 +2418,7 @@ function render(){
   if (typeof S!=='undefined' && S && _derived!==S){ _derived=S; try { deriveAll(); saveLocal(); } catch(e){} }
   if (!_nsKick && window.native && typeof _dbSettled!=='undefined' && _dbSettled && typeof nativeSync==='function'){ _nsKick=true; setTimeout(nativeSync, 1500); }
   _mVer++;
-  try { const want = view==='gym' ? 'arise' : view==='model' ? 'holo' : view==='datum' ? 'chrome' : view==='money' ? 'lab' : (()=>{ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(S&&S.skin)||'crt'; })(); if (document.documentElement.getAttribute('data-skin')!==want) document.documentElement.setAttribute('data-skin', want); } catch(e){}
+  try { const want = view==='gym' ? 'arise' : view==='model' ? 'holo' : view==='datum' ? 'chrome' : view==='money' ? 'lab' : view==='content' ? 'vf' : (()=>{ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(S&&S.skin)||'crt'; })(); if (document.documentElement.getAttribute('data-skin')!==want) document.documentElement.setAttribute('data-skin', want); } catch(e){}
   refreshToday(); releaseEvo(); try { travelTick(); } catch(e){}
   const xp=computeXP(), lvl=levelFor(xp), st=streaks();
   const app=document.getElementById('app');
@@ -4519,20 +4551,17 @@ function vContent(){
   if (mcpLib && !igBusy && Date.now()-(igData().t||0)>20*60e3 && Date.now()-igLastTry>20*60e3){ igLastTry=Date.now(); setTimeout(()=>igRefresh(false),0); }
   const W=ctWeek(), streak=weekStreak(postWeek);
   const tabs=[['plan','Plan'],['ideas','Ideas'],['create','Create'],['stats','Stats']];
-  const head=`<div class="ct-hero sec"><div class="row between"><span class="tag">Content · ${THIS_Q}</span>${mcpLib?`<button class="btn ghost sm" ${igBusy?'disabled':''} onclick="igRefresh(true)">${igBusy?'…':'↻'}</button>`:''}</div>
-    <div class="ct-big"><b class="num">${W.done}<small>/2</small></b><span>posts this week<br><em>${streak?`${streak}-week streak`:'start a streak'}</em></span></div>
-    <div class="ct-gaps"><span>IG <b>${gapTxt(ig.gap)}</b> since last</span><span>TikTok <b>${gapTxt(tk.gap)}</b> since last</span></div></div>
-    <div class="seg sec" style="display:flex;width:100%;overflow:hidden">${tabs.map(([k,l])=>`<button class="${ctTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px" onclick="ctTab='${k}';render()">${l}</button>`).join('')}</div>`;
+  const tabsBar=`<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${tabs.map(([k,l])=>`<button class="${ctTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px" onclick="ctTab='${k}';render()">${l}</button>`).join('')}</div>`;
+  const head=(ctTab==='plan'?vfHero(I,W,ig,tk):vfRec(W))+tabsBar;
   const ideaRow=x=>{ const i=CSTAGES.findIndex(([k])=>k===x.st), P=PILLARS.find(p=>p[0]===x.p)||PILLARS[3]; return `<div class="ct-idea"><span class="ct-pl" style="--c:${P[3]}" title="${P[1]}">${P[2]}</span><div class="ct-it"><b>${esc(x.text)}</b>${x.st==='posted'?(()=>{ const ps=ideaStats(x); return ps?`<small class="ct-ps">👁 ${(ps.views||0).toLocaleString()} views · ♥ ${ps.likes||0}</small>`:`<input class="inp ct-ln" placeholder="paste the post link" value="${esc(x.link||'')}" onchange="ideaLink('${x.id}',this.value)">`; })():''}<div class="ct-steps">${CSTAGES.map(([k,l],j)=>`<i class="${j<=i?'on':''}">${l}</i>`).join('')}</div></div><div class="ct-mv">${i>0?`<button onclick="ideaMove('${x.id}',-1)" aria-label="Back a stage">‹</button>`:''}${i<4?`<button class="go" onclick="ideaMove('${x.id}',1)">${CSTAGES[i+1][1]} ›</button>`:''}</div></div>`; };
   if (ctTab==='plan'){
     const live=I.filter(x=>x.st!=='posted'&&x.st!=='idea').sort((a,b)=>CSTAGES.findIndex(([k])=>k===b.st)-CSTAGES.findIndex(([k])=>k===a.st));
     const feed=ctFeed();
     const since=addDays(TODAY,-30), byP={}; for (const l of (S.logs||[]).filter(l=>l.kind==='post'&&l.d>=since)) { const p=l.pillar||pillarOf(l.a||''); byP[p]=(byP[p]||0)+1; } const tot=Object.values(byP).reduce((a,b)=>a+b,0);
-    return head+`<div class="card sec"><div class="tag" style="margin-bottom:8px">This week</div><div class="sr-week">${W.days.map(k=>{ const ps=W.posted.has(k), aw=W.away.has(k), sl=W.slots.has(k); return `<div class="sr-day ${aw?'away':''} ${sl?'bench':''}"><small>${parseD(k).toLocaleDateString('en-US',{weekday:'short'})}</small><b class="num">${+k.slice(8)}</b><span>${ps?'✅':aw?'🎬':sl?'📱':''}</span></div>`; }).join('')}</div>
-        <div class="sub" style="font-size:12px;margin-top:8px">✅ posted · 🎬 set day · 📱 post day</div>
-        <button class="btn" style="width:100%;justify-content:center;margin-top:12px" onclick="openLog('post')">📱 Log a post</button></div>
-      <div class="card sec"><div class="hdr"><h2>In the works</h2><span class="sub">${live.length}</span></div>${live.length?live.map(ideaRow).join(''):`<div class="empty">Nothing in progress.</div>`}</div>
-      ${feed.length?`<div class="card sec"><div class="hdr"><h2>From your week</h2></div>${feed.map(f=>{ const P=PILLARS.find(p=>p[0]===f.p); return `<div class="ct-feed"><span class="ct-pl" style="--c:${P[3]}">${P[2]}</span><div style="flex:1;min-width:0"><b>${esc(f.t)}</b><small>${esc(f.why)}</small></div><button class="btn sm" onclick="ideaQuick(${JSON.stringify(f.t).replace(/"/g,'&quot;')},'${f.p}')">+ idea</button><button class="mm-dis" onclick="ideaSkip(${JSON.stringify(f.t).replace(/"/g,'&quot;')})" aria-label="Skip">✕</button></div>`; }).join('')}</div>`:''}
+    const hid=(vfNext(I).x||{}).id;
+    return head+`
+      ${feed.length?`<div class="card sec vf-shots"><div class="hdr"><h2>Shots from your week</h2></div>${feed.map(f=>{ const P=PILLARS.find(p=>p[0]===f.p); return `<div class="vf-shot"><i style="background:${P[3]}"></i><div style="flex:1;min-width:0"><b>${esc(f.t)}</b><small>${esc(f.why)}</small></div><button class="vf-add" onclick="ideaQuick(${JSON.stringify(f.t).replace(/"/g,'&quot;')},'${f.p}')">+ SHOT</button><button class="mm-dis" onclick="ideaSkip(${JSON.stringify(f.t).replace(/"/g,'&quot;')})" aria-label="Skip">✕</button></div>`; }).join('')}</div>`:''}
+      ${live.filter(x=>x.id!==hid).length?`<div class="card sec"><div class="hdr"><h2>In the works</h2><span class="sub">${live.filter(x=>x.id!==hid).length}</span></div>${live.filter(x=>x.id!==hid).map(ideaRow).join('')}`:'<div>'}</div>
       <div class="card sec"><div class="hdr"><h2>Pillar mix</h2><span class="sub">last 30 days · ${tot} post${tot===1?'':'s'}</span></div>
         <div class="ct-mix">${PILLARS.map(([k,l,ic,c])=>`<i style="flex:${byP[k]||0};background:${c}"></i>`).join('')||''}${tot?'':'<i style="flex:1;background:var(--card2)"></i>'}</div>
         <div class="ct-leg">${PILLARS.map(([k,l,ic,c])=>`<span><i style="background:${c}"></i>${ic} ${l} <b class="num">${byP[k]||0}</b></span>`).join('')}</div>
@@ -6929,7 +6958,7 @@ function aLoot(s){ try { const B=aBoss(), h=B.hits.find(x=>x.sid===s.id), st=aSt
 
 /* ===================== pixel character: redraws the avatar / room media at low resolution, scaled up with hard pixels ===================== */
 const PX_SEL='.av-stack .av-still, .av-stack video, .pfp-v, video.anim, .room-art';
-function pxOn(){ try { const sk=document.documentElement.getAttribute('data-skin'); return (sk==='crt' || (['holo','chrome','lab','arise'].includes(sk) && baseSkin()==='crt')) && (S ? S.pxChar!==false : true); } catch(e){ return false; } }
+function pxOn(){ try { const sk=document.documentElement.getAttribute('data-skin'); return (sk==='crt' || (['holo','chrome','lab','arise','vf'].includes(sk) && baseSkin()==='crt')) && (S ? S.pxChar!==false : true); } catch(e){ return false; } }
 const pxItems=new Set(); let pxT=0, pxLast=0;
 function pxAttach(m){ if (m.controls) return; if (m._px){ if (!m._px.isConnected || m.nextElementSibling!==m._px) m.insertAdjacentElement('afterend', m._px); pxItems.add(m); return; } const c=document.createElement('canvas'); c.className='px-c'; c.setAttribute('aria-hidden','true'); m._px=c; m.classList.add('px-src'); m.insertAdjacentElement('afterend', c); pxItems.add(m); }
 function pxDetach(m){ try { m._px?.remove(); } catch(e){} m._px=null; m.classList.remove('px-src'); pxItems.delete(m); }
@@ -7615,6 +7644,28 @@ function lootGroup(L){ const m=new Map(); for (const it of L){ const k=it.n+'|'+
 function dreamCard(){ try { const R=R_(); return `<div class="card sec"><div class="hdr"><h2>Dream clients</h2><span class="sub">${R.dream.filter(d=>dreamCaught(d)).length}/${R.dream.length} booked</span></div>
   <div class="bgrid">${R.dream.map((d,i)=>{ const c=dreamCaught(d); return `<div class="bcard dream ${c?'got':''}" style="--rc:${c?'#f5c542':'#444'}"><div class="bc-r">${c?'BOOKED':'NOT YET'}</div><b class="bc-n">${esc(d)}</b><button class="x" onclick="dreamDel(${i})" aria-label="Remove">✕</button></div>`; }).join('')}</div>
   <form class="ct-add" style="margin-top:8px" onsubmit="return dreamAdd(event)"><input class="inp" placeholder="a client you want (e.g. Prada)"><button class="btn sm">Add</button></form></div>`; } catch(e){ return ''; } }
+
+/* ===================== Content · Viewfinder (b188) ===================== */
+// the next post: the idea furthest along, on the next open post day
+function vfNext(I){ const live=(I||[]).filter(x=>x.st!=='posted'), ord=x=>CSTAGES.findIndex(([k])=>k===x.st);
+  const x=live.slice().sort((a,b)=>ord(b)-ord(a)||String(a.d||'').localeCompare(String(b.d||'')))[0]||null;
+  let away=new Set(); try { for (const e of mAll()) if (e.t==='job'&&e.s!=='cancelled') for (const k of e.d) away.add(k); } catch(err){}
+  const posted=new Set((S.logs||[]).filter(l=>l.kind==='post').map(l=>l.d));
+  let day=null; for (let i=0;i<14&&!day;i++){ const k=addDays(TODAY,i), dw=parseD(k).getDay(); if ((dw===2||dw===5) && !away.has(k) && !posted.has(k)) day=k; }
+  return {x, day}; }
+const VF_NEXT={idea:['script','Start the script'],script:['film','Start filming'],film:['edit','Start editing'],edit:['posted','Mark posted']};
+function vfRec(W){ return `<div class="vf-rec sec"><span class="vf-dot">REC · WK ${THIS_WEEK.split('-W')[1]}</span><span>${W.done} / 2 POSTS</span>${mcpLib?`<button class="vf-sync" ${igBusy?'disabled':''} onclick="igRefresh(true)" aria-label="Refresh stats">${igBusy?'…':'↻'}</button>`:''}</div>`; }
+function vfHero(I,W,ig,tk){ const N=vfNext(I), x=N.x, P=x?(PILLARS.find(p=>p[0]===x.p)||PILLARS[3]):null, nx=x?VF_NEXT[x.st]:null;
+  const dayTxt=N.day?parseD(N.day).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}).toUpperCase():'THIS WEEK';
+  const strip=W.days.map(k=>{ const ps=W.posted.has(k), aw=W.away.has(k), sl=W.slots.has(k)||k===N.day; return `<div class="vf-d ${ps?'on':''} ${k===TODAY?'now':''} ${aw?'away':''} ${sl&&!ps?'slot':''}"><small>${'SMTWTFS'[parseD(k).getDay()]}</small><b class="num">${+k.slice(8)}</b></div>`; }).join('');
+  const tkGap=tk.gap, fol=ig.G&&ig.G.followers;
+  return `${vfRec(W)}<div class="vf-frame sec"><i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+    <div class="vf-k">NEXT POST · ${dayTxt}</div>
+    ${x?`<div class="vf-t">${esc(x.text)}</div><div class="vf-chips"><span style="background:${P[3]};color:#06121a">${esc(P[1].toUpperCase())}</span><span class="o">${esc((CSTAGES.find(([k])=>k===x.st)||['',''])[1].toUpperCase())}${nx?` → ${esc(CSTAGES.find(([k])=>k===nx[0])[1].toUpperCase())}`:''}</span></div>`
+       :`<div class="vf-t">Open slot</div><div class="vf-chips"><span class="o">NO IDEA LINED UP</span></div>`}
+    <div class="vf-btns">${x&&nx?`<button class="vf-b1" onclick="ideaMove('${x.id}',1)">${nx[1]}</button>`:`<button class="vf-b1" onclick="ctTab='ideas';render()">+ Add an idea</button>`}<button class="vf-b2" onclick="openLog('post')">Log a post</button></div></div>
+  <div class="vf-week sec">${strip}</div>
+  <div class="vf-tiles sec"><div><small>IG LAST</small><b>${ig.gap===null?'—':gapTxt(ig.gap).replace(' days','d').replace(' day','d')}</b></div><div class="${tkGap!==null&&tkGap>30?'bad':''}"><small>TIKTOK LAST</small><b>${tkGap===null?'—':gapTxt(tkGap).replace(' days','d').replace(' day','d')}</b></div><div><small>FOLLOWERS</small><b>${fol?(+fol).toLocaleString('en-US'):'—'}</b></div></div>`; }
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
 function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['waterfall','Waterfall'],['bills','Bills'],['budget','Budget'],['deduct','Write-offs']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
