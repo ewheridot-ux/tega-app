@@ -1,5 +1,5 @@
 <title>Tega.exe</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Press+Start+2P&family=VT323&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;600;800&family=Rajdhani:wght@500;600;700&family=Unbounded:wght@500;700;800&family=Press+Start+2P&family=VT323&display=swap">
 <style>
 
 /* ===== tokens: dark-first (the brief: Threads / Cash App / Instagram) ===== */
@@ -1141,6 +1141,59 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 [data-skin="fit"] .fb-sec button{color:var(--accent)}
 [data-skin="fit"] .nav button.on{background:var(--card2);color:#fff}
 [data-skin="fit"] .wordmark{font-weight:800}
+/* ===================== section skins (b176): Holo = Modeling, Chrome = Datum, Lab = Money ===================== */
+:root[data-skin="holo"]:not(#x){--bg:#0d0b14;--bg2:#141126;--card:#1a1630;--card2:#262046;--line:rgba(255,255,255,.16);--fg:#f1eefb;--muted:#9a93b8;--accent:#c9b8ff;--accent2:#7cf8ff;--good:#3df58c;--warn:#ffd23d;--bad:#ff5c8a;--modeling:#c9b8ff;--r:20px;--r2:14px;--shadow:0 14px 34px rgba(0,0,0,.45);color-scheme:dark}
+[data-skin="holo"] body{background:#0d0b14;color:var(--fg);font-family:Rajdhani,Inter,system-ui,sans-serif;font-size:16.5px;font-weight:500}
+[data-skin="holo"] h1,[data-skin="holo"] h2,[data-skin="holo"] .wordmark{font-family:Unbounded,Inter,sans-serif;font-weight:800;letter-spacing:-.01em}
+[data-skin="holo"] h2{font-size:17px}[data-skin="holo"] h3{font-weight:700;font-size:17px}
+[data-skin="holo"] b,[data-skin="holo"] strong{font-weight:700}
+[data-skin="holo"] .card,[data-skin="holo"] .stat{background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.06) 45%,transparent 60%),linear-gradient(160deg,#211a42,#141126);border:1.5px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+[data-skin="holo"] .mm-hero{position:relative;padding:18px;border-radius:22px;overflow:hidden;background:linear-gradient(115deg,transparent 28%,rgba(255,255,255,.16) 44%,transparent 60%),linear-gradient(135deg,#2a1f5c 0%,#102a4a 45%,#3b1440 100%);border:1.5px solid rgba(255,255,255,.35);box-shadow:0 18px 40px rgba(0,0,0,.5);background-size:250% 100%,100% 100%;animation:holoShine 7s ease-in-out infinite}
+@keyframes holoShine{0%,100%{background-position:100% 0,0 0}50%{background-position:0 0,0 0}}
+[data-skin="holo"] .mm-big b{font-family:Unbounded,Inter,sans-serif;background:linear-gradient(120deg,#ffffff,#c9b8ff 40%,#7cf8ff 70%,#ffd6f5);-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-skin="holo"] .mm-big span,[data-skin="holo"] .mm-hero .muted{color:#c9c2e6}
+[data-skin="holo"] .tag{color:var(--accent);letter-spacing:.16em;text-transform:uppercase;font-weight:700}
+[data-skin="holo"] .seg{background:transparent;padding:0;gap:6px}
+[data-skin="holo"] .seg button{border:1.5px solid var(--line);border-radius:999px;color:var(--muted);font-weight:700;font-size:14px}
+[data-skin="holo"] .seg button.on{background:var(--accent);border-color:var(--accent);color:#0d0b14;box-shadow:0 0 16px rgba(201,184,255,.35)}
+[data-skin="holo"] .chip{background:transparent;border:1.5px solid var(--line)}
+[data-skin="holo"] .btn{background:var(--accent);color:#0d0b14;border-radius:999px;font-weight:700}
+[data-skin="holo"] .btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--line)}
+[data-skin="holo"] .inp{background:#141126;border:1.5px solid var(--line);border-radius:12px}
+[data-skin="holo"] .nav{background:rgba(26,22,48,.95);border:1px solid rgba(255,255,255,.12);border-radius:22px;backdrop-filter:blur(14px)}
+[data-skin="holo"] .nav button.on{background:var(--accent);color:#0d0b14}
+
+:root[data-skin="chrome"]:not(#x){--bg:#05080c;--bg2:#0b1219;--card:#101a24;--card2:#1a2733;--line:rgba(255,255,255,.2);--fg:#eef6ff;--muted:#a9b8c9;--accent:#c8f1ff;--accent2:#b6d4ff;--good:#7dffcf;--warn:#ffd36b;--bad:#ff6b81;--grillz:#3a8fc4;--r:18px;--r2:14px;--shadow:0 14px 34px rgba(0,0,0,.5);color-scheme:dark}
+[data-skin="chrome"] body{background:radial-gradient(90% 50% at 80% 0%,#20384f,#05080c 70%) fixed #05080c;color:var(--fg);font-family:Inter,system-ui,sans-serif}
+[data-skin="chrome"] h1,[data-skin="chrome"] h2,[data-skin="chrome"] .wordmark{font-family:Unbounded,Inter,sans-serif;font-weight:700;letter-spacing:-.01em}
+[data-skin="chrome"] h2{font-size:17px}
+[data-skin="chrome"] .card,[data-skin="chrome"] .stat{background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));border:1px solid var(--line);border-radius:var(--r);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),var(--shadow);backdrop-filter:blur(10px)}
+[data-skin="chrome"] .tag{color:var(--accent);letter-spacing:.14em;text-transform:uppercase}
+[data-skin="chrome"] .seg{background:transparent;padding:0;gap:6px}
+[data-skin="chrome"] .seg button{border:1px solid rgba(200,241,255,.4);border-radius:999px;color:var(--accent);font-weight:600}
+[data-skin="chrome"] .seg button.on{background:linear-gradient(90deg,#c8f1ff,#ffffff,#b6d4ff);border-color:transparent;color:#06121c}
+[data-skin="chrome"] .chip{background:rgba(255,255,255,.06);border:1px solid var(--line)}
+[data-skin="chrome"] .btn{background:linear-gradient(90deg,#c8f1ff,#ffffff,#b6d4ff);color:#06121c;border-radius:999px;font-weight:800}
+[data-skin="chrome"] .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(200,241,255,.4)}
+[data-skin="chrome"] .inp{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px}
+[data-skin="chrome"] .bar b{background:linear-gradient(90deg,#8fa3b8,#ffffff,#c8f1ff)}
+[data-skin="chrome"] .nav{background:rgba(10,18,26,.85);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(14px)}
+[data-skin="chrome"] .nav button.on{background:linear-gradient(160deg,#dfe8f1,#7c8ea3 45%,#e9f1f8 60%,#5f7086);color:#06121c}
+
+:root[data-skin="lab"]:not(#x){--bg:#eef6f4;--bg2:#e3efec;--card:#ffffff;--card2:#e3f1ed;--line:rgba(16,35,31,.1);--fg:#10231f;--muted:#6b8580;--accent:#0f8f76;--accent2:#4fbfa5;--good:#0f8f76;--money:#0f8f76;--warn:#c27c00;--bad:#d64545;--gold:#b07d00;--r:18px;--r2:14px;--shadow:0 1px 2px rgba(10,60,50,.08),0 6px 18px rgba(10,60,50,.06);color-scheme:light}
+[data-skin="lab"] body{background:#eef6f4;color:var(--fg);font-family:Manrope,Inter,system-ui,sans-serif}
+[data-skin="lab"] h1,[data-skin="lab"] h2,[data-skin="lab"] .wordmark{font-family:Manrope,Inter,sans-serif;font-weight:800;letter-spacing:-.02em}
+[data-skin="lab"] .card,[data-skin="lab"] .stat{background:#fff;border:0;border-radius:var(--r);box-shadow:var(--shadow)}
+[data-skin="lab"] .tag{color:var(--muted)}
+[data-skin="lab"] .seg{background:#dcebe7}
+[data-skin="lab"] .seg button.on{background:#fff;color:var(--fg);box-shadow:0 1px 3px rgba(10,60,50,.15)}
+[data-skin="lab"] .btn{background:var(--accent);color:#fff;border-radius:999px}
+[data-skin="lab"] .btn.ghost{background:#dcebe7;color:var(--fg)}
+[data-skin="lab"] .chip{background:#e3f1ed}
+[data-skin="lab"] .inp{background:#fff;border:1px solid var(--line)}
+[data-skin="lab"] .bar{background:#dcebe7}[data-skin="lab"] .bar b{background:var(--accent)}
+[data-skin="lab"] .nav{background:#fff;box-shadow:0 6px 24px rgba(10,60,50,.14);border-radius:22px}
+[data-skin="lab"] .nav button.on{background:var(--accent);color:#fff}
 </style>
 
 <div class="app" id="app"></div>
@@ -1150,7 +1203,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b175';
+const BUILD='b176';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -2161,7 +2214,7 @@ const trackSelect = (val, onchange) => `<select onchange="${onchange}"><option v
 
 function render(){
   _mVer++;
-  try { const want = view==='gym' ? 'fit' : (()=>{ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(S&&S.skin)||'crt'; })(); if (document.documentElement.getAttribute('data-skin')!==want) document.documentElement.setAttribute('data-skin', want); } catch(e){}
+  try { const want = view==='gym' ? 'fit' : view==='model' ? 'holo' : view==='datum' ? 'chrome' : view==='money' ? 'lab' : (()=>{ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(S&&S.skin)||'crt'; })(); if (document.documentElement.getAttribute('data-skin')!==want) document.documentElement.setAttribute('data-skin', want); } catch(e){}
   refreshToday(); releaseEvo(); try { travelTick(); } catch(e){}
   const xp=computeXP(), lvl=levelFor(xp), st=streaks();
   const app=document.getElementById('app');
@@ -6697,7 +6750,7 @@ function aLoot(s){ try { const B=aBoss(), h=B.hits.find(x=>x.sid===s.id), st=aSt
 
 /* ===================== pixel character: redraws the avatar / room media at low resolution, scaled up with hard pixels ===================== */
 const PX_SEL='.av-stack .av-still, .av-stack video, .pfp-v, video.anim, .room-art';
-function pxOn(){ try { return document.documentElement.getAttribute('data-skin')==='crt' && (S ? S.pxChar!==false : true); } catch(e){ return false; } }
+function pxOn(){ try { const sk=document.documentElement.getAttribute('data-skin'); return (sk==='crt' || (['holo','chrome','lab'].includes(sk) && baseSkin()==='crt')) && (S ? S.pxChar!==false : true); } catch(e){ return false; } }
 const pxItems=new Set(); let pxT=0, pxLast=0;
 function pxAttach(m){ if (m.controls) return; if (m._px){ if (!m._px.isConnected || m.nextElementSibling!==m._px) m.insertAdjacentElement('afterend', m._px); pxItems.add(m); return; } const c=document.createElement('canvas'); c.className='px-c'; c.setAttribute('aria-hidden','true'); m._px=c; m.classList.add('px-src'); m.insertAdjacentElement('afterend', c); pxItems.add(m); }
 function pxDetach(m){ try { m._px?.remove(); } catch(e){} m._px=null; m.classList.remove('px-src'); pxItems.delete(m); }
@@ -6863,6 +6916,7 @@ function pxwLoop(now){ requestAnimationFrame(pxwLoop); if (!pxOn()) return; if (
   for (const c of document.querySelectorAll('canvas.boss-c')) bossDraw(c, now); }
 requestAnimationFrame(pxwLoop);
 
+function baseSkin(){ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(typeof S!=='undefined'&&S&&S.skin)||'crt'; }
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
 function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['waterfall','Waterfall'],['bills','Bills'],['budget','Budget'],['deduct','Write-offs']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
