@@ -1,0 +1,15 @@
+balance {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":28.25,"total":40.0}}
+image me_side {'type': 'generations', 'generations': 1.0}
+anim me_walk 9 frames 64 64
+anim me_work 9 frames 64 64
+anim me_look 7 frames 64 64
+anim me_stretch 7 frames 64 64
+image vault {'type': 'generations', 'generations': 1.0}
+anim vault_idle 9 frames 96 96
+anim vault_hit 7 frames 96 96
+anim vault_dead 9 frames 96 96
+image wyrm {'type': 'generations', 'generations': 1.0}
+anim wyrm_idle 9 frames 96 96
+anim wyrm_hit 7 frames 96 96
+anim wyrm_dead 9 frames 96 96
+balance after {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":10.75,"total":40.0}}
