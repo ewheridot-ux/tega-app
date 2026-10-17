@@ -1,0 +1,25 @@
+name: TestFlight setup
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['ci/run-testflight']
+permissions: { contents: write }
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install pyjwt cryptography -q
+      - name: Group + tester
+        env:
+          KID: ${{ secrets.ASC_KEY_ID }}
+          ISS: ${{ secrets.ASC_ISSUER_ID }}
+          KEY: ${{ secrets.ASC_KEY_P8 }}
+        run: python scripts/testflight_setup.py
+      - name: Report
+        if: always()
+        run: |
+          git config user.name "tega-ci"; git config user.email "ci@users.noreply.github.com"
+          git add ci/testflight-status.md; git commit -m "ci: testflight setup [skip ci]" || true
+          git pull --rebase -q origin main || true; git push -q origin HEAD:main || true
