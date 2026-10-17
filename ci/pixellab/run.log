@@ -1,4 +1,6 @@
-balance {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":9.75,"total":40.0}}
-done base128a {'type': 'generations', 'generations': 1.0}
-done base128b {'type': 'generations', 'generations': 1.0}
-balance after {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":7.75,"total":40.0}}
+balance {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":7.75,"total":40.0}}
+image warden {'type': 'generations', 'generations': 1.0}
+no frames warden_idle
+anim warden_hit 7 frames 96 96
+no frames warden_dead
+balance after {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":3.3999999999999986,"total":40.0}}
