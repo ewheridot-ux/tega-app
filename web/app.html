@@ -1288,6 +1288,19 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 [data-skin="crt"] .cs-t span,[data-skin="crt"] .cs-hi b,[data-skin="crt"] .cs-at span{font-family:var(--px);font-weight:400;font-size:9px;line-height:1.6}
 [data-skin="crt"] .cs-hi b{font-size:10px}[data-skin="crt"] .cs-rl{font-family:'Press Start 2P',monospace;font-size:7px;font-weight:400}
 [data-skin="crt"] .cs-at b,[data-skin="crt"] .cs-tiles b{font-size:22px}
+/* b182: goal rings */
+.gr{display:grid;gap:12px}
+.gr-top{display:flex;gap:12px;align-items:center}.gr-svg{width:150px;height:150px;flex:none;max-width:42%}
+.gr-leg{flex:1;min-width:0;display:grid;gap:8px}
+.gr-l{all:unset;cursor:pointer;display:grid;gap:0;border-left:3px solid transparent;padding-left:8px}.gr-l.on{border-left-color:var(--c)}
+.gr-l small{color:var(--c);font-size:11px;font-weight:800;letter-spacing:.1em}.gr-l b{font-size:26px;line-height:1.05}.gr-l span{color:var(--muted);font-size:13px}
+.gr-box{border:2px solid var(--line);padding:10px;display:grid;gap:2px}.gr-box.bad{border-color:#ff5a5a}
+.gr-h{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--accent);margin-bottom:4px}.gr-box.bad .gr-h{color:#ff5a5a}
+.gr-b{all:unset;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 8px;padding:7px 0;border-top:1px dashed var(--line)}
+.gr-b span{min-width:0}.gr-b small{color:var(--muted);font-size:13px}.gr-b em{font-style:normal;color:#ff5a5a;font-size:13px;text-align:right}
+.gr-on{font-size:14px;line-height:1.35}
+[data-skin="crt"] .gr-l small,[data-skin="crt"] .gr-h{font-family:var(--px);font-weight:400;font-size:8px}
+[data-skin="crt"] .gr-l b{font-size:28px}
 </style>
 
 <div class="app" id="app"></div>
@@ -1297,7 +1310,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b181';
+const BUILD='b182';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -2338,7 +2351,7 @@ function render(){
       ${(()=>{ const se=season(); return `<span class="pill" style="cursor:pointer;box-shadow:inset 0 0 0 1.5px ${se.c}" onclick="stMode='journey';go('evolve');render()" title="Season ${se.no} · ${se.name}">${se.ic} ${se.left}d</span>`; })()}
     </div>
     <div class="nav">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='goals'&&GOALS.some(([k])=>k===view))?'on':''}" onclick="go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
-    <div id="view">${GOALS.some(([k])=>k===view)?goalsTabs()+goalSheet(view):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve})[view]()}</div>`;
+    <div id="view">${GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve})[view]()}</div>`;
   checkEvo();
   if (_dbSettled && richness(S)>0 && !document.getElementById('lvs')?.classList.contains('show')) { if (S.lvlSeen===undefined) S.lvlSeen=Math.max(1,lvl-1); if (lvl>S.lvlSeen) { S.lvlSeen=lvl; setTimeout(()=>{ levelScene(lvl); saveLocal(); scheduleDbWrite(); },400); } }
 }
@@ -7091,6 +7104,31 @@ function statSheet(){ try {
     <div class="cs-note">Strongest: <b style="color:${top.c}">${top.n}</b> · Weakest: <b style="color:${low.c}">${low.n}</b> — ${esc(low.sub)}</div>
     ${csTiles([[String(dailyStreak()),'day streak',CS_COL.grillz],[String(xw),'XP this week',CS_COL.financial],[String(q),'quests · 7d',CS_COL.content]])}</div>`;
   } catch(e){ console.warn('stat sheet',e); return ''; } }
+
+/* ===================== goal rings (b182): week · quarter · year at a glance ===================== */
+function goalRings(v){ try {
+  const wk=week(THIS_WEEK), WL=weekInits(THIS_WEEK), wDone=WL.filter(i=>wk.inits[i.id]).length, wP=WL.length?wDone/WL.length:0;
+  const QO=S.quarters?.[THIS_Q]?.objectives||[], qP=QO.length?QO.reduce((s,o)=>s+objPct(o),0)/QO.length:0;
+  const YO=S.years?.[THIS_Y]?.objectives||[], yP=YO.length?YO.reduce((s,o)=>s+objPct(o),0)/YO.length:0;
+  const [qs,qe]=qRange(THIS_Q), pace=clamp(daysBetween(qs,TODAY)/Math.max(1,daysBetween(qs,qe)),0,1), wLeft=Math.max(1,Math.ceil((daysBetween(TODAY,qe)+1)/7));
+  const [ys,ye]=yRange(THIS_Y), ypace=clamp(daysBetween(ys,TODAY)/Math.max(1,daysBetween(ys,ye)),0,1);
+  const C={w:'#39ff9f',q:'#4dd8ff',y:'#ffe14d'};
+  const arc=(r,p,c,on)=>{ const L=2*Math.PI*r; return `<circle cx="80" cy="80" r="${r}" fill="none" stroke="${c}" stroke-opacity=".18" stroke-width="10"/><circle cx="80" cy="80" r="${r}" fill="none" stroke="${c}" stroke-width="${on?12:10}" stroke-linecap="butt" stroke-dasharray="${(L*clamp(p,0,1)).toFixed(1)} ${L.toFixed(1)}" transform="rotate(-90 80 80)"/>`; };
+  const svg=`<svg viewBox="0 0 160 160" class="gr-svg" role="img" aria-label="Week ${Math.round(wP*100)}%, quarter ${Math.round(qP*100)}%, year ${Math.round(yP*100)}%">${arc(70,wP,C.w,v==='week')}${arc(55,qP,C.q,v==='quarter')}${arc(40,yP,C.y,v==='year'||v==='vision')}</svg>`;
+  const yInc=(()=>{ const k=YO.flatMap(o=>o.krs||[]).find(k=>/income/i.test(k.text)); return k?`$${(+k.current/1000).toFixed(1)}k of $${(+k.target/1000).toFixed(0)}k`:`${YO.length} goals`; })();
+  const leg=[['WEEK',wP,C.w,`${wDone} of ${WL.length} goals`,'week'],['QUARTER',qP,C.q,`${Math.round(pace*100)}% of the time gone`,'quarter'],['YEAR',yP,C.y,yInc,'year']].map(([t,p,c,s,k])=>`<button class="gr-l ${v===k?'on':''}" style="--c:${c}" onclick="go('${k}')"><small>${t}</small><b class="num">${Math.round(p*100)}%</b><span>${esc(s)}</span></button>`).join('');
+  // key results behind / on pace this quarter
+  const krs=QO.flatMap(o=>(o.krs||[]).map(k=>({k,o}))).filter(x=>+x.k.target>0);
+  const gap=x=>krPct(x.k)-pace;
+  const behind=krs.filter(x=>!krHit(x.k) && gap(x)<-.05).sort((a,b)=>gap(a)-gap(b)).slice(0,4);
+  const onT=krs.filter(x=>krHit(x.k) || gap(x)>=-.05);
+  const needTxt=x=>{ const t=+x.k.target, c=+x.k.current||0; if (t<=1) return 'not done yet'; const per=Math.ceil((t-c)/wLeft); return `need ${x.k.unit==='$'?'$'+per.toLocaleString():per} a week`; };
+  const fmt=x=>x.k.unit==='$'?`$${Math.round(+x.k.current||0).toLocaleString()} / $${Math.round(+x.k.target).toLocaleString()}`:`${Math.round((+x.k.current||0)*10)/10} / ${x.k.target}`;
+  const bh=behind.map(x=>`<button class="gr-b" onclick="go('quarter')"><span>${esc(x.k.text.replace(/\s*\([^)]*\)\s*$/,''))}</span><b class="num" style="color:${CS_COL[x.o.track]||'var(--accent)'}">${fmt(x)}</b><small>${needTxt(x)}</small><em>behind</em></button>`).join('');
+  return `<div class="card sec gr"><div class="gr-top">${svg}<div class="gr-leg">${leg}</div></div>
+    ${behind.length?`<div class="gr-box bad"><div class="gr-h">BEHIND PACE · DO THESE NEXT</div>${bh}</div>`:`<div class="gr-box"><div class="gr-h">ALL ON PACE</div></div>`}
+    ${onT.length?`<div class="gr-box"><div class="gr-h">ON TRACK · ${onT.length}</div><div class="gr-on">${onT.slice(0,8).map(x=>esc(x.k.text.replace(/\s*\([^)]*\)\s*$/,''))).join(' · ')}${onT.length>8?` · +${onT.length-8} more`:''}</div></div>`:''}</div>`;
+  } catch(e){ console.warn('goal rings',e); return ''; } }
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
 function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['waterfall','Waterfall'],['bills','Bills'],['budget','Budget'],['deduct','Write-offs']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
