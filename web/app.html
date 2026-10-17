@@ -981,6 +981,26 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 .kr-add{display:grid;gap:6px;margin-top:10px}
 .wk-ed{display:grid;gap:6px;padding:10px;border-radius:var(--r2);background:var(--card2)}.wk-ed .inp{padding:8px 10px;font-size:14px;background:var(--card);text-align:left}.wk-tr{width:64px!important;flex:none;padding-left:8px!important;padding-right:4px!important}.wk-n{width:62px!important;flex:none}
 .wk-pg{font-size:12px;font-weight:700;padding:2px 7px;border-radius:99px;background:var(--card2);margin-right:4px}.wk-pg.ok{color:var(--good)}
+
+/* arise system window */
+.a-sys{--a1:#7cc8ff;background:linear-gradient(160deg,#0a1222,#0d1b33);color:#e8f3ff;border:1px solid rgba(124,200,255,.45);box-shadow:0 0 0 1px rgba(124,200,255,.08),0 0 24px rgba(80,160,255,.18) inset;border-radius:16px;padding:14px;margin-bottom:12px;font-variant-numeric:tabular-nums}
+.a-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.a-hd>span{font-size:11px;letter-spacing:.22em;font-weight:800;color:var(--a1)}
+.a-dim{color:rgba(232,243,255,.62);font-size:12px}
+.a-rank{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;border:1.5px solid var(--rc);background:rgba(255,255,255,.04);color:var(--rc);font-weight:900;font-size:22px;line-height:1;box-shadow:0 0 14px color-mix(in srgb,var(--rc) 45%,transparent)}.a-rank small{font-size:7.5px;letter-spacing:.15em;margin-top:-6px;color:rgba(232,243,255,.7)}
+.a-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:12px}.a-stats button{all:unset;cursor:pointer;display:grid;gap:3px;padding:8px;border-radius:10px;background:rgba(124,200,255,.07);border:1px solid rgba(124,200,255,.18)}
+.a-stats small{font-size:10px;letter-spacing:.14em;color:var(--a1);font-weight:800}.a-stats b{font-size:20px;color:#fff}.a-stats i{display:block;height:3px;border-radius:2px;background:rgba(255,255,255,.1);overflow:hidden}.a-stats u{display:block;height:100%;background:var(--a1)}
+.a-q{display:grid;gap:5px;padding-top:10px;border-top:1px dashed rgba(124,200,255,.25)}.a-q>.row b{font-size:11px;letter-spacing:.18em;color:var(--a1)}
+.a-qr{all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13.5px;padding:5px 2px}.a-qr span{color:var(--a1);width:14px}.a-qr.on{color:rgba(232,243,255,.55);text-decoration:line-through}.a-qr.pen{color:#ff7b7b}.a-qr.pen span{color:#ff7b7b}.a-qr em{margin-left:auto;font-style:normal;font-size:10px;letter-spacing:.1em;color:rgba(232,243,255,.45);text-decoration:none}.a-qr:disabled{cursor:default}
+.a-boss{margin-top:12px;padding-top:10px;border-top:1px dashed rgba(124,200,255,.25);display:grid;gap:5px}.a-boss b{font-size:13.5px}.a-hp{height:8px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden}.a-hp i{display:block;height:100%;background:linear-gradient(90deg,#ff4f6d,#ff9a3d)}
+.a-gate{box-shadow:inset 0 0 0 1.5px #ff6b6b,0 0 22px rgba(255,80,80,.18)}
+.a-hold{position:relative;overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none}.a-hold::before{content:'';position:absolute;inset:0;width:0;background:rgba(124,200,255,.35)}.a-hold.holding::before{width:100%;transition:width .85s linear}.a-hold span{position:relative}
+.a-pop{position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:24px;background:rgba(0,0,0,.55);animation:aIn .25s ease-out}.a-popw{width:min(340px,100%);text-align:center;display:grid;gap:6px}.a-pt{font-size:20px;letter-spacing:.08em}.a-big{font-weight:900;font-size:64px;line-height:1;text-shadow:0 0 22px currentColor}
+@keyframes aIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.a-pot{display:flex;align-items:center;justify-content:space-around;gap:10px;padding:8px 0}.a-pot div{display:grid;justify-items:center;gap:2px}.a-pot small{font-size:10px;letter-spacing:.18em;color:var(--a1)}.a-pot b{font-weight:900;font-size:40px;line-height:1}.a-pot i{font-style:normal;font-size:22px;color:var(--a1)}
+.a-wf{display:flex;gap:6px;margin:12px 0 6px}.a-wf .inp{flex:1;min-width:0;padding:8px 10px;background:rgba(255,255,255,.06);color:#fff;border-color:rgba(124,200,255,.25)}
+.a-mr{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.a-mr span{font-size:12px;padding:4px 8px;border-radius:99px;border:1px solid var(--rc);display:flex;gap:5px}.a-mr b{color:var(--rc)}
+.a-loot{margin:12px 0 0;text-align:left}.a-lr{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:4px 0}
+.a-ml{font-style:normal;font-weight:900}
 </style>
 
 <div class="app" id="app"></div>
@@ -990,7 +1010,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b163';
+const BUILD='b164';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -4600,7 +4620,7 @@ function spendOn(d){ return (S.money.budget?.txns||[]).filter(t=>t.d===d&&isSpen
 function overspentOn(k){ return rpgC('os:'+k,()=>{ const wb=(+S.money.s.flexPerCheck||250)/2; let run=0, over=false; for (const d of weekDays(isoWeek(k))){ if (d>k) break; const sp=spendOn(d); run+=sp; if (sp>0 && run>wb) over=true; else if (sp===0 && over && d<TODAY && d<k) over=false; } return over; }); }
 
 /* ---------- stats & perks ---------- */
-const STATS=[['STR','💪','Strength','Gym days'],['CHA','✨','Charisma','Bookings, nights out, followers'],['DEX','🖐️','Dexterity','Bench hours, Datum days'],['INT','🧠','Intellect','Things you studied, practice'],['WIS','🦉','Wisdom','Journaling, reviews, check-ins'],['LUCK','🍀','Luck','How often castings turn into bookings']];
+const STATS=[['STR','💪','Strength','Gym days + gym rank'],['CHA','✨','Charisma','Bookings, nights out, followers'],['DEX','🖐️','Dexterity','Bench hours, Datum days'],['INT','🧠','Intellect','Things you studied, practice'],['WIS','🦉','Wisdom','Journaling, reviews, check-ins'],['LUCK','🍀','Luck','How often castings turn into bookings']];
 const PERKS={
   STR:[[10,'ironbody','Iron Body','Gym on a travel day counts double'],[20,'secondwind','Second Wind','Rusty can’t touch you'],[30,'titan','Titan','+5% XP on gym days']],
   CHA:[[10,'silver','Silver Tongue','+40 XP on casting days'],[20,'magnetic','Magnetic','Afterglow lasts 3 days'],[30,'headliner','Headliner','On Set gives +20%']],
@@ -4612,7 +4632,8 @@ function rpgBase(){ return rpgC('base',()=>{ const D=ensureDatum(), days=Object.
   const E=liveE(), jobs=E.filter(e=>e.t==='job').length, casts=E.filter(e=>['casting','selftape'].includes(e.t)).length;
   const bench=D.prototypes.reduce((a,p)=>a+(+p.hours||0),0), hang=hangDays().size, learn=Object.keys(D.learnDone||{}).length;
   const reviews=Object.values(S.weeks||{}).filter(w=>w.review?.done).length, closes=days.filter(d=>d.close).length, ci=days.filter(d=>d.checkin).length;
-  return { STR:Math.floor(cnt('gym')/3), CHA:Math.min(40,Math.floor(jobs/2)+hang+Math.floor((+S.ig?.followers||0)/500)), DEX:Math.floor(bench/2)+Math.floor(cnt('datum')/4),
+  let rb=0; try { if (S.gym&&S.gym.sessions&&S.gym.sessions.length) rb=ARANK.indexOf(aRank(gScore()))*2; } catch(e){}
+  return { STR:Math.floor(cnt('gym')/3)+rb, CHA:Math.min(40,Math.floor(jobs/2)+hang+Math.floor((+S.ig?.followers||0)/500)), DEX:Math.floor(bench/2)+Math.floor(cnt('datum')/4),
     INT:learn*2+Math.floor(cnt('guitar')/4)+(S.art||[]).length, WIS:Math.floor((cnt('journal')+reviews*3+closes)/3)+Math.floor(ci/10), LUCK:Math.round(jobs/Math.max(1,jobs+casts)*20) }; }); }
 function statVal(k){ return (rpgBase()[k]||0)+(+R_().pts[k]||0); }
 function perks(){ return rpgC('perks',()=>{ const P={}; for (const [k] of STATS) for (const [lv,id] of PERKS[k]) if (statVal(k)>=lv) P[id]=1; return P; }); }
@@ -5783,7 +5804,7 @@ function gPlan(force){ const g=G_(); const P=g.plan;
 function gRegen(patch){ const g=G_(); gPlan(); Object.assign(g.plan, patch||{}); gPlan(true); commit({skipXp:true}); }
 function gWeekCount(wk){ wk=wk||isoWeek(TODAY); return new Set(G_().sessions.filter(s=>isoWeek(s.d)===wk).map(s=>s.d)).size; }
 function gWeekStreak(){ const g=G_(); let n=0, w=isoWeek(TODAY); if (gWeekCount(w)<g.setup.days) w=weekShift(w,-1); while (gWeekCount(w)>=g.setup.days && n<200){ n++; w=weekShift(w,-1); } return n; }
-function gymXP(){ try { const g=S.gym; if(!g) return 0; return (g.sessions||[]).reduce((a,s)=>a+25+(s.prs||[]).length*10,0); } catch(e){ return 0; } }
+function gymXP(){ try { const g=S.gym; if(!g) return 0; return (g.sessions||[]).reduce((a,s)=>a+25+(s.prs||[]).length*10,0)+aQuestXP(); } catch(e){ return 0; } }
 function gCal(s){ const hrs=Math.max(((s.t1||s.t0)-s.t0)/36e5, s.ex.reduce((a,e)=>a+e.sets.length,0)*1.6/60), kg=gBodyLb()/2.2046; const cardio=s.ex.filter(e=>GX[e.x]?.k==='cardio').reduce((a,e)=>a+e.sets.reduce((b,z)=>b+z.r,0),0)/60; return Math.round(5*kg*Math.max(0,hrs-cardio)+8*kg*cardio); }
 function gVol(s){ return s.ex.reduce((a,e)=>a+e.sets.filter(z=>z.ok!==false&&z.t!=='w').reduce((b,z)=>b+z.w*z.r,0),0); }
 // mStrength per muscle + overall Strength Score
@@ -5811,14 +5832,15 @@ function gWorkoutView(){ const g=G_(), P=gPlan(), R=gFatigue(), su=g.setup, wc=g
     return `${gs?`<div class="g-ss-l">Superset</div>`:''}<div class="g-ex ${e.grp?'in-ss':''} ${ge?'ss-end':''}">
       <button class="g-ex-main" onclick="gExInfo('${e.x}')">${gThumb(e.x)}<span class="g-ex-t"><b>${esc(X.n)}${e.max?' <em class="g-max">MAX EFFORT</em>':''}</b><small>${gSetsTxt(e)}${e.sets.some(z=>z.t==='w')?' · warm-up':''}</small></span></button>
       <button class="g-ic" onclick="gExMenu('plan',${i})" aria-label="More">⋯</button></div>`; }).join('');
-  return `${live}<div class="g-hero sec">
-    <div class="row between"><span class="tag">${dayLab} · ${GGOAL[su.goal].n}</span><button class="g-prof" onclick="gProfSheet()">${gProf().id==='main'?'🏢':'🧳'} ${esc(gProf().name)} ▾</button></div>
+  const gate=P.ex.some(e=>e.max);
+  return `${live}${aSysCard()}<div class="g-hero sec ${gate?'a-gate':''}">
+    <div class="row between"><span class="tag">${gate?'⚔️ BOSS GATE · ':''}${dayLab} · ${GGOAL[su.goal].n}</span><button class="g-prof" onclick="gProfSheet()">${gProf().id==='main'?'🏢':'🧳'} ${esc(gProf().name)} ▾</button></div>
     <h2 class="g-title">${esc(P.name)}</h2>
     <div class="g-mods"><button onclick="gModsSheet()">⏱ ${mins} min</button><button onclick="gModsSheet()">${GEQI.db} Equipment</button><button onclick="gSwapMenu()">⇄ Swap</button></div>
     <div class="g-meta">${P.ex.length} exercises · ${sets} sets · ~${est} min</div>
     <button class="g-chips" onclick="gMuscleSheet()">${mus.map(m=>`<span class="g-chip" style="--c:${gRecCol(R[m].pct)}">${GMUS[m]} <b>${R[m].pct}%</b></span>`).join('')}<span class="g-chip g-chip-e">✎ Target muscles</span></button>
     <div class="g-week">${Array.from({length:su.days},(_,i)=>`<i class="${i<wc?'on':''}"></i>`).join('')}<span>${wc}/${su.days} this week${streak?` · 🔥 ${streak}-week streak`:''}</span></div>
-    <button class="btn g-start" onclick="gStart()">${g.live?'Resume workout':'Start workout'}</button></div>
+    <button class="btn g-start a-hold" ${g.live?'onclick="gStart()"':'onpointerdown="aHoldStart(event,this)" onpointerup="aHoldEnd(this)" onpointerleave="aHoldEnd(this)" onpointercancel="aHoldEnd(this)" oncontextmenu="return false"'}><span>${g.live?'Resume workout':'Hold to start'}</span></button></div>
   <div class="card sec g-list">${rows}
     <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn ghost sm" onclick="gRegen()">↻ New workout</button><button class="btn ghost sm" onclick="gAddSheet('plan')">+ Exercise</button><button class="btn ghost sm" onclick="gSaveAs('plan')">☆ Save</button></div></div>`; }
 
@@ -5922,12 +5944,12 @@ function gResultsView(){ const g=G_(), P={week:7,month:30,'6mo':182,year:365}[gP
   const BENCH=[['bench','Bench press',['bb_bench','db_bench','m_chest']],['squat','Squat',['squat','goblet','leg_press']],['dead','Deadlift',['deadlift','rdl','db_rdl']],['ohp','Overhead press',['ohp','db_sp','m_sp']]];
   const bsel=BENCH.find(b=>b[0]===gResX)||BENCH[0], bx=bsel[2].find(x=>gHist(x).length)||bsel[2][0], bh=gHist(bx).map(h=>Math.max(...h.sets.map(z=>g1rm(z.w,z.r))));
   const prs=g.sessions.flatMap(s=>(s.prs||[]).map(x=>({x,d:s.d}))).sort((a,b)=>b.d.localeCompare(a.d)).slice(0,8);
-  return `<div class="g-score sec"><span class="tag">Strength score</span><b class="num">${sc||'—'}</b><small>${sc30&&sc?`${sc>=sc30?'▲':'▼'} ${Math.abs(sc-sc30)} vs 30 days ago`:'Log a few workouts to build your score'}</small></div>
+  return `<div class="g-score sec"><span class="tag">Strength score${sc?` · <b style="color:${ARCOL[aRank(sc)]}">${aRank(sc)}-Rank</b>`:''}</span><b class="num">${sc||'—'}</b><small>${sc30&&sc?`${sc>=sc30?'▲':'▼'} ${Math.abs(sc-sc30)} vs 30 days ago`:'Log a few workouts to build your score'}</small></div>
   <div class="card sec"><div class="hdr"><h2>Workout report</h2></div><div class="g-opts" style="margin-bottom:10px">${[['week','Week'],['month','Month'],['6mo','6 months'],['year','Year']].map(([k,l])=>`<button class="${gPeriod===k?'on':''}" onclick="gPeriod='${k}';render()">${l}</button>`).join('')}</div>
     <div class="g-rep"><div><span>Workouts</span><b class="num">${A.n}</b>${d(A.n,B.n)}</div><div><span>Weight lifted</span><b class="num">${Math.round(gShowW(A.vol)).toLocaleString()}</b><small>${gU()}</small>${d(A.vol,B.vol)}</div><div><span>Calories</span><b class="num">${A.cal.toLocaleString()}</b>${d(A.cal,B.cal)}</div><div><span>Time</span><b class="num">${Math.round(A.min)}</b><small>min</small>${d(A.min,B.min)}</div></div></div>
   <div class="card sec"><div class="hdr"><h2>Benchmark lifts</h2><span class="sub">estimated 1-rep max</span></div><div class="g-opts" style="margin-bottom:8px">${BENCH.map(([k,l])=>`<button class="${gResX===k?'on':''}" onclick="gResX='${k}';render()">${l}</button>`).join('')}</div>
     ${bh.length>1?gChart(bh, v=>gShowW(v)+' '+gU()):`<div class="help">${bh.length?`${esc(GX[bx].n)}: ${gShowW(bh[0])} ${gU()} est. max. One more session and the trend shows here.`:'Do one of these lifts to start tracking it.'}</div>`}</div>
-  <div class="card sec"><div class="hdr"><h2>Muscle strength</h2><span class="sub">mStrength · last 6 weeks</span></div><div class="stack" style="gap:8px">${Object.keys(GMUS).sort((a,b)=>ms[b]-ms[a]).map(m=>`<div class="g-rr"><span>${GMUS[m]}</span><div class="g-bar"><i style="width:${ms[m]/mx*100}%;background:${GMC[m]}"></i></div><b class="num">${ms[m]||'—'}</b><small>${ms[m]&&ms30[m]?(ms[m]>ms30[m]?'▲':ms[m]<ms30[m]?'▼':'＝'):''}</small></div>`).join('')}</div></div>
+  <div class="card sec"><div class="hdr"><h2>Muscle strength</h2><span class="sub">mStrength · last 6 weeks</span></div><div class="stack" style="gap:8px">${Object.keys(GMUS).sort((a,b)=>ms[b]-ms[a]).map(m=>`<div class="g-rr"><span>${GMUS[m]}</span><div class="g-bar"><i style="width:${ms[m]/mx*100}%;background:${GMC[m]}"></i></div><b class="num">${ms[m]?`<em class="a-ml" style="color:${ARCOL[aMRank(ms[m])]}">${aMRank(ms[m])}</em> `:''}${ms[m]||'—'}</b><small>${ms[m]&&ms30[m]?(ms[m]>ms30[m]?'▲':ms[m]<ms30[m]?'▼':'＝'):''}</small></div>`).join('')}</div></div>
   <div class="card sec"><div class="hdr"><h2>Weekly volume</h2><span class="sub">${gU()} lifted</span></div><div class="g-vbars">${wv.map((v,i)=>`<div><i style="height:${Math.max(2,v/wmx*100)}%"></i><small>${i===7?'now':'-'+(7-i)}</small></div>`).join('')}</div></div>
   ${prs.length?`<div class="card sec"><div class="hdr"><h2>Recent records</h2></div><div class="stack" style="gap:6px">${prs.map(p=>{ const b=gBest(p.x); return `<button class="g-rec" onclick="gExInfo('${p.x}')"><span>🏆 ${esc(GX[p.x]?.n)}</span><b class="num">${b.w?gShowW(b.w)+'×'+b.r:b.r+' reps'}</b><small>${nice(p.d)}</small></button>`; }).join('')}</div></div>`:''}`; }
 function gChart(pts, lab){ const mx=Math.max(...pts), mn=Math.min(...pts), W=300, H=110, xs=i=>14+i*(W-28)/(pts.length-1), ys=v=>H-16-(mx===mn?.5:(v-mn)/(mx-mn))*(H-36);
@@ -6083,7 +6105,7 @@ function gFinish(){ const g=G_(), L=g.live; if(!L) return; const x0=computeXP();
   const mins=Math.round((s.t1-s.t0)/6e4);
   document.getElementById('g-live')?.remove(); document.body.classList.remove('g-noscroll'); clearInterval(gTick); render();
   gSheet(`<div class="g-done"><div class="g-done-ic">💪</div><h2 class="g-sh-t" style="margin:0">Workout complete</h2><div class="sub">${esc(s.name)}</div><div class="g-stats"><div><b class="num">${mins}</b><span>min</span></div><div><b class="num">${Math.round(gShowW(gVol(s))).toLocaleString()}</b><span>${gU()} lifted</span></div><div><b class="num">${gCal(s)}</b><span>calories</span></div></div>
-    ${prs.length?`<div class="g-best">🏆 New record${prs.length>1?'s':''}: ${prs.map(x=>esc(GX[x].n)).join(', ')}</div>`:''}<div class="g-xp">+${gain} XP · Gym habit ticked · ${gWeekCount()}/${g.setup.days} this week</div>
+    ${prs.length?`<div class="g-best">🏆 New record${prs.length>1?'s':''}: ${prs.map(x=>esc(GX[x].n)).join(', ')}</div>`:''}<div class="g-xp">+${gain} XP · Gym habit ticked · ${gWeekCount()}/${g.setup.days} this week</div>${aLoot(s)}
     <div class="row" style="gap:8px;margin-top:12px"><button class="btn" style="flex:1;justify-content:center" onclick="gSheetClose()">Done</button><button class="btn ghost" onclick="gShare('${s.id}')">↗ Share</button></div></div>`); }
 function gDelSession(id){ const g=G_(), s=g.sessions.find(x=>x.id===id); if(!s) return; g.trash.push({...s, deletedAt:TODAY}); g.sessions=g.sessions.filter(x=>x.id!==id); gLogOpen=null; commit({skipXp:true}); toast('Deleted · restore below'); }
 function gRestore(id){ const g=G_(), s=g.trash.find(x=>x.id===id); if(!s) return; const {deletedAt,discarded,restEnd,restLen,...y}=s; if (discarded){ y.t1=y.t1||Date.now(); y.ex=y.ex.map(e=>({...e, sets:e.sets.filter(z=>z.ok)})).filter(e=>e.sets.length); y.prs=[]; } g.sessions.push(y); g.trash=g.trash.filter(x=>x.id!==id); commit({skipXp:true}); toast('Restored'); }
@@ -6409,6 +6431,96 @@ function wkEditHTML(w){ const tplIds=new Set((S.weeklyTemplate||[]).map(i=>i.id)
     <select class="inp" name="sc"><option value="tpl">Every week</option><option value="wk">This week only</option></select>
     <button class="btn sm" style="width:100%;justify-content:center">Add goal</button></form>`; }
 function wkSide(w,i){ if (!i.src) return ''; const n=(week(w).prog||{})[i.id] ?? wkProg(w,i) ?? 0, t=wkTargetOf(i); return `<span class="wk-pg num ${n>=t?'ok':''}" title="${esc(srcLab(i.src))}">${Math.round(n*10)/10}/${t}</span>`; }
+
+
+/* ===================== Gym × Arise: system window, stats, ranks, daily quest, boss gate, hold-to-start, potential ===================== */
+const ARANK=['E','D','C','B','A','S'], ARCOL={E:'#8b93a7',D:'#5aa0ff',C:'#36d1a0',B:'#f5c542',A:'#ff8a3d',S:'#ff4fd8'};
+const aRank = sc => ARANK[sc>=1050?5:sc>=850?4:sc>=650?3:sc>=450?2:sc>=250?1:0];
+const aMRank = v => ARANK[v>=160?5:v>=130?4:v>=100?3:v>=70?2:v>=40?1:0];
+const aNextAt = sc => [250,450,650,850,1050].find(t=>sc<t)||null;
+function aStats(){ const g=G_(), su=g.setup, since=addDays(TODAY,-27), L=g.sessions.filter(s=>s.d>=since&&s.d<=TODAY);
+  const sc=gScore(), days=new Set(L.map(s=>s.d)).size, cons=Math.min(1,days/Math.max(1,(su.days||3)*4));
+  const hard=L.reduce((a,s)=>a+s.ex.reduce((b,e)=>b+(gLift(e.x)?e.sets.filter(z=>z.t!=='w').length:0),0),0)/4;
+  const mob=L.reduce((a,s)=>a+s.ex.reduce((b,e)=>{ const k=GX[e.x]?.k; return b+(k==='cardio'?e.sets.reduce((c,z)=>c+(+z.r||0),0):k==='stretch'?e.sets.reduce((c,z)=>c+(+z.r||0),0)/60:0); },0),0);
+  const R=Object.values(gFatigue()).map(x=>x.pct), rec=R.length?R.reduce((a,b)=>a+b,0)/R.length:100;
+  const sl=[...Array(7)].map((_,i)=>S.days[addDays(TODAY,-i)]?.checkin?.sleep).filter(v=>v!=null), slp=sl.length?sl.reduce((a,b)=>a+b,0)/sl.length/4:.6;
+  return { STR:Math.min(99,Math.round(sc/12)), VIT:Math.min(99,Math.round(60*cons+40*Math.min(1,hard/Math.max(1,(su.days||3)*15)))), AGI:Math.min(99,Math.round(mob/1.6)), REC:Math.min(99,Math.round(rec*.7+slp*100*.3)), sc, rank:aRank(sc) }; }
+const ASTAT=[['STR','Strength','strength score'],['VIT','Vitality','showing up + weekly sets'],['AGI','Agility','cardio + stretch minutes, last 4 weeks'],['REC','Recovery','muscle recovery + your sleep']];
+
+/* ---------- daily quest + penalty ---------- */
+function aQday(k){ const g=G_(); g.q ||= {}; return g.q[k] ||= {done:{}}; }
+function aDueToday(){ const g=G_(), n=g.setup.days||3, wc=gWeekCount(), dow=(parseD(TODAY).getDay()+6)%7, left=7-dow, need=n-wc; if (g.sessions.some(s=>s.d===TODAY)) return true; if (need<=0) return false; const pref=[...Array(n)].map((_,i)=>Math.round(i*7/n)); return need>=left || pref.includes(dow) || need>pref.filter(d=>d>dow).length; }
+function aQuest(k){ k=k||TODAY; const g=G_(), Q=aQday(k), su=g.setup, sess=g.sessions.filter(s=>s.d===k), bw=Math.round(gBodyLb()), lean=(su.goal||'lean')==='lean';
+  const mins=t=>sess.reduce((a,s)=>a+s.ex.reduce((b,e)=>b+(GX[e.x]?.k===t?e.sets.reduce((c,z)=>c+(+z.r||0),0)/(t==='stretch'?60:1):0),0),0);
+  const pen=k===TODAY ? aPenalty() : !!Q.pen; if (k===TODAY) Q.pen=pen?1:0;
+  const due=k===TODAY ? aDueToday() : !!Q.due; if (k===TODAY) Q.due=due?1:0;
+  const L=[];
+  if (due) L.push({k:'wo',t:'Clear today’s workout',auto:sess.length>0});
+  else L.push({k:'walk',t:'Rest day · 20-min walk',auto:mins('cardio')>=20});
+  L.push({k:'mob',t:'10 min stretch or mobility',auto:mins('stretch')>=8});
+  L.push({k:'pro',t:`Protein · ${lean?Math.round(bw*.9):bw} g`});
+  L.push({k:'h2o',t:'Water · 3 L'});
+  if (pen) L.push({k:'pen',t:'PENALTY · 10-min cardio finisher',auto:mins('cardio')>=10,pen:1});
+  for (const x of L){ x.ok=!!(x.auto||Q.done[x.k]); }
+  return {L, Q, all:L.every(x=>x.ok), n:L.filter(x=>x.ok).length}; }
+function aPenalty(){ const y=addDays(TODAY,-1), g=G_(), Q=(g.q||{})[y]; if (!Q || !Q.due) return false; return !g.sessions.some(s=>s.d===y); }
+function aQTick(k){ const Q=aQday(TODAY); Q.done[k]=!Q.done[k]; const x0=computeXP(); commit({skipXp:true}); const q=aQuest(); if (q.all && !Q.cleared){ Q.cleared=1; commit({skipXp:true}); aSys('DAILY QUEST COMPLETE',`+${computeXP()-x0} XP · the System approves.`); } }
+function aQuestXP(){ const g=S.gym; if(!g||!g.q) return 0; let x=0; for (const [k,Q] of Object.entries(g.q)){ const n=Object.values(Q.done||{}).filter(Boolean).length; x+=n*5+(Q.cleared?20:0); } return x; }
+
+/* ---------- monthly boss: The Iron Warden (volume = damage, records = crits) ---------- */
+function aBoss(){ const g=G_(), m=TODAY.slice(0,7), prevM=[1,2].map(i=>{ const d=new Date(+m.slice(0,4), +m.slice(5,7)-1-i, 1); return dkey(d).slice(0,7); });
+  const vol=mm=>g.sessions.filter(s=>s.d.slice(0,7)===mm).reduce((a,s)=>a+gVol(s),0), past=prevM.map(vol).filter(Boolean);
+  const max=Math.max(20000, Math.round((past.length?past.reduce((a,b)=>a+b,0)/past.length:20000)*1.1/1000)*1000);
+  const S_=g.sessions.filter(s=>s.d.slice(0,7)===m).sort((a,b)=>a.d.localeCompare(b.d)), hits=S_.map(s=>({d:s.d, dmg:Math.round(gVol(s)+(s.prs||[]).length*max*.05), crit:(s.prs||[]).length, sid:s.id}));
+  const dealt=hits.reduce((a,h)=>a+h.dmg,0); return {max, hp:Math.max(0,max-dealt), dealt, hits, dead:dealt>=max, m}; }
+function aBossBar(B){ const pct=Math.max(0,B.hp/B.max); return `<div class="a-boss"><div class="row between"><b>🗿 The Iron Warden</b><span class="a-dim">${B.dead?'DEFEATED':MON3[+B.m.slice(5)-1]+' gate'}</span></div><div class="a-hp"><i style="width:${Math.round(pct*100)}%"></i></div><div class="row between a-dim"><span>${Math.round(gShowW(B.hp)).toLocaleString()} / ${Math.round(gShowW(B.max)).toLocaleString()} ${gU()} HP</span><span>Volume = damage · records crit</span></div></div>`; }
+
+/* ---------- system window on the Workout tab ---------- */
+function aSysCard(){ try { const st=aStats(), q=aQuest(), B=aBoss(), g=G_(); aRankCheck(st);
+  return `<div class="a-sys sec"><div class="a-hd"><span>◆ SYSTEM</span><button class="a-rank" style="--rc:${ARCOL[st.rank]}" onclick="aPotential()" aria-label="Rank ${st.rank}, see your potential">${st.rank}<small>RANK</small></button></div>
+    <div class="a-stats">${ASTAT.map(([k,n,h])=>`<button onclick="aStatInfo('${k}')"><small>${k}</small><b class="num">${st[k]}</b><i><u style="width:${st[k]}%"></u></i></button>`).join('')}</div>
+    <div class="a-q"><div class="row between"><b>DAILY QUEST</b><span class="a-dim">${q.n}/${q.L.length}${q.all?' · CLEARED':''}</span></div>
+      ${q.L.map(x=>`<button class="a-qr ${x.ok?'on':''} ${x.pen?'pen':''}" ${x.auto?'disabled':''} onclick="aQTick('${x.k}')"><span>${x.ok?'■':'□'}</span>${esc(x.t)}${x.auto?'<em>auto</em>':''}</button>`).join('')}
+      ${q.Q.pen?'<div class="a-dim" style="margin-top:4px">You skipped a workout day. Clear the penalty to keep the streak clean.</div>':''}</div>
+    ${aBossBar(B)}</div>`; } catch(e){ console.warn('arise',e); return ''; } }
+function aStatInfo(k){ const st=aStats(), m=ASTAT.find(x=>x[0]===k); gSheet(`<div class="a-sys" style="margin:0"><div class="a-hd"><span>◆ ${m[1].toUpperCase()}</span></div><div class="a-big num">${st[k]}</div><div class="a-dim" style="font-size:13px">From ${m[2]}.</div>
+  <div class="a-dim" style="margin-top:10px;font-size:13px">${k==='STR'?`Strength score ${st.sc}. Rank ${st.rank}${aNextAt(st.sc)?` · ${aNextAt(st.sc)-st.sc} to ${ARANK[ARANK.indexOf(st.rank)+1]}`:' · max rank'}`:k==='VIT'?'Hit your days per week and keep ~15 hard sets per workout.':k==='AGI'?'Add cardio or stretches to workouts. A 20-min walk on rest days counts.':'Train fresh muscles and log sleep in your check-in.'}</div></div>`); }
+function aRankCheck(st){ const g=G_(); if (!g.sessions.length) return; if (!g.rank){ g.rank=st.rank; return; } if (ARANK.indexOf(st.rank)>ARANK.indexOf(g.rank)){ g.rank=st.rank; setTimeout(()=>{ commit({skipXp:true}); aSys('RANK UP',`You are now ${st.rank}-Rank.`,st.rank); confetti(); },300); } }
+function aSys(title, body, big){ document.getElementById('a-pop')?.remove(); const m=document.createElement('div'); m.id='a-pop'; m.className='a-pop'; m.onclick=()=>m.remove();
+  m.innerHTML=`<div class="a-sys a-popw"><div class="a-hd"><span>◆ SYSTEM NOTICE</span></div>${big?`<div class="a-big" style="color:${ARCOL[big]}">${big}</div>`:''}<b class="a-pt">${esc(title)}</b><div class="a-dim">${esc(body)}</div><div class="a-dim" style="margin-top:10px;font-size:11px">tap to close</div></div>`;
+  document.body.appendChild(m); try { window.native?.haptic?.(); } catch(e){} setTimeout(()=>m.remove(),6000); }
+
+/* ---------- potential: 90-day projection ---------- */
+function aPotential(){ const g=G_(), sc=gScore(), pts=[56,42,28,14,0].map(n=>gScore(addDays(TODAY,-n))).filter((v,i,a)=>v>0);
+  let slope=0; if (pts.length>=2) slope=(pts[pts.length-1]-pts[0])/Math.max(1,(pts.length-1)*2); if (slope<=0) slope=Math.max(4, sc*.012);
+  const p90=Math.round(sc+slope*13), bl=(g.bwLog||[]).slice().sort((a,b)=>a.d.localeCompare(b.d)), w0=bl[0], w1=bl[bl.length-1];
+  let wTxt='Log your weight once a week and the 90-day line shows here.';
+  if (bl.length>=2 && daysBetween(w0.d,w1.d)>=7){ const perWk=(w1.lb-w0.lb)/(daysBetween(w0.d,w1.d)/7); wTxt=`${gShowW(w1.lb)} ${gU()} now → about <b>${gShowW(w1.lb+perWk*13)} ${gU()}</b> in 90 days at your current pace (${perWk>0?'+':''}${Math.round(perWk*10)/10} lb/week).`; }
+  const last=bl[bl.length-1]||{}, lastW=(g.wLog||[]).slice(-1)[0]||{};
+  gSheet(`<div class="a-sys" style="margin:0"><div class="a-hd"><span>◆ POTENTIAL · 90 DAYS</span></div>
+    <div class="a-pot"><div><small>NOW</small><b style="color:${ARCOL[aRank(sc)]}">${aRank(sc)}</b><span class="num">${sc}</span></div><i>→</i><div><small>DAY 90</small><b style="color:${ARCOL[aRank(p90)]}">${aRank(p90)}</b><span class="num">${p90}</span></div></div>
+    <div class="a-dim" style="font-size:12.5px;margin:6px 0 12px">Strength score projected from your last 8 weeks${pts.length<2?' (not enough history yet, so this uses a beginner pace)':''}. Estimate, not a promise.</div>
+    <div style="font-size:13.5px;line-height:1.45">${wTxt}</div>
+    <form class="a-wf" onsubmit="return aLogBody(event)"><input class="inp num" name="w" type="number" step="0.1" inputmode="decimal" placeholder="weight ${gU()}" value=""><input class="inp num" name="wa" type="number" step="0.1" inputmode="decimal" placeholder="waist in"><button class="btn sm">Log</button></form>
+    <div class="a-dim" style="font-size:11.5px">${last.d?`Last weight ${gShowW(last.lb)} ${gU()} · ${nice(last.d)}`:''}${lastW.d?` · waist ${lastW.in}" · ${nice(lastW.d)}`:''}</div>
+    <div class="a-dim" style="margin-top:12px;font-size:12px">Muscle ranks</div><div class="a-mr">${Object.entries(gMStrength()).filter(([,v])=>v).sort((a,b)=>b[1]-a[1]).map(([m,v])=>`<span style="--rc:${ARCOL[aMRank(v)]}"><b>${aMRank(v)}</b>${GMUS[m]}</span>`).join('')||'<span class="a-dim">Train to unlock</span>'}</div></div>`); }
+function aLogBody(e){ e.preventDefault(); const g=G_(), w=+e.target.w.value, wa=+e.target.wa.value; if (!w && !wa) return false;
+  if (w){ const lb=gFromU(w); g.bwLog=(g.bwLog||[]).filter(x=>x.d!==TODAY); g.bwLog.push({d:TODAY, lb}); g.setup.bw=w; }
+  if (wa){ g.wLog=(g.wLog||[]).filter(x=>x.d!==TODAY); g.wLog.push({d:TODAY, in:wa}); }
+  commit({skipXp:true}); toast('Logged'); aPotential(); return false; }
+
+/* ---------- hold to start ---------- */
+const A_LINES=['The gate is open. Go.','Daily quest accepted.','Arise.','Rank doesn’t move itself.','No skipping the warm-up, hunter.','Lean and dangerous. Let’s work.'];
+let aHoldT=null;
+function aHoldStart(ev,btn){ if (G_().live){ gStart(); return; } ev.preventDefault(); btn.classList.add('holding'); aHoldT=setTimeout(()=>{ btn.classList.remove('holding'); aHoldT=null; try { window.native?.haptic?.(); } catch(e){} toast('◆ '+A_LINES[Math.floor(Math.random()*A_LINES.length)]); gStart(); },850); }
+function aHoldEnd(btn){ if (aHoldT){ clearTimeout(aHoldT); aHoldT=null; btn.classList.remove('holding'); } }
+
+/* ---------- loot screen extras for the finish sheet ---------- */
+function aLoot(s){ try { const B=aBoss(), h=B.hits.find(x=>x.sid===s.id), st=aStats(), q=aQuest();
+  return `<div class="a-sys a-loot"><div class="a-hd"><span>◆ LOOT</span></div>
+    ${h?`<div class="a-lr"><span>🗿 Damage to the Iron Warden</span><b class="num">${Math.round(gShowW(h.dmg)).toLocaleString()}${h.crit?` · ${h.crit} crit${h.crit>1?'s':''}`:''}</b></div>`:''}
+    ${B.dead?`<div class="a-lr"><span>Boss</span><b>DEFEATED · ${MON3[+B.m.slice(5)-1]}</b></div>`:`<div class="a-lr"><span>Boss HP left</span><b class="num">${Math.round(gShowW(B.hp)).toLocaleString()}</b></div>`}
+    <div class="a-lr"><span>Daily quest</span><b>${q.n}/${q.L.length}</b></div><div class="a-lr"><span>Rank</span><b style="color:${ARCOL[st.rank]}">${st.rank} · STR ${st.STR}</b></div></div>`; } catch(e){ return ''; } }
 
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
