@@ -1407,6 +1407,13 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 .fb-mus{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;overflow:visible;margin:0;padding:0}.fb-mus button{width:auto;min-width:0}
 .fb-cta{bottom:calc(98px + env(safe-area-inset-bottom,0px))}
 .fb-list{gap:10px}
+
+/* b192 */
+.xp-pill.up{box-shadow:inset 0 0 0 1.5px var(--good)}.xp-pill.down{box-shadow:inset 0 0 0 1.5px var(--bad)}
+button.fx-m{border:0;background:none;font:inherit;cursor:pointer;padding:4px 6px}
+.xp-rows{display:grid;gap:2px;margin-top:8px}.xp-row{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.xp-row b{display:block}.xp-row small{display:block;color:var(--muted);font-size:12px;margin-top:2px}.xp-row em{font-style:normal;font-weight:800}.xp-row em.up{color:var(--good)}.xp-row em.down{color:var(--bad)}.xp-row.tot{border-top:2px solid var(--line)}
+.hq-era{display:flex;align-items:center;gap:8px;padding:0 2px 8px;font-size:11px;color:var(--muted)}.hq-era i{flex:1;height:5px;background:var(--card2);border-radius:3px;overflow:hidden}.hq-era u{display:block;height:100%;background:var(--accent)}
 </style>
 
 <div class="app" id="app"></div>
@@ -1416,7 +1423,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b191';
+const BUILD='b192';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -2435,7 +2442,7 @@ const trackSelect = (val, onchange) => `<select onchange="${onchange}"><option v
 let _derived=null; let _nsKick=false;
 function render(){
   if (typeof S!=='undefined' && S && _derived!==S){ _derived=S; try { deriveAll(); saveLocal(); } catch(e){} }
-  if (!_nsKick && window.native && typeof _dbSettled!=='undefined' && _dbSettled && typeof nativeSync==='function'){ _nsKick=true; setTimeout(nativeSync, 1500); }
+  if (!_nsKick && typeof _dbSettled!=='undefined' && _dbSettled){ _nsKick=true; setTimeout(()=>liveRefresh('open'), 1200); }
   _mVer++;
   try { const want = view==='gym' ? 'arise' : view==='model' ? 'holo' : view==='datum' ? 'chrome' : view==='money' ? 'lab' : view==='content' ? 'vf' : (()=>{ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(S&&S.skin)||'crt'; })(); if (document.documentElement.getAttribute('data-skin')!==want) document.documentElement.setAttribute('data-skin', want); } catch(e){}
   refreshToday(); releaseEvo(); try { travelTick(); } catch(e){}
@@ -2457,6 +2464,7 @@ function render(){
       ${S.travel&&S.travel.on?`<span class="pill" style="cursor:pointer" onclick="travelSheet()">✈️ ${esc(S.travel.city||'Away')}</span>`:''}
       <span class="pill fire">🔥 <span class="num">${st.daily}</span>&nbsp;day streak${shieldsLeft()?` · 🛡️${shieldsLeft()}`:''}</span>
       <span class="pill" style="cursor:pointer" onclick="levelScene(${lvl})" title="Replay level-up">Lv ${lvl} · ${titleOf(lvl)}</span>
+      ${(()=>{ try { const X=xpMult(TODAY); return Math.abs(X.total-1)<.005?'':`<span class="pill xp-pill ${X.total>=1?'up':'down'}" style="cursor:pointer" onclick="xpSheet()" title="XP multiplier today">⚡ ×${X.total.toFixed(2).replace(/\.?0+$/,'')}</span>`; } catch(e){ return ''; } })()}
       ${(()=>{ const se=season(); return `<span class="pill" style="cursor:pointer;box-shadow:inset 0 0 0 1.5px ${se.c}" onclick="stMode='progress';dFold.hq_season=true;go('evolve');render()" title="Season ${se.no} · ${se.name}">${se.ic} ${se.left}d</span>`; })()}
     </div>
     <div class="nav">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='goals'&&GOALS.some(([k])=>k===view))?'on':''}" onclick="go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
@@ -3499,7 +3507,7 @@ function rareDay(k){ if (k<RARE_FROM) return null; const h=dayHash(k)%9; if (h==
 function rareXp(k, base){ const r=rareDay(k); if(!r) return 0; return r.type==='double' ? base : (S.days[k]?.rareDone ? 50 : 0); }
 function toggleRare(){ const d=ensureDay(TODAY); d.rareDone=!d.rareDone; commit(); if (d.rareDone) confetti(); }
 function rareBanner(){ const r=rareDay(TODAY); if(!r) return ''; const d=S.days[TODAY];
-  if (r.type==='double') return `<div class="rare"><span>⚡</span><div><b>2× XP today</b></div></div>`;
+  if (r.type==='double') return '';
   return `<div class="rare" style="cursor:pointer" onclick="toggleRare()" role="button" aria-pressed="${!!d?.rareDone}"><span>🎲</span><div><b style="${d?.rareDone?'text-decoration:line-through;opacity:.6':''}">${esc(r.text)}</b><small>Rare challenge · today only · +50 XP${d?.rareDone?' · done':''}</small></div><span class="krbox ${d?.rareDone?'on':''}">${d?.rareDone?'✓':''}</span></div>`; }
 const dayOn = k => dayActive(k) || !!(S.shieldUsed && S.shieldUsed[k]) || rpgSafe(k);
 function perfectWeeks(){ const ws=new Set(Object.keys(S.days).map(isoWeek)); let n=0; for (const w of ws) if (w<THIS_WEEK && weekDays(w).every(dayActive)) n++; return n; }
@@ -5261,8 +5269,8 @@ function titleNow(){ const t=R_().title; return t && titlesAll().some(x=>x[0]===
 
 /* ---------- UI: Today strip ---------- */
 function fxTip(i){ const f=rpgFx(TODAY)[i]; if (f) toast(`${f.ic} ${f.n}${f.m?` · ${f.m>0?'+':''}${Math.round(f.m*100)}% XP`:''} — ${f.t}`); }
-function rpgStrip(){ try { const F=rpgFx(TODAY), V=vault(), ch=chestsWaiting().length, m=rpgMult(TODAY);
-  return `<div class="rpg-strip sec">${ch?`<button class="fx chest" onclick="chestNext()">🎁 <b>${ch}</b></button>`:''}${F.map((f,i)=>`<button class="fx ${f.b?'buff':'debuff'}" onclick="fxTip(${i})">${f.ic}<span>${esc(f.n)}</span></button>`).join('')}${Math.abs(m-1)>=.005?`<span class="fx-m num ${m>=1?'up':'down'}">${m>=1?'+':'−'}${Math.round(Math.abs(m-1)*100)}% XP</span>`:''}</div>
+function rpgStrip(){ try { const F=rpgFx(TODAY), V=vault(), ch=chestsWaiting().length, m=rpgMult(TODAY), rd=rareDay(TODAY);
+  return `<div class="rpg-strip sec">${rd&&rd.type==='double'?`<button class="fx buff" onclick="xpSheet()">⚡<span>2× XP day</span></button>`:''}${ch?`<button class="fx chest" onclick="chestNext()">🎁 <b>${ch}</b></button>`:''}${F.map((f,i)=>`<button class="fx ${f.b?'buff':'debuff'}" onclick="fxTip(${i})">${f.ic}<span>${esc(f.n)}</span></button>`).join('')}${(()=>{ const X=xpMult(TODAY); return `<button class="fx-m num ${X.total>=1?'up':'down'}" onclick="xpSheet()" aria-label="XP multiplier today">XP ×${X.total.toFixed(2).replace(/\.?0+$/,'')}</button>`; })()}</div>
 `; } catch(e){ return ''; } }
 
 /* ---------- UI: Stats tab ---------- */
@@ -7323,7 +7331,9 @@ const HQB=[
   {k:'relationships',n:'Plaza',a:'SOCIAL',c:'#b98cff',go:"go('social')",feed:'Hangouts',life:()=>srcVal('events','2000-01-01',TODAY)||0,steps:[1,5,15,30,60]},
   {k:'personal',n:'Library',a:'MIND',c:'#ff9ad5',go:"go('today')",feed:'Journal days',life:()=>srcVal('habit:journal','2000-01-01',TODAY)||0,steps:[1,10,30,60,120]}];
 function hqData(){ let A=[]; try { A=statAttrs(); } catch(e){} const act=Object.fromEntries(A.map(a=>[a.n,a]));
-  return HQB.map((b,i)=>{ const life=Math.round(b.life()*10)/10, AI=areaInfo(b.a), lvl=AI?AI.lvl:0, next=b.steps[lvl]; const at=act[b.a]||{v:0,sub:''}; return {...b,i,x:29+i*50,life,lvl,next,act:at.v,sub:at.sub}; }); }
+  return HQB.map((b,i)=>{ const life=Math.round(b.life()*10)/10, AI=areaInfo(b.a), lvl=AI?AI.lvl:0, next=b.steps[lvl]; const at=act[b.a]||{v:0,sub:''};
+    const span=AI&&AI.toNext>0?(AREA_STEPS[lvl]-(AREA_STEPS[lvl-1]||0)):1, prog=AI&&AI.toNext>0?1-AI.toNext/span:1;
+    return {...b,i,x:29+i*50,life,lvl,next,act:at.v,sub:at.sub,on:AI?AI.on:0,tot:AI?AI.tot:1,prog}; }); }
 function hqBuilding(b, night){ const w=46, x0=b.x-23, base=196, h=b.lvl? 56+b.lvl*18 : 30, y=base-h, ol='#0d0d12';
   if (!b.lvl) return `<g class="hq-b" onclick="hqTap(${b.i})" role="button" aria-label="${b.n}, not built yet"><rect x="${x0+3}" y="${y}" width="${w-6}" height="${h}" fill="none" stroke="${b.c}" stroke-width="2" stroke-dasharray="4 3" opacity=".7"/><path d="M${x0+3} ${base} L${x0+w-3} ${y} M${x0+3} ${y} L${x0+w-3} ${base}" stroke="${b.c}" stroke-width="1" opacity=".4"/><rect x="${x0+12}" y="${base-10}" width="22" height="8" fill="#ffb020" stroke="${ol}" stroke-width="1.5"/></g>`;
   const rows=Math.max(1,Math.floor((h-24)/14)), tot=rows*2, lit=Math.round(b.act/100*tot);
@@ -7353,7 +7363,9 @@ function vHQ(){
   const V=(()=>{ try { return vault(); } catch(e){ return {}; } })(), Wy=(()=>{ try { return wyrm(); } catch(e){ return {}; } })(), se=season();
   const W=(()=>{ try { return world(); } catch(e){ return null; } })(), ws=W?wmStats(W):null, lm=(()=>{ try { return landmarks(); } catch(e){ return {done:[],todo:[]}; } })(), an=(()=>{ try { return annToday().length; } catch(e){ return 0; } })();
   const bossSub=(()=>{ let Wd={}; try { Wd=aBoss(); } catch(e){} const n=(V.max&&V.hp>0?1:0)+(Wy.max&&Wy.need>1&&Wy.hp>0?1:0)+(Wd.max&&!Wd.dead?1:0); return n?`${n} awake`:'none awake'; })();
-  return `<div class="card sec hq-card"><div class="row between" style="padding:0 2px 8px"><span class="tag">HQ</span><span class="sub" style="font-size:11.5px">tap a building</span></div>${hqLive()}</div>
+  const Dd=hqData(), CY=hqCity(Dd), nx=CY.next, base=HQ_ERA[CY.era][0], pctE=nx?Math.round((CY.sum-base)/(nx[0]-base)*100):100;
+  return `<div class="card sec hq-card"><div class="row between" style="padding:0 2px 6px;gap:8px"><span class="tag">HQ · Year ${CY.year} of 5</span><span class="sub" style="font-size:11.5px">${CY.eraName}${nx?` → ${nx[1]} at ${nx[0]} levels`:' · max'}</span></div>
+    <div class="hq-era"><i><u style="width:${pctE}%"></u></i><span class="num">${CY.sum}/35</span></div>${hqLive()}</div>
   <div class="card sec hq-more" style="padding-top:6px;padding-bottom:6px">
     ${lazyFold('hq_boss','⚔️ Bosses',bossSub,()=>raidMini()||'<div class="empty">No bosses awake.</div>')}
     ${W?lazyFold('hq_world','✈️ World',`${ws.cities} cities · ${ws.countries} countries`,()=>wmCard(W)+wmPassport(W)):''}
@@ -7364,7 +7376,7 @@ function vHQ(){
 const hShort=h=>String(h.name||'').split(/[\s\/·]+/)[0];
 /* ===== HQ · isometric pixel town (b184). Software-rasterized so every edge stays crisp. ===== */
 const ISO=(()=>{
-  const W=216, H=168, TW=8, TH=4, OX=100, OY=62;
+  const W=216, H=196, TW=8, TH=4, OX=100, OY=90;
   const P=(x,y,z=0)=>[OX+(x-y)*TW, OY+(x+y)*TH-z];
   const HX={}; const hex=h=>HX[h]||(HX[h]=(()=>{ const n=parseInt(h.slice(1),16); return [(n>>16)&255,(n>>8)&255,n&255]; })());
   const mix=(a,b,t)=>{ const A=hex(a),B=hex(b); return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join(''); };
@@ -7405,10 +7417,12 @@ const HQ_GX=14, HQ_GY=11;
 function hqDraw(D, opts){ const {Buf,P,mix}=ISO, B=new Buf(), t=opts.t||0, night=opts.night, C=hqPal(night), O=C.out, R=opts.rand||((s)=>{ let v=s; return ()=>((v=(v*16807)%2147483647)-1)/2147483646; });
   // sky: banded gradient (pixel-art style), stars, sun/moon, far skyline
   for(let y=0;y<ISO.H;y++){ const k=Math.min(3,Math.floor(y/22)); B.rect(0,y,ISO.W,1,C.sky[k]); if(y%22===21&&k<3) for(let x=(y>>1)%2;x<ISO.W;x+=2) B.px(x,y,C.sky[k+1]); }
-  const r=R(7); if(night){ for(let i=0;i<40;i++){ const x=Math.floor(r()*ISO.W), y=Math.floor(r()*60); B.px(x,y,C.star); } const mx=176,my=16; B.poly([[mx-6,my],[mx-4,my-5],[mx,my-7],[mx+5,my-5],[mx+7,my],[mx+5,my+5],[mx,my+7],[mx-4,my+5]],'#f4efd2'); B.poly([[mx-2,my-6],[mx+4,my-6],[mx+8,my],[mx+4,my+6],[mx-2,my+6],[mx+2,my]],C.sky[0]); }
+  const r=R(7); if(night){ for(let i=0;i<50;i++){ const x=Math.floor(r()*ISO.W), y=Math.floor(r()*86); B.px(x,y,C.star); } const mx=176,my=16; B.poly([[mx-6,my],[mx-4,my-5],[mx,my-7],[mx+5,my-5],[mx+7,my],[mx+5,my+5],[mx,my+7],[mx-4,my+5]],'#f4efd2'); B.poly([[mx-2,my-6],[mx+4,my-6],[mx+8,my],[mx+4,my+6],[mx-2,my+6],[mx+2,my]],C.sky[0]); }
   else { const sx=178,sy=18; for(let a=0;a<8;a++){ const an=a*Math.PI/4; B.line([sx+Math.cos(an)*9,sy+Math.sin(an)*9],[sx+Math.cos(an)*12,sy+Math.sin(an)*12],'#ffe58a'); } B.poly([[sx-6,sy-3],[sx-3,sy-6],[sx+3,sy-6],[sx+6,sy-3],[sx+6,sy+3],[sx+3,sy+6],[sx-3,sy+6],[sx-6,sy+3]],'#ffd75e'); }
   // far skyline silhouette
-  const sky2=night?'#191640':'#9ccbea'; let x=0; const r2=R(3); while(x<ISO.W){ const w=6+Math.floor(r2()*10), h=8+Math.floor(r2()*22); B.rect(x,58-h+Math.floor(r2()*4),w,h+20,sky2); if(night&&r2()<.7) for(let k=0;k<3;k++) B.px(x+2+Math.floor(r2()*(w-3)),58-h+4+Math.floor(r2()*(h-4)),'#3a3470'); x+=w+1; }
+  const CY=opts.city||{era:0,sn:4,years:0,folk:3,cars:1}, era=CY.era, SB=86;
+  const sky2=night?'#191640':'#9ccbea'; let x=0; const r2=R(3); while(x<ISO.W){ const w=6+Math.floor(r2()*10), h=Math.round((8+Math.floor(r2()*22))*(1+era*.32)); B.rect(x,SB-h+Math.floor(r2()*4),w,h+20,sky2); if(night) for(let k=0;k<3+era*2;k++) if(r2()<.6+era*.08) B.px(x+2+Math.floor(r2()*(w-3)),SB-h+4+Math.floor(r2()*Math.max(1,h-4)),era>=3&&k%3===0?'#ff7ad9':'#3a3470'); x+=w+1; }
+  if (era>=4){ const ry=SB-44; B.rect(0,ry,ISO.W,2,night?'#3a3470':'#7fa9c9'); for(let px=8;px<ISO.W;px+=26) B.rect(px,ry+2,2,44,night?'#2a2858':'#8bb4d2'); const tx=60; B.rect(tx,ry-6,34,6,night?'#d0d6ff':'#eef4ff'); B.rect(tx,ry-6,34,1,'#4dd8ff'); for(let k=0;k<7;k++) B.rect(tx+2+k*4,ry-4,3,2,night?'#ffe08a':'#4a6a8a'); }
   // ground slab: thick tile with dirt sides
   B.box(0,0,HQ_GX,HQ_GY,-4,4,{top:C.ground,left:night?'#3a2a22':'#8a5f3e',right:night?'#2a1e18':'#6b462c'},O);
   // grass checker + road + sidewalk + paths
@@ -7421,27 +7435,34 @@ function hqDraw(D, opts){ const {Buf,P,mix}=ISO, B=new Buf(), t=opts.t||0, night
   // curb highlight
   B.line(P(0,8),P(HQ_GX,8),night?'#5a5a70':'#d8d2c4');
   // grass tufts
-  const r3=R(11); for(let i=0;i<60;i++){ const gx=r3()*HQ_GX, gy=r3()*HQ_GY; const row=Math.floor(gy); if(row===7||row===8||row===9||row===3) continue; const p=P(gx,gy); B.px(p[0],p[1],C.grass); B.px(p[0],p[1]-1,C.grass); }
+  const r3=R(11), tuft=CY.sn===1?'#eef6ff':CY.sn===4?(night?'#5a3a22':'#d9822b'):CY.sn===2?'#ff9fc8':C.grass; for(let i=0;i<(CY.sn===1?110:60);i++){ const gx=r3()*HQ_GX, gy=r3()*HQ_GY; const row=Math.floor(gy); if(row===7||row===8||row===9||row===3) continue; const p=P(gx,gy); B.px(p[0],p[1],i%3?C.grass:tuft); B.px(p[0],p[1]-1,tuft); }
   // ---- objects, painter-sorted by depth (x+y of the far corner) ----
   const objs=[];
-  for(const b of D){ const L=HQ_LOT[b.k]; if(!L) continue; objs.push({d:L[0]+L[2]+L[1]+L[3], f:()=>hqBuilding(B,b,L,C,t,night)}); }
-  const trees=[[3.5,2.4],[6.6,2.6],[10.6,2.5],[0.4,5.2],[4.4,6.2],[9.2,5.6],[13.3,5.6],[13.3,2.2]];
-  for(const [tx,ty] of trees) objs.push({d:tx+ty+1, f:()=>hqTree(B,tx,ty,C,night)});
-  for(const lx of [2.5,6.5,10.5]) objs.push({d:lx+7.6, f:()=>hqLamp(B,lx,7.6,C,night,t)});
+  for(const b of D){ const L=HQ_LOT[b.k]; if(!L) continue; objs.push({d:L[0]+L[2]+L[1]+L[3], f:()=>hqBuilding(B,b,L,C,t,night,CY)}); }
+  const trees=[[3.5,2.4],[6.6,2.6],[10.6,2.5],[0.4,5.2],[4.4,6.2],[9.2,5.6],[13.3,5.6],[13.3,2.2]].concat(era>=1?[[2.2,6.6],[8.6,6.5],[11.9,2.7]]:[]);
+  for(const [tx,ty] of trees) objs.push({d:tx+ty+1, f:()=>hqTree(B,tx,ty,C,night,CY.sn)});
+  for(const lx of (era>=2?[1,2.5,4.5,6.5,8.5,10.5,12.5]:[2.5,6.5,10.5])) objs.push({d:lx+7.6, f:()=>hqLamp(B,lx,7.6,C,night,t)});
+  if (era>=1) for(const [bx,by] of [[3.2,6.75],[9.6,6.75]]) objs.push({d:bx+by, f:()=>hqBench(B,bx,by,night)});
+  if (era>=2) objs.push({d:6.6+3.5, f:()=>hqFountain(B,6.6,3.5,night)});
+  if (era>=3) objs.push({d:12.9+6.6, f:()=>hqBillboard(B,12.6,6.7,night,CY)});
+  const MON=[[3.5,3.5],[7.6,3.5],[11.5,3.5],[13.6,3.6],[0.5,3.6]]; for(let i=0;i<Math.min(5,CY.years);i++){ const [mx,my]=MON[i]; objs.push({d:mx+my, f:()=>hqMonument(B,mx,my,night,i)}); }
   objs.sort((a,b)=>a.d-b.d); for(const o of objs) o.f();
   return B; }
-function hqTree(B,tx,ty,C,night){ const {P}=ISO, p=P(tx,ty); const tr=night?'#3b2a1f':'#6b4a2e', l1=night?'#1f5a3a':'#3f9a4f', l2=night?'#2a7048':'#5cc163', l3=night?'#174a2e':'#2f7a3c';
+function hqTree(B,tx,ty,C,night,sn){ const {P}=ISO, p=P(tx,ty); const tr=night?'#3b2a1f':'#6b4a2e'; let l1=night?'#1f5a3a':'#3f9a4f', l2=night?'#2a7048':'#5cc163', l3=night?'#174a2e':'#2f7a3c';
+  if (sn===1){ l1=night?'#6a7d8a':'#b9d3e0'; l2=night?'#a9b8c4':'#f2f8ff'; l3=night?'#3c4f5c':'#7fa3b8'; }
+  else if (sn===2){ l1=night?'#8a3f62':'#f78fb3'; l2=night?'#b0567f':'#ffc2da'; l3=night?'#5a2a44':'#d0628f'; }
+  else if (sn===4){ l1=night?'#8a4a1f':'#e07b39'; l2=night?'#a8642a':'#ffb347'; l3=night?'#5a2e12':'#a8552a'; }
   B.rect(p[0],p[1]-6,2,6,tr); B.px(p[0]-1,p[1],'#00000033'.slice(0,7));
   const cy=p[1]-10; B.poly([[p[0]-5,cy],[p[0]+1,cy-6],[p[0]+7,cy],[p[0]+1,cy+4]],l3); B.poly([[p[0]-4,cy-1],[p[0]+1,cy-6],[p[0]+5,cy-1],[p[0]+1,cy+2]],l1); B.poly([[p[0]-3,cy-4],[p[0]+1,cy-10],[p[0]+5,cy-4],[p[0]+1,cy-1]],l2); B.px(p[0],cy-7,night?'#3b8a5a':'#8fe08a'); }
 function hqLamp(B,lx,ly,C,night,t){ const {P}=ISO, p=P(lx,ly); B.rect(p[0],p[1]-12,1,12,C.out); B.rect(p[0]-1,p[1]-14,3,2,C.out); B.px(p[0],p[1]-13,night?C.lamp:'#d9d9d9');
   if(night){ for(let i=-3;i<=3;i++) for(let j=0;j<3;j++) if(Math.abs(i)+j<4 && ((i+j)&1)) B.px(p[0]+i,p[1]+j-1,'#5a5030'); } }
-function hqBuilding(B,b,L,C,t,night){ const {P,mix}=ISO, S=HQ_ST[b.k], [x,y,w,d]=L, O=C.out;
+function hqBuilding(B,b,L,C,t,night,CY){ const {P,mix}=ISO, S0=HQ_ST[b.k], [x,y,w,d]=L, O=C.out; CY=CY||{};
+  const S=CY.sn===1?{...S0, top:mix(S0.top,'#ffffff',.75)}:S0;
   if(!b.lvl){ // empty lot: fence, dirt, little crane
     B.poly([P(x,y),P(x+w,y),P(x+w,y+d),P(x,y+d)],night?'#3b2f26':'#a07a52');
     for(let i=0;i<=w*4;i++){ const a=P(x+i/4,y+d); B.rect(a[0],a[1]-3,1,3,i%2?'#ffb020':O); }
     const c=P(x+w*.6,y+d*.4); B.rect(c[0],c[1]-26,1,26,'#ffb020'); B.rect(c[0]-8,c[1]-26,14,1,'#ffb020'); B.rect(c[0]-7,c[1]-25,1,6,O); return; }
-  const h=12+b.lvl*9 + (b.k==='content'?14:0);
-  const lift=t; // unused for static
+  const h=hqH(b);
   const box=B.box(x,y,w,d,0,h,{top:S.top,left:S.left,right:S.right,edge:mix(S.right,'#ffffff',.25)},O);
   // floor bands every 9px
   for(let v=9; v<h-3; v+=9){ for(let u=0; u<w*8; u++) B.facePx('L',x,y,w,d,0,u,v,mix(S.left,'#000000',.18)); for(let u=0; u<d*8; u++) B.facePx('R',x,y,w,d,0,-u,v,mix(S.right,'#000000',.18)); }
@@ -7470,9 +7491,26 @@ function hqBuilding(B,b,L,C,t,night){ const {P,mix}=ISO, S=HQ_ST[b.k], [x,y,w,d]
   if(b.k==='relationships'){ // striped awning + tables
     for(let u=0; u<w*8; u++){ const c=(Math.floor(u/3)%2)?S.trim:'#ffffff'; for(let v=9; v<=11; v++) B.facePx('L',x,y,w,d,0,u,v,v===11?mix(c,'#ffffff',.3):c); B.facePx('L',x,y,w,d,0,u,8,mix(c,'#000000',.4)); }
     for(const fx of [.25,.75]){ const p=P(x+w*fx,y+d+1.1); B.rect(p[0]-2,p[1]-3,5,1,'#ffffff'); B.rect(p[0],p[1]-2,1,2,O); } }
-  // level flag at lvl>=3
+  // tiers: 2 = rooftop units, 3 = flag, 4 = penthouse, 5 = neon crown + spire
+  if(b.lvl>=2){ B.box(x+w*.62,y+d*.55,.45,.35,h,3,{top:'#c9ccd6',left:'#8d919e',right:'#6c707c'},O); }
   if(b.lvl>=3){ const f=top(.12,.15); B.rect(f[0],f[1]-9,1,9,O); B.rect(f[0]+1,f[1]-9,4,3,S.trim); }
+  if(b.lvl>=4){ B.box(x+w*.2,y+d*.2,w*.35,d*.45,h,7,{top:S.top,left:mix(S.left,'#ffffff',.1),right:S.right},O); }
+  if(b.lvl>=5){ for(let u=1; u<w*8-1; u++) B.facePx('L',x,y,w,d,0,u,h-1,night?'#fff3a8':S.trim); const sp=top(.5,.5); B.rect(sp[0],sp[1]-14,1,14,O); B.px(sp[0],sp[1]-15,night?'#fff3a8':'#ffd25e'); }
+  if(CY.crane===b.k && b.lvl<5){ const c=top(.8,.7); B.rect(c[0],c[1]-20,1,20,'#ffb020'); B.rect(c[0]-12,c[1]-20,16,1,'#ffb020'); B.rect(c[0]-11,c[1]-19,1,5,O); B.rect(c[0]+3,c[1]-19,2,2,O); }
 }
+function hqH(b){ if(!b.lvl) return 0; const f=b.tot?Math.min(1,b.on/b.tot):0; return Math.min(84, Math.round(16+60*Math.pow(f,.7)) + (b.k==='content'?10:0)); }
+function hqBench(B,bx,by,night){ const {P}=ISO, p=P(bx,by); const wd=night?'#5a3e2c':'#9c6b43'; B.rect(p[0]-3,p[1]-3,7,1,wd); B.rect(p[0]-3,p[1]-5,7,1,wd); B.px(p[0]-3,p[1]-2,'#1c1a28'); B.px(p[0]+3,p[1]-2,'#1c1a28'); }
+function hqFountain(B,fx,fy,night){ const {P}=ISO; B.box(fx-.45,fy-.45,.9,.9,0,3,{top:night?'#2a4a7a':'#7fc6e8',left:'#9a9aa8',right:'#7a7a88'},'#1c1a28'); const c=P(fx,fy,3); B.rect(c[0],c[1]-6,1,6,'#9a9aa8'); B.rect(c[0]-1,c[1]-7,3,1,night?'#9fd7ff':'#d9f3ff'); }
+function hqBillboard(B,bx,by,night,CY){ const {P}=ISO, p=P(bx,by); B.rect(p[0]-5,p[1]-12,1,12,'#1c1a28'); B.rect(p[0]+5,p[1]-12,1,12,'#1c1a28'); B.rect(p[0]-7,p[1]-21,15,9,'#1c1a28'); B.rect(p[0]-6,p[1]-20,13,7,night?'#1b4a66':'#4dd8ff'); B.rect(p[0]-4,p[1]-18,9,1,'#ffffff'); B.rect(p[0]-4,p[1]-16,6,1,'#ffffff'); }
+function hqMonument(B,mx,my,night,i){ const {P}=ISO; B.box(mx-.25,my-.25,.5,.5,0,3,{top:'#d9d6cc',left:'#a8a598',right:'#8a8778'},'#1c1a28'); const c=P(mx,my,3), g=night?'#c9a23a':'#ffd25e'; B.rect(c[0],c[1]-7,2,5,g); B.rect(c[0],c[1]-9,2,2,g); B.px(c[0]-1,c[1]-6,g); B.px(c[0]+2,c[1]-8-(i%2),g); }
+const HQ_ERA=[[0,'Outpost'],[5,'Village'],[12,'Town'],[20,'City'],[28,'Metropolis']];
+function hqCity(D){ const sum=D.reduce((a,b)=>a+b.lvl,0); let era=0; HQ_ERA.forEach(([n],i)=>{ if (sum>=n) era=i; });
+  const start=Object.keys(S.days||{}).sort()[0]||TODAY, dIn=Math.max(0,daysBetween(start,TODAY)), years=Math.floor(dIn/365), year=Math.min(5,years+1);
+  let sn=4; try { sn=season().n; } catch(e){}
+  let folk=3; try { folk=Math.max(3,Math.min(16, 3+(srcVal('events',addDays(TODAY,-29),TODAY)||0)*2+Math.floor(((S.circle||{}).people||[]).length/2))); } catch(e){}
+  let cars=1; try { const m=TODAY.slice(0,7); cars=Math.max(1,Math.min(3,1+mAll().filter(e=>e.t==='job'&&e.s!=='cancelled'&&String(e.start||'').slice(0,7)===m).length)); } catch(e){}
+  const grow=D.filter(b=>b.lvl<5&&b.prog>0).sort((a,b)=>b.prog-a.prog)[0];
+  return {sum, era, eraName:HQ_ERA[era][1], next:HQ_ERA[era+1]||null, year, years, sn, folk, cars, crane:grow?grow.k:null}; }
 /* ---- HQ runtime: static town cached, small things animated, Tega walks the sidewalk ---- */
 const HQI={ key:'', img:null, art:null, hw:{gx:6, tx:6, act:'idle', until:0, face:1, last:0, i:0, t0:0}, car:-3, cloud:0 };
 function hqNight(){ if (window.__hqNight!=null) return window.__hqNight; const h=new Date().getHours(); return h<6||h>=19; }
@@ -7482,10 +7520,10 @@ function hqTunnels(night){ const B=new ISO.Buf(), O=hqPal(night).out, rock={top:
   // dark openings facing the road
   for (let u=0; u<13; u++) for (let v=0; v<10; v++){ const dx=Math.abs(u-6); if (v>7 && dx>4) continue; if (v>8 && dx>2) continue; B.facePx('R',0,7.9,.9,2.2,0,u+2,v,v>=9-Math.floor(dx/3)?'#3a3f4a':'#05040a'); }
   const c=document.createElement('canvas'); c.width=ISO.W; c.height=ISO.H; c.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(B.d.buffer), ISO.W, ISO.H),0,0); return c; }
-function hqStatic(D){ const night=hqNight(), key=JSON.stringify([night,D.map(b=>[b.k,b.lvl,Math.round(b.act/10)])]);
-  if (HQI.key!==key){ const B=hqDraw(D,{night}); const id=new ImageData(new Uint8ClampedArray(B.d.buffer.slice(0)), ISO.W, ISO.H); HQI.img=id; HQI.key=key; HQI.night=night; HQI.D=D; HQI.boxes=hqBoxes(D); HQI.fg=hqTunnels(night); }
+function hqStatic(D){ const night=hqNight(), CY=hqCity(D); HQI.city=CY; HQI.boss=hqBossMarks(); const key=JSON.stringify([night,CY,D.map(b=>[b.k,b.lvl,b.on,Math.round(b.act/10)])]);
+  if (HQI.key!==key){ const B=hqDraw(D,{night,city:CY}); const id=new ImageData(new Uint8ClampedArray(B.d.buffer.slice(0)), ISO.W, ISO.H); HQI.img=id; HQI.key=key; HQI.night=night; HQI.D=D; HQI.boxes=hqBoxes(D); HQI.fg=hqTunnels(night); }
   return HQI.img; }
-function hqBoxes(D){ const {P}=ISO; return D.map(b=>{ const L=HQ_LOT[b.k]; if(!L) return null; const [x,y,w,d]=L, h=b.lvl?12+b.lvl*9+(b.k==='content'?14:0):6;
+function hqBoxes(D){ const {P}=ISO; return D.map(b=>{ const L=HQ_LOT[b.k]; if(!L) return null; const [x,y,w,d]=L, h=b.lvl?hqH(b)+(b.lvl>=4?7:0):6;
   const pts=[P(x,y,h+10),P(x+w,y,h),P(x+w,y+d,0),P(x,y+d,0),P(x,y+d,h)]; const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]); return {i:b.i, k:b.k, x0:Math.min(...xs)-1, x1:Math.max(...xs)+1, y0:Math.min(...ys)-6, y1:Math.max(...ys)+1, depth:x+w+y+d, door:x+w/2}; }).filter(Boolean); }
 function hqHit(ev, c){ const r=c.getBoundingClientRect(), ax=(ev.clientX-r.left)*ISO.W/r.width, ay=(ev.clientY-r.top)*ISO.H/r.height;
   const hit=(HQI.boxes||[]).filter(b=>ax>=b.x0&&ax<=b.x1&&ay>=b.y0&&ay<=b.y1).sort((a,b)=>b.depth-a.depth)[0]; if (hit) hqTap(hit.i); }
@@ -7497,14 +7535,17 @@ function hqFrame(c, now){ const D=HQI.D; if (!D) return; const art=HQI.art ||= (
   // clouds (day) drift; stars twinkle (night)
   if (!night){ const off=(now/220)%(ISO.W+60)-40; ax.fillStyle='rgba(255,255,255,.85)'; for (const [cx,cy,s] of [[off,22,1],[off+110,36,.8],[off-90,14,.7]]){ const X=Math.round(((cx%(ISO.W+60))+ISO.W+60)%(ISO.W+60)-30), Y=cy; ax.fillRect(X,Y,Math.round(18*s),3); ax.fillRect(X+3,Y-2,Math.round(9*s),2); ax.fillRect(X+2,Y+3,Math.round(13*s),1); } }
   else { ax.fillStyle='#ffffff'; for (let i=0;i<5;i++){ if (Math.floor(now/400+i*7)%5===0){ const sx=(i*47+13)%ISO.W, sy=(i*19+5)%50; ax.fillRect(sx-1,sy,3,1); ax.fillRect(sx,sy-1,1,3); } } }
-  for (const b of D){ const L=HQ_LOT[b.k]; if(!L||!b.lvl) continue; const [x,y,w,d]=L, h=12+b.lvl*9+(b.k==='content'?14:0);
+  for (const b of D){ const L=HQ_LOT[b.k]; if(!L||!b.lvl) continue; const [x,y,w,d]=L, h=hqH(b);
     if (b.k==='content' && Math.floor(now/600)%2){ const a=P(x+w*.5,y+d*.5,h); ax.fillStyle='#ff4f6d'; ax.fillRect(a[0]-1,a[1]-18,3,2); }
     if (b.k==='grillz' && b.act>0){ const a=P(x+w*.62+.25,y+d*.15+.25,h+8); for (let k=0;k<4;k++){ const t=((now/1400)+k/4)%1; ax.fillStyle=`rgba(${night?'150,150,170':'230,230,236'},${(1-t)*.9})`; const s=t<.5?2:3; ax.fillRect(Math.round(a[0]+Math.sin(t*6+k)*2+t*4), Math.round(a[1]-3-t*16), s, s); } }
     if (b.k==='modeling' && night){ const a=P(x+w*.3,y+d*.5,h); ax.fillStyle='rgba(255,246,200,.16)'; for (let k=0;k<14;k++) ax.fillRect(a[0]-k/2+Math.sin(now/900)*k/2, a[1]-6-k, 2+k/3, 1); } }
   // car on the road
-  const cs=hqCarSprite(), lane=8.55, span=HQ_GX-1.2, ph=(now/1100)%(span+5), cx=.3+ph, p=P(cx,lane,0), o=HQI.carO;
-  if (ph<span+.6){ ax.drawImage(cs, Math.round(p[0]-o[0]), Math.round(p[1]-o[1])); if (night){ ax.fillStyle='rgba(255,240,180,.55)'; ax.fillRect(Math.round(p[0]+8),Math.round(p[1]+1),3,1); ax.fillRect(Math.round(p[0]+10),Math.round(p[1]+2),3,1); } }
+  const cs=hqCarSprite(), lane=8.55, span=HQ_GX-1.2, o=HQI.carO, nC=(HQI.city||{}).cars||1;
+  for (let ci=0; ci<nC; ci++){ const ph=(now/1100+ci*(span+5)/nC)%(span+5), cx=.3+ph, p=P(cx,lane,0);
+    if (ph<span+.6){ ax.drawImage(cs, Math.round(p[0]-o[0]), Math.round(p[1]-o[1])); if (night){ ax.fillStyle='rgba(255,240,180,.55)'; ax.fillRect(Math.round(p[0]+8),Math.round(p[1]+1),3,1); ax.fillRect(Math.round(p[0]+10),Math.round(p[1]+2),3,1); } } }
   hqPeople(ax, now, night);
+  for (const m of (HQI.boss||[])){ const b=D.find(x=>x.k===m.k), L=HQ_LOT[m.k]; if(!b||!L) continue; const [x,y,w,d]=L, a=P(x+w*.5,y+d*.5,(b.lvl?hqH(b):6)+12+m.row*7), bw=16, bx=Math.round(a[0]-bw/2), by=Math.round(a[1]-(Math.floor(now/500)%2));
+    ax.fillStyle='#120b18'; ax.fillRect(bx-1,by-1,bw+2,4); ax.fillStyle='#3a2a3a'; ax.fillRect(bx,by,bw,2); ax.fillStyle=m.col; ax.fillRect(bx,by,Math.max(1,Math.round(bw*m.pct)),2); ax.fillStyle=m.col; ax.fillRect(bx-4,by-1,2,4); }
   if (HQI.fg) ax.drawImage(HQI.fg,0,0);
   // to screen, crisp
   devFit(c, c.offsetWidth||360, (c.offsetWidth||360)*ISO.H/ISO.W); const x=c.getContext('2d'); x.imageSmoothingEnabled=false; x.setTransform(1,0,0,1,0,0); x.clearRect(0,0,c.width,c.height); x.drawImage(art,0,0,c.width,c.height);
@@ -7526,8 +7567,9 @@ function hqWalker(x, c, now){ const k=c.width/ISO.W, W=HQI.hw, D=HQI.D; if (!PXW
 
 // tiny townsfolk: 2px wide, 6px tall, walking the sidewalk and turning around at the ends
 const HQ_FOLK=[['#ff5a7a','#2a2a3a',.5,7.25,.55],['#4dd8ff','#3a2a1a',5.2,7.7,.4],['#ffd25e','#1a2a4a',9.6,7.3,.7],['#9b7bff','#2a2a2a',12.4,7.65,.45],['#5fd38a','#3a2a3a',3.1,7.5,.6],['#ffffff','#4a3a2a',7.4,7.35,.5],['#ff9a3d','#22222f',11.0,7.6,.35]];
-function hqPeople(ax, now, night){ const {P}=ISO, skin=['#8a5a3c','#c68b5f','#5a3a28','#e0b08a'];
-  HQ_FOLK.forEach(([shirt,pants,x0,lane,sp],i)=>{ const span=12.6, raw=(x0+now/1000*sp*.35)%(span*2), fw=raw<span, gx=.7+(fw?raw:span*2-raw), p=P(gx,lane,0), x=Math.round(p[0]), y=Math.round(p[1]);
+function hqPeople(ax, now, night){ const {P}=ISO, skin=['#8a5a3c','#c68b5f','#5a3a28','#e0b08a'], n=(HQI.city||{}).folk||7, era=(HQI.city||{}).era||0;
+  const crowd=HQ_FOLK.concat(HQ_FOLK.map(([s,p,x0,l,sp])=>[p==='#2a2a3a'?'#ffd25e':s,p,(x0*1.7)%12.6,era>=2?3.5+(sp-.5)*.4:l+.05,sp*.8])).slice(0,n);
+  crowd.forEach(([shirt,pants,x0,lane,sp],i)=>{ const span=12.6, raw=(x0+now/1000*sp*.35)%(span*2), fw=raw<span, gx=.7+(fw?raw:span*2-raw), p=P(gx,lane,0), x=Math.round(p[0]), y=Math.round(p[1]);
     const step=Math.floor(now/180+i)%2; ax.fillStyle='rgba(0,0,0,.25)'; ax.fillRect(x-1,y,4,1);
     ax.fillStyle=pants; ax.fillRect(x+(step?0:1),y-2,1,2); ax.fillRect(x+(step?1:0),y-2,1,1);
     ax.fillStyle=shirt; ax.fillRect(x,y-5,2,3); ax.fillStyle=skin[i%4]; ax.fillRect(x,y-7,2,2);
@@ -7656,7 +7698,7 @@ async function nsCalendar(){ if (!window.native?.calendar) return; if (S.icalAt 
   const C=(S.circle ||= {ev:[],people:[]}); let n=0; for (const e of S.ical) if (e.d<=TODAY && SOC_RE.test(e.t) && !C.ev.some(x=>x.id==='cal:'+e.id || (x.d===e.d && x.name===e.t))){ C.ev.push({id:'cal:'+e.id, d:e.d, name:e.t, where:e.loc||'', src:'from your calendar'}); n++; }
   if (n) autoNote('cal',`${n} hangout${n===1?'':'s'} from your calendar`); commit({skipXp:true}); }
 async function nativeSync(){ if (!window.native) return; for (const f of [nsLocation, nsHealth, nsCalendar]) { try { await f(); } catch(e){ console.warn('native sync',f.name,e); } } }
-window.tegaNativeSync = nativeSync;
+window.tegaNativeSync = ()=>liveRefresh('resume');
 
 /* ===================== b186: one place for everything ===================== */
 // every section belongs to one of the 7 areas; its chip opens that area's level + skill trees
@@ -7731,6 +7773,35 @@ function wardenCard(){ try { const B=aBoss(); if (!B.max) return ''; const pct=B
     ${hits.length?`<div class="hits">${hits.map(h=>`<div><span class="sub num">${nice(h.d)}</span><b class="num" style="color:var(--good)">−${w(h.dmg)}</b>${h.crit?`<small class="sub">${h.crit} crit${h.crit>1?'s':''}</small>`:''}</div>`).join('')}</div>`:`<div class="help keep" style="margin-top:8px">No hits this month yet.</div>`}
     <button class="btn ghost sm" style="margin-top:10px" onclick="go('gym')">⚔️ Train to hit it ›</button></div>`; } catch(e){ return ''; } }
 function bossOpen(){ dFold.hq_boss=true; stMode='progress'; go('evolve'); setTimeout(()=>document.querySelector('.hq-more')?.scrollIntoView({behavior:'smooth',block:'start'}),350); }
+
+/* ===================== b192: one live loop + XP multiplier ===================== */
+// Every source refreshes when the app opens or comes back, so bosses, levels, rings, the city and Circle all move with new data
+let _lrAt=0;
+function liveRefresh(why){ const now=Date.now(); if (why==='resume' && now-_lrAt<20*60e3) { try { if (window.native) nativeSync(); } catch(e){} return; } _lrAt=now;
+  const q=[];
+  if (window.native) q.push(()=>nativeSync());
+  if (typeof mcpLib!=='undefined' && mcpLib){
+    try { if (S.money.budget.syncedDay!==TODAY && bankTriedDay!==TODAY && !bankBusy) q.push(()=>bankRefresh(false)); } catch(e){}
+    try { if (mState().syncDay!==TODAY && !mBusy) q.push(()=>mSync(false)); } catch(e){}
+    try { if (!igBusy && now-(igData().t||0)>6*3600e3) q.push(()=>{ igLastTry=Date.now(); return igRefresh(false); }); } catch(e){}
+    try { if ((S.circle||{}).syncDay!==TODAY) q.push(()=>socSync(false)); } catch(e){}
+  }
+  (async()=>{ for (const f of q){ try { await f(); } catch(e){} await new Promise(r=>setTimeout(r,400)); } try { commit({skipXp:true}); } catch(e){} })(); }
+document.addEventListener('visibilitychange',()=>{ if (document.visibilityState==='visible' && typeof _dbSettled!=='undefined' && _dbSettled) setTimeout(()=>liveRefresh('resume'),800); });
+// one number for today's XP: base × (1 + 2× day + every buff and debuff)
+function xpMult(k){ const parts=[]; const r=rareDay(k); if (r&&r.type==='double') parts.push({ic:'⚡',n:'2× XP day',m:1,t:'Random double-XP day'});
+  for (const f of rpgFx(k)) if (f.m) parts.push({ic:f.ic,n:f.n,m:f.m,t:f.t});
+  const raw=1+parts.reduce((a,p)=>a+p.m,0); return {parts, total:Math.max(.5,Math.min(5,raw))}; }
+function xpSheet(){ const X=xpMult(TODAY), pc=m=>`${m>0?'+':'−'}${Math.round(Math.abs(m)*100)}%`;
+  gSheet(`<h2 class="g-sh-t">XP ×${X.total.toFixed(2).replace(/\.?0+$/,'')} today</h2>
+    <div class="sub" style="font-size:12.5px">Applies to today's Top 3, habits and check-in.</div>
+    <div class="xp-rows">${X.parts.length?X.parts.map(p=>`<div class="xp-row"><span>${p.ic}</span><div><b>${esc(p.n)}</b><small>${esc(p.t||'')}</small></div><em class="num ${p.m>0?'up':'down'}">${pc(p.m)}</em></div>`).join(''):'<div class="empty">No buffs or debuffs today.</div>'}
+    <div class="xp-row tot"><span>＝</span><div><b>Total</b></div><em class="num">×${X.total.toFixed(2).replace(/\.?0+$/,'')}</em></div></div>`); }
+// bosses hover over their buildings in the town, HP live
+function hqBossMarks(){ const out=[]; try { const V=vault(); if (V.max&&V.hp>0) out.push({k:'financial',pct:V.hp/V.max,col:'#ff5a5a',row:0}); } catch(e){}
+  try { const W=wyrm(); if (W.max&&W.need>1&&W.hp>0) out.push({k:'financial',pct:W.hp/W.max,col:'#39ff9f',row:1}); } catch(e){}
+  try { const A=aBoss(); if (A.max&&!A.dead) out.push({k:'fitness',pct:A.hp/A.max,col:'#b57bff',row:0}); } catch(e){}
+  return out; }
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
 function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['waterfall','Waterfall'],['bills','Bills'],['budget','Budget'],['deduct','Write-offs']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
