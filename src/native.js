@@ -1,3 +1,33 @@
+/* ---- Tega.exe logo: chunky 3D pixel wordmark (b184) ---- */
+const N_LOGO_G={
+ T:['######','######','..##..','..##..','..##..','..##..','..##..','..##..'],
+ E:['######','######','##....','#####.','#####.','##....','######','######'],
+ G:['.#####','######','##....','##.###','##.###','##..##','######','.####.'],
+ A:['.####.','######','##..##','##..##','######','######','##..##','##..##'],
+ e:['.##.','#..#','####','#...','.###'],
+ x:['#..#','#..#','.##.','#..#','#..#'],
+ '.':['##','##'] };
+function nLogo(h){ h=h||26; const F=[]; let cx=1;
+  const put=(g,ox,oy,kind)=>g.forEach((row,y)=>[...row].forEach((ch,x)=>{ if(ch==='#') F.push({x:ox+x,y:oy+y,kind}); }));
+  for (const L of 'TEGA'){ put(N_LOGO_G[L],cx,1,'big'); cx+=N_LOGO_G[L][0].length+1; }
+  put(N_LOGO_G['.'],cx,7,'exe'); cx+=3; for (const L of 'exe'){ put(N_LOGO_G[L],cx,4,'exe'); cx+=N_LOGO_G[L][0].length+1; }
+  const cur={x:cx,y:3}; const W=cx+6, H=12, bigW=4*7;
+  const key=(x,y)=>x+','+y, face=new Map(F.map(p=>[key(p.x,p.y),p]));
+  const ext=new Map(); for (const p of F){ const dmax=p.kind==='big'?2:1; for (let d=1; d<=dmax; d++){ const k=key(p.x+d,p.y+d); if(!face.has(k) && (!ext.has(k)||ext.get(k).d>d)) ext.set(k,{x:p.x+d,y:p.y+d,d,kind:p.kind}); } }
+  for (let d=1; d<=2; d++){ for (let j=0;j<5;j++) for (let i=0;i<2;i++){ const k=key(cur.x+i+d,cur.y+j+d); if (d===1 && !ext.has(k)) ext.set(k,{x:cur.x+i+d,y:cur.y+j+d,d,kind:'cur'}); } }
+  const all=new Set([...face.keys(), ...ext.keys()]); for (let j=0;j<5;j++) for (let i=0;i<2;i++) all.add(key(cur.x+i,cur.y+j));
+  const lerp=(a,b,t)=>a.map((v,i)=>Math.round(v+(b[i]-v)*t)), stops=[[255,61,242],[180,107,255],[77,216,255]];
+  const grad=x=>{ const t=Math.max(0,Math.min(1,(x-1)/(bigW-2))); return t<.5?lerp(stops[0],stops[1],t*2):lerp(stops[1],stops[2],(t-.5)*2); };
+  const rgb=a=>`rgb(${a})`, light=a=>lerp(a,[255,255,255],.45), dark=(a,k)=>lerp(a,[10,4,24],k);
+  let s='';
+  // outline around the whole silhouette so it reads on any background
+  const ol=new Set(); for (const k of all){ const [x,y]=k.split(',').map(Number); for (const [a,b] of [[1,0],[-1,0],[0,1],[0,-1]]){ const kk=key(x+a,y+b); if(!all.has(kk)) ol.add(kk); } }
+  for (const k of ol){ const [x,y]=k.split(','); s+=`<rect x="${x}" y="${y}" width="1" height="1" fill="#0a0614"/>`; }
+  for (const e of ext.values()){ const base=e.kind==='big'?grad(e.x-e.d):[77,216,255]; s+=`<rect x="${e.x}" y="${e.y}" width="1" height="1" fill="${rgb(dark(base, e.d===1?.55:.75))}"/>`; }
+  for (const p of F){ const base=p.kind==='big'?grad(p.x):[77,216,255]; const top=!face.has(key(p.x,p.y-1)); s+=`<rect x="${p.x}" y="${p.y}" width="1" height="1" fill="${rgb(top?light(base):base)}"/>`; }
+  s+=`<g class="logo-cur">${[0,1,2,3,4].map(j=>`<rect x="${cur.x}" y="${cur.y+j}" width="2" height="1" fill="${j===0?'#d9f7ff':'#4dd8ff'}"/>`).join('')}</g>`;
+  return `<svg class="logo-svg" viewBox="0 0 ${W} ${H}" height="${h}" width="${Math.round(h*W/H)}" shape-rendering="crispEdges" role="img" aria-label="Tega.exe">${s}</svg>`; }
+
 // Tega.exe native layer.
 // The web app (web/app.html) was written against Claude's artifact runtime (window.claude.use('db' | 'assets' | 'sample' | 'downloads' | 'mcp')).
 // This file provides the same interface on iPhone, backed by Supabase (data + files), a Supabase Edge Function (Claude API),
@@ -55,7 +85,7 @@ let readyResolve; const ready = new Promise(r => (readyResolve = r));
 function showLogin(msg) {
   let el = document.getElementById('tega-login');
   if (!el) { el = document.createElement('div'); el.id = 'tega-login'; document.body.appendChild(el); }
-  el.innerHTML = `<div class="tl-card"><div class="tl-logo">Tega.exe</div><div class="tl-sub">${msg || 'Sign in to sync your app'}</div>
+  el.innerHTML = `<div class="tl-card"><div class="tl-logo">${(typeof logoSVG==='function'?logoSVG:nLogo)(44)}</div><div class="tl-sub">${msg || 'Sign in to sync your app'}</div>
     <form id="tl-form"><input id="tl-email" type="email" autocomplete="email" placeholder="Email" required>
     <input id="tl-pass" type="password" autocomplete="current-password" placeholder="Password (6+ characters)" required minlength="6">
     <button type="submit" id="tl-in">Sign in</button><button type="button" id="tl-up" class="ghost">Create account</button>
