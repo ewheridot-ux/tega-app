@@ -1,5 +1,5 @@
 <title>Tega.exe</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Press+Start+2P&family=VT323&display=swap">
 <style>
 
 /* ===== tokens: dark-first (the brief: Threads / Cash App / Instagram) ===== */
@@ -1020,6 +1020,61 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 .gl-rest[hidden]{display:none!important}
 .gl-rr{position:relative;width:76px;height:76px;display:grid;place-items:center}.gl-ring{position:absolute;inset:0;transform:rotate(-90deg)}.gl-ring circle{fill:none;stroke-width:5}.gl-ring .bg{stroke:rgba(255,255,255,.1)}.gl-ring .fg{stroke:#7cc8ff;stroke-dasharray:100;stroke-linecap:round;transition:stroke-dashoffset .5s linear}.gl-rr b{font-size:19px;position:relative}
 .gl-rn{display:grid;gap:2px;min-width:0}.gl-rn small{font-size:10px;letter-spacing:.18em;color:#7cc8ff;font-weight:800}.gl-rn b{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gl-rn .btn.ghost{color:#e8f3ff;border-color:rgba(124,200,255,.3)}
+
+/* ===================== skin: Night CRT (pixel arcade) ===================== */
+:root[data-skin="crt"]:not(#x){
+  --bg:#050508;--bg2:#0a0b10;--card:#0b0f0e;--card2:#121a17;--line:rgba(57,255,159,.28);--fg:#d9fff0;--muted:#7ea69a;
+  --accent:#39ff9f;--accent2:#ff3df2;--good:#39ff9f;--warn:#ffe14d;--bad:#ff5a5a;--gold:#ffe14d;--money:#39ff9f;
+  --modeling:#4dd8ff;--grillz:#ffb13d;--content:#ff3df2;--cad:#39ff9f;--financial:#4dd8ff;--personal:#ff6fd0;--relationships:#ff5a7a;--fitness:#ffe14d;--learning:#b18cff;
+  --shadow:0 0 22px rgba(57,255,159,.12);--r:4px;--r2:3px;color-scheme:dark;
+  --px:'Press Start 2P',ui-monospace,monospace;--vt:'VT323',ui-monospace,'Courier New',monospace;
+}
+[data-skin="crt"] body{font-family:var(--vt);font-size:19px;line-height:1.18;-webkit-font-smoothing:none;letter-spacing:.01em}
+[data-skin="crt"] body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px)}
+[data-skin="crt"] h1,[data-skin="crt"] h2,[data-skin="crt"] .g-title,[data-skin="crt"] .wordmark{font-family:var(--px);font-weight:400;letter-spacing:0;line-height:1.35;text-transform:uppercase}
+[data-skin="crt"] h1{font-size:16px}[data-skin="crt"] h2{font-size:12.5px}[data-skin="crt"] h3{font-size:19px;font-weight:400}
+[data-skin="crt"] .wordmark{font-size:14px;color:var(--accent);text-shadow:0 0 8px rgba(57,255,159,.7)}
+[data-skin="crt"] .tag,[data-skin="crt"] .seg button,[data-skin="crt"] .nav button span,[data-skin="crt"] .chip{font-family:var(--px);font-size:8.5px;letter-spacing:.04em;text-transform:uppercase;font-weight:400}
+[data-skin="crt"] .tag{color:var(--accent)}
+[data-skin="crt"] .sub{font-size:16px}
+[data-skin="crt"] b,[data-skin="crt"] strong{font-weight:400;color:#fff}
+[data-skin="crt"] .num,[data-skin="crt"] .stat b{font-family:var(--vt);font-weight:400;letter-spacing:0}
+[data-skin="crt"] .stat b{font-size:32px}
+/* surfaces: hard neon outlines instead of soft cards */
+[data-skin="crt"] .card,[data-skin="crt"] .stat,[data-skin="crt"] .g-hero,[data-skin="crt"] .gl-ex,[data-skin="crt"] .nextup{border:2px solid var(--line)!important;box-shadow:var(--shadow);border-radius:var(--r)}
+[data-skin="crt"] .check{border:2px solid var(--line);border-radius:var(--r2)}
+[data-skin="crt"] .check.on{border-color:rgba(57,255,159,.15)}
+[data-skin="crt"] .inp{border:2px solid var(--line);border-radius:var(--r2);background:#070a09}
+[data-skin="crt"] .inp:focus{border-color:var(--accent);box-shadow:0 0 10px rgba(57,255,159,.35)}
+[data-skin="crt"] .btn{background:var(--accent);color:#050508;border-radius:var(--r2);font-family:var(--px);font-size:10px;font-weight:400;text-transform:uppercase;letter-spacing:.04em;padding:12px 14px;box-shadow:0 0 12px rgba(57,255,159,.35)}
+[data-skin="crt"] .btn.ghost{background:transparent;color:var(--accent);border:2px solid var(--line);box-shadow:none}
+[data-skin="crt"] .btn.good{background:var(--accent)}[data-skin="crt"] .btn.danger{background:transparent;color:var(--bad);border:2px solid var(--bad)}
+[data-skin="crt"] .btn.sm{font-size:8.5px;padding:9px 10px}
+[data-skin="crt"] .seg{background:transparent;border:2px solid var(--line);border-radius:var(--r2)}
+[data-skin="crt"] .seg button{border-radius:2px;color:var(--muted)}
+[data-skin="crt"] .seg button.on{background:var(--accent);color:#050508}
+[data-skin="crt"] .chip{border-radius:2px;background:transparent;border:1.5px solid var(--line);color:var(--fg)}
+[data-skin="crt"] .bar{border-radius:0;height:9px;background:#0f1513;border:1.5px solid var(--line)}
+[data-skin="crt"] .bar b{border-radius:0;background:var(--accent);box-shadow:0 0 8px rgba(57,255,159,.6)}
+[data-skin="crt"] .iconbtn{border-radius:var(--r2);background:transparent;border:2px solid var(--line);color:var(--accent)}
+[data-skin="crt"] .nav{background:#07090a;border:2px solid var(--accent);border-radius:var(--r);box-shadow:0 0 16px rgba(57,255,159,.25)}
+[data-skin="crt"] .nav button{border-radius:2px;color:var(--muted)}
+[data-skin="crt"] .nav button.on{background:var(--accent);color:#050508}
+[data-skin="crt"] .nav button.on svg{stroke:#050508}
+[data-skin="crt"] .modal>.card,[data-skin="crt"] .g-sheet{border:2px solid var(--accent)!important;border-radius:var(--r) var(--r) 0 0;background:#07090a}
+[data-skin="crt"] .toast{background:#07090a;color:var(--accent);border:2px solid var(--accent);border-radius:var(--r2);font-family:var(--vt);font-size:19px;font-weight:400;box-shadow:0 0 16px rgba(57,255,159,.4)}
+[data-skin="crt"] .quip{font-family:var(--vt);font-size:20px}
+[data-skin="crt"] .a-sys{border-radius:var(--r);border-color:var(--accent);background:#060a09}
+[data-skin="crt"] #g-live{background:#050508}
+[data-skin="crt"] .gl-ok{border-radius:2px}
+[data-skin="crt"] .gl-pop{font-family:var(--px);font-size:18px}.gl-pop.crit{font-size:22px}
+[data-skin="crt"] .avatar,[data-skin="crt"] .pfp-sm{border-radius:var(--r2)!important}
+[data-skin="crt"] ::selection{background:rgba(57,255,159,.35)}
+[data-skin="crt"] .skin-pick button.on{outline:2px solid var(--accent)}
+[data-skin="crt"] .app button:not(.avatar):not(.pfp-sm),[data-skin="crt"] .pills>*,[data-skin="crt"] .g-chip,[data-skin="crt"] .g-wz-o,[data-skin="crt"] .g-sheet button,[data-skin="crt"] #g-live button{border-radius:3px!important}
+.skin-pick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.skin-pick button{padding:14px 10px;border-radius:12px;border:2px solid var(--line);background:var(--card2);display:grid;gap:4px;text-align:left}
+.skin-pick button.on{border-color:var(--accent)}
+.skin-pick small{color:var(--muted);font-size:12px}
 </style>
 
 <div class="app" id="app"></div>
@@ -1029,7 +1084,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b165';
+const BUILD='b166';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -7157,7 +7212,7 @@ function vCharacter(){
 let snapBusy=false;
 async function restoreSnap(){ if(!dbHandle){ toast('Cloud snapshots need the app signed in'); return; } if(snapBusy) return; snapBusy=true; try { const s=await dbHandle.doc('okr/auto-backup').get(); if(!s.exists){ toast('No cloud snapshot yet — the first one is taken within a week'); } else { const o=thaw(s.data()); if(!o||o.v!==2||!o.days) toast('The snapshot couldn\'t be read'); else { restorePending=o; render(); } } } catch(e){ toast('Couldn\'t reach the cloud snapshot just now'); } snapBusy=false; }
 function habitRestore(id,on){ if (on){ const h=(S.habitsOff||[]).find(h=>h.id===id); if(h){ S.habits.push(h); S.habitsOff=S.habitsOff.filter(x=>x.id!==id); } } else { const h=S.habits.find(h=>h.id===id); if(h){ (S.habitsOff ||= []).push(h); S.habits=S.habits.filter(x=>x.id!==id); } } commit({skipXp:true}); }
-function vSettings(){ return buddyCard()+`<div class="card sec"><div class="hdr"><h2>Habits on Today</h2><span class="sub">${S.habits.length} shown</span></div>
+function vSettings(){ const sk=document.documentElement.getAttribute('data-skin')||'classic'; return `<div class="card sec"><div class="hdr"><h2>Look</h2></div><div class="skin-pick"><button class="${sk==='crt'?'on':''}" onclick="skinSet('crt')"><b>Night CRT</b><small>pixel arcade · neon</small></button><button class="${sk!=='crt'?'on':''}" onclick="skinSet('classic')"><b>Classic</b><small>clean · ◐ light/dark</small></button></div></div>`+buddyCard()+`<div class="card sec"><div class="hdr"><h2>Habits on Today</h2><span class="sub">${S.habits.length} shown</span></div>
     <div class="stack" style="gap:6px">${[...S.habits.map(h=>[h,1]),...(S.habitsOff||[]).map(h=>[h,0])].map(([h,on])=>`<div class="check ${on?'on':''}" onclick="habitRestore('${h.id}',${on?0:1})"><div class="box">${on?'✓':''}</div><div class="txt" style="text-decoration:none;color:var(--fg)">${h.icon} ${esc(h.name)}</div></div>`).join('')}</div>
     <div class="help" style="margin-top:8px">Hidden habits keep all their history.</div></div>${vBackup()}<div class="help sec" style="text-align:center">Tega.exe · build ${BUILD}</div>`; }
 function vBackup(){
@@ -7291,6 +7346,9 @@ let resetArmed=false; function resetAll(){ if(!resetArmed){ resetArmed=true; toa
 /* ---------- theme ---------- */
 function toggleTheme(){ const r=document.documentElement; const dark = r.getAttribute('data-theme')==='dark' || (!r.getAttribute('data-theme') && !matchMedia('(prefers-color-scheme: light)').matches); r.setAttribute('data-theme', dark?'light':'dark'); try{localStorage.setItem('okrquest-theme', dark?'light':'dark');}catch(e){} }
 try{ const t=localStorage.getItem('okrquest-theme'); if(t) document.documentElement.setAttribute('data-theme',t); }catch(e){}
+function skinGet(){ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k || (S&&S.skin) || 'crt'; }
+function skinSet(k){ document.documentElement.setAttribute('data-skin',k); try{ localStorage.setItem('okrquest-skin',k); }catch(e){} if (S){ S.skin=k; commit({skipXp:true}); } else render(); }
+try{ document.documentElement.setAttribute('data-skin', (localStorage.getItem('okrquest-skin'))||'crt'); }catch(e){ document.documentElement.setAttribute('data-skin','crt'); }
 
 /* ---------- boot ---------- */
 evalBadges();
