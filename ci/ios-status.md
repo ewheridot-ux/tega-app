@@ -1,75 +1,126 @@
-# iPhone build #45 — cancelled
+# iPhone build #47 — success
 
-Sat Oct 17 19:23:08 UTC 2026
+Sat Oct 17 19:38:03 UTC 2026
 
 ```
-/Applications/Xcode_16.0.0.app
-/Applications/Xcode_16.0.app
-/Applications/Xcode_16.1.0.app
-/Applications/Xcode_16.1.app
-/Applications/Xcode_16.2.0.app
-/Applications/Xcode_16.2.app
-/Applications/Xcode_16.3.0.app
-/Applications/Xcode_16.3.app
-/Applications/Xcode_16.4.0.app
-/Applications/Xcode_16.4.app
-/Applications/Xcode_16.app
-/Applications/Xcode_26.0.1.app
-/Applications/Xcode_26.0.app
-/Applications/Xcode_26.1.1.app
-/Applications/Xcode_26.1.app
-/Applications/Xcode_26.2.0.app
-/Applications/Xcode_26.2.app
-/Applications/Xcode_26.3.0.app
-/Applications/Xcode_26.3.app
-/Applications/Xcode.app
-Xcode 26.3
-Build version 17C529
 
-added 113 packages in 9s
+sent 120023 bytes  received 70 bytes  29290975 bytes/sec
+total size is 119583  speedup is 1.00
+Symlinked...
+rsync --delete -av --filter P .*.?????? --links --filter "- CVS/" --filter "- .svn/" --filter "- .git/" --filter "- .hg/" --filter "- Headers" --filter "- PrivateHeaders" --filter "- Modules" "/Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/CapacitorSplashScreen.framework" "/Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/Frameworks"
+Transfer starting: 3 files
+CapacitorSplashScreen.framework/
+CapacitorSplashScreen.framework/CapacitorSplashScreen
+CapacitorSplashScreen.framework/Info.plist
 
-> tega-app@1.0.0 build
-> node scripts/build-www.mjs
+sent 144687 bytes  received 70 bytes  35306585 bytes/sec
+total size is 144215  speedup is 1.00
+Symlinked...
+rsync --delete -av --filter P .*.?????? --links --filter "- CVS/" --filter "- .svn/" --filter "- .git/" --filter "- .hg/" --filter "- Headers" --filter "- PrivateHeaders" --filter "- Modules" "/Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/CapacitorStatusBar.framework" "/Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/Frameworks"
+Transfer starting: 3 files
+CapacitorStatusBar.framework/
+CapacitorStatusBar.framework/CapacitorStatusBar
+CapacitorStatusBar.framework/Info.plist
 
-www built with Supabase config
-✔ Adding native Xcode project in ios in 20.35ms
-✔ add in 20.62ms
-✔ Copying web assets from www to ios/App/App/public in 73.98ms
-✔ Creating capacitor.config.json in ios/App/App in 407.21μs
-✔ copy ios in 102.91ms
-✔ Updating iOS plugins in 1.10ms
-✔ Updating iOS native dependencies with pod install in 17.64s
-[info] Found 10 Capacitor plugins for ios:
-       @capacitor/app@7.1.2
-       @capacitor/filesystem@7.1.9
-       @capacitor/geolocation@7.1.8
-       @capacitor/haptics@7.0.5
-       @capacitor/local-notifications@7.0.7
-       @capacitor/share@7.0.4
-       @capacitor/splash-screen@7.0.5
-       @capacitor/status-bar@7.0.6
-       @capgo/capacitor-health@7.2.15
-       @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 17.70s
-[success] ios platform added!
-Follow the Developer Workflow guide to get building:
-https://capacitorjs.com/docs/basics/workflow
-✔ Copying web assets from www to ios/App/App/public in 203.99ms
-✔ Creating capacitor.config.json in ios/App/App in 3.27ms
-✔ copy ios in 243.48ms
-✔ Updating iOS plugins in 2.00ms
-✔ Updating iOS native dependencies with pod install in 9.90s
-[info] Found 10 Capacitor plugins for ios:
-       @capacitor/app@7.1.2
-       @capacitor/filesystem@7.1.9
-       @capacitor/geolocation@7.1.8
-       @capacitor/haptics@7.0.5
-       @capacitor/local-notifications@7.0.7
-       @capacitor/share@7.0.4
-       @capacitor/splash-screen@7.0.5
-       @capacitor/status-bar@7.0.6
-       @capgo/capacitor-health@7.2.15
-       @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 9.96s
-[info] Sync finished in 10.31s
+sent 172265 bytes  received 70 bytes  42032926 bytes/sec
+total size is 171801  speedup is 1.00
+Symlinked...
+rsync --delete -av --filter P .*.?????? --links --filter "- CVS/" --filter "- .svn/" --filter "- .git/" --filter "- .hg/" --filter "- Headers" --filter "- PrivateHeaders" --filter "- Modules" "/Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/CapgoCapacitorHealth.framework" "/Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/Frameworks"
+Transfer starting: 3 files
+CapgoCapacitorHealth.framework/
+CapgoCapacitorHealth.framework/CapgoCapacitorHealth
+CapgoCapacitorHealth.framework/Info.plist
+
+sent 201346 bytes  received 70 bytes  39493333 bytes/sec
+total size is 200870  speedup is 1.00
+Symlinked...
+rsync --delete -av --filter P .*.?????? --links --filter "- CVS/" --filter "- .svn/" --filter "- .git/" --filter "- .hg/" --filter "- Headers" --filter "- PrivateHeaders" --filter "- Modules" "/Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/EbarooniCapacitorCalendar.framework" "/Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/Frameworks"
+Transfer starting: 3 files
+EbarooniCapacitorCalendar.framework/
+EbarooniCapacitorCalendar.framework/EbarooniCapacitorCalendar
+EbarooniCapacitorCalendar.framework/Info.plist
+
+sent 570875 bytes  received 70 bytes  70487037 bytes/sec
+total size is 570335  speedup is 1.00
+rsync --delete -av --filter P .*.?????? --links --filter "- CVS/" --filter "- .svn/" --filter "- .git/" --filter "- .hg/" --filter "- Headers" --filter "- PrivateHeaders" --filter "- Modules" "/Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/BuildProductsPath/Release-iphoneos/XCFrameworkIntermediates/IONFilesystemLib/IONFilesystemLib.framework" "/Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/Frameworks"
+Transfer starting: 3 files
+IONFilesystemLib.framework/
+IONFilesystemLib.framework/IONFilesystemLib
+IONFilesystemLib.framework/Info.plist
+
+sent 149239 bytes  received 70 bytes  36416829 bytes/sec
+total size is 148787  speedup is 1.00
+rsync --delete -av --filter P .*.?????? --links --filter "- CVS/" --filter "- .svn/" --filter "- .git/" --filter "- .hg/" --filter "- Headers" --filter "- PrivateHeaders" --filter "- Modules" "/Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/BuildProductsPath/Release-iphoneos/XCFrameworkIntermediates/IONGeolocationLib/IONGeolocationLib.framework" "/Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/Frameworks"
+Transfer starting: 3 files
+IONGeolocationLib.framework/
+IONGeolocationLib.framework/IONGeolocationLib
+IONGeolocationLib.framework/Info.plist
+
+sent 105189 bytes  received 70 bytes  25672926 bytes/sec
+total size is 104737  speedup is 1.00
+
+GenerateDSYMFile /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/BuildProductsPath/Release-iphoneos/App.app.dSYM /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/App (in target 'App' from project 'App')
+    cd /Users/runner/work/tega-app/tega-app/ios/App
+    /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/dsymutil /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/App -o /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/BuildProductsPath/Release-iphoneos/App.app.dSYM
+
+ExtractAppIntentsMetadata (in target 'App' from project 'App')
+    cd /Users/runner/work/tega-app/tega-app/ios/App
+    /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsmetadataprocessor --toolchain-dir /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.3.7003.10.EM0Lmu/Metal.xctoolchain --module-name App --sdk-root /Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.2.sdk --xcode-version 17C529 --platform-family iOS --deployment-target 15.0 --bundle-identifier com.ewheridot.tegaexe --output /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app --target-triple arm64-apple-ios15.0 --binary-file /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/App --dependency-file /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/IntermediateBuildFilesPath/App.build/Release-iphoneos/App.build/Objects-normal/arm64/App_dependency_info.dat --stringsdata-file /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/IntermediateBuildFilesPath/App.build/Release-iphoneos/App.build/Objects-normal/arm64/ExtractedAppShortcutsMetadata.stringsdata --source-file-list /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/IntermediateBuildFilesPath/App.build/Release-iphoneos/App.build/Objects-normal/arm64/App.SwiftFileList --metadata-file-list /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/IntermediateBuildFilesPath/App.build/Release-iphoneos/App.build/App.DependencyMetadataFileList --static-metadata-file-list /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/IntermediateBuildFilesPath/App.build/Release-iphoneos/App.build/App.DependencyStaticMetadataFileList --swift-const-vals-list /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/IntermediateBuildFilesPath/App.build/Release-iphoneos/App.build/Objects-normal/arm64/App.SwiftConstValuesFileList --compile-time-extraction --deployment-aware-processing --validate-assistant-intents --no-app-shortcuts-localization
+2026-10-17 19:36:38.020 appintentsmetadataprocessor[3942:15931] Starting appintentsmetadataprocessor export
+2026-10-17 19:36:38.022 appintentsmetadataprocessor[3942:15931] warning: Metadata extraction skipped. No AppIntents.framework dependency found.
+
+CopySwiftLibs /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app (in target 'App' from project 'App')
+    cd /Users/runner/work/tega-app/tega-app/ios/App
+    builtin-swiftStdLibTool --copy --verbose --scan-executable /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/App --scan-folder /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/Frameworks --scan-folder /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/PlugIns --scan-folder /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/SystemExtensions --scan-folder /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/Extensions --scan-folder /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/BuildProductsPath/Release-iphoneos/Pods_App.framework --platform iphoneos --toolchain /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.3.7003.10.EM0Lmu/Metal.xctoolchain --toolchain /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/Frameworks --unsigned-destination /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/BuildProductsPath/SwiftSupport --strip-bitcode --strip-bitcode-tool /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/IntermediateBuildFilesPath/App.build/Release-iphoneos/App.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os --back-deploy-swift-span
+Ignoring --strip-bitcode because --sign was not passed
+
+AppIntentsSSUTraining (in target 'App' from project 'App')
+    cd /Users/runner/work/tega-app/tega-app/ios/App
+    /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/Info.plist --temp-dir-path /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/IntermediateBuildFilesPath/App.build/Release-iphoneos/App.build/ssu --bundle-id com.ewheridot.tegaexe --product-path /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app --extracted-metadata-path /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/Metadata.appintents --deployment-postprocessing --metadata-file-list /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/IntermediateBuildFilesPath/App.build/Release-iphoneos/App.build/App.DependencyMetadataFileList --archive-ssu-assets
+2026-10-17 19:36:38.048 appintentsnltrainingprocessor[3943:15932] Parsing options for appintentsnltrainingprocessor
+2026-10-17 19:36:38.050 appintentsnltrainingprocessor[3943:15932] No AppShortcuts found - Skipping.
+
+Strip /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/App (in target 'App' from project 'App')
+    cd /Users/runner/work/tega-app/tega-app/ios/App
+    /Applications/Xcode_26.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip -D /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app/App
+
+SetOwnerAndGroup runner:staff /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app (in target 'App' from project 'App')
+    cd /Users/runner/work/tega-app/tega-app/ios/App
+    /usr/sbin/chown -RH runner:staff /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app
+
+SetMode u+w,go-w,a+rX /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app (in target 'App' from project 'App')
+    cd /Users/runner/work/tega-app/tega-app/ios/App
+    /bin/chmod -RH u+w,go-w,a+rX /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app
+
+RegisterExecutionPolicyException /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app (in target 'App' from project 'App')
+    cd /Users/runner/work/tega-app/tega-app/ios/App
+    builtin-RegisterExecutionPolicyException /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app
+
+Validate /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app (in target 'App' from project 'App')
+    cd /Users/runner/work/tega-app/tega-app/ios/App
+    builtin-validationUtility /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app -validate-for-store -shallow-bundle -infoplist-subpath Info.plist
+
+Touch /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app (in target 'App' from project 'App')
+    cd /Users/runner/work/tega-app/tega-app/ios/App
+    /usr/bin/touch -c /Users/runner/Library/Developer/Xcode/DerivedData/App-dideniotfvrxldfnxxovvbsxdtaq/Build/Intermediates.noindex/ArchiveIntermediates/App/InstallationBuildProductsLocation/Applications/App.app
+
+warning: Run script build phase '[CP] Copy XCFrameworks' will be run during every build because it does not specify any outputs. To address this issue, either add output dependencies to the script phase, or configure it to run in every build by unchecking "Based on dependency analysis" in the script phase. (in target 'IONGeolocationLib' from project 'Pods')
+warning: Run script build phase '[CP] Copy XCFrameworks' will be run during every build because it does not specify any outputs. To address this issue, either add output dependencies to the script phase, or configure it to run in every build by unchecking "Based on dependency analysis" in the script phase. (in target 'IONFilesystemLib' from project 'Pods')
+warning: Run script build phase '[CP] Embed Pods Frameworks' will be run during every build because it does not specify any outputs. To address this issue, either add output dependencies to the script phase, or configure it to run in every build by unchecking "Based on dependency analysis" in the script phase. (in target 'App' from project 'App')
+** ARCHIVE SUCCEEDED **
+
+2026-10-17 19:36:39.762 xcodebuild[3949:15971] [MT] IDEDistribution: -[IDEDistributionLogging _createLoggingBundleAtPath:]: Created bundle at path "/var/folders/nj/vtw8zd2j31d1gdrtntc5y4600000gn/T/App_2026-10-17_19-36-39.755.xcdistributionlogs".
+Exported App to: /Users/runner/work/_temp/out
+** EXPORT SUCCEEDED **
+
+HEALTHKIT=no
+Running altool at path '/Applications/Xcode_26.3.app/Contents/SharedFrameworks/ContentDelivery.framework/Resources/altool'...
+
+2026-10-17 19:38:03.570  INFO: [ContentDelivery.Uploader.60000309C4C0] 
+==========================================
+UPLOAD SUCCEEDED with no errors
+Delivery UUID: 047d7346-aff8-46eb-a8b3-72f629e6b983
+Transferred 31134120 bytes in 0.518 seconds (60.2MB/s, 481.253Mbps)
+==========================================
+No errors uploading archive at '/Users/runner/work/_temp/out/App.ipa'.
 ```
