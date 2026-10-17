@@ -12,6 +12,12 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+      - name: Use Xcode 26 (App Store needs the iOS 26 SDK)
+        run: |
+          ls -d /Applications/Xcode*.app | tee -a "$RUNNER_TEMP/log.txt"
+          X=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
+          if [ -z "$X" ]; then echo "No Xcode 26 on this runner" | tee -a "$RUNNER_TEMP/log.txt"; exit 1; fi
+          sudo xcode-select -s "$X/Contents/Developer"; xcodebuild -version | tee -a "$RUNNER_TEMP/log.txt"
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - name: Check secrets
@@ -67,7 +73,9 @@ jobs:
         env:
           KID: ${{ secrets.ASC_KEY_ID }}
           ISS: ${{ secrets.ASC_ISSUER_ID }}
-        run: xcrun altool --upload-app -f "$RUNNER_TEMP/out/App.ipa" -t ios --apiKey "$KID" --apiIssuer "$ISS" 2>&1 | tee -a "$RUNNER_TEMP/log.txt"
+        run: |
+          xcrun altool --upload-app -f "$RUNNER_TEMP/out/App.ipa" -t ios --apiKey "$KID" --apiIssuer "$ISS" 2>&1 | tee "$RUNNER_TEMP/up.txt" | tee -a "$RUNNER_TEMP/log.txt"
+          if grep -q "UPLOAD FAILED\|ERROR:" "$RUNNER_TEMP/up.txt"; then exit 1; fi
       - name: Report status to the repo
         if: always()
         run: |
