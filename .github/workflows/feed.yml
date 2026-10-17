@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - run: pip install -q pynacl requests
+      - run: pip install -q pynacl requests cryptography
       - name: Ingest
         env:
           SUPA_SERVICE: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
