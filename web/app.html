@@ -1213,6 +1213,60 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 /* b177: Gym uses Apple's system font (SF Pro) on iPhone */
 [data-skin="fit"] body,[data-skin="fit"] button,[data-skin="fit"] input,[data-skin="fit"] select{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,system-ui,sans-serif}
 [data-skin="fit"] .fb-title,[data-skin="fit"] h1,[data-skin="fit"] h2{font-family:-apple-system-headline,-apple-system,BlinkMacSystemFont,"SF Pro Display",Inter,sans-serif;font-weight:800}
+/* ===================== skin: Arise (Gym) b178 — Solo-Leveling style system UI on the Fitbod layout ===================== */
+:root[data-skin="arise"]:not(#x){--bg:#03060d;--bg2:#070d1a;--card:rgba(14,30,58,.55);--card2:rgba(40,90,160,.18);--line:rgba(110,190,255,.28);--fg:#e8f3ff;--muted:#8ea6c4;--accent:#5cc8ff;--accent2:#9b7bff;--good:#4dffb5;--warn:#ffcf5c;--bad:#ff5c7a;--r:6px;--r2:6px;--shadow:0 0 18px rgba(60,150,255,.12);--ag:#5cc8ff;color-scheme:dark}
+[data-skin="arise"] body{background:radial-gradient(120% 55% at 50% -5%,#0c2246 0%,#050b18 55%,#03060d 100%) fixed #03060d;color:var(--fg);font-family:Rajdhani,Inter,system-ui,sans-serif;font-size:16.5px;font-weight:600}
+[data-skin="arise"] button,[data-skin="arise"] input,[data-skin="arise"] select{font-family:Rajdhani,Inter,system-ui,sans-serif}
+[data-skin="arise"] h1,[data-skin="arise"] h2,[data-skin="arise"] .fb-title{font-family:Rajdhani,Inter,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.04em;text-shadow:0 0 14px rgba(92,200,255,.55)}
+[data-skin="arise"] .fb-title{font-size:34px;line-height:1;color:#f2f9ff}
+[data-skin="arise"] .fb-kick{display:flex;align-items:center;gap:8px;color:var(--muted);letter-spacing:.14em}
+.a-tagq{display:inline-block;padding:2px 8px;border:1px solid var(--ag,#5cc8ff);color:var(--ag,#5cc8ff);font-size:11px;letter-spacing:.2em;box-shadow:0 0 10px rgba(92,200,255,.35)}
+[data-skin="arise"] .fb-meta{color:var(--muted);letter-spacing:.06em}
+[data-skin="arise"] .fb-tabs{border-bottom-color:var(--line)}
+[data-skin="arise"] .fb-tabs button{text-transform:uppercase;letter-spacing:.12em;font-size:13px}
+[data-skin="arise"] .fb-tabs button.on{color:#fff;border-bottom-color:var(--ag);text-shadow:0 0 10px rgba(92,200,255,.7)}
+[data-skin="arise"] .fb-sec span{text-transform:uppercase;letter-spacing:.16em;font-size:14px;color:var(--ag);text-shadow:0 0 10px rgba(92,200,255,.5)}
+[data-skin="arise"] .fb-sec span::before{content:'◆ '}
+[data-skin="arise"] .fb-sec button{color:var(--ag)}
+[data-skin="arise"] .fb-pills button,[data-skin="arise"] .fb-gym,[data-skin="arise"] .fb-ic{background:rgba(20,50,95,.45);border:1px solid var(--line);border-radius:4px;color:var(--fg);letter-spacing:.04em}
+[data-skin="arise"] .fb-rank{border-radius:4px;box-shadow:0 0 12px color-mix(in srgb,var(--rc) 50%,transparent)}
+/* system panels: glowing frame + corner brackets */
+[data-skin="arise"] .a-sys,[data-skin="arise"] .fb-body,[data-skin="arise"] .g-sheet,[data-skin="arise"] .card{
+  --k:#8fdcff;border-radius:4px;border:1px solid rgba(110,190,255,.45);
+  background:
+   linear-gradient(var(--k),var(--k)) top left/16px 2px no-repeat,linear-gradient(var(--k),var(--k)) top left/2px 16px no-repeat,
+   linear-gradient(var(--k),var(--k)) top right/16px 2px no-repeat,linear-gradient(var(--k),var(--k)) top right/2px 16px no-repeat,
+   linear-gradient(var(--k),var(--k)) bottom left/16px 2px no-repeat,linear-gradient(var(--k),var(--k)) bottom left/2px 16px no-repeat,
+   linear-gradient(var(--k),var(--k)) bottom right/16px 2px no-repeat,linear-gradient(var(--k),var(--k)) bottom right/2px 16px no-repeat,
+   linear-gradient(180deg,rgba(18,42,82,.78),rgba(6,14,30,.88));
+  box-shadow:0 0 22px rgba(60,150,255,.18),inset 0 0 26px rgba(60,150,255,.12)}
+[data-skin="arise"] .a-sys{padding:16px}
+[data-skin="arise"] .a-hd>span{font-size:13px;text-shadow:0 0 10px rgba(124,200,255,.8)}
+[data-skin="arise"] .a-stats button{border-radius:3px}
+[data-skin="arise"] .a-stats b{font-size:24px;text-shadow:0 0 10px rgba(124,200,255,.6)}
+[data-skin="arise"] .a-rank{border-radius:4px}
+[data-skin="arise"] .fb-ex{background:linear-gradient(90deg,rgba(20,50,95,.55),rgba(8,18,38,.6));border:1px solid var(--line);border-left:2px solid var(--ag);border-radius:4px}
+[data-skin="arise"] .fb-ex b{letter-spacing:.02em}
+[data-skin="arise"] .fb-ex .g-th{border-radius:3px;box-shadow:0 0 0 1px rgba(110,190,255,.5)}
+[data-skin="arise"] .fb-mtags i{border-radius:2px;letter-spacing:.06em;text-transform:uppercase;font-size:10px}
+[data-skin="arise"] .fb-mus button{background:rgba(14,30,58,.6);border:1px solid var(--line);border-radius:4px}
+[data-skin="arise"] .fb-mus button.on{box-shadow:0 0 0 1.5px var(--c),0 0 14px color-mix(in srgb,var(--c) 40%,transparent)}
+[data-skin="arise"] .fb-week i{border-radius:1px}
+[data-skin="arise"] .btn{background:linear-gradient(180deg,#1f6fd6,#0f3f8a);color:#fff;border:1px solid #8fdcff;border-radius:4px;text-transform:uppercase;letter-spacing:.12em;font-weight:700;box-shadow:0 0 18px rgba(80,170,255,.45)}
+[data-skin="arise"] .btn.ghost{background:rgba(20,50,95,.4);border:1px solid var(--line);box-shadow:none;color:var(--fg)}
+[data-skin="arise"] .g-start{font-size:17px;padding:17px;border-radius:4px}
+[data-skin="arise"] .g-start.a-gate{background:linear-gradient(180deg,#b3263f,#5c0f22);border-color:#ff8fa3;box-shadow:0 0 22px rgba(255,70,100,.5)}
+[data-skin="arise"] .a-hold::before{background:rgba(160,225,255,.45)}
+[data-skin="arise"] .inp{background:rgba(6,14,30,.8);border:1px solid var(--line);border-radius:4px}
+[data-skin="arise"] .seg{background:rgba(6,14,30,.8);border:1px solid var(--line);border-radius:4px}[data-skin="arise"] .seg button{border-radius:3px}[data-skin="arise"] .seg button.on{background:#1f6fd6;color:#fff}
+[data-skin="arise"] .chip,[data-skin="arise"] .tag{letter-spacing:.1em}
+[data-skin="arise"] .nav{background:rgba(5,12,26,.92);border:1px solid rgba(110,190,255,.4);border-radius:6px;box-shadow:0 0 18px rgba(60,150,255,.2);backdrop-filter:blur(12px)}
+[data-skin="arise"] .nav button.on{background:rgba(31,111,214,.45);color:#fff;box-shadow:inset 0 0 0 1px #8fdcff,0 0 12px rgba(92,200,255,.5)}
+[data-skin="arise"] .wordmark{font-family:Rajdhani,Inter,sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-shadow:0 0 12px rgba(92,200,255,.6)}
+[data-skin="arise"] .g-body .g-bl{fill:#8ea6c4;letter-spacing:.1em}
+@keyframes aScan{from{background-position:0 -100%}to{background-position:0 200%}}
+[data-skin="arise"] .a-sys{position:relative;overflow:hidden}
+[data-skin="arise"] .a-sys::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(140,220,255,.08),transparent) 0 0/100% 40% no-repeat;animation:aScan 5s linear infinite}
 </style>
 
 <div class="app" id="app"></div>
@@ -1222,7 +1276,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b177';
+const BUILD='b178';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -2233,7 +2287,7 @@ const trackSelect = (val, onchange) => `<select onchange="${onchange}"><option v
 
 function render(){
   _mVer++;
-  try { const want = view==='gym' ? 'fit' : view==='model' ? 'holo' : view==='datum' ? 'chrome' : view==='money' ? 'lab' : (()=>{ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(S&&S.skin)||'crt'; })(); if (document.documentElement.getAttribute('data-skin')!==want) document.documentElement.setAttribute('data-skin', want); } catch(e){}
+  try { const want = view==='gym' ? 'arise' : view==='model' ? 'holo' : view==='datum' ? 'chrome' : view==='money' ? 'lab' : (()=>{ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(S&&S.skin)||'crt'; })(); if (document.documentElement.getAttribute('data-skin')!==want) document.documentElement.setAttribute('data-skin', want); } catch(e){}
   refreshToday(); releaseEvo(); try { travelTick(); } catch(e){}
   const xp=computeXP(), lvl=levelFor(xp), st=streaks();
   const app=document.getElementById('app');
@@ -6054,16 +6108,17 @@ function gWorkoutView(){ const g=G_(), P=gPlan(), R=gFatigue(), su=g.setup, wc=g
   return `${live}<div class="fb">
     <div class="fb-top"><button class="fb-gym" onclick="gProfSheet()">${gProf().id==='main'?'🏢':'🧳'} ${esc(gProf().name)} <i>▾</i></button>
       <span class="fb-sp"></span>${st?`<button class="fb-rank" style="--rc:${ARCOL[st.rank]}" onclick="aSysSheet()" aria-label="Rank, daily quest and boss"><b>${st.rank}</b><small>${q?`${q.n}/${q.L.length}`:''}</small></button>`:''}<button class="fb-ic" onclick="gTopMenu()" aria-label="Workout options">⋯</button></div>
-    <div class="fb-kick">${gate?'⚔️ Boss gate · ':''}${dayLab} · ${GGOAL[su.goal].n}</div>
+    <div class="fb-kick"><span class="a-tagq">${gate?'BOSS GATE':'QUEST'}</span>${dayLab} · ${GGOAL[su.goal].n}</div>
     <h1 class="fb-title">${esc(P.name)}</h1>
     <div class="fb-meta">${P.ex.length} exercises · ${sets} sets · ~${est} min</div>
     <div class="fb-pills"><button onclick="gModsSheet()">⏱ ${mins} min</button><button onclick="gModsSheet()">${GEQI.db} Equipment</button><button onclick="gMuscleSheet()">🎯 Target muscles</button><button onclick="gSwapMenu()">⇄ Swap</button></div>
+    ${aSysCard()}
     <div class="fb-sec"><span>Muscle recovery</span><button onclick="gTab='recovery';render()">See all ›</button></div>
     <button class="fb-body" onclick="gTab='recovery';render()" aria-label="Muscle recovery map">${gBodyMap(R,mus)}</button><div class="fb-mus">${allM.slice(0,10).map(m=>`<button class="${mus.includes(m)?'on':''}" style="--c:${gRecCol(R[m].pct)};--p:${R[m].pct}" onclick="gMuscleSheet()"><i></i><b class="num">${R[m].pct}%</b><small>${GMUS[m]}</small></button>`).join('')}</div>
     <div class="fb-sec"><span>Exercises</span><button onclick="gAddSheet('plan')" aria-label="Add exercise">＋</button></div>
     <div class="fb-list">${rows}</div>
     <div class="fb-week">${Array.from({length:su.days},(_,i)=>`<i class="${i<wc?'on':''}"></i>`).join('')}<span>${wc}/${su.days} this week${streak?` · 🔥 ${streak}-week streak`:''}</span></div>
-    <div class="fb-cta"><button class="btn g-start a-hold ${gate?'a-gate':''}" ${g.live?'onclick="gStart()"':'onpointerdown="aHoldStart(event,this)" onpointerup="aHoldEnd(this)" onpointerleave="aHoldEnd(this)" onpointercancel="aHoldEnd(this)" oncontextmenu="return false"'}><span>${g.live?'Resume workout':'Hold to start workout'}</span></button></div>
+    <div class="fb-cta"><button class="btn g-start a-hold ${gate?'a-gate':''}" ${g.live?'onclick="gStart()"':'onpointerdown="aHoldStart(event,this)" onpointerup="aHoldEnd(this)" onpointerleave="aHoldEnd(this)" onpointercancel="aHoldEnd(this)" oncontextmenu="return false"'}><span>${g.live?'Resume workout':gate?'Hold to enter the gate':'Hold to accept quest'}</span></button></div>
   </div>`; }
 function gTopMenu(){ gSheet(`<span class="tag">Workout</span><h2 class="g-sh-t">Options</h2><div class="stack" style="gap:8px">
   <button class="pp-row" onclick="gSheetClose();gRegen()"><b>↻ New workout</b><small>Generate a fresh one for today</small></button>
@@ -6757,7 +6812,7 @@ function aLoot(s){ try { const B=aBoss(), h=B.hits.find(x=>x.sid===s.id), st=aSt
 
 /* ===================== pixel character: redraws the avatar / room media at low resolution, scaled up with hard pixels ===================== */
 const PX_SEL='.av-stack .av-still, .av-stack video, .pfp-v, video.anim, .room-art';
-function pxOn(){ try { const sk=document.documentElement.getAttribute('data-skin'); return (sk==='crt' || (['holo','chrome','lab'].includes(sk) && baseSkin()==='crt')) && (S ? S.pxChar!==false : true); } catch(e){ return false; } }
+function pxOn(){ try { const sk=document.documentElement.getAttribute('data-skin'); return (sk==='crt' || (['holo','chrome','lab','arise'].includes(sk) && baseSkin()==='crt')) && (S ? S.pxChar!==false : true); } catch(e){ return false; } }
 const pxItems=new Set(); let pxT=0, pxLast=0;
 function pxAttach(m){ if (m.controls) return; if (m._px){ if (!m._px.isConnected || m.nextElementSibling!==m._px) m.insertAdjacentElement('afterend', m._px); pxItems.add(m); return; } const c=document.createElement('canvas'); c.className='px-c'; c.setAttribute('aria-hidden','true'); m._px=c; m.classList.add('px-src'); m.insertAdjacentElement('afterend', c); pxItems.add(m); }
 function pxDetach(m){ try { m._px?.remove(); } catch(e){} m._px=null; m.classList.remove('px-src'); pxItems.delete(m); }
