@@ -27,6 +27,7 @@ fs.writeFileSync(path.join(www, 'index.html'), head + app + '</body></html>');
 const mig = path.join(root, 'migration');
 if (fs.existsSync(mig)) {
   fs.cpSync(mig, path.join(www, 'migration'), { recursive: true });
+  fs.cpSync(path.join(root, 'fonts'), path.join(www, 'fonts'), { recursive: true });
   const assets = JSON.parse(fs.readFileSync(path.join(mig, 'assets.json'), 'utf8'));
   const docs = fs.readdirSync(path.join(mig, 'db/okr')).filter(f => f.endsWith('.json')).map(f => 'okr/' + f.replace(/\.json$/, ''));
   fs.writeFileSync(path.join(www, 'migration/manifest.json'), JSON.stringify({ assets, docs }));

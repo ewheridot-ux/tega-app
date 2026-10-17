@@ -1,3 +1,5 @@
+@font-face{font-family:'VT323';src:url(fonts/VT323-Regular.ttf) format('truetype');font-display:block}
+@font-face{font-family:'Press Start 2P';src:url(fonts/PressStart2P-Regular.ttf) format('truetype');font-display:block}
 #tega-login,#tega-import{position:fixed;inset:0;z-index:9999;background:radial-gradient(120% 80% at 50% 0%,#2a1a55,#000 60%);display:grid;place-items:center;padding:24px;font-family:Inter,-apple-system,sans-serif}
 .tl-card{width:min(380px,100%);display:grid;gap:12px;text-align:center}
 .tl-logo{font-size:36px;font-weight:800;letter-spacing:-.02em;color:#fff}
