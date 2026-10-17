@@ -67,7 +67,7 @@ function showLogin(msg) {
       const j = signup ? await authCall('signup', { email, password }) : await authCall('token?grant_type=password', { email, password });
       if (!j.access_token) { err.textContent = 'Check your email to confirm, then sign in.'; return; }
       saveAuth(withExp(j)); el.remove(); await afterLogin();
-    } catch (e) { err.textContent = e.message; }
+    } catch (e) { let m = e.message; try { const j = JSON.parse(m); m = j.msg || j.error_description || j.message || m; } catch (_) {} err.textContent = /not confirmed/i.test(m) ? 'Your email isn’t confirmed yet. Tap the link in the confirmation email, then sign in.' : /invalid login/i.test(m) ? 'Wrong email or password. (New here? Tap Create account.)' : m; }
   };
   el.querySelector('#tl-form').onsubmit = e => { e.preventDefault(); go(false); };
   el.querySelector('#tl-up').onclick = () => go(true);

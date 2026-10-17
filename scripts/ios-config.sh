@@ -10,6 +10,7 @@ set_str NSCameraUsageDescription "Take photos of your pieces, art and progress."
 set_str NSPhotoLibraryUsageDescription "Add photos from your library to Datum, your art wall and your room."
 set_str NSPhotoLibraryAddUsageDescription "Save bench photos and cards to your Photos."
 set_str NSLocationWhenInUseUsageDescription "Find castings and casters near you."
+set_str NSLocationAlwaysAndWhenInUseUsageDescription "Tega.exe only uses your location while you have the app open, to find castings and casters near you."
 set_str UIUserInterfaceStyle "Dark"
 # tegaexe:// links for Siri Shortcuts and quick capture
 pb "Delete :CFBundleURLTypes"
