@@ -1,3 +1,4 @@
-balance {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":10.75,"total":40.0}}
-anim idle16 17 frames 64 64
-balance after {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":9.75,"total":40.0}}
+balance {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":9.75,"total":40.0}}
+done base128a {'type': 'generations', 'generations': 1.0}
+done base128b {'type': 'generations', 'generations': 1.0}
+balance after {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":7.75,"total":40.0}}
