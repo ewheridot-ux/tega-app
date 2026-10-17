@@ -1069,9 +1069,10 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 [data-skin="crt"] #g-live{background:#050508}
 [data-skin="crt"] .gl-pop{font-family:var(--px)}
 /* rectangular profile pictures everywhere */
-[data-skin="crt"] .avatar svg,[data-skin="crt"] .av-v,[data-skin="crt"] .av-ph,[data-skin="crt"] .av-still,[data-skin="crt"] .avatar img,[data-skin="crt"] .avatar video{border-radius:4px!important}
-[data-skin="crt"] .avatar.ringed{border-radius:6px!important}
-[data-skin="crt"] .pfp,[data-skin="crt"] .pfp-sm,[data-skin="crt"] .pfp-sm svg,[data-skin="crt"] .pfp-v,[data-skin="crt"] .pfp-ph,[data-skin="crt"] .pfp img{border-radius:3px!important}
+[data-skin="crt"] .avatar svg,[data-skin="crt"] .av-v,[data-skin="crt"] .av-ph,[data-skin="crt"] .av-still,[data-skin="crt"] .avatar img,[data-skin="crt"] .avatar video,[data-skin="crt"] .avatar .px-c,[data-skin="crt"] .av-stack{border-radius:12px!important}
+[data-skin="crt"] .avatar.ringed{border-radius:18px!important}
+[data-skin="crt"] .pfp-sm{border-radius:9px!important}
+[data-skin="crt"] .pfp,[data-skin="crt"] .pfp-sm svg,[data-skin="crt"] .pfp-v,[data-skin="crt"] .pfp-ph,[data-skin="crt"] .pfp img,[data-skin="crt"] .pfp-sm .px-c{border-radius:7px!important}
 [data-skin="crt"] .lvlpip{border-radius:3px;font-family:var(--px);font-weight:400;font-size:12px}
 /* pixel corners on everything that was rounded (inline styles keep their own) */
 [data-skin="crt"] .app :is(div,span,button,a,i,label,section,small,b,em,input,select,textarea){border-radius:3px}
@@ -1086,6 +1087,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 .skin-pick small{color:var(--muted);font-size:12px}
 .px-c{position:absolute;pointer-events:none;image-rendering:pixelated;image-rendering:crisp-edges;z-index:1}
 .px-on .px-src{opacity:0!important}
+.px-on :is(.arena,.room-live,.lvs-in svg,.b-cracks){filter:url(#pxf)}
 </style>
 
 <div class="app" id="app"></div>
@@ -1095,7 +1097,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b168';
+const BUILD='b169';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -6640,7 +6642,7 @@ function pxDraw(m){ const c=m._px; if(!c) return; const op=m.offsetParent; if(!o
   const isV=m.tagName==='VIDEO', ready=isV ? (m.readyState>=2 && (!m.classList.contains('av-v') || m.classList.contains('on'))) : (m.complete && m.naturalWidth>0);
   c.style.display=ready?'block':'none'; if(!ready) return;
   Object.assign(c.style,{left:m.offsetLeft+'px', top:m.offsetTop+'px', width:W+'px', height:H+'px', borderRadius:getComputedStyle(m).borderRadius});
-  const cols = W<=56 ? 22 : W<=140 ? 44 : 64, rows=Math.max(1,Math.round(cols*H/W));
+  const cols = Math.max(24, Math.min(96, Math.round(W/2.2))), rows=Math.max(1,Math.round(cols*H/W));
   if (c.width!==cols) c.width=cols; if (c.height!==rows) c.height=rows;
   const nw=isV?m.videoWidth:m.naturalWidth, nh=isV?m.videoHeight:m.naturalHeight; if(!nw||!nh) return;
   const fit=getComputedStyle(m).objectFit, ar=W/H, nar=nw/nh; let sx=0,sy=0,sw=nw,sh=nh;
@@ -6650,6 +6652,8 @@ function pxDraw(m){ const c=m._px; if(!c) return; const op=m.offsetParent; if(!o
 function pxLoop(t){ requestAnimationFrame(pxLoop); if (!pxItems.size) return; if (t-pxLast<66) return; pxLast=t; for (const m of pxItems) pxDraw(m); }
 requestAnimationFrame(pxLoop);
 new MutationObserver(()=>{ clearTimeout(pxT); pxT=setTimeout(pxScan,60); }).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['data-skin']});
+// everything else that animates (raid bosses, the room, level-up art) goes through one SVG pixel filter
+(function(){ const mk=()=>{ if (document.getElementById('px-defs')) return; document.body.insertAdjacentHTML('beforeend', '<svg id="px-defs" width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="pxf" x="0" y="0" width="1" height="1" color-interpolation-filters="sRGB"><feFlood x="1" y="1" height="1" width="1"/><feComposite width="3" height="3"/><feTile result="t"/><feComposite in="SourceGraphic" in2="t" operator="in"/><feMorphology operator="dilate" radius="1.5"/></filter></svg>'); }; if (document.body) mk(); else document.addEventListener('DOMContentLoaded', mk); })();
 function pxToggle(){ S.pxChar = S.pxChar===false; commit({skipXp:true}); pxScan(); }
 
 let moneyTab = 'waterfall';
