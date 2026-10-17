@@ -49,26 +49,25 @@ jobs:
           mkdir -p ~/.appstoreconnect/private_keys
           printf '%s' "$KEY" > ~/.appstoreconnect/private_keys/AuthKey_$KID.p8
           echo "KEYPATH=$HOME/.appstoreconnect/private_keys/AuthKey_$KID.p8" >> $GITHUB_ENV
-      - name: Archive
-        env:
-          TEAM: ${{ secrets.APPLE_TEAM_ID }}
-          KID: ${{ secrets.ASC_KEY_ID }}
-          ISS: ${{ secrets.ASC_ISSUER_ID }}
-        run: |
-          xcodebuild -workspace ios/App/App.xcworkspace -scheme App -configuration Release \
-            -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/App.xcarchive" \
-            -allowProvisioningUpdates -authenticationKeyPath "$KEYPATH" -authenticationKeyID "$KID" -authenticationKeyIssuerID "$ISS" \
-            DEVELOPMENT_TEAM="$TEAM" CODE_SIGN_STYLE=Automatic CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO IPHONEOS_DEPLOYMENT_TARGET=15.0 CURRENT_PROJECT_VERSION=${{ github.run_number }} MARKETING_VERSION=1.0 \
-            archive 2>&1 | tee -a "$RUNNER_TEMP/log.txt" | tail -40; exit ${PIPESTATUS[0]}
-      - name: Export
+      - name: Archive and export
         env:
           TEAM: ${{ secrets.APPLE_TEAM_ID }}
           KID: ${{ secrets.ASC_KEY_ID }}
           ISS: ${{ secrets.ASC_ISSUER_ID }}
         run: |
           sed "s/TEAM_ID/$TEAM/" scripts/ExportOptions.plist > "$RUNNER_TEMP/ExportOptions.plist"
-          xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/App.xcarchive" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath "$RUNNER_TEMP/out" \
-            -allowProvisioningUpdates -authenticationKeyPath "$KEYPATH" -authenticationKeyID "$KID" -authenticationKeyIssuerID "$ISS" 2>&1 | tee -a "$RUNNER_TEMP/log.txt"; test -f "$RUNNER_TEMP/out/App.ipa"
+          AUTH=(-allowProvisioningUpdates -authenticationKeyPath "$KEYPATH" -authenticationKeyID "$KID" -authenticationKeyIssuerID "$ISS")
+          COMMON=(-workspace ios/App/App.xcworkspace -scheme App -configuration Release -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/App.xcarchive")
+          VER=(IPHONEOS_DEPLOYMENT_TARGET=15.0 CURRENT_PROJECT_VERSION=${{ github.run_number }} MARKETING_VERSION=1.0 DEVELOPMENT_TEAM="$TEAM")
+          export_it(){ rm -rf "$RUNNER_TEMP/out"; xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/App.xcarchive" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath "$RUNNER_TEMP/out" "${AUTH[@]}" 2>&1 | tee -a "$RUNNER_TEMP/log.txt" | tail -25; test -f "$RUNNER_TEMP/out/App.ipa"; }
+          echo "== try: archive with HealthKit entitlement" | tee -a "$RUNNER_TEMP/log.txt"
+          if xcodebuild "${COMMON[@]}" "${AUTH[@]}" "${VER[@]}" CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- PROVISIONING_PROFILE_SPECIFIER= CODE_SIGN_ENTITLEMENTS=App/App.entitlements archive 2>&1 | tee -a "$RUNNER_TEMP/log.txt" | tail -30 && test -d "$RUNNER_TEMP/App.xcarchive" && export_it; then
+            echo "HEALTHKIT=yes" | tee -a "$RUNNER_TEMP/log.txt"
+          else
+            echo "== HealthKit build failed, building without it" | tee -a "$RUNNER_TEMP/log.txt"; rm -rf "$RUNNER_TEMP/App.xcarchive"
+            xcodebuild "${COMMON[@]}" "${AUTH[@]}" "${VER[@]}" CODE_SIGN_STYLE=Automatic CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO archive 2>&1 | tee -a "$RUNNER_TEMP/log.txt" | tail -30
+            export_it; echo "HEALTHKIT=no" | tee -a "$RUNNER_TEMP/log.txt"
+          fi
       - name: Upload to TestFlight
         env:
           KID: ${{ secrets.ASC_KEY_ID }}

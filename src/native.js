@@ -33,6 +33,8 @@ function nLogo(h){ h=h||26; const F=[]; let cx=1;
 // This file provides the same interface on iPhone, backed by Supabase (data + files), a Supabase Edge Function (Claude API),
 // and Capacitor plugins (notifications, haptics, share sheet). The app code itself stays identical to the web version.
 import { LocalNotifications } from '@capacitor/local-notifications';
+import { Health } from '@capgo/capacitor-health';
+import { CapacitorCalendar } from '@ebarooni/capacitor-calendar';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { Share } from '@capacitor/share';
 import { Filesystem, Directory } from '@capacitor/filesystem';
@@ -208,6 +210,27 @@ window.native = {
   syncReminders(st) { if (st) lastState = st; clearTimeout(remT); remT = setTimeout(syncReminders, 2500); },
   async locate() { const p = await Geolocation.getCurrentPosition({ enableHighAccuracy: false, timeout: 10000 }); return `${p.coords.latitude.toFixed(4)},${p.coords.longitude.toFixed(4)}`; },
   haptic() { Haptics.impact({ style: ImpactStyle.Medium }).catch(() => {}); },
+  // Apple Health: last N days of workouts, sleep, steps and weight
+  async health(days = 14) {
+    const av = await Health.isAvailable().catch(() => ({ available: false }));
+    if (!av.available) return { ok: false, reason: av.reason || 'unavailable' };
+    const types = ['steps', 'sleep', 'weight', 'workouts'];
+    await Health.requestAuthorization({ read: types, write: [] }).catch(() => {});
+    const end = new Date(), start = new Date(end.getTime() - days * 864e5), iso = d => d.toISOString();
+    const out = { ok: true, workouts: [], sleep: [], steps: [], weight: [] };
+    try { const r = await Health.queryWorkouts({ startDate: iso(start), endDate: iso(end), limit: 200 }); out.workouts = (r.workouts || []).map(w => ({ type: w.workoutType || w.type, start: w.startDate, end: w.endDate, cal: w.totalEnergyBurned || w.calories || 0, src: w.sourceName || '' })); } catch (e) {}
+    try { const r = await Health.readSamples({ dataType: 'sleep', startDate: iso(start), endDate: iso(end), limit: 2000 }); out.sleep = (r.samples || []).map(s => ({ start: s.startDate, end: s.endDate, state: s.sleepState || '' })); } catch (e) {}
+    try { const r = await Health.queryAggregated({ dataType: 'steps', startDate: iso(start), endDate: iso(end), bucket: 'day', aggregation: 'sum' }); out.steps = (r.samples || []).map(s => ({ start: s.startDate, value: s.value })); } catch (e) {}
+    try { const r = await Health.readSamples({ dataType: 'weight', startDate: iso(new Date(end.getTime() - 90 * 864e5)), endDate: iso(end), limit: 30, ascending: false }); out.weight = (r.samples || []).map(s => ({ d: s.startDate, value: s.value, unit: s.unit })); } catch (e) {}
+    return out;
+  },
+  // iPhone Calendar: events in a range (read only)
+  async calendar(fromMs, toMs) {
+    const p = await CapacitorCalendar.requestFullCalendarAccess().catch(() => ({ result: 'denied' }));
+    if (p.result !== 'granted') return { ok: false };
+    const r = await CapacitorCalendar.listEventsInRange({ from: fromMs, to: toMs }).catch(() => ({ result: [] }));
+    return { ok: true, events: (r.result || []).map(e => ({ id: e.id, title: e.title || '', start: e.startDate, end: e.endDate, allDay: !!e.isAllDay, loc: e.location || '', cal: e.calendarId || '' })) };
+  },
 };
 async function syncReminders() {
   try {
@@ -248,7 +271,7 @@ document.addEventListener('visibilitychange', () => { if (awake && document.visi
 new MutationObserver(() => { const on = !!document.getElementById('g-live'); if (on !== awake) { awake = on; wakeLock(on); } }).observe(document.documentElement, { childList: true, subtree: true });
 
 /* ---------------- boot ---------------- */
-App.addListener('appStateChange', ({ isActive }) => { if (isActive) { for (const p of pollers) p.run(); window.native.syncReminders(); } });
+App.addListener('appStateChange', ({ isActive }) => { if (isActive) { for (const p of pollers) p.run(); window.native.syncReminders(); try { window.tegaNativeSync && window.tegaNativeSync(); } catch (e) {} } });
 StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
 document.addEventListener('DOMContentLoaded', () => {
   SplashScreen.hide().catch(() => {});

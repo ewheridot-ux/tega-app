@@ -11,6 +11,10 @@ set_str NSPhotoLibraryUsageDescription "Add photos from your library to Datum, y
 set_str NSPhotoLibraryAddUsageDescription "Save bench photos and cards to your Photos."
 set_str NSLocationWhenInUseUsageDescription "Find castings and casters near you."
 set_str NSLocationAlwaysAndWhenInUseUsageDescription "Tega.exe only uses your location while you have the app open, to find castings and casters near you."
+set_str NSHealthShareUsageDescription "Tega.exe reads your workouts, sleep, steps and weight so the Gym, check-in and Stats fill themselves."
+set_str NSHealthUpdateUsageDescription "Tega.exe can save workouts you log in the app to Apple Health."
+set_str NSCalendarsUsageDescription "Tega.exe reads your calendar so bookings and hangouts show up without logging them."
+set_str NSCalendarsFullAccessUsageDescription "Tega.exe reads your calendar so bookings and hangouts show up without logging them."
 set_str UIUserInterfaceStyle "Dark"
 # portrait only (iPhone and iPad)
 for K in UISupportedInterfaceOrientations "UISupportedInterfaceOrientations~ipad"; do pb "Delete :$K"; /usr/libexec/PlistBuddy -c "Add :$K array" -c "Add :$K:0 string UIInterfaceOrientationPortrait" "$P"; done
@@ -19,4 +23,10 @@ set_bool UIRequiresFullScreen true
 pb "Delete :CFBundleURLTypes"
 /usr/libexec/PlistBuddy -c "Add :CFBundleURLTypes array" -c "Add :CFBundleURLTypes:0 dict" -c "Add :CFBundleURLTypes:0:CFBundleURLName string com.ewheridot.tegaexe" -c "Add :CFBundleURLTypes:0:CFBundleURLSchemes array" -c "Add :CFBundleURLTypes:0:CFBundleURLSchemes:0 string tegaexe" "$P"
 set_bool ITSAppUsesNonExemptEncryption false
+# HealthKit needs an entitlement
+cat > ios/App/App/App.entitlements <<'ENT'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict><key>com.apple.developer.healthkit</key><true/><key>com.apple.developer.healthkit.access</key><array/></dict></plist>
+ENT
 echo "Info.plist updated"
