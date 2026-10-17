@@ -3,5 +3,40 @@
   "frames": 6,
   "ms": 140,
   "loop": 1
+ },
+ "hype": {
+  "frames": 8,
+  "ms": 90,
+  "loop": 0
+ },
+ "flex": {
+  "frames": 8,
+  "ms": 110,
+  "loop": 0
+ },
+ "tired": {
+  "frames": 6,
+  "ms": 260,
+  "loop": 1
+ },
+ "levelup": {
+  "frames": 12,
+  "ms": 90,
+  "loop": 0
+ },
+ "money": {
+  "frames": 8,
+  "ms": 110,
+  "loop": 0
+ },
+ "locked": {
+  "frames": 4,
+  "ms": 160,
+  "loop": 1
+ },
+ "missed": {
+  "frames": 6,
+  "ms": 150,
+  "loop": 0
  }
 }

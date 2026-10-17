@@ -1,0 +1,17 @@
+balance 200 {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":35.6,"total":40.0}}
+submitted hype
+done hype 9 frames
+submitted flex
+done flex 9 frames
+submitted tired
+done tired 7 frames
+submitted levelup
+done levelup 13 frames
+submitted money
+done money 9 frames
+submitted locked
+done locked 5 frames
+submitted missed
+done missed 7 frames
+left []
+balance after {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":28.25,"total":40.0}}
