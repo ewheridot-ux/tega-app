@@ -1272,6 +1272,22 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 .fb-mus i{width:46px;height:46px}
 .fb-mus b{position:absolute;left:0;right:0;top:10px;height:46px;margin:0!important;display:grid;place-items:center;font-size:11.5px;line-height:1;letter-spacing:-.02em;text-align:center}
 .fb-mus small{margin-top:2px}
+/* b181: character sheets */
+.cs{display:grid;gap:12px}
+.cs-t{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.cs-t span{font-weight:800;letter-spacing:.06em;color:var(--accent)}.cs-t small{color:var(--muted);font-size:13px;text-align:right}
+.cs-head{display:flex;gap:12px;align-items:center}.cs-av{flex:none;width:58px;height:66px;border:2px solid #ff3df2;overflow:hidden;display:grid;place-items:center;border-radius:6px}.cs-av .pfp-v,.cs-av img,.cs-av svg{width:58px!important;height:66px!important;border-radius:0!important}
+.cs-hi{flex:1;min-width:0;display:grid;gap:4px}.cs-hi b{font-size:15px}.cs-hi small{color:var(--muted);font-size:13px}
+.cs-bar{height:9px;border:1.5px solid color-mix(in srgb,var(--accent) 50%,transparent);background:var(--bg)}.cs-bar i{display:block;height:100%;background:var(--accent)}
+.cs-radar{display:block;width:100%;max-width:250px;margin:0 auto}.cs-rl{font-size:10px;font-weight:700;letter-spacing:.06em}
+.cs-attrs{display:grid;gap:7px}
+.cs-at{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:74px minmax(0,1fr) 34px;gap:2px 8px;align-items:center}
+.cs-at span{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--c)}.cs-at i{display:block;height:9px;background:color-mix(in srgb,var(--c) 14%,var(--bg));border:1px solid color-mix(in srgb,var(--c) 40%,transparent)}.cs-at u{display:block;height:100%;background:var(--c)}
+.cs-at b{text-align:right;font-size:15px}.cs-at small{grid-column:2/4;color:var(--muted);font-size:12px;margin-top:-2px}
+.cs-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.cs-tiles div{border:2px solid var(--c);padding:7px 4px;display:grid;justify-items:center;text-align:center}.cs-tiles b{font-size:22px;line-height:1.1}.cs-tiles small{color:var(--muted);font-size:12px}
+.cs-note{font-size:13px;color:var(--muted)}
+[data-skin="crt"] .cs-t span,[data-skin="crt"] .cs-hi b,[data-skin="crt"] .cs-at span{font-family:var(--px);font-weight:400;font-size:9px;line-height:1.6}
+[data-skin="crt"] .cs-hi b{font-size:10px}[data-skin="crt"] .cs-rl{font-family:'Press Start 2P',monospace;font-size:7px;font-weight:400}
+[data-skin="crt"] .cs-at b,[data-skin="crt"] .cs-tiles b{font-size:22px}
 </style>
 
 <div class="app" id="app"></div>
@@ -1281,7 +1297,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b180';
+const BUILD='b181';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -2322,7 +2338,7 @@ function render(){
       ${(()=>{ const se=season(); return `<span class="pill" style="cursor:pointer;box-shadow:inset 0 0 0 1.5px ${se.c}" onclick="stMode='journey';go('evolve');render()" title="Season ${se.no} · ${se.name}">${se.ic} ${se.left}d</span>`; })()}
     </div>
     <div class="nav">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='goals'&&GOALS.some(([k])=>k===view))?'on':''}" onclick="go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
-    <div id="view">${GOALS.some(([k])=>k===view)?goalsTabs():''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve})[view]()}</div>`;
+    <div id="view">${GOALS.some(([k])=>k===view)?goalsTabs()+goalSheet(view):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve})[view]()}</div>`;
   checkEvo();
   if (_dbSettled && richness(S)>0 && !document.getElementById('lvs')?.classList.contains('show')) { if (S.lvlSeen===undefined) S.lvlSeen=Math.max(1,lvl-1); if (lvl>S.lvlSeen) { S.lvlSeen=lvl; setTimeout(()=>{ levelScene(lvl); saveLocal(); scheduleDbWrite(); },400); } }
 }
@@ -4380,7 +4396,7 @@ function krCredit(src, text, track, on){
     if (k.src || krDataKey(k) || /checks received|posts published|weeks with 2 posts|proposals sent|outreach/i.test(k.text)) continue;
     if (k.target && (+k.current||0)>=k.target) continue;
     const kw=krWords(k.text), hit=kw.filter(w=>words.has(w)), same=track&&o.track===track;
-    const ok = hit.length>=2 || (hit.length===1 && (hit[0].length>=5 ? (kw.length<=3 || same) : (kw.length<=2 && same)));
+    const ok = hit.length>=2 || (hit.length===1 && same && (hit[0].length>=5 || kw.length<=2));
     const score=hit.length+(same?.5:0); if (ok && (!best||score>best.score)) best={k,score}; }
   if (!best) return; const k=best.k, add=(+k.target||1)>1 ? 1 : Math.max(0,(+k.target||1)-(+k.current||0)); if(!add) return;
   k.current=(+k.current||0)+add; S.krCred[src]={q:THIS_Q,kid:k.id,add};
@@ -7021,6 +7037,60 @@ function twinSync(){ const L=twinItems(), prev=S.twinSeen, now={}; for (const x 
   else { const changed=L.filter(x=>(x.key in prev) && prev[x.key]!==now[x.key]), touched=new Set(changed.map(x=>x.key));
     for (const x of changed) for (const y of L){ if (y===x || touched.has(y.key) || !twinMatch(x,y)) continue; if (y.get()!==now[x.key]){ y.set(now[x.key]); touched.add(y.key); } } }
   S.twinSeen={}; for (const x of L) S.twinSeen[x.key]=x.get(); }
+
+/* ===================== character sheets (b181): Goals and Stats ===================== */
+const CS_COL={modeling:'#ff3df2',grillz:'#ffe14d',content:'#4dd8ff',cad:'#7cf0c5',financial:'#39ff9f',personal:'#ff9ad5',relationships:'#b98cff',fitness:'#ff5a5a',learning:'#8fb8ff'};
+const CS_AB={modeling:'MODEL',grillz:'DATUM',content:'CONTENT',cad:'CAD',financial:'MONEY',personal:'MIND',relationships:'SOCIAL',fitness:'BODY',learning:'LEARN'};
+function csRadar(A){ const n=A.length; if (n<3) return ''; const cx=100, cy=100, r=74, pt=(i,k)=>{ const a=-Math.PI/2+i*2*Math.PI/n; return [cx+r*k*Math.cos(a), cy+r*k*Math.sin(a)]; };
+  const ring=k=>`<polygon points="${A.map((_,i)=>pt(i,k).map(v=>v.toFixed(1)).join(',')).join(' ')}" fill="none" stroke="var(--line)" stroke-width="1"/>`;
+  const axes=A.map((_,i)=>{ const [x,y]=pt(i,1); return `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="var(--line)" stroke-width="1"/>`; }).join('');
+  const lab=A.map((a,i)=>{ const [x,y]=pt(i,1.2); return `<text x="${x.toFixed(1)}" y="${(y+3).toFixed(1)}" text-anchor="middle" class="cs-rl" fill="${a.c}">${a.n}</text>`; }).join('');
+  const shape=A.map((a,i)=>pt(i,Math.max(.04,a.v/100)).map(v=>v.toFixed(1)).join(',')).join(' ');
+  return `<svg viewBox="-14 -6 228 214" class="cs-radar" role="img" aria-label="${A.map(a=>a.n+' '+a.v).join(', ')}">${ring(.33)}${ring(.66)}${ring(1)}${axes}<polygon points="${shape}" fill="color-mix(in srgb,var(--accent) 22%,transparent)" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>${A.map((a,i)=>{ const [x,y]=pt(i,Math.max(.04,a.v/100)); return `<rect x="${(x-3).toFixed(1)}" y="${(y-3).toFixed(1)}" width="6" height="6" fill="${a.c}"/>`; }).join('')}${lab}</svg>`; }
+function csHead(sub){ const xp=computeXP(), lvl=levelFor(xp), lo=xpForLevel(lvl), hi=lvl<MAXLVL?xpForLevel(lvl+1):xp, p=hi>lo?Math.round((xp-lo)/(hi-lo)*100):100;
+  return `<div class="cs-head"><div class="cs-av">${pfpMini(stageOf(lvl))}</div><div class="cs-hi"><b>LV ${lvl} · ${esc(titleOf(lvl))}</b><div class="cs-bar"><i style="width:${p}%"></i></div><small>${xp.toLocaleString()} XP · ${Math.max(0,hi-xp).toLocaleString()} to Lv ${lvl+1}${sub?' · '+sub:''}</small></div></div>`; }
+function csAttrs(A){ return `<div class="cs-attrs">${A.map(a=>`<button class="cs-at" style="--c:${a.c}" ${a.go?`onclick="${a.go}"`:''}><span>${a.n}</span><i><u style="width:${a.v}%"></u></i><b class="num">${a.v}</b>${a.sub?`<small>${esc(a.sub)}</small>`:''}</button>`).join('')}</div>`; }
+function csTiles(T){ return `<div class="cs-tiles">${T.map(([v,l,c])=>`<div style="--c:${c}"><b class="num">${v}</b><small>${l}</small></div>`).join('')}</div>`; }
+
+// Goals: how far along each area's goals are, for the period on screen
+function goalSheet(v){ try {
+  let A=[], title='', sub='', tiles=[];
+  if (v==='week'){ const w=curWeek, wk=week(w), L=weekInits(w), done=L.filter(i=>wk.inits[i.id]).length, by={};
+    for (const i of L){ const t=i.track||'personal'; (by[t] ||= [0,0])[1]++; if (wk.inits[i.id]) by[t][0]++; }
+    A=Object.entries(by).map(([t,[d,n]])=>({n:CS_AB[t]||t.toUpperCase(),c:CS_COL[t]||'var(--accent)',v:Math.round(d/n*100),sub:`${d}/${n}`}));
+    const [a]=wRange(w), left=Math.max(0,daysBetween(TODAY,addDays(a,6))+ (w===THIS_WEEK?1:0));
+    title=`WEEK ${w.slice(-2)}`; sub=`${done}/${L.length} goals${w===THIS_WEEK?` · ${left} day${left===1?'':'s'} left`:''}`;
+    const dl=(S.dl||[]).filter(x=>!x.done&&x.d<=addDays(TODAY,7)).length; tiles=[[`${done}/${L.length}`,'goals',CS_COL.financial],[`${Math.round(dailyPct(w)*100)}%`,'daily tasks',CS_COL.content],[String(dl),'due in 7 days',dl?'#ff5a5a':CS_COL.grillz]];
+  } else if (v==='quarter' || v==='year'){ const isQ=v==='quarter', key=isQ?curQ:curY, O=((isQ?S.quarters:S.years)[key]||{}).objectives||[]; if (!O.length) return '';
+    const by={}; for (const o of O){ (by[o.track||'personal'] ||= []).push(objPct(o)); }
+    A=Object.entries(by).map(([t,ps])=>({n:CS_AB[t]||t.toUpperCase(),c:CS_COL[t]||'var(--accent)',v:Math.round(ps.reduce((a,b)=>a+b,0)/ps.length*100)}));
+    const krs=O.flatMap(o=>o.krs||[]), hit=krs.filter(krHit).length, [a,b]=isQ?qRange(key):yRange(key), pace=clamp(daysBetween(a,TODAY)/Math.max(1,daysBetween(a,b)),0,1), all=Math.round(O.reduce((s,o)=>s+objPct(o),0)/O.length*100);
+    const behind=O.filter(o=>objPct(o)<1 && objPct(o)-pace<-.05).length;
+    title=isQ?key.replace('-',' '):key; sub=`${all}% · ${Math.round(pace*100)}% of the time gone`;
+    tiles=[[`${hit}/${krs.length}`,'key results hit',CS_COL.financial],[`${all}%`,'overall',CS_COL.content],[String(behind),'behind pace',behind?'#ff5a5a':CS_COL.grillz]];
+  } else return '';
+  A.sort((x,y)=>TRACKS.findIndex(t=>CS_AB[t.key]===x.n)-TRACKS.findIndex(t=>CS_AB[t.key]===y.n));
+  return `<div class="card sec cs"><div class="cs-t"><span>&gt; ${title} SHEET</span><small>${esc(sub)}</small></div>${csHead('')}${A.length>=3?csRadar(A):''}${csAttrs(A)}${csTiles(tiles)}</div>`;
+  } catch(e){ console.warn('goal sheet',e); return ''; } }
+
+// Stats: what you actually did in the last 30 days, scored against a healthy pace
+function statSheet(){ try {
+  const b=TODAY, a=addDays(TODAY,-29), sv=k=>{ const x=srcVal(k,a,b); return x==null?0:x; }, pct=(x,t)=>Math.max(0,Math.min(100,Math.round(x/t*100)));
+  const set=sv('setdays'), out=sv('outreach'), bh=sv('benchhrs'), posts=sv('posts'), gym=sv('gym'), ev=sv('events'), jr=sv('habit:journal'), bw=sv('budgetweeks'), ord=sv('orders'), gtrm=sv('guitar');
+  const A=[
+    {n:'MODEL',c:CS_COL.modeling,v:Math.round((pct(set,4)+pct(out,8))/2),sub:`${set} set days · ${out} outreach`,go:"go('model')"},
+    {n:'DATUM',c:CS_COL.grillz,v:Math.round((pct(bh,16)*3+pct(ord,1))/4),sub:`${bh}h bench · ${ord} paid orders`,go:"go('datum')"},
+    {n:'CONTENT',c:CS_COL.content,v:pct(posts,8),sub:`${posts} posts`,go:"go('content')"},
+    {n:'BODY',c:CS_COL.fitness,v:pct(gym,12),sub:`${gym} workouts`,go:"go('gym')"},
+    {n:'MONEY',c:CS_COL.financial,v:pct(bw,4),sub:`${bw} of 4 weeks under budget`,go:"go('money')"},
+    {n:'SOCIAL',c:CS_COL.relationships,v:pct(ev,4),sub:`${ev} hangouts`},
+    {n:'MIND',c:CS_COL.personal,v:Math.round((pct(jr,20)*2+pct(gtrm,240))/3),sub:`${jr} journal days · ${Math.round(gtrm)} guitar min`}];
+  const st=streaks(), xw=weekXp(THIS_WEEK), q=(S.quests||[]).filter(x=>x.done&&x.done>=addDays(TODAY,-6)).length;
+  const top=A.slice().sort((x,y)=>y.v-x.v)[0], low=A.slice().sort((x,y)=>x.v-y.v)[0];
+  return `<div class="card sec cs"><div class="cs-t"><span>&gt; CHARACTER</span><small>last 30 days</small></div>${csHead('')}${csRadar(A)}${csAttrs(A)}
+    <div class="cs-note">Strongest: <b style="color:${top.c}">${top.n}</b> · Weakest: <b style="color:${low.c}">${low.n}</b> — ${esc(low.sub)}</div>
+    ${csTiles([[String(dailyStreak()),'day streak',CS_COL.grillz],[String(xw),'XP this week',CS_COL.financial],[String(q),'quests · 7d',CS_COL.content]])}</div>`;
+  } catch(e){ console.warn('stat sheet',e); return ''; } }
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
 function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['waterfall','Waterfall'],['bills','Bills'],['budget','Budget'],['deduct','Write-offs']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
@@ -7642,7 +7712,7 @@ function foldCards(html, order, openKey, subs={}){ const t=document.createElemen
 function vEvolve(){
   if (stMode==='art'){ stMode='progress'; ctTab='create'; setTimeout(()=>go('content'),0); }
   if (stMode==='backup') stMode='settings';
-  const body = stMode==='character' ? vCharacter() : stMode==='circle' ? vCircle() : stMode==='settings' ? vSettings() : stMode==='journey' ? vWorld() : foldCards(vStats()+sleepCard()+tellsCard()+rivalCard(), ['Consistency','XP per week','Furthest behind','Your tells','Shadow','Money','Bench time','Records'], '', {Consistency:`${[...Array(30)].filter((_,i)=>dayActive(addDays(TODAY,-i))).length} of the last 30 days`, Records:`best streak ${bestDailyStreak()}`});
+  const body = stMode==='character' ? vCharacter() : stMode==='circle' ? vCircle() : stMode==='settings' ? vSettings() : stMode==='journey' ? vWorld() : statSheet()+foldCards(vStats()+sleepCard()+tellsCard()+rivalCard(), ['Consistency','XP per week','Furthest behind','Your tells','Shadow','Money','Bench time','Records'], '', {Consistency:`${[...Array(30)].filter((_,i)=>dayActive(addDays(TODAY,-i))).length} of the last 30 days`, Records:`best streak ${bestDailyStreak()}`});
   return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['progress','Progress'],['character','Character'],['circle','Circle'],['journey','World'],['settings','Settings']].map(([k,l])=>`<button class="${stMode===k?'on':''}" style="flex:1 1 auto;min-width:0;padding:9px 6px;font-size:12px;letter-spacing:-.01em" onclick="stMode='${k}';render();window.scrollTo(0,0)">${l}</button>`).join('')}</div>` + body;
 }
 function vTrophies(){ stMode='character'; return vEvolve(); }
