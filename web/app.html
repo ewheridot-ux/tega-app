@@ -1127,6 +1127,20 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 .fb-tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin:0 -16px;padding:0 10px;overflow-x:auto;scrollbar-width:none}
 .fb-tabs button{flex:1;min-width:max-content;border:0;background:none;color:var(--muted);font-weight:700;font-size:14px;padding:10px 8px;border-bottom:2.5px solid transparent;border-radius:0!important}
 .fb-tabs button.on{color:var(--fg);border-bottom-color:var(--accent)}
+
+/* ===================== skin: Fitbod (used by the Gym section) ===================== */
+:root[data-skin="fit"]:not(#x){--bg:#000;--bg2:#0b0b0c;--card:#141416;--card2:#232326;--line:rgba(255,255,255,.08);--fg:#fff;--muted:#9a9aa1;--accent:#ff4f6d;--accent2:#ff8a5c;--good:#2fd27c;--warn:#ffb020;--bad:#ff453a;--r:20px;--r2:14px;color-scheme:dark}
+[data-skin="fit"] body{background:#000;color:#fff;font-family:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif}
+[data-skin="fit"] .fb-title{font-size:32px;font-weight:800;letter-spacing:-.03em}
+[data-skin="fit"] .fb-tabs button.on{border-bottom-color:var(--accent)}
+[data-skin="fit"] .btn{background:var(--accent);color:#fff;border-radius:999px;font-weight:800}
+[data-skin="fit"] .btn.ghost{background:var(--card2);color:#fff}
+[data-skin="fit"] .g-start{background:var(--accent);color:#fff;font-size:17px;padding:17px;border-radius:999px}
+[data-skin="fit"] .fb-ex{background:var(--card)}
+[data-skin="fit"] .fb-ex .g-th{border-radius:12px}
+[data-skin="fit"] .fb-sec button{color:var(--accent)}
+[data-skin="fit"] .nav button.on{background:var(--card2);color:#fff}
+[data-skin="fit"] .wordmark{font-weight:800}
 </style>
 
 <div class="app" id="app"></div>
@@ -1136,7 +1150,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b174';
+const BUILD='b175';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -2147,6 +2161,7 @@ const trackSelect = (val, onchange) => `<select onchange="${onchange}"><option v
 
 function render(){
   _mVer++;
+  try { const want = view==='gym' ? 'fit' : (()=>{ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(S&&S.skin)||'crt'; })(); if (document.documentElement.getAttribute('data-skin')!==want) document.documentElement.setAttribute('data-skin', want); } catch(e){}
   refreshToday(); releaseEvo(); try { travelTick(); } catch(e){}
   const xp=computeXP(), lvl=levelFor(xp), st=streaks();
   const app=document.getElementById('app');
