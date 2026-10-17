@@ -1,0 +1,29 @@
+name: PixelLab
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['ci/run-pixellab', 'scripts/pixellab.py']
+permissions: { contents: write }
+jobs:
+  px:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -q requests pillow
+      - name: Run
+        env:
+          PXKEY: ${{ secrets.PIXELLAB_API_KEY }}
+        run: |
+          mkdir -p ci/pixellab
+          curl -sS https://api.pixellab.ai/v2/llms.txt -o ci/pixellab/llms.txt || true
+          curl -sS https://api.pixellab.ai/v2/openapi.json -o ci/pixellab/openapi.json || true
+          [ -n "$PXKEY" ] && echo "key present" > ci/pixellab/key.txt || echo "KEY MISSING" > ci/pixellab/key.txt
+          if [ -f scripts/pixellab.py ]; then python scripts/pixellab.py 2>&1 | tee ci/pixellab/run.log; fi
+      - name: Report
+        if: always()
+        run: |
+          git config user.name "tega-ci"; git config user.email "ci@users.noreply.github.com"
+          git add ci/pixellab sprites 2>/dev/null; git commit -qm "ci: pixellab [skip ci]" || true
+          git pull --rebase -q origin main || true; git push -q origin HEAD:main || true
