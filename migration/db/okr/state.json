@@ -255,7 +255,7 @@
         "name": "J.M. Blay-Tofey"
       }
     ],
-    "syncDay": "2026-10-15"
+    "syncDay": "2026-10-16"
   },
   "datum": {
     "contacts": [],
@@ -1309,12 +1309,18 @@
       "win": ""
     },
     "2026-10-16": {
-      "habits": {},
+      "checkin": {
+        "at": "15:34",
+        "feel": 2
+      },
+      "habits": {
+        "content": true
+      },
       "top3": [
         {
           "done": false,
-          "text": "",
-          "track": ""
+          "text": "get paid",
+          "track": "financial"
         },
         {
           "done": false,
@@ -1463,7 +1469,143 @@
   "fillQ4": 1,
   "gym": {
     "excl": {},
-    "live": null,
+    "live": {
+      "d": "2026-10-16",
+      "ex": [
+        {
+          "sets": [
+            {
+              "ok": false,
+              "r": 10,
+              "t": "n",
+              "w": 25
+            },
+            {
+              "ok": false,
+              "r": 10,
+              "t": "n",
+              "w": 25
+            },
+            {
+              "ok": false,
+              "r": 10,
+              "t": "n",
+              "w": 25
+            }
+          ],
+          "x": "db_sp"
+        },
+        {
+          "sets": [
+            {
+              "ok": false,
+              "r": 8,
+              "t": "w",
+              "w": 40
+            },
+            {
+              "ok": false,
+              "r": 5,
+              "t": "w",
+              "w": 60
+            },
+            {
+              "ok": false,
+              "r": 10,
+              "t": "n",
+              "w": 80
+            },
+            {
+              "ok": false,
+              "r": 10,
+              "t": "n",
+              "w": 80
+            },
+            {
+              "ok": false,
+              "r": 10,
+              "t": "n",
+              "w": 80
+            }
+          ],
+          "x": "bb_bench"
+        },
+        {
+          "sets": [
+            {
+              "ok": false,
+              "r": 10,
+              "t": "n",
+              "w": 70
+            },
+            {
+              "ok": false,
+              "r": 10,
+              "t": "n",
+              "w": 70
+            },
+            {
+              "ok": false,
+              "r": 10,
+              "t": "n",
+              "w": 70
+            }
+          ],
+          "x": "cg_bench"
+        },
+        {
+          "sets": [
+            {
+              "ok": false,
+              "r": 12,
+              "t": "n",
+              "w": 10
+            },
+            {
+              "ok": false,
+              "r": 12,
+              "t": "n",
+              "w": 10
+            },
+            {
+              "ok": false,
+              "r": 12,
+              "t": "n",
+              "w": 10
+            }
+          ],
+          "x": "lat_raise"
+        },
+        {
+          "sets": [
+            {
+              "ok": false,
+              "r": 12,
+              "t": "n",
+              "w": 15
+            },
+            {
+              "ok": false,
+              "r": 12,
+              "t": "n",
+              "w": 15
+            },
+            {
+              "ok": false,
+              "r": 12,
+              "t": "n",
+              "w": 15
+            }
+          ],
+          "x": "db_fly"
+        }
+      ],
+      "id": "wfm2d6ua",
+      "mode": "custom",
+      "name": "Shoulders · Chest · Triceps",
+      "restEnd": 0,
+      "t0": 1792212316785
+    },
     "notes": {},
     "plan": {
       "d": "2026-10-16",
@@ -1610,6 +1752,15 @@
         "name": "My gym"
       }
     ],
+    "q": {
+      "2026-10-16": {
+        "done": {
+          "pro": false
+        },
+        "due": 1,
+        "pen": 0
+      }
+    },
     "recOv": {},
     "rest": {},
     "saved": [],
@@ -1886,6 +2037,144 @@
         "name": "Shoulders · Chest · Triceps",
         "restEnd": 0,
         "t0": 1792161672597
+      },
+      {
+        "d": "2026-10-16",
+        "discarded": 1,
+        "ex": [
+          {
+            "sets": [
+              {
+                "ok": false,
+                "r": 10,
+                "t": "n",
+                "w": 25
+              },
+              {
+                "ok": false,
+                "r": 10,
+                "t": "n",
+                "w": 25
+              },
+              {
+                "ok": false,
+                "r": 10,
+                "t": "n",
+                "w": 25
+              }
+            ],
+            "x": "db_sp"
+          },
+          {
+            "sets": [
+              {
+                "ok": false,
+                "r": 8,
+                "t": "w",
+                "w": 40
+              },
+              {
+                "ok": false,
+                "r": 5,
+                "t": "w",
+                "w": 60
+              },
+              {
+                "ok": false,
+                "r": 10,
+                "t": "n",
+                "w": 80
+              },
+              {
+                "ok": false,
+                "r": 10,
+                "t": "n",
+                "w": 80
+              },
+              {
+                "ok": false,
+                "r": 10,
+                "t": "n",
+                "w": 80
+              }
+            ],
+            "x": "bb_bench"
+          },
+          {
+            "sets": [
+              {
+                "ok": false,
+                "r": 10,
+                "t": "n",
+                "w": 70
+              },
+              {
+                "ok": false,
+                "r": 10,
+                "t": "n",
+                "w": 70
+              },
+              {
+                "ok": false,
+                "r": 10,
+                "t": "n",
+                "w": 70
+              }
+            ],
+            "x": "cg_bench"
+          },
+          {
+            "sets": [
+              {
+                "ok": false,
+                "r": 12,
+                "t": "n",
+                "w": 10
+              },
+              {
+                "ok": false,
+                "r": 12,
+                "t": "n",
+                "w": 10
+              },
+              {
+                "ok": false,
+                "r": 12,
+                "t": "n",
+                "w": 10
+              }
+            ],
+            "x": "lat_raise"
+          },
+          {
+            "sets": [
+              {
+                "ok": false,
+                "r": 12,
+                "t": "n",
+                "w": 15
+              },
+              {
+                "ok": false,
+                "r": 12,
+                "t": "n",
+                "w": 15
+              },
+              {
+                "ok": false,
+                "r": 12,
+                "t": "n",
+                "w": 15
+              }
+            ],
+            "x": "db_fly"
+          }
+        ],
+        "id": "wk7syice",
+        "mode": "custom",
+        "name": "Shoulders · Chest · Triceps",
+        "restEnd": 0,
+        "t0": 1792202335699
       }
     ]
   },
@@ -1951,7 +2240,7 @@
   "ig": {
     "at": "2026-10-16",
     "aud": {
-      "at": "2026-10-15",
+      "at": "2026-10-16",
       "cities": [
         [
           "Chicago",
@@ -2359,8 +2648,8 @@
         1
       ]
     ],
-    "followers": 1312,
-    "follows": 1160,
+    "followers": 1314,
+    "follows": 1159,
     "hist": {
       "2026-10-05": 1316,
       "2026-10-06": 1316,
@@ -2372,37 +2661,61 @@
       "2026-10-13": 1316,
       "2026-10-14": 1314,
       "2026-10-15": 1313,
-      "2026-10-16": 1312
+      "2026-10-16": 1314
     },
     "media": 5,
     "posts": [
+      {
+        "cap": "Collab post",
+        "collab": 1,
+        "comments": 0,
+        "likes": 0,
+        "link": "collab-rzbqyw6",
+        "reach": 0,
+        "saves": 0,
+        "shares": 0,
+        "ts": "2026-10-16",
+        "type": "COLLAB",
+        "views": 0
+      },
       {
         "cap": "Pt.✌🏿 📸: @thejesuscosta",
         "comments": 10,
         "likes": 143,
         "link": "https://www.instagram.com/p/DbbrT6XiZy1/",
-        "reach": 1154,
+        "reach": 1159,
         "saves": 0,
         "shares": 2,
         "ts": "2026-07-30",
         "type": "FEED",
-        "views": 3068
+        "views": 3093
       },
       {
         "cap": "📸: @thejesuscosta",
         "comments": 7,
         "likes": 115,
         "link": "https://www.instagram.com/p/DbMZ5HuCez0/",
-        "reach": 738,
+        "reach": 741,
         "saves": 1,
         "shares": 0,
         "ts": "2026-07-24",
         "type": "FEED",
-        "views": 2280
+        "views": 2295
       }
     ],
-    "stAt": 1792161411670,
+    "stAt": 1792212311726,
     "stories": [
+      {
+        "back": 1,
+        "exits": 27,
+        "fwd": 116,
+        "id": "18113530585855532",
+        "reach": 156,
+        "replies": 0,
+        "shares": 1,
+        "ts": "2026-10-16 12:29",
+        "views": 194
+      },
       {
         "back": 4,
         "exits": 61,
@@ -2426,6 +2739,7 @@
         "views": 270
       }
     ],
+    "t": 1792195692535,
     "user": "organic_tega"
   },
   "krCred": {
@@ -2438,7 +2752,18 @@
   "lastBackup": "2026-10-05",
   "lastSnap": "2026-10-12",
   "logSynced": true,
-  "logs": [],
+  "logs": [
+    {
+      "a": "Instagram collab",
+      "b": "",
+      "d": "2026-10-16",
+      "id": "6j6x5rs",
+      "kind": "post",
+      "likes": 0,
+      "pillar": "model",
+      "views": 0
+    }
+  ],
   "lvlAt": {},
   "lvlSeen": 5,
   "mem": {
@@ -2677,7 +3002,25 @@
         "t": "travel",
         "th": "1a1222a77f73e574",
         "url": "https://mail.google.com/mail/?authuser=ewheridot@gmail.com#all/thread-f:1878602097360102772"
+      },
+      "A1a140685c9a95cfd": {
+        "ag": "ONE",
+        "auto": 1,
+        "c": "BowFlex",
+        "d": [],
+        "id": "A1a140685c9a95cfd",
+        "r": "",
+        "s": "unknown",
+        "t": "selftape",
+        "th": "1a140685c9a95cfd",
+        "tm": "",
+        "url": "https://mail.google.com/mail/?authuser=ewheridot@gmail.com#all/thread-f:1879134116204076285"
       }
+    },
+    "card": {
+      "agency": "",
+      "imgs": [],
+      "name": ""
     },
     "hide": {
       "E122": "2026-10-12",
@@ -2699,8 +3042,8 @@
       "E127": "booked",
       "E128": "nobook"
     },
-    "syncAt": 1792061113049,
-    "syncDay": "2026-10-15",
+    "syncAt": 1792194953485,
+    "syncDay": "2026-10-16",
     "syncN": 0
   },
   "money": {
@@ -4700,6 +5043,17 @@
           "note": "",
           "ok": false,
           "txn": "j8p6msn"
+        },
+        {
+          "acct": "email",
+          "amt": 98.99,
+          "cat": "other",
+          "d": "2026-10-16",
+          "desc": "Apple Developer Program (annual) · order MX5Y1YH9TG",
+          "id": "mgu7rs6",
+          "note": "App Store developer membership for the Tega.exe iPhone app · renews Oct 16, 2027",
+          "ok": true,
+          "txn": null
         }
       ],
       "pulled": "2026-10-16",
@@ -12586,15 +12940,21 @@
           "id": "qcrllro",
           "krs": [
             {
+              "base": 1,
               "current": 1,
               "id": "xvjtj4o",
+              "src": "outreach",
+              "srcN": 0,
               "target": 24,
               "text": "Client / agency outreach touches",
               "unit": ""
             },
             {
+              "base": 1,
               "current": 1,
               "id": "2jxj6ba",
+              "src": "checks",
+              "srcN": 0,
               "target": 6,
               "text": "checks received",
               "unit": ""
@@ -12631,8 +12991,11 @@
               "autoN": {
                 "orders": 0
               },
+              "base": 0,
               "current": 0,
               "id": "djx207l",
+              "src": "orders",
+              "srcN": 0,
               "target": 5,
               "text": "Paid orders (Dec 31)",
               "unit": ""
@@ -12641,8 +13004,11 @@
               "autoN": {
                 "revenue": 0
               },
+              "base": 0,
               "current": 0,
               "id": "hk16uqy",
+              "src": "revenue",
+              "srcN": 0,
               "target": 500,
               "text": "Revenue",
               "unit": "$"
@@ -12662,16 +13028,22 @@
               "unit": ""
             },
             {
-              "current": 2,
+              "base": 2,
+              "current": 3,
               "id": "mxwy9q6",
-              "logN": 0,
+              "logN": 1,
+              "src": "posts",
+              "srcN": 1,
               "target": 26,
               "text": "Posts published",
               "unit": ""
             },
             {
+              "base": 1,
               "current": 1,
               "id": "pruka18",
+              "src": "weeks2",
+              "srcN": 0,
               "target": 13,
               "text": "Weeks with 2 posts",
               "unit": ""
@@ -12680,8 +13052,11 @@
               "autoN": {
                 "followers": 0
               },
+              "base": 0,
               "current": 0,
               "id": "43y9g00",
+              "src": "followers",
+              "srcN": 0,
               "target": 100,
               "text": "Combined followers",
               "unit": ""
@@ -12708,8 +13083,11 @@
               "unit": ""
             },
             {
+              "base": 0,
               "current": 0,
               "id": "ai2ckmt",
+              "src": "proposals",
+              "srcN": 0,
               "target": 15,
               "text": "Proposals sent",
               "unit": ""
@@ -12774,8 +13152,11 @@
               "autoN": {
                 "journal": 0
               },
+              "base": 0,
               "current": 0,
               "id": "6l8e45d",
+              "src": "habit:journal",
+              "srcN": 0,
               "target": 40,
               "text": "Journal days",
               "unit": ""
@@ -12784,8 +13165,11 @@
               "autoN": {
                 "reviews": 2
               },
+              "base": 0,
               "current": 2,
               "id": "bcvjq2k",
+              "src": "reviews",
+              "srcN": 2,
               "target": 13,
               "text": "Weekly reviews done",
               "unit": ""
@@ -12808,8 +13192,11 @@
               "autoN": {
                 "events": 4
               },
+              "base": 0,
               "current": 4,
               "id": "nweylvg",
+              "src": "events",
+              "srcN": 4,
               "target": 8,
               "text": "Hangouts / events",
               "unit": ""
@@ -12818,8 +13205,11 @@
               "autoN": {
                 "people": 0
               },
+              "base": 0,
               "current": 0,
               "id": "7uteijb",
+              "src": "people",
+              "srcN": 0,
               "target": 5,
               "text": "New people met",
               "unit": ""
@@ -12835,8 +13225,11 @@
               "autoN": {
                 "gym": 0
               },
+              "base": 0,
               "current": 0,
               "id": "cevlwc4",
+              "src": "gym",
+              "srcN": 0,
               "target": 39,
               "text": "Gym sessions",
               "unit": ""
@@ -13352,7 +13745,15 @@
       "track": "learning"
     }
   ],
-  "updatedAt": 1792161717434,
+  "travel": {
+    "city": "",
+    "on": false,
+    "pause": [
+      "datum",
+      "guitar"
+    ]
+  },
+  "updatedAt": 1792212932499,
   "v": 2,
   "vision": {
     "milestones": [
@@ -13547,10 +13948,16 @@
           "id": "4fqdt1f",
           "text": "Bench day Monday",
           "track": "grillz"
+        },
+        {
+          "gen": 1,
+          "id": "2hus5e5",
+          "text": "Bench day Friday",
+          "track": "grillz"
         }
       ],
       "inits": {},
-      "movesAt": "2026-10-12",
+      "movesAt": "2026-10-16",
       "oneDone": true,
       "review": {
         "blocker": "",
@@ -13578,6 +13985,7 @@
       "text": "◆ P-002 · 11h 34m at the bench"
     }
   ],
+  "wkSrcV": 1,
   "years": {
     "2026": {
       "objectives": [
@@ -13586,8 +13994,12 @@
           "krs": [
             {
               "auto": 1,
+              "base": 0,
               "current": 7940,
+              "from": "2026-09-01",
               "id": "vh0u2h0",
+              "src": "income",
+              "srcN": 7940,
               "target": 16000,
               "text": "Modeling income (Sep–Dec)",
               "unit": "$"
@@ -13608,24 +14020,33 @@
           "krs": [
             {
               "auto": 1,
+              "base": 0,
               "current": 0,
               "id": "43lm2he",
+              "src": "sets",
+              "srcN": 0,
               "target": 2,
               "text": "Sets made end-to-end",
               "unit": ""
             },
             {
               "auto": 1,
+              "base": 0,
               "current": 0,
               "id": "msynlsi",
+              "src": "orders",
+              "srcN": 0,
               "target": 5,
               "text": "Paid orders",
               "unit": ""
             },
             {
               "auto": 1,
+              "base": 0,
               "current": 0,
               "id": "xrtt7tn",
+              "src": "revenue",
+              "srcN": 0,
               "target": 500,
               "text": "Revenue",
               "unit": "$"
@@ -13639,16 +14060,22 @@
           "krs": [
             {
               "auto": 1,
-              "current": 2,
+              "base": 2,
+              "current": 3,
               "id": "i37bw3l",
+              "src": "posts",
+              "srcN": 1,
               "target": 26,
               "text": "Posts published",
               "unit": ""
             },
             {
               "auto": 1,
+              "base": 0,
               "current": 0,
               "id": "i5g4o7m",
+              "src": "followers",
+              "srcN": 0,
               "target": 100,
               "text": "Combined followers",
               "unit": ""
@@ -13669,8 +14096,11 @@
             },
             {
               "auto": 1,
+              "base": 0,
               "current": 0,
               "id": "s4moubh",
+              "src": "proposals",
+              "srcN": 0,
               "target": 15,
               "text": "Proposals sent",
               "unit": ""
@@ -13727,8 +14157,11 @@
           "krs": [
             {
               "auto": 1,
+              "base": 0,
               "current": 0,
               "id": "491h6cg",
+              "src": "habit:journal",
+              "srcN": 0,
               "target": 60,
               "text": "Journal entries",
               "unit": ""
@@ -13750,8 +14183,11 @@
           "krs": [
             {
               "auto": 1,
-              "current": 4,
+              "base": 0,
+              "current": 7,
               "id": "krimfuk",
+              "src": "events",
+              "srcN": 7,
               "target": 8,
               "text": "Hangouts / events",
               "unit": ""
@@ -13772,8 +14208,11 @@
           "krs": [
             {
               "auto": 1,
+              "base": 0,
               "current": 0,
               "id": "q1bo6fr",
+              "src": "gym",
+              "srcN": 0,
               "target": 39,
               "text": "Gym sessions",
               "unit": ""

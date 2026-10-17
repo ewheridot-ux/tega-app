@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['web/**', 'src/**', 'assets/**', 'scripts/**', 'config/**', 'capacitor.config.json', 'package.json', '.github/workflows/ios.yml']
+    paths: ['web/**', 'src/**', 'assets/**', 'scripts/**', 'config/**', 'migration/**', 'capacitor.config.json', 'package.json', '.github/workflows/ios.yml']
 concurrency: { group: ios, cancel-in-progress: true }
 permissions: { contents: write }
 jobs:
