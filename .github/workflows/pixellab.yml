@@ -20,7 +20,7 @@ jobs:
           curl -sS https://api.pixellab.ai/v2/llms.txt -o ci/pixellab/llms.txt || true
           curl -sS https://api.pixellab.ai/v2/openapi.json -o ci/pixellab/openapi.json || true
           [ -n "$PXKEY" ] && echo "key present" > ci/pixellab/key.txt || echo "KEY MISSING" > ci/pixellab/key.txt
-          if [ -f scripts/pixellab2.py ]; then python scripts/pixellab2.py 2>&1 | tee ci/pixellab/run.log; fi
+          if [ -f scripts/pixellab3.py ]; then python scripts/pixellab3.py 2>&1 | tee ci/pixellab/run.log; fi
       - name: Report
         if: always()
         run: |
