@@ -974,6 +974,9 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 .rc-img{height:140px;border-radius:12px;background:var(--card2) center/contain no-repeat}
 .feel.sleep button{padding:10px 2px}
 .sl-bars{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:3px;height:96px;align-items:end}.sl-bars div{height:100%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr auto;gap:1px;align-items:end}.sl-bars i{display:block;border-radius:3px 3px 1px 1px}.sl-bars i.e{background:var(--accent2)}.sl-bars i.s{background:var(--accent)}.sl-bars small{grid-column:1/-1;text-align:center;font-size:9.5px;color:var(--muted)}
+.pd .pd-list{display:grid;gap:4px;margin-top:8px}
+.pd-row{display:grid;grid-template-columns:22px auto minmax(0,1fr) auto;align-items:center;gap:8px;width:100%;padding:8px 10px;border:0;border-radius:var(--r2);background:var(--card2);color:var(--fg);font:inherit;font-size:13px;text-align:left}
+.pd-row small{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pd-row em{font-style:normal;font-size:12px;color:var(--muted);white-space:nowrap}
 </style>
 
 <div class="app" id="app"></div>
@@ -983,7 +986,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b160';
+const BUILD='b161';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -4136,7 +4139,7 @@ function vContent(){
       <div class="card sec"><div class="hdr"><h2>Pillar mix</h2><span class="sub">last 30 days · ${tot} post${tot===1?'':'s'}</span></div>
         <div class="ct-mix">${PILLARS.map(([k,l,ic,c])=>`<i style="flex:${byP[k]||0};background:${c}"></i>`).join('')||''}${tot?'':'<i style="flex:1;background:var(--card2)"></i>'}</div>
         <div class="ct-leg">${PILLARS.map(([k,l,ic,c])=>`<span><i style="background:${c}"></i>${ic} ${l} <b class="num">${byP[k]||0}</b></span>`).join('')}</div>
-        ${tot&&!byP.datum?`<div class="help" style="margin-top:8px">No Datum posts this month — a bench clip counts toward both content and the grillz track.</div>`:''}</div>`;
+        ${tot&&!byP.datum?`<div class="help" style="margin-top:8px">No Datum posts this month — a bench clip counts toward both content and the grillz track.</div>`:''}</div>${postedCard()}`;
   }
   if (ctTab==='create') return head + vCreate();
   if (ctTab==='ideas'){
@@ -6283,6 +6286,29 @@ function buddySend(){ const B=B_(), t=buddyText(), ph=String(B.phone||'').replac
 /* ---------- native-only helpers ---------- */
 async function cstLocate(){ if (!window.native || !window.native.locate) return toast('Location works in the app'); try { const p=await window.native.locate(); const C=cstCRM(); C.where=p; commit({skipXp:true}); toast('📍 Using your location'); } catch(e){ toast('Couldn’t get your location'); } }
 
+
+/* ---------- posted list (Content → Plan): small fold, tap a row to edit ---------- */
+let pdOpen=false;
+const PICON={TikTok:'🎵',Instagram:'📷','Instagram collab':'🤝',YouTube:'▶️',Other:'📱'};
+function postedCard(){ const L=(S.logs||[]).filter(l=>l.kind==='post').sort((a,b)=>b.d.localeCompare(a.d)), mo=L.filter(l=>l.d.slice(0,7)===TODAY.slice(0,7)).length, show=L.slice(0,12);
+  const k=n=>n>=1000?(Math.round(n/100)/10)+'k':String(n);
+  return `<details class="card sec fold pd" ${pdOpen?'open':''} ontoggle="pdOpen=this.open"><summary><span>Posted</span><span class="sub">${mo} this month ›</span></summary>
+    ${show.length?`<div class="pd-list">${show.map(l=>`<button class="pd-row" onclick="postEdit('${l.id}')"><span>${PICON[l.a]||'📱'}</span><b>${nice(l.d)}</b><small>${esc(l.a)}${l.auto?' · auto':''}</small><em>${l.views?`👁 ${k(l.views)} `:''}${l.likes?`♥ ${k(l.likes)}`:''}</em></button>`).join('')}</div>${L.length>12?`<div class="sub" style="font-size:12px;margin-top:6px">Showing the latest 12 of ${L.length}</div>`:''}`:`<div class="help">Nothing logged yet.</div>`}</details>`; }
+function postEdit(id){ const l=(S.logs||[]).find(x=>x.id===id); if(!l) return; const opts=LOGK.post.opts.includes(l.a)?LOGK.post.opts:[l.a,...LOGK.post.opts];
+  gSheet(`<h2 class="g-sh-t">${PICON[l.a]||'📱'} Post</h2><div class="stack" style="gap:8px">
+    <div class="row" style="gap:8px;flex-wrap:nowrap"><select id="pe-a" class="inp" style="flex:1;min-width:0">${opts.map(o=>`<option ${o===l.a?'selected':''}>${esc(o)}</option>`).join('')}</select><input id="pe-d" class="inp" type="date" style="flex:1;min-width:0" value="${l.d}" max="${TODAY}"></div>
+    <input id="pe-b" class="inp" placeholder="Link" inputmode="url" value="${esc(l.b||'')}">
+    <div class="row" style="gap:8px;flex-wrap:nowrap"><input id="pe-v" class="inp" style="flex:1;min-width:0" type="number" inputmode="numeric" placeholder="Views" value="${l.views||''}"><input id="pe-l" class="inp" style="flex:1;min-width:0" type="number" inputmode="numeric" placeholder="Likes" value="${l.likes||''}"></div>
+    <div class="row" style="gap:8px">${safeUrl(l.b)?`<a class="btn ghost sm" href="${esc(safeUrl(l.b))}" target="_blank" rel="noopener">Open</a>`:''}<button class="btn ghost sm danger" id="pe-del" onclick="postDel('${id}')">Delete</button><span style="flex:1"></span><button class="btn sm" onclick="postSave('${id}')">Save</button></div></div>`); }
+function postSave(id){ const l=(S.logs||[]).find(x=>x.id===id); if(!l) return; const v=x=>document.getElementById(x).value.trim(), oldLink=l.b;
+  l.a=v('pe-a')||l.a; const d=v('pe-d'); if(d) l.d=d>TODAY?TODAY:d; l.b=v('pe-b'); l.views=+v('pe-v')||0; l.likes=+v('pe-l')||0; delete l.auto;
+  if (l.a==='Instagram collab' && S.ig){ const P=(S.ig.posts||[]).find(p=>p.collab&&(p.link===oldLink.split('?')[0]||p.link===l.b.split('?')[0])); if(P){ P.ts=l.d; P.views=l.views; P.likes=l.likes; if(safeUrl(l.b)) P.link=l.b.split('?')[0]; } }
+  gSheetClose(); commit({skipXp:true}); toast('Saved'); }
+let peArmed=0;
+function postDel(id){ const b=document.getElementById('pe-del'); if(Date.now()-peArmed>3000){ peArmed=Date.now(); if(b) b.textContent='Tap again to delete'; return; }
+  const l=(S.logs||[]).find(x=>x.id===id); S.logs=(S.logs||[]).filter(x=>x.id!==id);
+  if (l && l.a==='Instagram collab' && S.ig) S.ig.posts=(S.ig.posts||[]).filter(p=>!(p.collab&&p.ts===l.d&&(!l.b||p.link===l.b.split('?')[0])));
+  gSheetClose(); commit({skipXp:true}); toast('Post removed'); }
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
 function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['waterfall','Waterfall'],['bills','Bills'],['budget','Budget'],['deduct','Write-offs']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
