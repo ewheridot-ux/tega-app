@@ -37,7 +37,7 @@ for it in plan:
         if r: img(r['image']).save(out); log('image', it['id'], r.get('usage'))
     else:
         src = Image.open(f"{D}/{it['from']}.png").convert('RGBA')
-        r = post('/animate-with-text-v3', {'first_frame': b64(src), 'action': it['action'], 'frame_count': it['frames'], 'no_background': True, 'enhance_prompt': True})
+        r = post('/animate-with-text-v3', {'first_frame': b64(src), 'action': it['action'], 'frame_count': it['frames'], 'no_background': it.get('nobg', True), 'enhance_prompt': it.get('enhance', True)})
         if not r: continue
         lr = wait(r['background_job_id'])
         fr = [img(x) for x in ((lr or {}).get('images') or [])]
