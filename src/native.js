@@ -10,7 +10,6 @@ import { App } from '@capacitor/app';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { Geolocation } from '@capacitor/geolocation';
-import { KeepAwake } from '@capacitor-community/keep-awake';
 
 const CFG = window.TEGA_CONFIG || {};
 const URL0 = (CFG.url || '').replace(/\/$/, '');
@@ -213,8 +212,10 @@ async function syncReminders() {
 
 /* ---------------- deep links (tegaexe://win?text=…, Siri Shortcuts) + screen awake during a workout ---------------- */
 App.addListener('appUrlOpen', ({ url }) => { const go = () => window.tegaDeepLink ? window.tegaDeepLink(url) : setTimeout(go, 400); go(); });
-let awake = false;
-new MutationObserver(() => { const on = !!document.getElementById('g-live'); if (on !== awake) { awake = on; (on ? KeepAwake.keepAwake() : KeepAwake.allowSleep()).catch(() => {}); } }).observe(document.documentElement, { childList: true, subtree: true });
+let awake = false, wl = null;
+async function wakeLock(on) { try { if (on && 'wakeLock' in navigator) { wl = await navigator.wakeLock.request('screen'); } else if (wl) { await wl.release(); wl = null; } } catch (e) {} }
+document.addEventListener('visibilitychange', () => { if (awake && document.visibilityState === 'visible') wakeLock(true); });
+new MutationObserver(() => { const on = !!document.getElementById('g-live'); if (on !== awake) { awake = on; wakeLock(on); } }).observe(document.documentElement, { childList: true, subtree: true });
 
 /* ---------------- boot ---------------- */
 App.addListener('appStateChange', ({ isActive }) => { if (isActive) { for (const p of pollers) p.run(); window.native.syncReminders(); } });
