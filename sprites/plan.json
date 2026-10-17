@@ -1,0 +1,10 @@
+[
+ {"id":"idle","frames":6,"ms":140,"loop":1,"action":"subtle idle breathing loop, shoulders gently rise and fall, one slow blink, small light glint moving across the glasses, head stays still"},
+ {"id":"hype","frames":8,"ms":90,"loop":0,"action":"excited fist pump into frame, big open-mouth grin, small yellow sparkles pop around the head, then relaxes"},
+ {"id":"flex","frames":8,"ms":110,"loop":0,"action":"raises right arm into frame and flexes bicep, confident smirk, holds the flex, a single sweat drop falls from the temple"},
+ {"id":"tired","frames":6,"ms":260,"loop":1,"action":"sleepy, heavy half-closed eyelids, slow head nod down and back up, small yawn, tiny z letter floating up"},
+ {"id":"levelup","frames":12,"ms":90,"loop":0,"action":"powering up: dips down, rises with a glowing green aura outline, burst of bright pixels flying outward, ends standing proud and smiling"},
+ {"id":"money","frames":8,"ms":110,"loop":0,"action":"a gold coin falls from above, he catches it in his hand, looks at it, smirks and flips it up"},
+ {"id":"locked","frames":4,"ms":160,"loop":1,"action":"intensely focused, narrowed eyes staring forward, slight forward lean, subtle flickering aura at the edges"},
+ {"id":"missed","frames":6,"ms":150,"loop":0,"action":"disappointed sigh, shoulders drop, small breath puff from mouth, slow head shake"}
+]
