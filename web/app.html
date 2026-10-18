@@ -1463,14 +1463,53 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 .nav button{-webkit-touch-callout:none}
 #navqa{position:fixed;inset:0;z-index:9500}
 #navqa .nq-dim{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;transition:opacity .15s}
-#navqa .nq-pop{position:absolute;display:flex;flex-direction:column;padding:6px;background:var(--card,#0b0d12);border:2px solid var(--nq,#39ff9f);box-shadow:0 0 24px color-mix(in srgb,var(--nq,#39ff9f) 35%,transparent),0 12px 30px rgba(0,0,0,.6);border-radius:14px;transform:translateY(10px) scale(.94);transform-origin:50% 100%;opacity:0;transition:transform .16s cubic-bezier(.2,1.4,.4,1),opacity .12s}
+#navqa .nq-pop{position:absolute;display:flex;flex-direction:column;padding:6px;transform:translateY(10px) scale(.94);transform-origin:50% 100%;opacity:0;transition:transform .16s cubic-bezier(.2,1.4,.4,1),opacity .12s;overflow:hidden}
 #navqa.on .nq-dim{opacity:1}#navqa.on .nq-pop{transform:none;opacity:1}
-#navqa button{display:flex;align-items:center;gap:12px;min-height:46px;padding:0 12px;border:0;background:transparent;color:var(--fg,#e8fff4);font:inherit;font-size:16px;text-align:left;border-radius:9px}
-#navqa button:active{background:color-mix(in srgb,var(--nq,#39ff9f) 22%,transparent)}
-#navqa button i{font-style:normal;width:24px;text-align:center;color:var(--nq,#39ff9f);font-variant-emoji:text}
-#navqa .nq-open{border-top:1px solid color-mix(in srgb,var(--nq,#39ff9f) 30%,transparent);border-radius:0 0 9px 9px;color:var(--muted,#8aa);font-size:14px}
-#navqa[data-hl="holo"]{--nq:#ff7bf2}#navqa[data-hl="vf"]{--nq:#ff4d5e}#navqa[data-hl="chrome"]{--nq:#cfd8e3}#navqa[data-hl="arise"]{--nq:#9b5cff}#navqa[data-hl="lab"]{--nq:#2fe39a}
-[data-skin="crt"] #navqa .nq-pop{border-radius:4px}[data-skin="crt"] #navqa button{font-family:VT323,monospace;font-size:20px;border-radius:2px}
+#navqa .nq-hd{padding:8px 12px 6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+#navqa button{white-space:nowrap;position:relative;display:flex;align-items:center;gap:12px;min-height:46px;padding:0 12px;border:0;background:transparent;font:inherit;font-size:16px;text-align:left;color:inherit}
+#navqa button i{font-style:normal;width:24px;text-align:center;font-variant-emoji:text}
+#navqa .nq-open{font-size:14px;opacity:.75}
+/* Today / Goals — night CRT */
+#navqa[data-hl="crt"] .nq-pop{background:#050a07;color:#d9ffe9;border:2px solid #39ff9f;border-radius:4px;box-shadow:0 0 22px rgba(57,255,159,.35);font-family:VT323,monospace;background-image:repeating-linear-gradient(0deg,rgba(57,255,159,.05) 0 1px,transparent 1px 3px)}
+#navqa[data-hl="crt"] .nq-hd{font-family:'Press Start 2P',monospace;font-size:8px;color:#39ff9f}
+#navqa[data-hl="crt"] button{font-size:21px;border-radius:2px}#navqa[data-hl="crt"] button i{color:#39ff9f}
+#navqa[data-hl="crt"] button:active{background:#39ff9f;color:#04120b}#navqa[data-hl="crt"] button:active i{color:#04120b}
+#navqa[data-hl="crt"] .nq-open{border-top:1px dashed rgba(57,255,159,.4)}
+/* Model — holo foil */
+#navqa[data-hl="holo"] .nq-pop{background:linear-gradient(160deg,rgba(32,22,48,.97),rgba(13,11,20,.97));color:#f6eefe;border-radius:20px;font-family:Rajdhani,Inter,sans-serif;font-weight:600;box-shadow:0 0 0 1.5px transparent,0 14px 34px rgba(0,0,0,.6),0 0 26px rgba(255,122,217,.3)}
+#navqa[data-hl="holo"] .nq-pop::before{content:'';position:absolute;inset:0;border-radius:20px;padding:1.5px;background:conic-gradient(from 210deg,#ff7ad9,#b98cff,#7ee2ff,#a8ffcf,#ffe57a,#ff7ad9);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+#navqa[data-hl="holo"] .nq-hd{font-family:Unbounded,Inter,sans-serif;font-weight:800;font-size:11px;letter-spacing:.08em;background:linear-gradient(90deg,#ff7ad9,#7ee2ff,#ffe57a);-webkit-background-clip:text;background-clip:text;color:transparent}
+#navqa[data-hl="holo"] button{border-radius:14px;font-size:18px}#navqa[data-hl="holo"] button i{color:#ff9ce6}
+#navqa[data-hl="holo"] button:active{background:conic-gradient(from 210deg at 30% 30%,#ff7ad9,#b98cff,#7ee2ff,#a8ffcf,#ffe57a,#ff7ad9);color:#1a0f24}#navqa[data-hl="holo"] button:active i{color:#1a0f24}
+#navqa[data-hl="holo"] .nq-open{border-top:1px solid rgba(255,255,255,.12)}
+/* Content — viewfinder */
+#navqa[data-hl="vf"] .nq-pop{background:rgba(5,7,10,.96);color:#e8f7ff;border-radius:4px;font-family:Archivo,Manrope,sans-serif;font-weight:600;padding:14px 10px 8px;
+  background-image:linear-gradient(#4dd8ff,#4dd8ff),linear-gradient(#4dd8ff,#4dd8ff),linear-gradient(#4dd8ff,#4dd8ff),linear-gradient(#4dd8ff,#4dd8ff),linear-gradient(#4dd8ff,#4dd8ff),linear-gradient(#4dd8ff,#4dd8ff),linear-gradient(#4dd8ff,#4dd8ff),linear-gradient(#4dd8ff,#4dd8ff);
+  background-repeat:no-repeat;background-size:16px 2px,2px 16px,16px 2px,2px 16px,16px 2px,2px 16px,16px 2px,2px 16px;background-position:0 0,0 0,100% 0,100% 0,0 100%,0 100%,100% 100%,100% 100%}
+#navqa[data-hl="vf"] .nq-hd{font-family:'Space Mono',ui-monospace,monospace;font-size:10px;color:#9fdcf2;display:flex;align-items:center;gap:7px}
+#navqa[data-hl="vf"] .nq-hd u{width:8px;height:8px;border-radius:50%;background:#ff4d5e;animation:vfblink 1.4s steps(2) infinite}
+#navqa[data-hl="vf"] button{border-radius:3px;font-size:16px;letter-spacing:.01em}#navqa[data-hl="vf"] button i{color:#4dd8ff}
+#navqa[data-hl="vf"] button:active{background:rgba(77,216,255,.16);box-shadow:inset 2px 0 0 #4dd8ff}
+#navqa[data-hl="vf"] .nq-open{border-top:1px solid rgba(77,216,255,.25)}
+/* Datum — chrome */
+#navqa[data-hl="chrome"] .nq-pop{background:linear-gradient(170deg,#1b2a3a,#070c12 70%);color:#eef4fa;border-radius:16px;font-family:Inter,system-ui,sans-serif;font-weight:600;border:1px solid transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 0 0 1px rgba(200,215,230,.35),0 14px 32px rgba(0,0,0,.6)}
+#navqa[data-hl="chrome"] .nq-hd{font-family:Unbounded,Inter,sans-serif;font-weight:700;font-size:11px;background:linear-gradient(180deg,#ffffff,#8a9bb0 55%,#e9eff5);-webkit-background-clip:text;background-clip:text;color:transparent}
+#navqa[data-hl="chrome"] button{border-radius:11px}#navqa[data-hl="chrome"] button i{color:#c9d6e3}
+#navqa[data-hl="chrome"] button:active{background:linear-gradient(160deg,#f2f6fa,#8a9bb0 42%,#f7fafd 58%,#5f7086);color:#07121c}#navqa[data-hl="chrome"] button:active i{color:#07121c}
+#navqa[data-hl="chrome"] .nq-open{border-top:1px solid rgba(200,215,230,.18)}
+/* Gym — Solo Leveling system window */
+#navqa[data-hl="arise"] .nq-pop{background:linear-gradient(180deg,rgba(40,10,70,.97),rgba(12,3,22,.97));color:#f0e2ff;border-radius:3px;font-family:Rajdhani,Inter,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.04em;box-shadow:inset 0 0 0 1px #9b5cff,0 0 22px rgba(140,70,255,.55),inset 0 0 18px rgba(155,92,255,.35)}
+#navqa[data-hl="arise"] .nq-hd{color:#d9b8ff;font-size:12px;text-shadow:0 0 10px rgba(155,92,255,.9);border-bottom:1px solid rgba(155,92,255,.5);margin:0 4px 4px}
+#navqa[data-hl="arise"] button{border-radius:2px;font-size:17px}#navqa[data-hl="arise"] button i{color:#b98cff;text-shadow:0 0 8px #9b5cff}
+#navqa[data-hl="arise"] button:active{background:rgba(155,92,255,.28);box-shadow:inset 0 0 0 1px #b98cff}
+#navqa[data-hl="arise"] .nq-open{border-top:1px solid rgba(155,92,255,.35);text-transform:none}
+/* Money — the lab (light) */
+#navqa[data-hl="lab"] .nq-dim{background:rgba(6,40,30,.28)}
+#navqa[data-hl="lab"] .nq-pop{background:#f7fbfa;color:#0d2b22;border-radius:20px;font-family:Manrope,Inter,sans-serif;font-weight:700;box-shadow:0 18px 40px rgba(6,60,44,.28),0 0 0 1px rgba(13,43,34,.08)}
+#navqa[data-hl="lab"] .nq-hd{color:#1a8a66;font-weight:800}
+#navqa[data-hl="lab"] button{border-radius:14px}#navqa[data-hl="lab"] button i{color:#0c7a5c}
+#navqa[data-hl="lab"] button:active{background:radial-gradient(120% 120% at 30% 20%,#b6ffe3 0%,#3fd6a0 60%,#22b886 100%);color:#03261c}
+#navqa[data-hl="lab"] .nq-open{border-top:1px solid rgba(13,43,34,.1)}
 </style>
 
 <div class="app" id="app"></div>
@@ -1480,7 +1519,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b198';
+const BUILD='b199';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -8007,9 +8046,10 @@ const NAV_QA={
 let _navHold=null, _navHeldAt=0;
 function navHeld(){ return Date.now()-_navHeldAt<600; }
 function navMenu(btn){ const v=btn.dataset.tab, L=NAV_QA[v]; if(!L) return; navMenuClose(); _navHeldAt=Date.now(); nat('haptic','medium');
-  const r=btn.getBoundingClientRect(), nav=btn.closest('.nav'), nr=nav.getBoundingClientRect(), W=Math.min(230, innerWidth-24);
-  const m=document.createElement('div'); m.id='navqa'; m.dataset.hl=nav.dataset.hl||'crt';
-  m.innerHTML=`<div class="nq-dim"></div><div class="nq-pop" role="menu" style="left:${Math.max(12,Math.min(innerWidth-W-12, r.left+r.width/2-W/2))}px;bottom:${innerHeight-nr.top+10}px;width:${W}px">${L.map((x,i)=>`<button role="menuitem" data-i="${i}"><i>${x[0]}</i><span>${esc(x[1])}</span></button>`).join('')}<button class="nq-open" data-i="go"><i>›</i><span>Open ${esc(btn.getAttribute('aria-label')||v)}</span></button></div>`;
+  const r=btn.getBoundingClientRect(), nav=btn.closest('.nav'), nr=nav.getBoundingClientRect(), W=Math.min(250, innerWidth-24);
+  const m=document.createElement('div'); m.id='navqa'; const mat=({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab'})[v]||'crt'; m.dataset.hl=mat;
+  const name=btn.getAttribute('aria-label')||v, hd=({crt:`&gt; ${name}`,holo:name,vf:`<u></u>REC · ${name}`,chrome:name,arise:`◆ SYSTEM · ${name}`,lab:name})[mat];
+  m.innerHTML=`<div class="nq-dim"></div><div class="nq-pop" role="menu" style="left:${Math.max(12,Math.min(innerWidth-W-12, r.left+r.width/2-W/2))}px;bottom:${innerHeight-nr.top+10}px;width:${W}px"><div class="nq-hd">${hd}</div>${L.map((x,i)=>`<button role="menuitem" data-i="${i}"><i>${x[0]}</i><span>${esc(x[1])}</span></button>`).join('')}<button class="nq-open" data-i="go"><i>›</i><span>Open ${esc(btn.getAttribute('aria-label')||v)}</span></button></div>`;
   document.body.appendChild(m); requestAnimationFrame(()=>m.classList.add('on'));
   m.addEventListener('click',e=>{ const b=e.target.closest('button'); if (!b && navHeld()) return; navMenuClose(); if(!b) return; if (b.dataset.i==='go') return go(v); try { L[+b.dataset.i][2](); } catch(err){ console.warn(err); go(v); } }); }
 function navMenuClose(){ document.getElementById('navqa')?.remove(); }
