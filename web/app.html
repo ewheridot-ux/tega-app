@@ -1510,6 +1510,22 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 #navqa[data-hl="lab"] button{border-radius:14px}#navqa[data-hl="lab"] button i{color:#0c7a5c}
 #navqa[data-hl="lab"] button:active{background:radial-gradient(120% 120% at 30% 20%,#b6ffe3 0%,#3fd6a0 60%,#22b886 100%);color:#03261c}
 #navqa[data-hl="lab"] .nq-open{border-top:1px solid rgba(13,43,34,.1)}
+
+/* b200: press and pop, like holding an app icon */
+.nav button[data-tab]{transition:transform .38s cubic-bezier(.3,0,.6,1)}
+.nav button.nq-press{transform:scale(.86)}
+#navqa .nq-dim{-webkit-backdrop-filter:blur(7px) saturate(1.1);backdrop-filter:blur(7px) saturate(1.1)}
+#navqa .nq-lift{position:absolute;display:grid;place-items:center;border-radius:14px;color:var(--lc,#39ff9f);background:var(--lb,#0b120e);box-shadow:0 10px 28px rgba(0,0,0,.55),0 0 22px var(--lg,rgba(57,255,159,.45));transform:scale(.86);transition:transform .32s cubic-bezier(.2,1.6,.4,1)}
+#navqa .nq-lift svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}#navqa[data-hl="arise"] .nq-lift svg{filter:drop-shadow(0 0 4px #b98cff)}
+#navqa.on .nq-lift{transform:scale(1.18)}
+#navqa.off{pointer-events:none}#navqa.off .nq-lift{transform:scale(1);transition-duration:.14s}#navqa.off .nq-pop{opacity:0;transform:scale(.9);transition-duration:.12s}#navqa.off .nq-dim{opacity:0}
+#navqa .nq-pop{transform:scale(.4);transition:transform .3s cubic-bezier(.2,1.35,.4,1),opacity .14s}
+#navqa[data-hl="crt"]{--lc:#04120b;--lb:#39ff9f;--lg:rgba(57,255,159,.6)}#navqa[data-hl="crt"] .nq-lift{border-radius:4px}
+#navqa[data-hl="holo"]{--lc:#1a0f24;--lb:conic-gradient(from 210deg at 30% 30%,#ff7ad9,#b98cff,#7ee2ff,#a8ffcf,#ffe57a,#ff7ad9);--lg:rgba(255,122,217,.55)}
+#navqa[data-hl="vf"]{--lc:#4dd8ff;--lb:#071822;--lg:rgba(77,216,255,.45)}#navqa[data-hl="vf"] .nq-lift{border-radius:4px;box-shadow:inset 0 0 0 2px #4dd8ff,0 10px 28px rgba(0,0,0,.55)}
+#navqa[data-hl="chrome"]{--lc:#07121c;--lb:linear-gradient(160deg,#f2f6fa,#8a9bb0 42%,#f7fafd 58%,#5f7086);--lg:rgba(200,215,230,.45)}
+#navqa[data-hl="arise"]{--lc:#f0e2ff;--lb:linear-gradient(180deg,#3e126e,#18062c);--lg:rgba(140,70,255,.75)}#navqa[data-hl="arise"] .nq-lift{border-radius:3px;box-shadow:inset 0 0 0 1px #9b5cff,0 0 22px rgba(140,70,255,.75)}
+#navqa[data-hl="lab"]{--lc:#03261c;--lb:radial-gradient(120% 120% at 30% 20%,#b6ffe3 0%,#3fd6a0 45%,#0c7a5c 100%);--lg:rgba(124,240,197,.55)}#navqa[data-hl="lab"] .nq-lift{border-radius:16px}
 </style>
 
 <div class="app" id="app"></div>
@@ -1519,7 +1535,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b199';
+const BUILD='b200';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -8047,14 +8063,19 @@ let _navHold=null, _navHeldAt=0;
 function navHeld(){ return Date.now()-_navHeldAt<600; }
 function navMenu(btn){ const v=btn.dataset.tab, L=NAV_QA[v]; if(!L) return; navMenuClose(); _navHeldAt=Date.now(); nat('haptic','medium');
   const r=btn.getBoundingClientRect(), nav=btn.closest('.nav'), nr=nav.getBoundingClientRect(), W=Math.min(250, innerWidth-24);
-  const m=document.createElement('div'); m.id='navqa'; const mat=({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab'})[v]||'crt'; m.dataset.hl=mat;
+  const m=document.createElement('div'); m.id='navqa'; const pl=Math.max(12,Math.min(innerWidth-W-12, r.left+r.width/2-W/2)); const mat=({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab'})[v]||'crt'; m.dataset.hl=mat;
   const name=btn.getAttribute('aria-label')||v, hd=({crt:`&gt; ${name}`,holo:name,vf:`<u></u>REC · ${name}`,chrome:name,arise:`◆ SYSTEM · ${name}`,lab:name})[mat];
-  m.innerHTML=`<div class="nq-dim"></div><div class="nq-pop" role="menu" style="left:${Math.max(12,Math.min(innerWidth-W-12, r.left+r.width/2-W/2))}px;bottom:${innerHeight-nr.top+10}px;width:${W}px"><div class="nq-hd">${hd}</div>${L.map((x,i)=>`<button role="menuitem" data-i="${i}"><i>${x[0]}</i><span>${esc(x[1])}</span></button>`).join('')}<button class="nq-open" data-i="go"><i>›</i><span>Open ${esc(btn.getAttribute('aria-label')||v)}</span></button></div>`;
+  m.innerHTML=`<div class="nq-dim"></div><div class="nq-pop" role="menu" style="left:${pl}px;bottom:${innerHeight-nr.top+14}px;width:${W}px;transform-origin:${Math.round(r.left+r.width/2-pl)}px 100%"><div class="nq-hd">${hd}</div>${L.map((x,i)=>`<button role="menuitem" data-i="${i}"><i>${x[0]}</i><span>${esc(x[1])}</span></button>`).join('')}<button class="nq-open" data-i="go"><i>›</i><span>Open ${esc(btn.getAttribute('aria-label')||v)}</span></button></div><div class="nq-lift" style="left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px">${btn.querySelector('svg')?.outerHTML||''}</div>`;
   document.body.appendChild(m); requestAnimationFrame(()=>m.classList.add('on'));
-  m.addEventListener('click',e=>{ const b=e.target.closest('button'); if (!b && navHeld()) return; navMenuClose(); if(!b) return; if (b.dataset.i==='go') return go(v); try { L[+b.dataset.i][2](); } catch(err){ console.warn(err); go(v); } }); }
-function navMenuClose(){ document.getElementById('navqa')?.remove(); }
-document.addEventListener('touchstart',e=>{ const b=e.target.closest&&e.target.closest('.nav button[data-tab]'); if(!b) return; clearTimeout(_navHold); _navHold=setTimeout(()=>navMenu(b),380); },{passive:true});
-for (const ev of ['touchend','touchmove','touchcancel']) document.addEventListener(ev,()=>clearTimeout(_navHold),{passive:true});
+  m.addEventListener('click',e=>{ if (!m.classList.contains('on')&&m.classList.contains('off')) return; const b=e.target.closest('button'); if (!b && navHeld()) return; navMenuClose(); if (!b && e.target.closest('.nq-lift')) return go(v); if(!b) return; if (b.dataset.i==='go') return go(v); try { L[+b.dataset.i][2](); } catch(err){ console.warn(err); go(v); } }); }
+function navMenuClose(){ const m=document.getElementById('navqa'); if (!m) return; m.id=''; m.classList.remove('on'); m.classList.add('off'); setTimeout(()=>m.remove(),140); }
+// the tab under a finger, even while a menu covers the bar (so holding another tab switches menus)
+function navTabAt(e){ const t=e.touches&&e.touches[0]; if(!t) return null; for (const b of document.querySelectorAll('.nav button[data-tab]')){ const r=b.getBoundingClientRect(); if (t.clientX>=r.left&&t.clientX<=r.right&&t.clientY>=r.top-6&&t.clientY<=r.bottom+6) return b; } return null; }
+let _navPress=null;
+function navPressEnd(){ clearTimeout(_navHold); if (_navPress){ _navPress.classList.remove('nq-press'); _navPress=null; } }
+document.addEventListener('touchstart',e=>{ const b=navTabAt(e); if(!b) return; navPressEnd(); _navPress=b; b.classList.add('nq-press');
+  _navHold=setTimeout(()=>{ b.classList.remove('nq-press'); _navPress=null; navMenu(b); },420); },{passive:true});
+for (const ev of ['touchend','touchmove','touchcancel']) document.addEventListener(ev,navPressEnd,{passive:true});
 document.addEventListener('contextmenu',e=>{ const b=e.target.closest&&e.target.closest('.nav button[data-tab]'); if (b){ e.preventDefault(); navMenu(b); return; } if (!e.target.closest('input,textarea,[contenteditable],.ph-stage')) e.preventDefault(); });
 
 let moneyTab = 'waterfall';
