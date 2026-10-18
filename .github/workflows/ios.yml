@@ -9,7 +9,7 @@ permissions: { contents: write }
 jobs:
   ios:
     runs-on: macos-15
-    timeout-minutes: 60
+    timeout-minutes: 100
     steps:
       - uses: actions/checkout@v4
       - name: Use Xcode 26 (App Store needs the iOS 26 SDK)
@@ -49,6 +49,14 @@ jobs:
           mkdir -p ~/.appstoreconnect/private_keys
           printf '%s' "$KEY" > ~/.appstoreconnect/private_keys/AuthKey_$KID.p8
           echo "KEYPATH=$HOME/.appstoreconnect/private_keys/AuthKey_$KID.p8" >> $GITHUB_ENV
+      - name: Apple capabilities (HealthKit, extension IDs)
+        env:
+          KID: ${{ secrets.ASC_KEY_ID }}
+          ISS: ${{ secrets.ASC_ISSUER_ID }}
+          KEY: ${{ secrets.ASC_KEY_P8 }}
+        run: |
+          pip3 install -q --break-system-packages pyjwt cryptography 2>/dev/null || pip3 install -q pyjwt cryptography
+          python3 scripts/asc_caps.py 2>&1 | tee -a "$RUNNER_TEMP/log.txt" || true
       - name: Archive and export
         env:
           TEAM: ${{ secrets.APPLE_TEAM_ID }}
@@ -58,16 +66,19 @@ jobs:
           sed "s/TEAM_ID/$TEAM/" scripts/ExportOptions.plist > "$RUNNER_TEMP/ExportOptions.plist"
           AUTH=(-allowProvisioningUpdates -authenticationKeyPath "$KEYPATH" -authenticationKeyID "$KID" -authenticationKeyIssuerID "$ISS")
           COMMON=(-workspace ios/App/App.xcworkspace -scheme App -configuration Release -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/App.xcarchive")
-          VER=(IPHONEOS_DEPLOYMENT_TARGET=15.0 CURRENT_PROJECT_VERSION=${{ github.run_number }} MARKETING_VERSION=1.0 DEVELOPMENT_TEAM="$TEAM")
-          export_it(){ rm -rf "$RUNNER_TEMP/out"; xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/App.xcarchive" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath "$RUNNER_TEMP/out" "${AUTH[@]}" 2>&1 | tee -a "$RUNNER_TEMP/log.txt" | tail -25; test -f "$RUNNER_TEMP/out/App.ipa"; }
-          echo "== try: archive with HealthKit entitlement" | tee -a "$RUNNER_TEMP/log.txt"
-          if xcodebuild "${COMMON[@]}" "${AUTH[@]}" "${VER[@]}" CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- PROVISIONING_PROFILE_SPECIFIER= CODE_SIGN_ENTITLEMENTS=App/App.entitlements archive 2>&1 | tee -a "$RUNNER_TEMP/log.txt" | tail -30 && test -d "$RUNNER_TEMP/App.xcarchive" && export_it; then
-            echo "HEALTHKIT=yes" | tee -a "$RUNNER_TEMP/log.txt"
-          else
-            echo "== HealthKit build failed, building without it" | tee -a "$RUNNER_TEMP/log.txt"; rm -rf "$RUNNER_TEMP/App.xcarchive"
-            xcodebuild "${COMMON[@]}" "${AUTH[@]}" "${VER[@]}" CODE_SIGN_STYLE=Automatic CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO archive 2>&1 | tee -a "$RUNNER_TEMP/log.txt" | tail -30
-            export_it; echo "HEALTHKIT=no" | tee -a "$RUNNER_TEMP/log.txt"
-          fi
+          VER=(CURRENT_PROJECT_VERSION=${{ github.run_number }} MARKETING_VERSION=1.0 DEVELOPMENT_TEAM="$TEAM")
+          SIGN=(CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- PROVISIONING_PROFILE_SPECIFIER=)
+          export_it(){ rm -rf "$RUNNER_TEMP/out"; xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/App.xcarchive" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath "$RUNNER_TEMP/out" "${AUTH[@]}" > "$RUNNER_TEMP/x.txt" 2>&1; R=$?; cat "$RUNNER_TEMP/x.txt" >> "$RUNNER_TEMP/full.txt"; grep -iE "error|fail" "$RUNNER_TEMP/x.txt" | head -12 | tee -a "$RUNNER_TEMP/log.txt"; test $R -eq 0 && test -f "$RUNNER_TEMP/out/App.ipa"; }
+          archive_it(){ rm -rf "$RUNNER_TEMP/App.xcarchive"; xcodebuild "${COMMON[@]}" "${AUTH[@]}" "${VER[@]}" "$@" archive > "$RUNNER_TEMP/a.txt" 2>&1; R=$?; cat "$RUNNER_TEMP/a.txt" >> "$RUNNER_TEMP/full.txt"; grep -E "error:|\*\* ARCHIVE" "$RUNNER_TEMP/a.txt" | sort -u | head -15 | tee -a "$RUNNER_TEMP/log.txt"; test $R -eq 0 && test -d "$RUNNER_TEMP/App.xcarchive"; }
+          rm -rf ios.orig; cp -R ios ios.orig
+          fresh(){ rm -rf ios; cp -R ios.orig ios; }
+          # most features first; each step down drops the part most likely to be refused
+          for T in "full yes yes" "noHealth no yes" "noWidgets yes no" "basic no no"; do
+            set -- $T; echo "== try: $1 (health=$2 widgets+share=$3)" | tee -a "$RUNNER_TEMP/log.txt"; fresh
+            if TEAM="$TEAM" bash scripts/ios-native.sh $2 $3 2>&1 | tee -a "$RUNNER_TEMP/log.txt" && archive_it "${SIGN[@]}" && export_it; then echo "TIER=$1" | tee -a "$RUNNER_TEMP/log.txt"; exit 0; fi
+          done
+          echo "== try: plain (no native code)" | tee -a "$RUNNER_TEMP/log.txt"; fresh
+          archive_it CODE_SIGN_STYLE=Automatic CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO IPHONEOS_DEPLOYMENT_TARGET=15.0 && export_it && echo "TIER=plain" | tee -a "$RUNNER_TEMP/log.txt"
       - name: Upload to TestFlight
         env:
           KID: ${{ secrets.ASC_KEY_ID }}

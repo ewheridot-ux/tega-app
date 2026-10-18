@@ -1442,6 +1442,19 @@ html .nav[data-hl="arise"] button.on svg{filter:drop-shadow(0 0 4px #b98cff)}
 /* Money — emerald lab glass */
 html .nav[data-hl="lab"] button.on{background:radial-gradient(120% 120% at 30% 20%,#b6ffe3 0%,#3fd6a0 45%,#0c7a5c 100%)!important;color:#03261c!important;border-radius:16px!important;box-shadow:0 0 14px rgba(124,240,197,.5),inset 0 1px 0 rgba(255,255,255,.6)!important}
 @keyframes navSheen{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+
+/* b196 */
+#undo{position:fixed;left:50%;bottom:calc(150px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:90;display:flex;gap:14px;align-items:center;background:#16171f;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:8px 8px 8px 14px;font-size:14px;transition:.2s;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+#undo.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}#undo button{border:0;background:#2a2c38;color:#7ee2ff;font-weight:800;border-radius:8px;padding:8px 12px;font:inherit;font-weight:800}
+#ptr{position:fixed;top:calc(env(safe-area-inset-top,0px) - 30px);left:50%;margin-left:-15px;width:30px;height:30px;border-radius:50%;background:#16171f;border:1px solid rgba(255,255,255,.15);z-index:95;display:grid;place-items:center;opacity:0;transition:opacity .15s}
+#ptr i{width:14px;height:14px;border-radius:50%;border:2px solid #7d8394;border-top-color:transparent}#ptr.vis{opacity:1}#ptr.arm i{border-color:#39ff9f;border-top-color:transparent}
+#ptr.spin{opacity:1;transform:translateY(70px)!important}#ptr.spin i{animation:ptrs .7s linear infinite;border-color:#39ff9f;border-top-color:transparent}@keyframes ptrs{to{transform:rotate(360deg)}}
+body.offline::before{content:'Offline · changes are saved on this phone and will sync';position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:96;background:#3a2a10;color:#ffd78a;font:600 12px/1.2 -apple-system,sans-serif;text-align:center;padding:6px}
+.sr-top{padding-right:40px}.sr-top .inp{width:100%;font-size:16px}.sr-out{display:grid;gap:2px;margin-top:6px}.sr-g{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:12px 2px 4px}
+.sr-r{display:block;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);color:var(--fg);padding:10px 2px;font:inherit;cursor:pointer}.sr-r b{display:block;font-weight:600}.sr-r small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.skel-card{display:grid;gap:10px}.skel{display:block;height:14px;border-radius:6px;background:linear-gradient(90deg,var(--card2) 25%,rgba(255,255,255,.12) 50%,var(--card2) 75%);background-size:200% 100%;animation:skel 1.2s linear infinite}.skel:nth-child(1){width:60%}.skel:nth-child(3){width:80%}@keyframes skel{to{background-position:-200% 0}}
+#lockscr{position:fixed;inset:0;z-index:999;background:#05060a;display:grid;place-items:center}#lockscr>div{display:grid;gap:22px;justify-items:center}
+#g-sheet .g-sheet{transition:transform .15s}
 </style>
 
 <div class="app" id="app"></div>
@@ -1451,7 +1464,7 @@ html .nav[data-hl="lab"] button.on{background:radial-gradient(120% 120% at 30% 2
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b195';
+const BUILD='b197';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -1725,13 +1738,13 @@ function deriveAll(){
   try { recordMem(); recordSeason(); } catch(e){}
 }
 function commit(opts={}){
-  _mVer++;
+  _mVer++; try { undoCapture(opts); } catch(e){}
   deriveAll();
   try { window.native?.syncReminders?.(S); } catch(e){}
   const before = opts.skipXp ? null : (lastProg || snapshotProgress());
   if (!before) evalBadges();
   S.updatedAt = Date.now();
-  saveLocal(); scheduleDbWrite();
+  saveLocal(); scheduleDbWrite(); try { phoneSync(); } catch(e){}
   if (before) celebrateDiff(before);
   lastProg = snapshotProgress();
   render();
@@ -2486,7 +2499,7 @@ function render(){
     <div class="topbar">
       <div class="brand"><button class="pfp-sm ${view==='evolve'||view==='social'?'on':''}" style="--ringc:${ringCss(lvl)}" onclick="go('evolve')" aria-label="Me · character and settings">${pfpMini(stg)}</button></div>
       <div class="wordmark logo">${logoSVG(24)}</div>
-      <div class="right"><span class="sync ${dbStatus==='cloud'?'on':''}" id="sync" onclick="syncInfo()" style="padding:10px 6px;cursor:pointer"><i></i></span><button class="iconbtn" onclick="capOpen()" title="Quick capture" aria-label="Quick capture">＋</button><button class="iconbtn" onclick="toggleTheme()" title="Theme">◐</button></div>
+      <div class="right"><span class="sync ${dbStatus==='cloud'?'on':''}" id="sync" onclick="syncInfo()" style="padding:10px 6px;cursor:pointer"><i></i></span><button class="iconbtn" onclick="searchOpen()" title="Search" aria-label="Search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button><button class="iconbtn" onclick="capOpen()" title="Quick capture" aria-label="Quick capture">＋</button><button class="iconbtn" onclick="toggleTheme()" title="Theme">◐</button></div>
     </div>
     <div class="pills">
       ${S.travel&&S.travel.on?`<span class="pill" style="cursor:pointer" onclick="travelSheet()">✈️ ${esc(S.travel.city||'Away')}</span>`:''}
@@ -4500,6 +4513,7 @@ async function srSaveCard(w){
   const wrap=(t,y)=>{ x.font='600 44px Inter, sans-serif'; let line='', yy=y; for (const wd of String(t).split(' ')){ const tt=line?line+' '+wd:wd; if (x.measureText(tt).width>920){ x.fillText(line,80,yy); line=wd; yy+=56; } else line=tt; } x.fillText(line,80,yy); return yy; };
   let y=1090; if (rv.oneThing){ x.fillStyle='rgba(255,255,255,.6)'; x.font='500 34px Inter, sans-serif'; x.fillText("NEXT WEEK'S ONE THING",80,y); x.fillStyle='#fff'; wrap(rv.oneThing,y+60); }
   const blob=await new Promise(r=>c.toBlob(r,'image/png'));
+  if (await shareCanvas(c, `week-${w}.png`, `Week ${w.split('-W')[1]} · Tega.exe`)) return;
   try { if (!dlLib) throw 0; await dlLib.save({filename:`week-${w}.png`, data:blob}); toast('Card saved'); }
   catch(e){ const url=c.toDataURL('image/png'), wrapEl=document.getElementById('srCardWrap'); if (wrapEl) wrapEl.innerHTML=`<img src="${url}" alt="Week card" style="width:100%;border-radius:18px"><div class="sub" style="text-align:center;font-size:12px;margin-top:6px">Press and hold the image to save it</div>`; }
 }
@@ -6412,6 +6426,7 @@ function gLogSet(sid,ei,zi,f,v){ const s=G_().sessions.find(x=>x.id===sid); if(!
 function gLogDur(sid,v){ const s=G_().sessions.find(x=>x.id===sid); if(!s) return; const m=parseInt(v)||0; if (m>0) s.t1=s.t0+m*6e4; commit({skipXp:true}); }
 function gLogDelEx(sid,ei){ const s=G_().sessions.find(x=>x.id===sid); if(!s) return; (s.removedEx ||= []).push(s.ex[ei]); s.ex.splice(ei,1); commit({skipXp:true}); toast('Removed'); }
 function gShare(sid){ const s=G_().sessions.find(x=>x.id===sid); if(!s) return; const t=`💪 ${s.name} · ${nice(s.d)}\n`+s.ex.map(e=>`${GX[e.x]?.n}: ${e.sets.filter(z=>z.t!=='w').map(z=>(z.w?gShowW(z.w)+'×':'')+z.r).join(', ')}`).join('\n')+`\n${Math.round(gShowW(gVol(s))).toLocaleString()} ${gU()} moved · Tega.exe`;
+  if (IS_APP() && window.native?.share){ window.native.share({title:s.name, text:t}); return; }
   try { navigator.clipboard.writeText(t).then(()=>toast('Copied — paste it anywhere'),()=>gSheet(`<h2 class="g-sh-t">Copy this</h2><textarea class="inp" style="min-height:160px">${esc(t)}</textarea>`)); } catch(e){ gSheet(`<h2 class="g-sh-t">Copy this</h2><textarea class="inp" style="min-height:160px">${esc(t)}</textarea>`); } }
 
 /* ---------- results / insights ---------- */
@@ -6668,6 +6683,7 @@ async function mCardSave(){ const K=mCard(), M=mState(), st=mCardStats(), c=docu
   const ms=MEAS_KEYS.filter(([k])=>M.meas[k]); x.font='600 30px Inter, sans-serif'; ms.forEach(([k,l],i)=>{ const X=44+(i%3)*340, Y=1290+Math.floor(i/3)*70; x.fillStyle='rgba(255,255,255,.5)'; x.fillText(l.toUpperCase(),X,Y); x.fillStyle='#fff'; x.fillText(String(M.meas[k]),X+(l.length>5?150:130),Y); });
   x.fillStyle='rgba(255,255,255,.5)'; x.font='500 28px Inter, sans-serif'; x.fillText(`${st.days} days on set${st.clients.length?' · '+st.clients.slice(0,4).join(' · '):''}`,44,1470);
   const blob=await new Promise(r=>c.toBlob(r,'image/png'));
+  if (await shareCanvas(c, 'tega-comp-card.png', 'Comp card')) return;
   try { if (!dlLib) throw 0; await dlLib.save({filename:'tega-comp-card.png', data:blob}); toast('Card saved'); }
   catch(e){ gSheet(`<h2 class="g-sh-t">Your comp card</h2><img src="${c.toDataURL('image/png')}" alt="Comp card" style="width:100%;border-radius:14px"><div class="help keep">Press and hold the image to save it.</div>`); } }
 
@@ -6718,6 +6734,11 @@ function capIdea(t){ t=String(t||'').trim(); if(!t) return; (S.ideas ||= []).pus
 window.tegaDeepLink = function(url){ try { const u=new URL(url), what=(u.host||u.pathname.replace(/^\/+/,'')).toLowerCase(), q=u.searchParams.get('text')||'';
   if (what==='win') return q?capWin(q):capOpen(); if (what==='idea') return q?capIdea(q):capOpen();
   if (what==='coach') return coachOpen(); if (what==='receipt') return receiptOpen(); if (what==='gym'){ go('gym'); return; }
+  if (what==='start'){ go('today'); setTimeout(()=>{ try { const d=S.days[TODAY]; if (!d||!d.checkin) openCheckin(); } catch(e){} },300); return; }
+  if (what==='post'){ go('content'); setTimeout(()=>openLog('post'),300); return; }
+  if (what==='workout'){ gTab='workout'; go('gym'); setTimeout(()=>{ try { if (!(S.gym||{}).live && typeof gStart==='function') gStart(); } catch(e){} },400); return; }
+  if (what==='search'){ return searchOpen(); }
+  if (what==='open'){ const p=(u.searchParams.get('page')||'today'); if (p.includes('/')){ const [v,t]=p.split('/'); if (v==='money') moneyTab=t; if (v==='gym') gTab=t; if (v==='model') mTab=t; go(v); } else go(p); return; }
   if (what==='bench'){ const act=ensureDatum().prototypes.filter(p=>!['complete','failed'].includes(p.status)); if (act.length===1) benchStart(act[0].id); dView='bench'; go('datum'); return; }
   capOpen(); } catch(e){ capOpen(); } };
 window.addEventListener('hashchange', ()=>{ const h=location.hash.slice(1); if (['capture','coach','receipt'].includes(h)){ ({capture:capOpen,coach:coachOpen,receipt:receiptOpen})[h](); } });
@@ -6768,7 +6789,14 @@ window.tegaReminders = function(){ const out=[]; prepUpcoming(14).forEach((e,i)=
   try { const su=(S.gym||{}).setup||{}, n=su.days||3, wc=gWeekCount(), dow=(parseD(TODAY).getDay()+6)%7, need=n-wc, left=7-dow; if (need>0 && !(S.gym.sessions||[]).some(x=>x.d===TODAY)) add(5400,'💪 Gym today?',`${wc}/${n} this week · ${left} day${left===1?'':'s'} left`,mk(TODAY,17,30)); } catch(e){}
   try { const d=S.days[TODAY]||{}, done=Object.values(d.habits||{}).filter(Boolean).length; if (done<3) add(5500,'🌙 Habits check',`${done}/${S.habits.length} done today — a quick one still counts`,mk(TODAY,20,30)); } catch(e){}
   try { const L=(S.gym||{}).live; if (L) add(5600,'💪 Workout still open',`Started ${new Date(L.t0).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})} — finish or discard it`,new Date(Math.max(L.t0+2*3600e3, now.getTime()+60e3))); } catch(e){}
+  for (const r of out){ const id=r.id; r.go = id<5100?'model':id<5200?'money/bills':id<5300?'money/waterfall':id<5400?'content':id<5500?'gym':id<5600?'today':'gym'; r.act = id>=5300&&id<5400?'post':id>=5500&&id<5600?'today':''; }
   return out; };
+// actions pressed on a notification (Done / Snooze / Log it) arrive here from the phone
+window.tegaNotifAction = function(action, extra){ try { extra=extra||{};
+  if (action==='log' && extra.act==='post'){ go('content'); setTimeout(()=>openLog('post'),300); return; }
+  if (action==='done' && extra.dl){ const x=(S.dl||[]).find(x=>x.id===extra.dl); if (x&&!x.done){ x.done=TODAY; commit({skipXp:true}); } return; }
+  if (action==='done' && extra.bill){ go('money'); moneyTab='bills'; render(); return; }
+  if (extra.go){ const [v,t]=String(extra.go).split('/'); if (v==='money'&&t) moneyTab=t; if (v==='gym'&&t) gTab=t; go(v); } } catch(e){} };
 
 /* ---------- 7. Receipt scanner (Money) ---------- */
 let rcDraft=null;
@@ -7805,14 +7833,15 @@ function bossOpen(){ dFold.hq_boss=true; stMode='progress'; go('evolve'); setTim
 /* ===================== b192: one live loop + XP multiplier ===================== */
 // Every source refreshes when the app opens or comes back, so bosses, levels, rings, the city and Circle all move with new data
 let _lrAt=0;
-function liveRefresh(why){ const now=Date.now(); if (why==='resume' && now-_lrAt<20*60e3) { try { if (window.native) nativeSync(); } catch(e){} return; } _lrAt=now;
+function liveRefresh(why){ const now=Date.now(), force=why==='pull'||why==='online'; if (why==='resume' && now-_lrAt<20*60e3) { try { if (window.native) nativeSync(); } catch(e){} return; } _lrAt=now;
   const q=[];
+  if (force) nat('pull');
   if (window.native) q.push(()=>nativeSync());
   if (typeof mcpLib!=='undefined' && mcpLib){
-    try { if (S.money.budget.syncedDay!==TODAY && bankTriedDay!==TODAY && !bankBusy) q.push(()=>bankRefresh(false)); } catch(e){}
-    try { if (mState().syncDay!==TODAY && !mBusy) q.push(()=>mSync(false)); } catch(e){}
-    try { if (!igBusy && now-(igData().t||0)>6*3600e3) q.push(()=>{ igLastTry=Date.now(); return igRefresh(false); }); } catch(e){}
-    try { if ((S.circle||{}).syncDay!==TODAY) q.push(()=>socSync(false)); } catch(e){}
+    try { if ((force || (S.money.budget.syncedDay!==TODAY && bankTriedDay!==TODAY)) && !bankBusy) q.push(()=>bankRefresh(false)); } catch(e){}
+    try { if ((force || mState().syncDay!==TODAY) && !mBusy) q.push(()=>mSync(false)); } catch(e){}
+    try { if (!igBusy && (force || now-(igData().t||0)>6*3600e3)) q.push(()=>{ igLastTry=Date.now(); return igRefresh(false); }); } catch(e){}
+    try { if (force || (S.circle||{}).syncDay!==TODAY) q.push(()=>socSync(false)); } catch(e){}
   }
   (async()=>{ for (const f of q){ try { await f(); } catch(e){} await new Promise(r=>setTimeout(r,400)); } try { commit({skipXp:true}); } catch(e){} })(); }
 document.addEventListener('visibilitychange',()=>{ if (document.visibilityState==='visible' && typeof _dbSettled!=='undefined' && _dbSettled) setTimeout(()=>liveRefresh('resume'),800); });
@@ -7830,6 +7859,123 @@ function hqBossMarks(){ const out=[]; try { const V=vault(); if (V.max&&V.hp>0) 
   try { const W=wyrm(); if (W.max&&W.need>1&&W.hp>0) out.push({k:'financial',pct:W.hp/W.max,col:'#39ff9f',row:1}); } catch(e){}
   try { const A=aBoss(); if (A.max&&!A.dead) out.push({k:'fitness',pct:A.hp/A.max,col:'#b57bff',row:0}); } catch(e){}
   return out; }
+
+/* ===================== b196: the things every app does ===================== */
+const IS_APP = () => !!(window.claude && window.claude.native);
+const nat = (fn, ...a) => { try { const n=window.native; if (n && typeof n[fn]==='function') return n[fn](...a); } catch(e){} };
+// ---- haptics: a light tap on every button, a success buzz on celebrations
+let _hapT=0; document.addEventListener('click', e=>{ const b=e.target.closest('button,[role=button],.check,.hdot,.krbox,a.btn,label.btn'); if (!b) return; _userAct=Date.now(); const now=Date.now(); if (now-_hapT<60) return; _hapT=now; nat('haptic','light'); }, true);
+const _confetti0 = confetti; confetti = function(){ nat('haptic','success'); return _confetti0.apply(this, arguments); };
+const _lvl0 = levelScene; levelScene = function(){ nat('haptic','heavy'); return _lvl0.apply(this, arguments); };
+// ---- undo: every tick / delete you make can be taken back for 6 seconds
+let _userAct=0, _undoBase=null, _undoPrev=null, _undoT=null;
+function undoCapture(opts){ if (opts && opts.noUndo){ _undoBase=JSON.stringify(S); return; }
+  const user = Date.now()-_userAct < 1500;
+  if (user && _undoBase){ _undoPrev=_undoBase; setTimeout(undoShow,0); }
+  setTimeout(()=>{ try { _undoBase=JSON.stringify(S); } catch(e){} },0); }
+function undoShow(){ let el=document.getElementById('undo'); if(!el){ el=document.createElement('div'); el.id='undo'; document.body.appendChild(el); }
+  el.innerHTML=`<span>Saved</span><button onclick="undoNow()">Undo</button>`; el.className='show'; clearTimeout(_undoT); _undoT=setTimeout(()=>{ el.className=''; _undoPrev=null; },6000); }
+function undoNow(){ if (!_undoPrev) return; try { S=migrate(JSON.parse(_undoPrev)); _undoPrev=null; document.getElementById('undo').className=''; gSheetClose(); commit({skipXp:true, noUndo:true}); render(); toast('Undone'); nat('haptic','medium'); } catch(e){ toast('Couldn’t undo'); } }
+// ---- pull down to refresh (top of any page)
+(function(){ let y0=null, pulling=false, dist=0; const ind=()=>{ let e=document.getElementById('ptr'); if(!e){ e=document.createElement('div'); e.id='ptr'; e.innerHTML='<i></i>'; document.body.appendChild(e); } return e; };
+  document.addEventListener('touchstart', e=>{ if (window.scrollY>2 || document.getElementById('g-sheet') || document.querySelector('.modal') || e.touches.length>1) { y0=null; return; } y0=e.touches[0].clientY; dist=0; pulling=false; }, {passive:true});
+  document.addEventListener('touchmove', e=>{ if (y0==null) return; dist=e.touches[0].clientY-y0; if (dist>12 && window.scrollY<=0){ pulling=true; const el=ind(); el.style.transform=`translateY(${Math.min(80,dist*.5)}px) rotate(${dist*2}deg)`; el.classList.toggle('arm', dist>110); el.classList.add('vis'); } }, {passive:true});
+  document.addEventListener('touchend', ()=>{ if (y0==null) return; const el=document.getElementById('ptr'); if (pulling && dist>110){ el.classList.add('spin'); nat('haptic','medium'); liveRefresh('pull'); setTimeout(()=>{ el.classList.remove('spin','vis','arm'); el.style.transform=''; toast('Up to date'); }, 1800); } else if (el){ el.classList.remove('vis','arm'); el.style.transform=''; } y0=null; pulling=false; }, {passive:true}); })();
+// ---- swipe right from the left edge = back; swipe a sheet down = close
+function goBack(){ if (document.getElementById('g-sheet')) return gSheetClose(); const m=document.querySelector('.modal'); if (m){ const x=m.querySelector('.x,[aria-label=Close]'); if (x) x.click(); else m.remove(); return; }
+  if (view==='social') return go('evolve'); if (view==='evolve' && stMode==='settings'){ stMode='progress'; return render(); } if (history.length>1) history.back(); else go('today'); }
+(function(){ let sx=null, sy=0, edge=false, sheet=null;
+  document.addEventListener('touchstart', e=>{ const t=e.touches[0]; sx=t.clientX; sy=t.clientY; edge=sx<24; sheet=e.target.closest('#g-sheet .g-sheet'); }, {passive:true});
+  document.addEventListener('touchmove', e=>{ if (!sheet) return; const dy=e.touches[0].clientY-sy; if (dy>0 && sheet.scrollTop<=0){ sheet.style.transform=`translateY(${dy*.6}px)`; } }, {passive:true});
+  document.addEventListener('touchend', e=>{ const t=e.changedTouches[0], dx=t.clientX-sx, dy=t.clientY-sy;
+    if (sheet){ const s0=sheet; sheet.style.transform=''; if (dy>120 && s0.scrollTop<=0){ gSheetClose(); nat('haptic','light'); } sheet=null; return; }
+    if (edge && dx>80 && Math.abs(dy)<60){ nat('haptic','light'); goBack(); } edge=false; }, {passive:true}); })();
+// ---- offline: say so, keep going, sync when back
+function netState(){ document.body.classList.toggle('offline', !navigator.onLine); }
+addEventListener('offline', netState); addEventListener('online', ()=>{ netState(); try { scheduleDbWrite(); } catch(e){} setTimeout(()=>liveRefresh('online'),800); toast('Back online · syncing'); }); setTimeout(netState,500);
+// ---- appearance + text size (per phone)
+function apprSet(k){ try { localStorage.setItem('tega-appr',k); } catch(e){} if (k==='auto'){ skinSet('classic'); document.documentElement.removeAttribute('data-theme'); try { localStorage.removeItem('okrquest-theme'); } catch(e){} } else skinSet(k); }
+function zoomSet(z){ try { localStorage.setItem('tega-zoom',String(z)); } catch(e){} zoomApply(); render(); }
+function zoomApply(){ let z=1; try { z=+localStorage.getItem('tega-zoom')||1; } catch(e){} document.documentElement.style.setProperty('--zoom', z); const a=document.getElementById('app'); if (a) a.style.zoom = z===1?'':z; }
+setTimeout(zoomApply, 0);
+// ---- search everything
+let srQ='';
+function searchOpen(){ srQ=''; gSheet(`<div class="sr-top"><input class="inp" id="sr-in" placeholder="Search clients, ideas, money, people…" autocomplete="off" oninput="srQ=this.value;searchRender()"></div><div id="sr-out" class="sr-out"></div>`); const m=document.getElementById('g-sheet'); if (m) m.dataset.k='search'; setTimeout(()=>document.getElementById('sr-in')?.focus(),50); searchRender(); }
+function searchRender(){ const out=document.getElementById('sr-out'); if (!out) return; const q=srQ.trim().toLowerCase(); if (q.length<2){ out.innerHTML='<div class="sub" style="padding:10px 2px">Type at least 2 letters.</div>'; return; }
+  const has=t=>String(t||'').toLowerCase().includes(q), G=[], grp=(name,items)=>{ if (items.length) G.push(`<div class="sr-g">${name}</div>`+items.slice(0,6).map(([t,s,act])=>`<button class="sr-r" onclick="gSheetClose();${act.replace(/"/g,'&quot;')}"><b>${esc(t)}</b>${s?`<small>${esc(s)}</small>`:''}</button>`).join('')); };
+  const J=v=>JSON.stringify(v);
+  try { const E=mAll(); const cl=[...new Set(E.map(e=>e.c))].filter(has); grp('Clients', cl.map(c=>[c, E.filter(e=>e.c===c&&e.t==='job').length+' jobs', `mClient=${J(c)};mTab='now';mHist='jobs';go('model')`]));
+    grp('Bookings', E.filter(e=>has(e.c)||has(e.p)).sort((a,b)=>String(b.start).localeCompare(a.start)).map(e=>[`${e.c}${e.p?' · '+e.p:''}`, `${(MT[e.t]||[e.t])[0]} · ${nice(e.start)}`, `go('model');setTimeout(()=>mSheet(${J(e.id)}),300)`])); } catch(e){}
+  try { grp('Ideas', (S.ideas||[]).filter(x=>has(x.text)).map(x=>[x.text, ideaStage(x), `ctTab='ideas';go('content')`])); } catch(e){}
+  try { grp('Deadlines', dlAll().filter(x=>has(x.text)).map(x=>[x.text, (x.done?'done · ':'')+dlDate(x.d), `go('today');setTimeout(()=>dlSheetOpen(${J(x.src==='own'?x.id:'')}),300)`])); } catch(e){}
+  try { grp('Money', (S.money.budget.txns||[]).filter(t=>has(t.desc)).sort((a,b)=>b.d.localeCompare(a.d)).map(t=>[t.desc, `${nice(t.d)} · ${money0(t.amt)}`, `bSearch=${J(srQ)};moneyTab='budget';go('money')`])); } catch(e){}
+  try { grp('People', ((S.circle||{}).people||[]).filter(p=>has(p.name)).map(p=>[p.name, `seen ${nice(p.last)}`, `go('social')`])); grp('Hangouts', socAll().filter(e=>has(e.name)||has(e.where)).map(e=>[e.name, nice(e.d)+(e.where?' · '+e.where:''), `go('social')`])); } catch(e){}
+  try { grp('Exercises', Object.values(GX).filter(x=>has(x.n)).map(x=>[x.n, (x.p||[]).map(m=>GMUS[m]).join(', '), `go('gym');setTimeout(()=>gExInfo(${J(x.id)}),300)`])); } catch(e){}
+  try { grp('Goals', allKRs().filter(k=>has(k.text)).map(k=>[k.text, `${k.current||0} / ${k.target||'?'}`, `go('quarter')`])); grp('Quests', (S.quests||[]).filter(x=>has(x.text)).map(x=>[x.text, x.done?'cleared':'open', `go('today')`])); grp('Wins', (S.wins||[]).filter(w=>has(w.text)).map(w=>[w.text, nice(w.d), `curDay=${J(w.d)};go('today')`])); } catch(e){}
+  out.innerHTML = G.join('') || '<div class="sub" style="padding:10px 2px">Nothing found.</div>'; }
+// ---- loading placeholders
+const skel = (n=3) => `<div class="card sec skel-card">${'<i class="skel"></i>'.repeat(n)}</div>`;
+// ---- phone extras: badge, calendar, widgets, Face ID (no-ops in the browser)
+let _phT=null;
+function phoneSync(){ if (!IS_APP()) return; clearTimeout(_phT); _phT=setTimeout(()=>{ try {
+  const d=S.days[TODAY]||{}, paused=(()=>{ try { return travelPaused(d); } catch(e){ return []; } })();
+  const late=(()=>{ try { return dlAll().filter(x=>!x.done&&x.d<TODAY).length; } catch(e){ return 0; } })();
+  const habitsLeft=S.habits.filter(h=>!paused.includes(h.id)&&!(d.habits||{})[h.id]).length;
+  nat('badge', late+habitsLeft);
+  nat('widgetData', widgetSummary());
+  if (localStorage.getItem('tega-cal')!=='off') nat('calendarSync', calItems());
+} catch(e){} }, 1500); }
+function calItems(){ const out=[], end=addDays(TODAY,60);
+  try { for (const e of mAll()){ if (['cancelled','released','declined','nobook'].includes(e.s)||!e.start||e.start<TODAY||e.start>end) continue; if (!['job','option','casting','fitting','test','selftape','digitals'].includes(e.t)) continue; out.push({key:'m:'+e.id, title:`${(MT[e.t]||[e.t])[0]}: ${e.c}`, start:e.start, end:(e.d||[]).slice(-1)[0]||e.start, notes:e.p||'', loc:e.loc||'', allDay:true}); } } catch(e){}
+  try { for (const x of dlAll()){ if (x.done||x.src==='check'||x.d<TODAY||x.d>end) continue; out.push({key:'d:'+x.id, title:`Due: ${x.text}`, start:x.d, end:x.d, allDay:true}); } } catch(e){}
+  return out; }
+function widgetSummary(){ const d=S.days[TODAY]||{}; let X={total:1}, se={}, V={}, nx=null; try { X=xpMult(TODAY); } catch(e){} try { V=vault(); } catch(e){}
+  try { nx=S.money.checks.filter(c=>!c.got).sort((a,b)=>a.d.localeCompare(b.d))[0]||null; } catch(e){}
+  return { at:Date.now(), day:TODAY, streak:(()=>{ try { return streaks().daily; } catch(e){ return 0; } })(), lvl:(()=>{ try { return levelFor(computeXP()); } catch(e){ return 1; } })(),
+    mult:+X.total.toFixed(2), top3:(d.top3||[]).filter(t=>t.text).map(t=>({t:String(t.text).slice(0,40), done:!!t.done})), habits:{done:S.habits.filter(h=>(d.habits||{})[h.id]).length, total:S.habits.length},
+    boss: V.max?{name:'The Vault', hp:Math.max(0,Math.min(1,V.hp/V.max))}:null, checkedIn: !!d.checkin }; }
+// Face ID lock (per phone): asked when the app opens and when it comes back after 2+ minutes
+let _hidAt=0;
+function lockOn(){ try { return localStorage.getItem('tega-lock')==='on'; } catch(e){ return false; } }
+async function lockCheck(){ if (!IS_APP() || !lockOn()) return; let el=document.getElementById('lockscr'); if (!el){ el=document.createElement('div'); el.id='lockscr'; el.innerHTML=`<div>${typeof logoSVG==='function'?logoSVG(36):'Tega.exe'}<button class="btn" onclick="lockCheck()">Unlock</button></div>`; document.body.appendChild(el); }
+  const ok=await nat('unlock'); if (ok) el.remove(); }
+document.addEventListener('visibilitychange',()=>{ if (document.hidden) _hidAt=Date.now(); else if (_hidAt && Date.now()-_hidAt>120e3) lockCheck(); });
+setTimeout(lockCheck, 300);
+function lockSet(on){ if (on){ nat('unlock').then(ok=>{ if (ok){ try { localStorage.setItem('tega-lock','on'); } catch(e){} toast('Face ID lock on'); render(); } else toast('Face ID isn’t available'); }); } else { try { localStorage.setItem('tega-lock','off'); } catch(e){} render(); } }
+function calSet(on){ try { localStorage.setItem('tega-cal', on?'on':'off'); } catch(e){} if (!on) nat('calendarSync', []); else phoneSync(); render(); }
+// quick actions on the app icon + Siri phrases land here
+window.tegaShortcut = id => { try { window.tegaDeepLink('tegaexe://'+id); } catch(e){} };
+
+/* ===================== b197: phone pieces — share sheet, lock-screen workout, Health write, share-into-Tega ===================== */
+async function shareCanvas(c, file, title){ if (!IS_APP() || !window.native?.share) return false; try { return !!(await window.native.share({dataUrl:c.toDataURL('image/png'), file, title})); } catch(e){ return false; } }
+// workout on the lock screen / Dynamic Island
+function gLiveInfo(){ const L=G_().live; if(!L) return null; const done=L.ex.reduce((a,e)=>a+e.sets.filter(z=>z.ok).length,0);
+  const e=L.ex.find(e=>e.sets.some(z=>!z.ok))||L.ex[L.ex.length-1]; if(!e) return {title:L.name, label:'Workout', detail:'', sets:done};
+  const i=e.sets.findIndex(z=>!z.ok), z=e.sets[i<0?e.sets.length-1:i];
+  return {title:L.name||'Workout', label:`${GX[e.x]?.n||'Exercise'} ${Math.max(1,(i<0?e.sets.length:i+1))}/${e.sets.length}`, detail:z?`${z.w?Math.round(gShowW(z.w)*10)/10+' '+gU()+' × ':''}${z.r}${GX[e.x]?.k==='t'?'s':''}`:'', sets:done}; }
+function gLA(kind){ if (!IS_APP()) return; try { if (kind==='end') return nat('live','end'); const I=gLiveInfo(); if(!I) return; const L=G_().live, rest=Math.max(0,Math.round(((L.restEnd||0)-Date.now())/1000)); nat('live',kind,{...I, rest}); } catch(e){} }
+{ const _s=gStart; gStart=function(){ const had=!!G_().live; _s(); if (!had) gLA('start'); else gLA('update'); };
+  const _t=gTick1; gTick1=function(i,j){ _t(i,j); gLA('update'); };
+  const _r=gRest; gRest=function(d,skip){ _r(d,skip); gLA('update'); };
+  const _f=gFinish; gFinish=function(){ const L=G_().live, t0=L&&L.t0; _f(); gLA('end');
+    // Apple Health: save the workout (setting under Settings → This phone)
+    try { if (IS_APP() && t0 && localStorage.getItem('tega-hw')!=='off'){ const s=G_().sessions.slice(-1)[0]; if (s&&s.t1){ const mins=(s.t1-s.t0)/6e4; nat('saveWorkout',{start:new Date(s.t0).toISOString(), end:new Date(s.t1).toISOString(), cal:Math.round(mins*6), kind:'strength'}); } } } catch(e){} };
+  const _c=gLiveClose; gLiveClose=function(){ _c(); if (!G_().live) gLA('end'); }; }
+function hwSet(on){ try { localStorage.setItem('tega-hw', on?'on':'off'); } catch(e){} render(); }
+const hwOn=()=>{ try { return localStorage.getItem('tega-hw')!=='off'; } catch(e){ return true; } };
+// Share → Tega.exe from any app: links and text wait in an inbox until you file them
+let _inbox=[];
+window.tegaInbox = L => { _inbox=_inbox.concat(L||[]).slice(-20); if (_inbox.length) inboxOpen(); };
+function inboxOpen(){ if (!_inbox.length) return gSheetClose&&gSheetClose(); const x=_inbox[0], u=x.url||'', t=(x.text||'').trim(), host=(()=>{ try { return new URL(u).hostname.replace(/^www\./,''); } catch(e){ return ''; } })();
+  const label=(t&&t!==u?t:host||u).slice(0,120);
+  gSheet(`<span class="tag">Shared into Tega${_inbox.length>1?` · 1 of ${_inbox.length}`:''}</span><h2 class="g-sh-t">${esc(label||'Shared item')}</h2>${u?`<div class="sub" style="word-break:break-all">${esc(u.slice(0,140))}</div>`:''}
+    <div class="g-opts" style="margin-top:12px"><button onclick="inboxFile('idea')">Content idea</button><button onclick="inboxFile('dl')">Deadline</button><button onclick="inboxFile('note')">Note for today</button><button onclick="inboxFile('skip')">Skip</button></div>`); }
+function inboxFile(kind){ const x=_inbox.shift(); if (!x) return; const u=x.url||'', t=((x.text||'').trim()||u).slice(0,140);
+  if (kind==='idea'){ (S.ideas ||= []).push({id:uid(), text:t, url:u||undefined, d:TODAY, done:'', stage:'idea', pillar:pillarOf(t)}); commit({skipXp:true}); toast('Added to Content ideas'); }
+  else if (kind==='dl'){ (S.dl ||= []).push({id:uid(), d:addDays(TODAY,7), text:t, type:'other', done:'', url:u||undefined}); commit({skipXp:true}); toast('Deadline in a week — change the date in Today'); }
+  else if (kind==='note'){ const d=ensureDay(TODAY); d.note=((d.note||'')+(d.note?'\n':'')+t+(u&&u!==t?' '+u:'')).slice(0,2000); commit({skipXp:true}); toast('Saved to today'); }
+  if (_inbox.length) inboxOpen(); else gSheetClose(); }
+
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
 function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['waterfall','Waterfall'],['bills','Bills'],['budget','Budget'],['deduct','Write-offs']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
@@ -8416,7 +8562,13 @@ function vCharacter(){
 let snapBusy=false;
 async function restoreSnap(){ if(!dbHandle){ toast('Cloud snapshots need the app signed in'); return; } if(snapBusy) return; snapBusy=true; try { const s=await dbHandle.doc('okr/auto-backup').get(); if(!s.exists){ toast('No cloud snapshot yet — the first one is taken within a week'); } else { const o=thaw(s.data()); if(!o||o.v!==2||!o.days) toast('The snapshot couldn\'t be read'); else { restorePending=o; render(); } } } catch(e){ toast('Couldn\'t reach the cloud snapshot just now'); } snapBusy=false; }
 function habitRestore(id,on){ if (on){ const h=(S.habitsOff||[]).find(h=>h.id===id); if(h){ S.habits.push(h); S.habitsOff=S.habitsOff.filter(x=>x.id!==id); } } else { const h=S.habits.find(h=>h.id===id); if(h){ (S.habitsOff ||= []).push(h); S.habits=S.habits.filter(x=>x.id!==id); } } commit({skipXp:true}); }
-function vSettings(){ const sk=document.documentElement.getAttribute('data-skin')||'classic'; return `<div class="card sec"><div class="hdr"><h2>Look</h2></div><div class="skin-pick"><button class="${sk==='crt'?'on':''}" onclick="skinSet('crt')"><b>Night CRT</b><small>pixel arcade · neon</small></button><button class="${sk!=='crt'?'on':''}" onclick="skinSet('classic')"><b>Classic</b><small>clean · ◐ light/dark</small></button></div>${sk==='crt'?`<button class="check ${S.pxChar!==false?'on':''}" style="margin-top:10px;width:100%" onclick="pxToggle()"><div class="box">${S.pxChar!==false?'✓':''}</div><div class="txt">Pixel character</div></button>${S.pxChar!==false?`<button class="check ${S.sprite!==false?'on':''}" style="margin-top:8px;width:100%" onclick="sprToggle()"><div class="box">${S.sprite!==false?'✓':''}</div><div class="txt">Animated character</div></button>`:''}`:''}</div><div class="card sec"><div class="hdr"><h2>Habits on Today</h2><span class="sub">${S.habits.length} shown</span></div>
+function vSettings(){ const sk=document.documentElement.getAttribute('data-skin')||'classic'; let ap='crt', zm=1; try { ap=localStorage.getItem('tega-appr')||(sk==='crt'?'crt':'classic'); zm=+localStorage.getItem('tega-zoom')||1; } catch(e){}
+  const phone=IS_APP() ? `<div class="card sec"><div class="hdr"><h2>This phone</h2></div>
+    <button class="check ${lockOn()?'on':''}" style="width:100%" onclick="lockSet(${!lockOn()})"><div class="box">${lockOn()?'✓':''}</div><div class="txt">Face ID to open the app</div></button>
+    <button class="check ${hwOn()?'on':''}" style="width:100%;margin-top:8px" onclick="hwSet(${!hwOn()})"><div class="box">${hwOn()?'✓':''}</div><div class="txt">Save workouts to Apple Health</div></button>
+    <button class="check ${(()=>{ try { return localStorage.getItem('tega-cal')!=='off'; } catch(e){ return true; } })()?'on':''}" style="width:100%;margin-top:8px" onclick="calSet(${(()=>{ try { return localStorage.getItem('tega-cal')==='off'; } catch(e){ return false; } })()})"><div class="box">${(()=>{ try { return localStorage.getItem('tega-cal')!=='off'; } catch(e){ return true; } })()?'✓':''}</div><div class="txt">Put bookings and deadlines in my iPhone calendar</div></button></div>` : '';
+  return `<div class="card sec"><div class="hdr"><h2>Appearance</h2></div><div class="seg" style="display:flex">${[['crt','Night CRT'],['classic','Classic'],['auto','Match iPhone']].map(([k,l])=>`<button class="${ap===k?'on':''}" style="flex:1" onclick="apprSet('${k}')">${l}</button>`).join('')}</div>
+    <div class="tag" style="margin:12px 0 6px">Text size</div><div class="seg" style="display:flex">${[[.9,'S'],[1,'M'],[1.1,'L'],[1.2,'XL']].map(([z,l])=>`<button class="${Math.abs(zm-z)<.01?'on':''}" style="flex:1" onclick="zoomSet(${z})">${l}</button>`).join('')}</div>${sk==='crt'?`<div class="tag" style="margin:12px 0 6px">Character</div>`:''}${sk==='crt'?`<button class="check ${S.pxChar!==false?'on':''}" style="margin-top:10px;width:100%" onclick="pxToggle()"><div class="box">${S.pxChar!==false?'✓':''}</div><div class="txt">Pixel character</div></button>${S.pxChar!==false?`<button class="check ${S.sprite!==false?'on':''}" style="margin-top:8px;width:100%" onclick="sprToggle()"><div class="box">${S.sprite!==false?'✓':''}</div><div class="txt">Animated character</div></button>`:''}`:''}</div>${phone}<div class="card sec"><div class="hdr"><h2>Habits on Today</h2><span class="sub">${S.habits.length} shown</span></div>
     <div class="stack" style="gap:6px">${[...S.habits.map(h=>[h,1]),...(S.habitsOff||[]).map(h=>[h,0])].map(([h,on])=>`<div class="check ${on?'on':''}" onclick="habitRestore('${h.id}',${on?0:1})"><div class="box">${on?'✓':''}</div><div class="txt" style="text-decoration:none;color:var(--fg)">${h.icon} ${esc(h.name)}</div></div>`).join('')}</div>
     <div class="help" style="margin-top:8px">Hidden habits keep all their history.</div></div>${vBackup()}<div class="help sec keep" style="text-align:center">Tega.exe · build ${BUILD}</div>`; }
 function vBackup(){

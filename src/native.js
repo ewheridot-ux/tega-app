@@ -35,7 +35,11 @@ function nLogo(h){ h=h||26; const F=[]; let cx=1;
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { Health } from '@capgo/capacitor-health';
 import { CapacitorCalendar } from '@ebarooni/capacitor-calendar';
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
+import { registerPlugin } from '@capacitor/core';
+// Tega's own Swift module (badge, Face ID, quick actions, Siri, Health, widgets, Live Activity). Missing on older builds: every call is guarded.
+const TegaNative = registerPlugin('TegaNative');
+const tn = async (m, o) => { try { return await TegaNative[m](o || {}); } catch (e) { return null; } };
 import { Share } from '@capacitor/share';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { App } from '@capacitor/app';
@@ -51,7 +55,8 @@ window.BLOBURL = URL0 + '/storage/v1/object/public/blobs/';
 const AUTH_KEY = 'tega-auth';
 let auth = null;
 try { auth = JSON.parse(localStorage.getItem(AUTH_KEY) || 'null'); } catch (e) { auth = null; }
-const saveAuth = a => { auth = a; try { a ? localStorage.setItem(AUTH_KEY, JSON.stringify(a)) : localStorage.removeItem(AUTH_KEY); } catch (e) {} };
+const saveAuth = a => { auth = a; try { a ? localStorage.setItem(AUTH_KEY, JSON.stringify(a)) : localStorage.removeItem(AUTH_KEY); } catch (e) {} tn('setShared', { key: 'auth', value: a ? JSON.stringify({ ...a, url: (window.TEGA_CONFIG || {}).url, anon: (window.TEGA_CONFIG || {}).anon }) : '' }); };
+async function authFromKeychain() { const r = await tn('getShared', { key: 'auth' }); try { const k = r && r.value ? JSON.parse(r.value) : null; if (k && k.refresh_token && (!auth || (k.exp || 0) > (auth.exp || 0))) { auth = { access_token: k.access_token, refresh_token: k.refresh_token, exp: k.exp, user: k.user || (auth && auth.user) }; try { localStorage.setItem(AUTH_KEY, JSON.stringify(auth)); } catch (e) {} } } catch (e) {} }
 const withExp = j => ({ access_token: j.access_token, refresh_token: j.refresh_token, exp: Date.now() + (j.expires_in || 3600) * 1000, user: j.user });
 
 async function authCall(path, body) {
@@ -236,9 +241,22 @@ window.native = {
   },
   syncReminders(st) { if (st) lastState = st; clearTimeout(remT); remT = setTimeout(syncReminders, 2500); },
   async locate() { const p = await Geolocation.getCurrentPosition({ enableHighAccuracy: false, timeout: 10000 }); return `${p.coords.latitude.toFixed(4)},${p.coords.longitude.toFixed(4)}`; },
-  haptic() { Haptics.impact({ style: ImpactStyle.Medium }).catch(() => {}); },
+  haptic(kind) {
+    if (kind === 'success') return Haptics.notification({ type: NotificationType.Success }).catch(() => {});
+    if (kind === 'warning') return Haptics.notification({ type: NotificationType.Warning }).catch(() => {});
+    Haptics.impact({ style: kind === 'light' ? ImpactStyle.Light : kind === 'heavy' ? ImpactStyle.Heavy : ImpactStyle.Medium }).catch(() => {});
+  },
+  badge(n) { clearTimeout(badgeT); badgeT = setTimeout(() => tn('badge', { count: Math.max(0, n | 0) }), 400); },
+  async unlock() { const r = await tn('unlock', { reason: 'Unlock Tega.exe' }); return !!(r && r.ok); },
+  widgetData(o) { clearTimeout(widT); widT = setTimeout(async () => { tn('setShared', { key: 'widget', value: JSON.stringify(o) }); try { await putDoc('widget/latest', o); } catch (e) {} }, 800); },
+  pull() { feedCache = null; for (const p of pollers) p.run(); window.native.syncReminders(); },
+  async calendarSync(items) { clearTimeout(calT); calT = setTimeout(() => calSync(items).catch(e => console.warn('cal', e)), 2500); },
+  async saveWorkout(o) { return tn('healthSaveWorkout', o); },
+  async live(kind, o) { return tn(kind === 'start' ? 'liveStart' : kind === 'end' ? 'liveEnd' : 'liveUpdate', o); },
+  async share(o) { try { if (o.dataUrl) { const w = await Filesystem.writeFile({ path: o.file || 'tega.png', data: o.dataUrl.split(',')[1], directory: Directory.Cache }); await Share.share({ title: o.title, text: o.text, files: [w.uri] }); } else await Share.share({ title: o.title, text: o.text, url: o.url }); return true; } catch (e) { return false; } },
   // Apple Health: last N days of workouts, sleep, steps and weight
   async health(days = 14) {
+    const own = await tn('healthRead', { days }); if (own && own.ok) return own;
     const av = await Health.isAvailable().catch(() => ({ available: false }));
     if (!av.available) return { ok: false, reason: av.reason || 'unavailable' };
     const types = ['steps', 'sleep', 'weight', 'workouts'];
@@ -256,9 +274,25 @@ window.native = {
     const p = await CapacitorCalendar.requestFullCalendarAccess().catch(() => ({ result: 'denied' }));
     if (p.result !== 'granted') return { ok: false };
     const r = await CapacitorCalendar.listEventsInRange({ from: fromMs, to: toMs }).catch(() => ({ result: [] }));
-    return { ok: true, events: (r.result || []).map(e => ({ id: e.id, title: e.title || '', start: e.startDate, end: e.endDate, allDay: !!e.isAllDay, loc: e.location || '', cal: e.calendarId || '' })) };
+    const mine = localStorage.getItem('tega-calid') || '';
+    return { ok: true, events: (r.result || []).filter(e => !mine || e.calendarId !== mine).map(e => ({ id: e.id, title: e.title || '', start: e.startDate, end: e.endDate, allDay: !!e.isAllDay, loc: e.location || '', cal: e.calendarId || '' })) };
   },
 };
+let badgeT = null, widT = null, calT = null;
+// bookings + deadlines → a "Tega.exe" calendar on the phone; edits and removals follow
+async function calSync(items) {
+  let map = {}; try { map = JSON.parse(localStorage.getItem('tega-calmap') || '{}'); } catch (e) {}
+  if (!items.length && !Object.keys(map).length) return;
+  const p = await CapacitorCalendar.requestFullCalendarAccess().catch(() => ({ result: 'denied' })); if (p.result !== 'granted') return;
+  let cid = localStorage.getItem('tega-calid');
+  const cals = await CapacitorCalendar.listCalendars().catch(() => ({ result: [] }));
+  if (!cid || !(cals.result || []).some(c => c.id === cid)) { const c = (cals.result || []).find(c => c.title === 'Tega.exe'); cid = c ? c.id : (await CapacitorCalendar.createCalendar({ title: 'Tega.exe', color: '#39ff9f' })).id; localStorage.setItem('tega-calid', cid); }
+  const day = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d).getTime(); };
+  const want = new Map(items.map(i => [i.key, i]));
+  for (const [key, ev] of Object.entries(map)) { const i = want.get(key), sig = i && JSON.stringify([i.title, i.start, i.end, i.loc]); if (!i || sig !== ev.sig) { await CapacitorCalendar.deleteEventsById({ ids: [ev.id] }).catch(() => {}); delete map[key]; } }
+  for (const i of items) { if (map[i.key]) continue; const r = await CapacitorCalendar.createEvent({ title: i.title, calendarId: cid, startDate: day(i.start), endDate: day(i.end) + 864e5 - 60e3, isAllDay: true, location: i.loc || undefined, description: i.notes || undefined }).catch(() => null); if (r && r.id) map[i.key] = { id: r.id, sig: JSON.stringify([i.title, i.start, i.end, i.loc]) }; }
+  localStorage.setItem('tega-calmap', JSON.stringify(map));
+}
 async function syncReminders() {
   try {
     const S = lastState; if (!S || !S.days) return; await perm();
@@ -272,8 +306,9 @@ async function syncReminders() {
       let i = 0;
       for (const x of dls) {
         const due = at(x.d, 10), before = new Date(due.getTime() - 864e5);
-        if (before > now && before - now < 30 * 864e5 && i < 20) list.push({ id: 3000 + i++, title: 'Due tomorrow', body: x.text, schedule: { at: before } });
-        if (due > now && due - now < 30 * 864e5 && i < 20) list.push({ id: 3000 + i++, title: 'Due today', body: x.text, schedule: { at: due } });
+        const ex = { go: 'today', dl: x.src === 'own' ? x.id : '' };
+        if (before > now && before - now < 30 * 864e5 && i < 20) list.push({ id: 3000 + i++, title: 'Due tomorrow', body: x.text, schedule: { at: before }, actionTypeId: ex.dl ? 'TEGA_DONE' : 'TEGA_GO', extra: ex });
+        if (due > now && due - now < 30 * 864e5 && i < 20) list.push({ id: 3000 + i++, title: 'Due today', body: x.text, schedule: { at: due }, actionTypeId: ex.dl ? 'TEGA_DONE' : 'TEGA_GO', extra: ex });
       }
     } catch (e) {}
     try {
@@ -282,7 +317,8 @@ async function syncReminders() {
         if (c.got) continue; const d = at(c.d, 12); if (d > now && i < 10) list.push({ id: 4000 + i++, title: 'Check expected today', body: `$${Math.round(c.amt).toLocaleString()} ${c.note || ''}`.trim(), schedule: { at: d } });
       }
     } catch (e) {}
-    try { for (const r of (typeof window.tegaReminders === 'function' ? window.tegaReminders() : []).slice(0, 20)) list.push({ id: r.id, title: r.title, body: r.body, schedule: { at: r.at } }); } catch (e) {}
+    try { for (const r of (typeof window.tegaReminders === 'function' ? window.tegaReminders() : []).slice(0, 20)) list.push({ id: r.id, title: r.title, body: r.body, schedule: { at: r.at }, actionTypeId: r.act === 'post' ? 'TEGA_LOG' : 'TEGA_GO', extra: { go: r.go || '', act: r.act || '' } }); } catch (e) {}
+    for (const n of list) { if (!n.actionTypeId) { n.actionTypeId = n.id >= 3000 && n.id < 4000 ? 'TEGA_DONE' : 'TEGA_GO'; n.extra = n.extra || { go: n.id >= 3000 && n.id < 4000 ? 'today' : n.id >= 4000 && n.id < 5000 ? 'money/waterfall' : 'today' }; } }
     const pend = await LocalNotifications.getPending();
     const old = (pend.notifications || []).filter(n => n.id >= 2000 && n.id < 6000).map(n => ({ id: n.id }));
     if (old.length) await LocalNotifications.cancel({ notifications: old });
@@ -297,11 +333,33 @@ async function wakeLock(on) { try { if (on && 'wakeLock' in navigator) { wl = aw
 document.addEventListener('visibilitychange', () => { if (awake && document.visibilityState === 'visible') wakeLock(true); });
 new MutationObserver(() => { const on = !!document.getElementById('g-live'); if (on !== awake) { awake = on; wakeLock(on); } }).observe(document.documentElement, { childList: true, subtree: true });
 
+/* ---------------- notification buttons, quick actions, Siri, share inbox ---------------- */
+LocalNotifications.registerActionTypes({ types: [
+  { id: 'TEGA_GO', actions: [{ id: 'snooze', title: 'Snooze 1h' }] },
+  { id: 'TEGA_DONE', actions: [{ id: 'done', title: 'Done' }, { id: 'snooze', title: 'Snooze 1h' }] },
+  { id: 'TEGA_LOG', actions: [{ id: 'log', title: 'Log it', foreground: true }, { id: 'snooze', title: 'Snooze 1h' }] },
+] }).catch(() => {});
+const appCall = (fn, ...a) => { const run = () => typeof window[fn] === 'function' ? window[fn](...a) : setTimeout(run, 400); run(); };
+LocalNotifications.addListener('localNotificationActionPerformed', async ({ actionId, notification }) => {
+  const ex = (notification && notification.extra) || {};
+  if (actionId === 'snooze') { await LocalNotifications.schedule({ notifications: [{ id: 6100 + Math.floor(Math.random() * 800), title: notification.title, body: notification.body, schedule: { at: new Date(Date.now() + 3600e3) }, actionTypeId: notification.actionTypeId, extra: ex }] }).catch(() => {}); return; }
+  appCall('tegaNotifAction', actionId === 'tap' ? 'open' : actionId, ex);
+});
+try { Promise.resolve(TegaNative.addListener('shortcut', ({ id }) => appCall('tegaShortcut', id))).catch(() => {}); } catch (e) {}
+async function takePending() { const r = await tn('takePending'); for (const id of (r && r.ids) || []) appCall('tegaShortcut', id);
+  const ib = await tn('getShared', { key: 'inbox' }); try { const L = ib && ib.value ? JSON.parse(ib.value) : []; if (L.length) { await tn('setShared', { key: 'inbox', value: '[]' }); appCall('tegaInbox', L); } } catch (e) {} }
+tn('setShortcuts', { items: [
+  { id: 'start', title: 'Start the day', subtitle: 'Check in + Top 3', icon: 'sun.max.fill' },
+  { id: 'post', title: 'Log a post', subtitle: 'Content', icon: 'play.rectangle.fill' },
+  { id: 'workout', title: 'Start workout', subtitle: 'Gym', icon: 'dumbbell.fill' },
+  { id: 'receipt', title: 'Scan receipt', subtitle: 'Write-offs', icon: 'doc.text.viewfinder' },
+] });
+
 /* ---------------- boot ---------------- */
-App.addListener('appStateChange', ({ isActive }) => { if (isActive) { for (const p of pollers) p.run(); window.native.syncReminders(); try { window.tegaNativeSync && window.tegaNativeSync(); } catch (e) {} } });
+App.addListener('appStateChange', ({ isActive }) => { if (isActive) { takePending(); for (const p of pollers) p.run(); window.native.syncReminders(); try { window.tegaNativeSync && window.tegaNativeSync(); } catch (e) {} } });
 StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
 document.addEventListener('DOMContentLoaded', () => {
   SplashScreen.hide().catch(() => {});
   if (!URL0 || !CFG.anon) { showLogin('Setup isn’t finished: the app has no Supabase address yet.'); return; }
-  if (auth) afterLogin(); else showLogin();
+  authFromKeychain().finally(() => { if (auth) afterLogin(); else showLogin(); setTimeout(takePending, 2500); });
 });
