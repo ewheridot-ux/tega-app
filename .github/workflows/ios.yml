@@ -63,11 +63,19 @@ jobs:
           KID: ${{ secrets.ASC_KEY_ID }}
           ISS: ${{ secrets.ASC_ISSUER_ID }}
         run: |
+          set -o pipefail
           sed "s/TEAM_ID/$TEAM/" scripts/ExportOptions.plist > "$RUNNER_TEMP/ExportOptions.plist"
           AUTH=(-allowProvisioningUpdates -authenticationKeyPath "$KEYPATH" -authenticationKeyID "$KID" -authenticationKeyIssuerID "$ISS")
           COMMON=(-workspace ios/App/App.xcworkspace -scheme App -configuration Release -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/App.xcarchive")
           VER=(CURRENT_PROJECT_VERSION=${{ github.run_number }} MARKETING_VERSION=1.0 DEVELOPMENT_TEAM="$TEAM")
-          SIGN=(CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY=- PROVISIONING_PROFILE_SPECIFIER=)
+          # iOS 26 SDK refuses ad-hoc signing inside xcodebuild, so archive unsigned and stamp the entitlements with codesign; export re-signs for the App Store
+          SIGN=(CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO)
+          sign_it(){ APP=$(ls -d "$RUNNER_TEMP"/App.xcarchive/Products/Applications/*.app | head -1); [ -d "$APP" ] || return 1
+            ent(){ sed "s/\$(DEVELOPMENT_TEAM)/$TEAM/g" "$1" > "$2"; }
+            for f in "$APP"/Frameworks/*; do [ -e "$f" ] && codesign -f -s - "$f" >/dev/null 2>&1; done
+            for x in "$APP"/PlugIns/*.appex; do [ -d "$x" ] || continue; n=$(basename "$x" .appex); ent "ios/App/$n/$n.entitlements" "$RUNNER_TEMP/$n.ent"; codesign -f -s - --entitlements "$RUNNER_TEMP/$n.ent" "$x" || return 1; done
+            ent ios/App/App/App.entitlements "$RUNNER_TEMP/app.ent"; codesign -f -s - --entitlements "$RUNNER_TEMP/app.ent" "$APP" || return 1
+            codesign -d --entitlements - "$APP" 2>/dev/null | grep -oE "healthkit|keychain-access-groups" | sort -u | tr '\n' ' ' | sed 's/^/entitlements: /' | tee -a "$RUNNER_TEMP/log.txt"; echo | tee -a "$RUNNER_TEMP/log.txt"; }
           export_it(){ rm -rf "$RUNNER_TEMP/out"; xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/App.xcarchive" -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath "$RUNNER_TEMP/out" "${AUTH[@]}" > "$RUNNER_TEMP/x.txt" 2>&1; R=$?; cat "$RUNNER_TEMP/x.txt" >> "$RUNNER_TEMP/full.txt"; grep -iE "error|fail" "$RUNNER_TEMP/x.txt" | head -12 | tee -a "$RUNNER_TEMP/log.txt"; test $R -eq 0 && test -f "$RUNNER_TEMP/out/App.ipa"; }
           archive_it(){ rm -rf "$RUNNER_TEMP/App.xcarchive"; xcodebuild "${COMMON[@]}" "${AUTH[@]}" "${VER[@]}" "$@" archive > "$RUNNER_TEMP/a.txt" 2>&1; R=$?; cat "$RUNNER_TEMP/a.txt" >> "$RUNNER_TEMP/full.txt"; grep -E "error:|\*\* ARCHIVE" "$RUNNER_TEMP/a.txt" | sort -u | head -15 | tee -a "$RUNNER_TEMP/log.txt"; test $R -eq 0 && test -d "$RUNNER_TEMP/App.xcarchive"; }
           rm -rf ios.orig; cp -R ios ios.orig
@@ -75,7 +83,7 @@ jobs:
           # most features first; each step down drops the part most likely to be refused
           for T in "full yes yes" "noHealth no yes" "noWidgets yes no" "basic no no"; do
             set -- $T; echo "== try: $1 (health=$2 widgets+share=$3)" | tee -a "$RUNNER_TEMP/log.txt"; fresh
-            if TEAM="$TEAM" bash scripts/ios-native.sh $2 $3 2>&1 | tee -a "$RUNNER_TEMP/log.txt" && archive_it "${SIGN[@]}" && export_it; then echo "TIER=$1" | tee -a "$RUNNER_TEMP/log.txt"; exit 0; fi
+            if TEAM="$TEAM" bash scripts/ios-native.sh $2 $3 2>&1 | tee -a "$RUNNER_TEMP/log.txt" && archive_it "${SIGN[@]}" && sign_it && export_it; then echo "TIER=$1" | tee -a "$RUNNER_TEMP/log.txt"; exit 0; fi
           done
           echo "== try: plain (no native code)" | tee -a "$RUNNER_TEMP/log.txt"; fresh
           archive_it CODE_SIGN_STYLE=Automatic CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO IPHONEOS_DEPLOYMENT_TARGET=15.0 && export_it && echo "TIER=plain" | tee -a "$RUNNER_TEMP/log.txt"

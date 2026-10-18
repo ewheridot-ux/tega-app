@@ -14,10 +14,10 @@ def bundle(ident, name):
     if hit: return hit[0], [x['attributes']['capabilityType'] for x in r.get('included', []) if x['type'] == 'bundleIdCapabilities']
     r = api('POST', '/v1/bundleIds', {'data': {'type': 'bundleIds', 'attributes': {'identifier': ident, 'name': name, 'platform': 'IOS'}}})
     print('registered', ident, bool(r)); return (r or {}).get('data'), []
-main, caps = bundle('com.ewheridot.tegaexe', 'Tega.exe')
+main, caps = bundle('com.ewheridot.tegaexe', 'Tega')
 print('app capabilities:', caps)
 if main and 'HEALTHKIT' not in caps:
     r = api('POST', '/v1/bundleIdCapabilities', {'data': {'type': 'bundleIdCapabilities', 'attributes': {'capabilityType': 'HEALTHKIT'}, 'relationships': {'bundleId': {'data': {'type': 'bundleIds', 'id': main['id']}}}}})
     print('HealthKit turned on:', bool(r))
-for ident, name in [('com.ewheridot.tegaexe.widgets', 'Tega.exe Widgets'), ('com.ewheridot.tegaexe.share', 'Tega.exe Share')]:
+for ident, name in [('com.ewheridot.tegaexe.widgets', 'Tega Widgets'), ('com.ewheridot.tegaexe.share', 'Tega Share')]:
     b, _ = bundle(ident, name); print(ident, 'ok' if b else 'MISSING')
