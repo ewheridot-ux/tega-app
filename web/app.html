@@ -1422,6 +1422,26 @@ html .nav button > span:not(.dlg),html[data-skin] .nav button > span:not(.dlg){d
 html .nav button svg,html[data-skin] .nav button svg{width:24px!important;height:24px!important}
 html .nav button .dlg{width:24px!important}
 html .nav button.on,html[data-skin] .nav button.on{background:var(--navOn,#39ff9f)!important;color:var(--navOnFg,#07080c)!important}
+
+/* b195 · the lit tab is made of the same material as its page */
+html .nav[data-hl] button.on{position:relative;overflow:hidden}
+/* Today · Goals — night CRT: square neon, pixel corners, scanlines, glow */
+html .nav[data-hl="crt"] button.on{background:#39ff9f!important;color:#04120b!important;border-radius:3px!important;box-shadow:0 0 14px rgba(57,255,159,.55),inset 0 0 0 2px #04120b!important;background-image:repeating-linear-gradient(0deg,rgba(0,0,0,.12) 0 1px,transparent 1px 3px)!important}
+/* Model — holographic foil */
+html .nav[data-hl="holo"] button.on{background:conic-gradient(from 210deg at 30% 30%,#ff7ad9,#b98cff,#7ee2ff,#a8ffcf,#ffe57a,#ff7ad9)!important;color:#1a0f24!important;border-radius:14px!important;box-shadow:0 0 16px rgba(255,122,217,.45),inset 0 0 0 1px rgba(255,255,255,.6)!important}
+html .nav[data-hl="holo"] button.on::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.55) 45%,transparent 60%);animation:navSheen 3.2s ease-in-out infinite}
+/* Content — camera viewfinder: dark glass, cyan corner brackets, REC dot */
+html .nav[data-hl="vf"] button.on{background:#071822!important;color:#4dd8ff!important;border-radius:4px!important;box-shadow:none!important;background-image:linear-gradient(#4dd8ff,#4dd8ff),linear-gradient(#4dd8ff,#4dd8ff),linear-gradient(#4dd8ff,#4dd8ff),linear-gradient(#4dd8ff,#4dd8ff),linear-gradient(#4dd8ff,#4dd8ff),linear-gradient(#4dd8ff,#4dd8ff),linear-gradient(#4dd8ff,#4dd8ff),linear-gradient(#4dd8ff,#4dd8ff)!important;background-size:9px 2px,2px 9px,9px 2px,2px 9px,9px 2px,2px 9px,9px 2px,2px 9px!important;background-position:3px 3px,3px 3px,calc(100% - 3px) 3px,calc(100% - 3px) 3px,3px calc(100% - 3px),3px calc(100% - 3px),calc(100% - 3px) calc(100% - 3px),calc(100% - 3px) calc(100% - 3px)!important;background-repeat:no-repeat!important}
+html .nav[data-hl="vf"] button.on::after{content:'';position:absolute;top:6px;right:7px;width:5px;height:5px;border-radius:50%;background:#ff4d5e;animation:vfblink 1.4s steps(2) infinite}
+/* Datum — polished chrome */
+html .nav[data-hl="chrome"] button.on{background:linear-gradient(160deg,#f2f6fa,#8a9bb0 42%,#f7fafd 58%,#5f7086)!important;color:#07121c!important;border-radius:12px!important;box-shadow:0 2px 10px rgba(180,200,220,.35),inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(0,0,0,.35)!important}
+html .nav[data-hl="chrome"] button.on::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.7) 48%,transparent 60%);animation:navSheen 4s ease-in-out infinite}
+/* Gym — Solo Leveling system window: dark violet glass, glowing frame */
+html .nav[data-hl="arise"] button.on{background:linear-gradient(180deg,rgba(62,18,110,.95),rgba(24,6,44,.95))!important;color:#f0e2ff!important;border-radius:3px!important;box-shadow:inset 0 0 0 1px #9b5cff,0 0 14px rgba(140,70,255,.7),inset 0 0 12px rgba(155,92,255,.5)!important}
+html .nav[data-hl="arise"] button.on svg{filter:drop-shadow(0 0 4px #b98cff)}
+/* Money — emerald lab glass */
+html .nav[data-hl="lab"] button.on{background:radial-gradient(120% 120% at 30% 20%,#b6ffe3 0%,#3fd6a0 45%,#0c7a5c 100%)!important;color:#03261c!important;border-radius:16px!important;box-shadow:0 0 14px rgba(124,240,197,.5),inset 0 1px 0 rgba(255,255,255,.6)!important}
+@keyframes navSheen{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
 </style>
 
 <div class="app" id="app"></div>
@@ -1431,7 +1451,7 @@ html .nav button.on,html[data-skin] .nav button.on{background:var(--navOn,#39ff9
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b194';
+const BUILD='b195';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -2475,7 +2495,7 @@ function render(){
       ${(()=>{ try { const X=xpMult(TODAY); return Math.abs(X.total-1)<.005?'':`<span class="pill xp-pill ${X.total>=1?'up':'down'}" style="cursor:pointer" onclick="xpSheet()" title="XP multiplier today">⚡ ×${X.total.toFixed(2).replace(/\.?0+$/,'')}</span>`; } catch(e){ return ''; } })()}
       ${(()=>{ const se=season(); return `<span class="pill" style="cursor:pointer;box-shadow:inset 0 0 0 1.5px ${se.c}" onclick="stMode='progress';dFold.hq_season=true;go('evolve');render()" title="Season ${se.no} · ${se.name}">${se.ic} ${se.left}d</span>`; })()}
     </div>
-    <div class="nav" style="--navOn:${({model:'#ff3df2',content:'#4dd8ff',datum:'linear-gradient(160deg,#f2f6fa,#8a9bb0 42%,#f7fafd 58%,#5f7086)',gym:'#9b5cff',money:'#7cf0c5'})[view]||'#39ff9f'};--navOnFg:${view==='gym'?'#ffffff':'#07080c'}">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='goals'&&GOALS.some(([k])=>k===view))?'on':''}" onclick="go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
+    <div class="nav" data-hl="${({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab'})[view]||'crt'}">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='goals'&&GOALS.some(([k])=>k===view))?'on':''}" onclick="go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
     <div id="view">${GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):''}${AREA_VIEW[view]?areaChip(AREA_VIEW[view]):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve,social:vSocial})[view]()}</div>`;
   dlSheetRefresh();
   checkEvo();
