@@ -1414,6 +1414,14 @@ button.fx-m{border:0;background:none;font:inherit;cursor:pointer;padding:4px 6px
 .xp-rows{display:grid;gap:2px;margin-top:8px}.xp-row{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
 .xp-row b{display:block}.xp-row small{display:block;color:var(--muted);font-size:12px;margin-top:2px}.xp-row em{font-style:normal;font-weight:800}.xp-row em.up{color:var(--good)}.xp-row em.down{color:var(--bad)}.xp-row.tot{border-top:2px solid var(--line)}
 .hq-era{display:flex;align-items:center;gap:8px;padding:0 2px 8px;font-size:11px;color:var(--muted)}.hq-era i{flex:1;height:5px;background:var(--card2);border-radius:3px;overflow:hidden}.hq-era u{display:block;height:100%;background:var(--accent)}
+
+/* b193 · one bottom bar on every page: same size, shape and spot; only the lit tab's colour follows the section */
+html .nav,html[data-skin] .nav{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:4px!important;height:auto!important;padding:6px!important;border-radius:16px!important;border:1px solid rgba(255,255,255,.09)!important;background:#0a0b10!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:0 10px 28px rgba(0,0,0,.55)!important;overflow:hidden!important}
+html .nav button,html[data-skin] .nav button{min-width:0!important;height:48px!important;padding:0!important;margin:0!important;border:0!important;border-radius:11px!important;background:transparent!important;box-shadow:none!important;color:#7d8394!important;transform:none!important;transition:background .15s,color .15s!important;display:flex!important;align-items:center!important;justify-content:center!important}
+html .nav button > span:not(.dlg),html[data-skin] .nav button > span:not(.dlg){display:none!important}
+html .nav button svg,html[data-skin] .nav button svg{width:24px!important;height:24px!important}
+html .nav button .dlg{width:24px!important}
+html .nav button.on,html[data-skin] .nav button.on{background:var(--navOn,#39ff9f)!important;color:var(--navOnFg,#07080c)!important}
 </style>
 
 <div class="app" id="app"></div>
@@ -1423,7 +1431,7 @@ button.fx-m{border:0;background:none;font:inherit;cursor:pointer;padding:4px 6px
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b192';
+const BUILD='b193';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -2467,7 +2475,7 @@ function render(){
       ${(()=>{ try { const X=xpMult(TODAY); return Math.abs(X.total-1)<.005?'':`<span class="pill xp-pill ${X.total>=1?'up':'down'}" style="cursor:pointer" onclick="xpSheet()" title="XP multiplier today">⚡ ×${X.total.toFixed(2).replace(/\.?0+$/,'')}</span>`; } catch(e){ return ''; } })()}
       ${(()=>{ const se=season(); return `<span class="pill" style="cursor:pointer;box-shadow:inset 0 0 0 1.5px ${se.c}" onclick="stMode='progress';dFold.hq_season=true;go('evolve');render()" title="Season ${se.no} · ${se.name}">${se.ic} ${se.left}d</span>`; })()}
     </div>
-    <div class="nav">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='goals'&&GOALS.some(([k])=>k===view))?'on':''}" onclick="go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
+    <div class="nav" style="--navOn:${({model:'#ff3df2',content:'#4dd8ff',datum:'#ffe14d',gym:'#9b5cff',money:'#7cf0c5'})[view]||'#39ff9f'};--navOnFg:${view==='gym'?'#ffffff':'#07080c'}">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='goals'&&GOALS.some(([k])=>k===view))?'on':''}" onclick="go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
     <div id="view">${GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):''}${AREA_VIEW[view]?areaChip(AREA_VIEW[view]):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve,social:vSocial})[view]()}</div>`;
   dlSheetRefresh();
   checkEvo();
