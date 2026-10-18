@@ -39,6 +39,11 @@ import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 import { registerPlugin } from '@capacitor/core';
 // Tega's own Swift module (badge, Face ID, quick actions, Siri, Health, widgets, Live Activity). Missing on older builds: every call is guarded.
 const TegaNative = registerPlugin('TegaNative');
+// Errors thrown inside callbacks the phone calls back into show up as a useless "Script error." — catch them here with the real details.
+const report = (where, e) => { try { const m = where + ': ' + ((e && (e.message || e)) || 'error') + (e && e.stack ? '\n' + String(e.stack).split('\n').slice(0, 3).join('\n') : ''); console.error(m); if (typeof window.showErr === 'function') window.showErr(m); } catch (_) {} };
+const safe = (where, fn) => function () { try { const r = fn.apply(this, arguments); if (r && typeof r.catch === 'function') r.catch(e => report(where, e)); return r; } catch (e) { report(where, e); } };
+(function guardBridge() { const C = window.Capacitor; if (!C) return setTimeout(guardBridge, 50);
+  for (const k of ['fromNative', 'triggerEvent']) if (typeof C[k] === 'function' && !C[k]._g) { const f = C[k]; C[k] = function (r) { try { return f.apply(this, arguments); } catch (e) { report('bridge ' + k + ' ' + ((r && (r.pluginId + '.' + r.methodName)) || (typeof r === 'string' ? r : '')), e); } }; C[k]._g = 1; } })();
 const tn = async (m, o) => { try { return await TegaNative[m](o || {}); } catch (e) { return null; } };
 import { Share } from '@capacitor/share';
 import { Filesystem, Directory } from '@capacitor/filesystem';
@@ -330,7 +335,7 @@ async function syncReminders() {
 }
 
 /* ---------------- deep links (tegaexe://win?text=…, Siri Shortcuts) + screen awake during a workout ---------------- */
-App.addListener('appUrlOpen', ({ url }) => { const go = () => window.tegaDeepLink ? window.tegaDeepLink(url) : setTimeout(go, 400); go(); });
+App.addListener('appUrlOpen', safe('open link', ({ url }) => { const go = () => window.tegaDeepLink ? window.tegaDeepLink(url) : setTimeout(go, 400); go(); }));
 let awake = false, wl = null;
 async function wakeLock(on) { try { if (on && 'wakeLock' in navigator) { wl = await navigator.wakeLock.request('screen'); } else if (wl) { await wl.release(); wl = null; } } catch (e) {} }
 document.addEventListener('visibilitychange', () => { if (awake && document.visibilityState === 'visible') wakeLock(true); });
@@ -342,12 +347,12 @@ LocalNotifications.registerActionTypes({ types: [
   { id: 'TEGA_DONE', actions: [{ id: 'done', title: 'Done' }, { id: 'snooze', title: 'Snooze 1h' }] },
   { id: 'TEGA_LOG', actions: [{ id: 'log', title: 'Log it', foreground: true }, { id: 'snooze', title: 'Snooze 1h' }] },
 ] }).catch(() => {});
-const appCall = (fn, ...a) => { const run = () => typeof window[fn] === 'function' ? window[fn](...a) : setTimeout(run, 400); run(); };
-LocalNotifications.addListener('localNotificationActionPerformed', async ({ actionId, notification }) => {
+const appCall = (fn, ...a) => { const run = () => { if (typeof window[fn] !== 'function') return setTimeout(run, 400); try { window[fn](...a); } catch (e) { report(fn, e); } }; run(); };
+LocalNotifications.addListener('localNotificationActionPerformed', safe('notification button', async ({ actionId, notification }) => {
   const ex = (notification && notification.extra) || {};
   if (actionId === 'snooze') { await LocalNotifications.schedule({ notifications: [{ id: 6100 + Math.floor(Math.random() * 800), title: notification.title, body: notification.body, schedule: { at: new Date(Date.now() + 3600e3) }, actionTypeId: notification.actionTypeId, extra: ex }] }).catch(() => {}); return; }
   appCall('tegaNotifAction', actionId === 'tap' ? 'open' : actionId, ex);
-});
+}));
 try { Promise.resolve(TegaNative.addListener('shortcut', ({ id }) => appCall('tegaShortcut', id))).catch(() => {}); } catch (e) {}
 async function takePending() { const r = await tn('takePending'); for (const id of (r && r.ids) || []) appCall('tegaShortcut', id);
   const ib = await tn('getShared', { key: 'inbox' }); try { const L = ib && ib.value ? JSON.parse(ib.value) : []; if (L.length) { await tn('setShared', { key: 'inbox', value: '[]' }); appCall('tegaInbox', L); } } catch (e) {} }
@@ -359,7 +364,7 @@ tn('setShortcuts', { items: [
 ] });
 
 /* ---------------- boot ---------------- */
-App.addListener('appStateChange', ({ isActive }) => { if (isActive) { takePending(); for (const p of pollers) p.run(); window.native.syncReminders(); try { window.tegaNativeSync && window.tegaNativeSync(); } catch (e) {} } });
+App.addListener('appStateChange', safe('resume', ({ isActive }) => { if (isActive) { takePending().catch(e => report('takePending', e)); for (const p of pollers) p.run(); window.native.syncReminders(); try { window.tegaNativeSync && window.tegaNativeSync(); } catch (e) { report('resume sync', e); } } }));
 StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
 document.addEventListener('DOMContentLoaded', () => {
   SplashScreen.hide().catch(() => {});
