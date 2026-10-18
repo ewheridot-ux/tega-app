@@ -1535,7 +1535,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b200';
+const BUILD='b201';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -7949,7 +7949,7 @@ function undoShow(){ let el=document.getElementById('undo'); if(!el){ el=documen
 function undoNow(){ if (!_undoPrev) return; try { S=migrate(JSON.parse(_undoPrev)); _undoPrev=null; document.getElementById('undo').className=''; gSheetClose(); commit({skipXp:true, noUndo:true}); render(); toast('Undone'); nat('haptic','medium'); } catch(e){ toast('Couldn’t undo'); } }
 // ---- pull down to refresh (top of any page)
 (function(){ let y0=null, pulling=false, dist=0; const ind=()=>{ let e=document.getElementById('ptr'); if(!e){ e=document.createElement('div'); e.id='ptr'; e.innerHTML='<i></i>'; document.body.appendChild(e); } return e; };
-  document.addEventListener('touchstart', e=>{ if (window.scrollY>2 || document.getElementById('g-sheet') || document.querySelector('.modal') || e.touches.length>1) { y0=null; return; } y0=e.touches[0].clientY; dist=0; pulling=false; }, {passive:true});
+  document.addEventListener('touchstart', e=>{ if (window.scrollY>2 || document.querySelector('#g-sheet,.modal,#navqa,#ci,#lvs,#g-live,#lockscr') || (e.target.closest&&e.target.closest('.nav,.mm-strip,[style*="overflow-x"]')) || e.touches.length>1) { y0=null; return; } y0=e.touches[0].clientY; dist=0; pulling=false; }, {passive:true});
   document.addEventListener('touchmove', e=>{ if (y0==null) return; dist=e.touches[0].clientY-y0; if (dist>12 && window.scrollY<=0){ pulling=true; const el=ind(); el.style.transform=`translateY(${Math.min(80,dist*.5)}px) rotate(${dist*2}deg)`; el.classList.toggle('arm', dist>110); el.classList.add('vis'); } }, {passive:true});
   document.addEventListener('touchend', ()=>{ if (y0==null) return; const el=document.getElementById('ptr'); if (pulling && dist>110){ el.classList.add('spin'); nat('haptic','medium'); liveRefresh('pull'); setTimeout(()=>{ el.classList.remove('spin','vis','arm'); el.style.transform=''; toast('Up to date'); }, 1800); } else if (el){ el.classList.remove('vis','arm'); el.style.transform=''; } y0=null; pulling=false; }, {passive:true}); })();
 // ---- swipe right from the left edge = back; swipe a sheet down = close
@@ -8077,6 +8077,31 @@ document.addEventListener('touchstart',e=>{ const b=navTabAt(e); if(!b) return; 
   _navHold=setTimeout(()=>{ b.classList.remove('nq-press'); _navPress=null; navMenu(b); },420); },{passive:true});
 for (const ev of ['touchend','touchmove','touchcancel']) document.addEventListener(ev,navPressEnd,{passive:true});
 document.addEventListener('contextmenu',e=>{ const b=e.target.closest&&e.target.closest('.nav button[data-tab]'); if (b){ e.preventDefault(); navMenu(b); return; } if (!e.target.closest('input,textarea,[contenteditable],.ph-stage')) e.preventDefault(); });
+
+
+/* ===================== b201: re-renders keep every running animation where it was (no jumps, no replays) ===================== */
+// …and every sideways strip / inner scroller stays where you left it (tapping a date no longer snaps the strip back)
+{ const ck=el=>el.tagName+'.'+(typeof el.className==='string'?el.className.split(' ')[0]:'');
+  const _r=render; render=function(){ let pos=null; try { const cnt={}; for (const el of document.querySelectorAll('#app *')){ const k=ck(el), i=cnt[k]=(cnt[k]||0)+1; if (el.scrollLeft>0||el.scrollTop>0) (pos ||= new Map()).set(k+'#'+i,[el.scrollLeft,el.scrollTop]); } } catch(e){}
+    const out=_r.apply(this,arguments);
+    if (pos) try { const cnt={}; for (const el of document.querySelectorAll('#app *')){ const k=ck(el), i=cnt[k]=(cnt[k]||0)+1, x=pos.get(k+'#'+i); if (x){ if (x[0]) el.scrollLeft=x[0]; if (x[1]) el.scrollTop=x[1]; } } } catch(e){}
+    return out; }; }
+// a sheet left open never sits on top of a different page
+{ const stamp=new MutationObserver(l=>{ for (const m of l) for (const n of m.addedNodes) if (n.nodeType===1 && (n.id==='g-sheet'||n.classList.contains('modal'))) n.dataset.at=Date.now(); }); stamp.observe(document.body,{childList:true});
+  window.addEventListener('hashchange',()=>{ const old=el=>el && Date.now()-(+el.dataset.at||0)>300; const g=document.getElementById('g-sheet'); if (old(g)) try { gSheetClose(); } catch(e){ g.remove(); } for (const m of document.querySelectorAll('.modal')) if (old(m) && !['lvs','ci'].includes(m.id)) { const x=m.querySelector('.x,[aria-label=Close]'); if (x) x.click(); else m.remove(); } navMenuClose(); }); }
+{ const akey=(a,cnt)=>{ const t=a.effect&&a.effect.target; if(!t||!a.animationName) return null; const k=a.animationName+'|'+(a.effect.pseudoElement||'')+'|'+t.tagName+'.'+(typeof t.className==='string'?t.className.replace(/\b(on|show|vis|holding|nq-press)\b/g,'').trim():''); const i=cnt[k]=(cnt[k]||0)+1; return k+'#'+i; };
+  const _r=render; render=function(){ let saved=null;
+    try { const cnt={}; saved=new Map(); for (const a of document.getAnimations()){ if (!a.effect||!a.effect.target||!a.effect.target.closest||!a.effect.target.closest('#app')) continue; const k=akey(a,cnt); if (k&&a.currentTime!=null) saved.set(k,a.currentTime); } } catch(e){ saved=null; }
+    const out=_r.apply(this,arguments);
+    if (saved&&saved.size) try { const cnt={}; for (const a of document.getAnimations()){ if (!a.effect||!a.effect.target||!a.effect.target.closest||!a.effect.target.closest('#app')) continue; const k=akey(a,cnt), v=k&&saved.get(k); if (v!=null && a.currentTime!=null && a.currentTime<v) a.currentTime=v; } } catch(e){}
+    return out; }; }
+
+// background updates (sync, refresh, timers) never wipe what you're typing: they wait until you leave the field
+{ const typing=()=>{ const a=document.activeElement; return !!(a && a.matches && a.matches('#app input:not([type=checkbox]):not([type=radio]):not([type=range]), #app textarea, #app select')); };
+  let deferred=false; const _r=render;
+  for (const ev of ['input','change','submit','keydown']) document.addEventListener(ev, ()=>{ _userAct=Date.now(); }, true);
+  render=function(){ if (typing() && Date.now()-_userAct>900){ deferred=true; return; } deferred=false; return _r.apply(this,arguments); };
+  document.addEventListener('focusout', ()=>{ if (deferred) setTimeout(()=>{ if (deferred && !typing()) render(); },30); }); }
 
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
