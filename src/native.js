@@ -248,9 +248,9 @@ window.native = {
   },
   badge(n) { clearTimeout(badgeT); badgeT = setTimeout(() => tn('badge', { count: Math.max(0, n | 0) }), 400); },
   async unlock() { const r = await tn('unlock', { reason: 'Unlock Tega.exe' }); return !!(r && r.ok); },
-  widgetData(o) { clearTimeout(widT); widT = setTimeout(async () => { tn('setShared', { key: 'widget', value: JSON.stringify(o) }); try { await putDoc('widget/latest', o); } catch (e) {} }, 800); },
+  widgetData(o) { clearTimeout(widT); widT = setTimeout(() => { const v = JSON.stringify(o); if (v !== lastWid) { lastWid = v; tn('setShared', { key: 'widget', value: v }); } }, 800); },
   pull() { feedCache = null; for (const p of pollers) p.run(); window.native.syncReminders(); },
-  async calendarSync(items) { clearTimeout(calT); calT = setTimeout(() => calSync(items).catch(e => console.warn('cal', e)), 2500); },
+  async calendarSync(items) { const sig = JSON.stringify(items); if (sig === lastCal) return; clearTimeout(calT); calT = setTimeout(async () => { if (calBusy) return; calBusy = true; try { await calSync(items); lastCal = sig; } catch (e) { console.warn('cal', e); } calBusy = false; }, 2500); },
   async saveWorkout(o) { return tn('healthSaveWorkout', o); },
   async live(kind, o) { return tn(kind === 'start' ? 'liveStart' : kind === 'end' ? 'liveEnd' : 'liveUpdate', o); },
   async share(o) { try { if (o.dataUrl) { const w = await Filesystem.writeFile({ path: o.file || 'tega.png', data: o.dataUrl.split(',')[1], directory: Directory.Cache }); await Share.share({ title: o.title, text: o.text, files: [w.uri] }); } else await Share.share({ title: o.title, text: o.text, url: o.url }); return true; } catch (e) { return false; } },
@@ -278,7 +278,7 @@ window.native = {
     return { ok: true, events: (r.result || []).filter(e => !mine || e.calendarId !== mine).map(e => ({ id: e.id, title: e.title || '', start: e.startDate, end: e.endDate, allDay: !!e.isAllDay, loc: e.location || '', cal: e.calendarId || '' })) };
   },
 };
-let badgeT = null, widT = null, calT = null;
+let badgeT = null, widT = null, calT = null, lastWid = '', lastCal = '', calBusy = false;
 // bookings + deadlines → a "Tega.exe" calendar on the phone; edits and removals follow
 async function calSync(items) {
   let map = {}; try { map = JSON.parse(localStorage.getItem('tega-calmap') || '{}'); } catch (e) {}
@@ -286,7 +286,10 @@ async function calSync(items) {
   const p = await CapacitorCalendar.requestFullCalendarAccess().catch(() => ({ result: 'denied' })); if (p.result !== 'granted') return;
   let cid = localStorage.getItem('tega-calid');
   const cals = await CapacitorCalendar.listCalendars().catch(() => ({ result: [] }));
-  if (!cid || !(cals.result || []).some(c => c.id === cid)) { const c = (cals.result || []).find(c => c.title === 'Tega.exe'); cid = c ? c.id : (await CapacitorCalendar.createCalendar({ title: 'Tega.exe', color: '#39ff9f' })).id; localStorage.setItem('tega-calid', cid); }
+  if (!cid || !(cals.result || []).some(c => c.id === cid) || !Object.keys(map).length) {
+    // start clean: an old Tega.exe calendar whose event list we no longer know would otherwise fill with duplicates
+    for (const c of (cals.result || []).filter(c => c.title === 'Tega.exe')) await CapacitorCalendar.deleteCalendar({ id: c.id }).catch(() => {});
+    cid = (await CapacitorCalendar.createCalendar({ title: 'Tega.exe', color: '#39ff9f' })).id; map = {}; localStorage.setItem('tega-calid', cid); }
   const day = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d).getTime(); };
   const want = new Map(items.map(i => [i.key, i]));
   for (const [key, ev] of Object.entries(map)) { const i = want.get(key), sig = i && JSON.stringify([i.title, i.start, i.end, i.loc]); if (!i || sig !== ev.sig) { await CapacitorCalendar.deleteEventsById({ ids: [ev.id] }).catch(() => {}); delete map[key]; } }
