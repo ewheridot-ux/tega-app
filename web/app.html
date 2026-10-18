@@ -1431,7 +1431,7 @@ html .nav button.on,html[data-skin] .nav button.on{background:var(--navOn,#39ff9
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b193';
+const BUILD='b194';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 window.addEventListener('error', e=>showErr((e.message||'error')+' @'+(e.lineno||'?')+':'+(e.colno||'?')));
@@ -2475,7 +2475,7 @@ function render(){
       ${(()=>{ try { const X=xpMult(TODAY); return Math.abs(X.total-1)<.005?'':`<span class="pill xp-pill ${X.total>=1?'up':'down'}" style="cursor:pointer" onclick="xpSheet()" title="XP multiplier today">⚡ ×${X.total.toFixed(2).replace(/\.?0+$/,'')}</span>`; } catch(e){ return ''; } })()}
       ${(()=>{ const se=season(); return `<span class="pill" style="cursor:pointer;box-shadow:inset 0 0 0 1.5px ${se.c}" onclick="stMode='progress';dFold.hq_season=true;go('evolve');render()" title="Season ${se.no} · ${se.name}">${se.ic} ${se.left}d</span>`; })()}
     </div>
-    <div class="nav" style="--navOn:${({model:'#ff3df2',content:'#4dd8ff',datum:'#ffe14d',gym:'#9b5cff',money:'#7cf0c5'})[view]||'#39ff9f'};--navOnFg:${view==='gym'?'#ffffff':'#07080c'}">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='goals'&&GOALS.some(([k])=>k===view))?'on':''}" onclick="go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
+    <div class="nav" style="--navOn:${({model:'#ff3df2',content:'#4dd8ff',datum:'linear-gradient(160deg,#f2f6fa,#8a9bb0 42%,#f7fafd 58%,#5f7086)',gym:'#9b5cff',money:'#7cf0c5'})[view]||'#39ff9f'};--navOnFg:${view==='gym'?'#ffffff':'#07080c'}">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='goals'&&GOALS.some(([k])=>k===view))?'on':''}" onclick="go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
     <div id="view">${GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):''}${AREA_VIEW[view]?areaChip(AREA_VIEW[view]):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve,social:vSocial})[view]()}</div>`;
   dlSheetRefresh();
   checkEvo();
