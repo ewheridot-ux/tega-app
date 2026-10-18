@@ -1,6 +1,6 @@
 node_modules/
 www/
-ios/
+/ios/
 android/
 test/*.png
 test/native.test.js
