@@ -1570,7 +1570,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b216';
+const BUILD='b217';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -5030,9 +5030,11 @@ function stmtReceived(year){ const st=stmtNow(), all=[ONE_STMT, ...((S.model&&S.
   return rows; }
 function taxCard(){
   const s=S.money.s, y=THIS_Y, R=stmtReceived(y), rec=R.reduce((a,r)=>a+r.amt,0), pre=R.filter(r=>r.d<y+'-09-01').reduce((a,r)=>a+r.amt,0);
-  const need=rec*s.taxRate, paid=(S.money.taxPaid||[]).filter(p=>(p.d||'').startsWith(y)||!p.d).reduce((a,p)=>a+p.amt,0), buf=+s.taxBufNow||0, gap=Math.max(0,need-paid-buf);
-  return `<div class="card sec tx-card"><div class="row between"><span class="tag">${y} taxes on modeling</span><span class="sub" style="font-size:12px">Jan 15 est. due</span></div>
-    <div class="st-flow" style="margin-top:10px">${[['Paid to you by ONE in '+y,rec],['× '+Math.round(s.taxRate*100)+'% set-aside',need],['− estimated payments made',-paid],['− in your Tax Buffer',-buf],['= gap',gap]].map(([l,v])=>`<div><span>${l}</span><b class="num">${v<0?'−'+money0(-v).replace('−',''):money0(v)}</b></div>`).join('')}</div>
+  const dInc=datumInc(y+'-01-01'), ded=dedTotal(y+'-01-01'), rv=((S.money.budget||{}).deductibles||[]).filter(x=>!x.ok&&(x.d||'')>=y+'-01-01').length, taxable=Math.max(0,rec+dInc-ded);
+  const need=taxable*s.taxRate, paid=(S.money.taxPaid||[]).filter(p=>(p.d||'').startsWith(y)||!p.d).reduce((a,p)=>a+p.amt,0), buf=+s.taxBufNow||0, gap=Math.max(0,need-paid-buf);
+  return `<div class="card sec tx-card"><div class="row between"><span class="tag">${y} taxes</span><span class="sub" style="font-size:12px">Jan 15 est. due</span></div>
+    <div class="st-flow" style="margin-top:10px">${[['Modeling paid in '+y,rec],...(dInc?[['+ Datum sales',dInc]]:[]),['− write-offs',-ded],['× '+Math.round(s.taxRate*100)+'% on '+money0(taxable),need],['− estimated payments made',-paid],['− in your Tax Buffer',-buf],['= gap',gap]].map(([l,v])=>`<div><span>${l}</span><b class="num">${v<0?'−'+money0(-v).replace('−',''):money0(v)}</b></div>`).join('')}</div>
+    ${ded?`<div class="help keep" style="margin-top:8px;color:var(--good)">Write-offs cut what you owe by ${money0(Math.min(rec+dInc,ded)*s.taxRate)}.</div>`:''}${rv?`<button class="btn sm ghost" style="margin-top:8px" onclick="dedN=20;setDedFilter('review');setTimeout(()=>document.getElementById('dedList')?.scrollIntoView({behavior:'smooth'}),60)">${rv} write-off${rv===1?'':'s'} to confirm → lowers the tax</button>`:''}
     <div class="help" style="margin-top:8px">You're taxed when ONE actually pays you, not when you shoot — so the $${Math.round(stmtNow().balance).toLocaleString()} they still owe is taxed in the year it lands. ${pre?`${money0(pre)} landed before September, when the waterfall's set-aside started. `:''}Ask the CPA how much of this your Schneider W-2 withholding already covers.</div>
     <form class="ct-add" style="margin-top:10px" onsubmit="return wyrmFeed(event)"><input class="inp" type="number" min="1" step="1" inputmode="decimal" placeholder="$ just set aside for taxes"><button class="btn sm">Set aside</button></form></div>`;
 }
@@ -8327,19 +8329,19 @@ function vDeduct(){
   return `
   <div class="card sec">
     <div class="row between" style="align-items:flex-start;gap:10px"><div><div class="tag">Confirmed deductible</div><h2 class="num" style="font-size:34px;font-weight:800;letter-spacing:-.04em;color:var(--good)">${money0(tot)}</h2></div><button class="btn sm" onclick="copyDeductibles()">Copy CSV for CPA</button></div>
-    <div class="home3" style="margin-top:12px"><div><b class="num">${money0(tot*S.money.s.taxRate)}</b><small>≈ tax saved</small></div><div><b class="num" style="${review.length?'color:var(--warn)':''}">${review.length}</b><small>to review</small></div><div><b class="num">${money0(totAll-tot)}</b><small>unconfirmed</small></div></div>
+    <div class="home3" style="margin-top:12px"><div><b class="num">${money0(tot*S.money.s.taxRate)}</b><small>off your tax</small></div><div><b class="num" style="${review.length?'color:var(--warn)':''}">${review.length}</b><small>to review</small></div><div><b class="num">${money0(totAll-tot)}</b><small>unconfirmed</small></div></div>
     ${infold('dcat','By category',`${byCat.length}`,`<div class="stack" style="gap:6px">${byCat.map(([k,v])=>`<div class="row between" style="font-size:14px"><span>${DCATS[k]}</span><b class="num">${money0(v)}</b></div>`).join('')||'<div class="empty">Nothing confirmed yet.</div>'}</div>`)}
     ${infold('dq','By quarter','for estimated payments',`<div class="stack" style="gap:6px">${Object.entries(byQ).sort().map(([q,v])=>`<div class="row between" style="font-size:14px"><span>${q}</span><b class="num">${money0(v)}</b></div>`).join('')||'<div class="empty">—</div>'}</div>`)}
     ${infold('dadd','Add one by hand','cash fares, receipts',`<form onsubmit="return addDedManual(event)" class="row" style="gap:6px;flex-wrap:wrap"><input id="ddD" type="date" class="inp" value="${TODAY}"><input id="ddDesc" class="inp" style="flex:1;min-width:140px" placeholder="e.g. Uber home → ORD"><input id="ddAmt" class="inp num" style="width:90px" placeholder="$"><select id="ddCat" class="inp">${Object.entries(DCATS).map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select><select id="ddAcct" class="inp">${accts.map(a=>`<option>${a}</option>`).join('')}</select><button class="btn" type="submit">+ Add</button></form>`)}
   </div>
-  <div class="card sec"><div class="hdr"><h2>Ledger</h2><span class="sub">${vis.length} shown · ${money0(vis.reduce((a,x)=>a+x.amt,0))}</span></div>
+  <div class="card sec" id="dedList"><div class="hdr"><h2>Ledger</h2><span class="sub">${vis.length} shown · ${money0(vis.reduce((a,x)=>a+x.amt,0))}</span></div>
     <div class="tchips" style="margin-bottom:10px">${chips.map(([k,l])=>`<button class="${dedFilter===k?'on':''}" onclick="dedN=20;dedOpen=null;setDedFilter('${k}')">${l}</button>`).join('')}</div>
     ${vis.length?`<div class="row between" style="gap:8px;margin-bottom:8px;flex-wrap:nowrap"><span class="help" style="min-width:0">Tap a circle to confirm, or press and drag down to do a run. Tap a row to edit.</span><button class="btn ghost sm" style="white-space:nowrap" onclick="dedBulk(${dedFilter!=='ok'})">${dedFilter==='ok'?'Unconfirm all':'Confirm all'}</button></div>`:''}
     <div onpointermove="dedMove(event)" onpointerup="dedUp()" onpointercancel="dedUp()">${show.map(x=>{ const m=x.d.slice(0,7), hdr = m!==cur ? `<div class="row between" style="margin:12px 2px 6px"><span class="tag">${parseD(m+'-01').toLocaleDateString('en-US',{month:'long',year:'numeric'})}</span><span class="tag num">${money0(msum[m])}</span></div>` : ''; cur=m; const open=dedOpen===x.id, datum=String(x.txn||'').startsWith('datum:');
       return hdr+`<div class="txr ${open?'open':''}"><div class="dedh"><div class="check ${x.ok?'on':''}" data-ded="${x.id}" style="padding:6px;background:none;border:0;touch-action:none" onpointerdown="dedDown(event,'${x.id}')" role="checkbox" aria-checked="${!!x.ok}" aria-label="Confirm"><div class="box">${x.ok?'✓':''}</div></div><button class="txh" onclick="dedOpen=dedOpen==='${x.id}'?null:'${x.id}';render()"><span class="txd"><b>${esc(x.desc)}</b><small>${nice(x.d)} · ${esc(x.acct||'')} · ${DCATS[x.cat]||x.cat}${x.note?' · '+esc(x.note):''}</small></span><b class="num">$${x.amt.toFixed(2)}</b></button></div>
         ${open?`<div class="txe"><label>Category<select class="inp" onchange="setDed('${x.id}','cat',this.value)">${Object.entries(DCATS).map(([k,l])=>`<option value="${k}" ${x.cat===k?'selected':''}>${l}</option>`).join('')}</select></label><label>Note<input class="inp" value="${esc(x.note||'')}" placeholder="trip / job" onchange="setDed('${x.id}','note',this.value)"></label>${datum?'<span class="sub">◆ Mirrors Datum → Money; change it there.</span>':`<button class="btn danger sm" onclick="delDed('${x.id}')">Delete</button>`}</div>`:''}</div>`; }).join('') || `<div class="empty">${dedFilter==='review'?'Nothing to review. Everything is confirmed.':'Nothing here yet.'}</div>`}</div>
     ${vis.length>dedN?`<button class="btn ghost sm" style="margin-top:10px;width:100%;justify-content:center" onclick="dedN+=20;render()">Show more · ${vis.length-dedN} left</button>`:''}
-    <div class="help" style="margin-top:10px">Only confirmed rows count. Rides default to "Uber / Lyft (other)" — switch them to the ORD or LGA category so the CPA sees the trip pattern.</div>
+    <div class="help" style="margin-top:10px">Only confirmed rows lower your tax gap. Rides default to "Uber / Lyft (other)" — switch them to the ORD or LGA category so the CPA sees the trip pattern.</div>
   </div>`;
 }
 /* ---- waterfall tab: landed-check to-dos, upcoming checks, auto-detected deposits ---- */
@@ -8350,7 +8352,9 @@ function splitFor(c){ const s=S.money.s, r=waterfall(c.amt,{ef:+s.efNow||0,buf:0
 function cardList(){ return (S.money.budget?.accounts||[]).filter(a=>a.bal!=null && a.bal<0 && !/auto|loan|mortgage/i.test(a.name+' '+a.type)).map(a=>({name:a.name.replace(/ Card$/,'').replace(/^Discover it$/,'Discover'), bal:-a.bal})).sort((a,b)=>a.bal-b.bal); }
 const TAX_CATCHUP_BY='2027-04-15';
 function taxReceived(){ let r=0; try { r=stmtReceived('2026').reduce((a,x)=>a+x.amt,0); } catch(e){} r+=S.money.checks.filter(c=>c.got&&(c.gotOn||c.d)>='2027-01-01').reduce((a,c)=>a+c.amt,0); return r; }
-function taxOwedSoFar(){ return taxReceived()*S.money.s.taxRate; }
+function dedTotal(from){ return ((S.money.budget||{}).deductibles||[]).filter(x=>x.ok&&(x.d||'')>=from).reduce((a,x)=>a+(+x.amt||0),0); }
+function datumInc(from){ try { return incomeBy(from, TODAY).datum||0; } catch(e){ return 0; } }
+function taxOwedSoFar(){ return Math.max(0, taxReceived()+datumInc('2026-01-01')-dedTotal('2026-01-01'))*S.money.s.taxRate; }
 function taxBehind(){ const paid=(S.money.taxPaid||[]).filter(p=>!p.d||p.d>='2026-01-01').reduce((a,p)=>a+(+p.amt||0),0); return Math.max(0, taxOwedSoFar()-paid-(+S.money.s.taxBufNow||0)); }
 function taxShortApril(){ try { const P=projection(); return Math.max(0, taxBehind()-P.rows.filter(r=>r.d<TAX_CATCHUP_BY).reduce((t,r)=>t+(r.catchup||0),0)); } catch(e){ return 0; } }
 function cushTarget(){ const s=S.money.s; if (s.cushTarget!=null && s.cushTarget!=='') return +s.cushTarget||0; try { return Math.round(stmtReceived('2026').filter(r=>r.d<'2026-09-01').reduce((a,r)=>a+r.amt,0)*s.taxRate); } catch(e){ return 0; } }
