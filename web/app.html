@@ -1564,7 +1564,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b214';
+const BUILD='b215';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2023,16 +2023,16 @@ const fixedMo = () => { const s=S.money.s; if (s.minCap1==null) s.minCap1=25; if
 const efTarget = () => fixedMo() * S.money.s.efMonths;
 function waterfall(amt, ctx, dateKey){
   // ctx: {ef, buf, cush, house, cards}; returns row and mutates ctx.
-  // Order (b207): TAXES (32.2% + an even share of what you're behind, until Apr 15 2027) → bills → spending → emergency fund → CREDIT CARDS (everything left, until $0) → house → retirement → sweep EF
   const s=S.money.s, PER=perMo(), BF=billsFor(dateKey, ctx.nextD||addDays(dateKey, s.payEvery===14?14:15)), fixedCk=BF.amt, efCk=s.efMonthly/PER, retCk=s.retMonthly/PER, cushCk=s.cushionMonthly/PER, yr=+dateKey.slice(0,4);
   const tax = amt*s.taxRate; ctx.buf += tax;
   let left = amt - tax - fixedCk, draw = 0;
   if (left < 0) { draw = -left; ctx.ef -= draw; left = 0; }
   const flex = Math.min(s.flexPerCheck, left); left -= flex;
-  let cu = 0; if (dateKey < TAX_CATCHUP_BY && (ctx.behind||0) > 0.5){ const n=Math.max(1, (ctx.nLeft||1)-1); cu = Math.min(left, ctx.plan && ctx.plan[dateKey]!=null ? ctx.plan[dateKey] : ctx.behind/n); ctx.behind -= cu; left -= cu; } if (dateKey < TAX_CATCHUP_BY) ctx.nLeft = Math.max(0,(ctx.nLeft||1)-1); ctx.buf += cu;
+  // b215 order: 32.2% → bills → spending → CREDIT CARDS until $0 → tax catch-up until covered → emergency fund → house → retirement
+  const cards = Math.min(left, Math.max(0, ctx.cards==null ? cardDebt() : ctx.cards)); left -= cards; if (ctx.cards!=null) ctx.cards -= cards;
+  let cu = 0; if ((ctx.behind||0) > 0.5){ cu = Math.min(left, ctx.behind); ctx.behind -= cu; left -= cu; } ctx.buf += cu;
   const efRoom = Math.max(0, efTarget() - ctx.ef);
   let efAdd = Math.min(efCk, left, efRoom); ctx.ef += efAdd; left -= efAdd;
-  const cards = Math.min(left, Math.max(0, ctx.cards==null ? cardDebt() : ctx.cards)); left -= cards; if (ctx.cards!=null) ctx.cards -= cards;
   let house = 0; if (efRoom <= 0.5) { house = Math.min(efCk, left); ctx.house += house; left -= house; }
   const ret = Math.min(retCk, left); left -= ret;
   const sweep = Math.min(left, Math.max(0, efTarget()-ctx.ef)); ctx.ef += sweep; left -= sweep; efAdd += sweep;
@@ -2044,7 +2044,7 @@ function projection(){
   try { const pre=future.filter(c=>c.d<TAX_CATCHUP_BY), caps=pre.map((c,i)=>{ const nd=future[future.indexOf(c)+1]?.d||addDays(c.d,14); const bl=billsFor(c.d,nd).amt, after=c.amt-c.amt*s.taxRate-bl; return Math.max(0, after-Math.min(s.flexPerCheck, Math.max(0,after))); });
     let need=ctx.behind, lo=0, hi=Math.max(0,...caps,need); const tot=L=>caps.reduce((t,c)=>t+Math.min(c,L),0);
     if (tot(hi)<=need) lo=hi; else for (let k=0;k<40;k++){ const m=(lo+hi)/2; if (tot(m)<need) lo=m; else hi=m; }
-    const L=tot(hi)<=need?hi:hi; ctx.plan={}; pre.forEach((c,i)=>{ ctx.plan[c.d]=Math.min(caps[i],L); }); } catch(e){ ctx.plan=null; }
+    ctx.plan=null; } catch(e){ ctx.plan=null; }
   const rows=[], payouts=[]; let duePtr=0;
   while (duePtr<DUES.length && DUES[duePtr][0] < TODAY) duePtr++; // dues already passed are ignored
   for (const c of future) {
@@ -8396,7 +8396,7 @@ function detectDeposits(txs, keyAcct){
 let mAdj=false;
 function bucketsCard(sinceSep, paidTot, efFull){ const s=S.money.s, taxNeed=Math.max(0,sinceSep*s.taxRate-paidTot);
   const cz=(()=>{ try { const r=projection().rows.find(r=>r.cardsLeft!=null&&r.cardsLeft<=0.5); return r?'$0 by '+nice(r.d)+', '+r.d.slice(0,4):''; } catch(e){ return ''; } })();
-  const B=[['🛡️','Emergency fund','efNow',efTarget(),efFull?'full by '+nice(efFull.d):(+s.efNow>=efTarget()?'full':''),'var(--good)'],['💳','Credit cards owed','__cards',0,(cardList().map(c=>c.name).join(' → ')||'none')+(cz?' · '+cz:''),'var(--accent)'],['📊','Tax buffer','taxBufNow',Math.max(0,taxOwedSoFar()-(S.money.taxPaid||[]).reduce((a,p)=>a+(+p.amt||0),0)),taxBehind()>0.5?(()=>{ const sh=taxShortApril(); return `behind ${money0(taxBehind())} · checks catch up by Apr 15`+(sh>50?` · <b style="color:var(--bad)">${money0(sh)} short</b>`:' · covered'); })():'on track','var(--warn)'],['🌱',`Roth IRA ${THIS_Y}`,'rothYtd',s.rothLimit,'','var(--accent)'],['🏠','House fund','houseNow',0,'starts when the emergency fund is full','var(--fg)']];
+  const B=[['🛡️','Emergency fund','efNow',efTarget(),efFull?'full by '+nice(efFull.d):(+s.efNow>=efTarget()?'full':''),'var(--good)'],['💳','Credit cards owed','__cards',0,(cardList().map(c=>c.name).join(' → ')||'none')+(cz?' · '+cz:''),'var(--accent)'],['📊','Tax buffer','taxBufNow',Math.max(0,taxOwedSoFar()-(S.money.taxPaid||[]).reduce((a,p)=>a+(+p.amt||0),0)),taxBehind()>0.5?(()=>{ const sh=taxShortApril(); return `behind ${money0(taxBehind())} · catch-up starts once the cards hit $0`+(sh>50?` · ~${money0(sh)} paid after Apr 15`:' · covered by Apr 15'); })():'on track','var(--warn)'],['🌱',`Roth IRA ${THIS_Y}`,'rothYtd',s.rothLimit,'','var(--accent)'],['🏠','House fund','houseNow',0,'starts when the emergency fund is full','var(--fg)']];
   return `<div class="card sec"><div class="hdr"><h2>Buckets</h2><button class="btn ${mAdj?'':'ghost'} sm" onclick="mAdj=!mAdj;render()">${mAdj?'Done':'Adjust'}</button></div>
     <div class="stack" style="gap:14px;grid-template-columns:minmax(0,1fr)">${B.map(([ic,l,k,target,sub,col])=>{ const v=k==='__cards'?cardDebt():+s[k]||0; return `<div><div class="row between" style="gap:8px;flex-wrap:nowrap"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ic} <b>${l}</b></span>${mAdj&&k!=='__cards'?`<input class="inp num" type="number" inputmode="decimal" step="any" style="width:110px;padding:6px 10px;text-align:right" value="${v}" onchange="setMoney('${k}',this.value)" aria-label="${l} balance">`:`<b class="num" style="white-space:nowrap">${money0(v)}${target?`<span class="sub" style="font-weight:500"> / ${money0(target)}</span>`:''}</b>`}</div>${target?`<div class="bar" style="margin-top:6px;height:6px"><b style="width:${Math.round(clamp(v/Math.max(1,target),0,1)*100)}%;background:${col}"></b></div>`:''}${sub?`<div class="sub" style="font-size:11px;margin-top:3px">${sub}</div>`:''}</div>`; }).join('')}</div>
     <div class="help" style="margin-top:12px">Balances go up when you tick a move on a landed check. Use Adjust to correct one by hand.</div></div>`; }
@@ -8430,7 +8430,7 @@ function moneyBits(){
     moreFold: `<div class="card sec" style="padding:4px 18px">
     ${infold('wsplit','Split any amount','',`<form class="inline" onsubmit="return calcDeposit(event)"><input class="inp num" type="number" id="depAmt" value="4000" min="1"><button class="btn">Split it</button></form>
       <div id="depOut" style="margin-top:10px">${depositHtml(sample)}</div>
-      <div class="help keep" style="margin-top:10px">Order: 32.2% + catch-up (${money0(taxBehind())} behind, spread to Apr 15) → Tax Buffer · bills stay in checking · <b>$${s.flexPerCheck} spending money first</b> · then emergency fund · then <b>everything left pays down the credit cards</b> (smallest first: ${esc(cardList().map(c=>c.name).join(' → ')||'—')}) until they hit $0 · only then retirement (Roth in 2026, SEP from Jan 2027). When the emergency fund is full, its $500/check becomes the <b>House</b> bucket.</div>`)}
+      <div class="help keep" style="margin-top:10px">Order: 32.2% → Tax Buffer · bills stay in checking · <b>$${s.flexPerCheck} spending money</b> · then <b>everything left pays down the credit cards</b> (smallest first: ${esc(cardList().map(c=>c.name).join(' → ')||'—')}) until they hit $0 · then the tax catch-up (${money0(taxBehind())} behind) · then emergency fund · then retirement (Roth in 2026, SEP from Jan 2027). When the emergency fund is full, its $500/check becomes the <b>House</b> bucket.</div>`)}
     ${infold('wland','Landed',`${got.length} · ${money0(got.reduce((a,c)=>a+c.amt,0))}`,`<div class="help" style="margin-bottom:10px">Agency deposits are picked up from Bank of America when Money refreshes each day. Rows with ✓ bank were matched to a real deposit; undo moves a check back to upcoming.</div>
       <div class="stack" style="gap:8px">${got.slice().sort((a,b)=>(b.gotOn||b.d).localeCompare(a.gotOn||a.d)).map(c=>`<div class="row between" style="gap:10px;padding:12px 14px;border-radius:var(--r2);background:var(--card2)"><div style="min-width:0"><b class="num">${money0(c.amt)}</b> <span class="sub">· ${nice(c.gotOn||c.d)}${c.verified||/from bank/.test(c.note||'')?' · <span style="color:var(--good)">✓ bank</span>':' · marked by hand'}</span><div class="sub" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.note||'')}</div></div><span class="row" style="gap:6px;flex-wrap:nowrap">${c.unsched&&S.money.checks.some(x=>!x.got)?`<select class="inp" style="padding:4px 26px 4px 8px;font-size:12px;max-width:120px" onchange="matchLanded('${c.id}',this.value)"><option value="">which job?</option>${S.money.checks.filter(x=>!x.got).slice(0,8).map(x=>`<option value="${x.id}">${nice(x.d)} · ${money0(x.amt)}</option>`).join('')}</select>`:''}<button class="btn ghost sm" onclick="unGot('${c.id}')">Undo</button></span></div>`).join('')||'<div class="empty">Nothing landed yet.</div>'}</div>`)}
     ${infold('wset','Settings','the standing numbers',`<div class="settings">
