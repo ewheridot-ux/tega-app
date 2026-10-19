@@ -1553,6 +1553,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 .pc-r>b{font-size:17px}.pc-mini{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:3px}
 .st-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.st-s{border-radius:var(--r2);background:var(--card2);padding:10px 12px;border-left:3px solid var(--c);display:flex;flex-direction:column;gap:2px;min-width:0}.st-s b{font-size:20px}.st-s small{font-size:12px;color:var(--muted)}
 .ov-grid{gap:8px}.ov-t{border:0;text-align:left;cursor:pointer;font:inherit;color:inherit}
+.pc-edit{margin-top:10px}.pc-edit summary{font-size:13px;color:var(--muted);cursor:pointer}
 </style>
 
 <div class="app" id="app"></div>
@@ -1562,7 +1563,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b207';
+const BUILD='b208';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2022,7 +2023,7 @@ function waterfall(amt, ctx, dateKey){
   let left = amt - tax - fixedCk, draw = 0;
   if (left < 0) { draw = -left; ctx.ef -= draw; left = 0; }
   const flex = Math.min(s.flexPerCheck, left); left -= flex;
-  let cu = 0; if (dateKey < TAX_CATCHUP_BY && (ctx.behind||0) > 0.5){ const n=Math.max(1, ctx.nLeft||1); cu = Math.min(left, ctx.behind/n); ctx.behind -= cu; left -= cu; } if (dateKey < TAX_CATCHUP_BY) ctx.nLeft = Math.max(0,(ctx.nLeft||1)-1); ctx.buf += cu;
+  let cu = 0; if (dateKey < TAX_CATCHUP_BY && (ctx.behind||0) > 0.5){ const n=Math.max(1, (ctx.nLeft||1)-1); cu = Math.min(left, ctx.behind/n); /* aim to finish one check early */ ctx.behind -= cu; left -= cu; } if (dateKey < TAX_CATCHUP_BY) ctx.nLeft = Math.max(0,(ctx.nLeft||1)-1); ctx.buf += cu;
   const efRoom = Math.max(0, efTarget() - ctx.ef);
   let efAdd = Math.min(efCk, left, efRoom); ctx.ef += efAdd; left -= efAdd;
   const cards = Math.min(left, Math.max(0, ctx.cards==null ? cardDebt() : ctx.cards)); left -= cards; if (ctx.cards!=null) ctx.cards -= cards;
@@ -8163,11 +8164,12 @@ function splitList(rows){ return `<div class="pc-list">${rows.map(([ic,l,where,v
 function payCard(P){ const nx=P.rows[0]; if (!nx) return `<div class="card sec"><div class="empty">No modeling checks scheduled.</div></div>`;
   const dd=daysBetween(TODAY,nx.d), rows=splitRows(nx);
   return `<div class="card sec pc-card"><div class="row between" style="align-items:flex-end"><div><div class="tag">Next check</div><b class="num pc-amt">${money0(nx.amt)}</b></div><span class="sub" style="text-align:right">${nice(nx.d)}<br><b style="color:${dd<0?'var(--warn)':'var(--fg)'}">${dd<0?(-dd)+' days late':dd===0?'today':'in '+dd+' days'}</b></span></div>
-    ${splitBar(rows)}${splitList(rows)}</div>`; }
+    ${splitBar(rows)}${splitList(rows)}
+    <details class="pc-edit"><summary>Edit amount or date</summary><div class="row" style="gap:6px;margin-top:8px;flex-wrap:wrap"><input class="inp num" type="number" inputmode="decimal" value="${nx.amt}" style="width:110px" onchange="setCheckAmt('${nx.id}',this.value)" aria-label="Amount"><input class="inp" type="date" value="${nx.d}" style="width:auto" onchange="setCheckDate('${nx.id}',this.value)" aria-label="Date"><button class="btn sm" id="landed-${nx.id}" onclick="verifyLanded('${nx.id}')">Check bank</button></div></details></div>`; }
 function upcomingCompact(P){ const rows=P.rows.slice(1,7); if(!rows.length) return '';
   return `<div class="card sec"><div class="hdr"><h2>After that</h2><span class="sub">${P.rows.length-1} more · ${money0(P.rows.slice(1).reduce((a,r)=>a+r.amt,0))}</span></div>
     <div class="stack" style="gap:6px;grid-template-columns:minmax(0,1fr)">${rows.map(r=>`<details class="ck" ${wfOpen===r.id?'open':''} ontoggle="wfOpen=this.open?'${r.id}':(wfOpen==='${r.id}'?null:wfOpen)"><summary><span class="ck-d"><b>${nice(r.d)}</b></span><span class="ck-n">${splitRows(r).filter(x=>x[3]>0&&!['Bills','Spending'].includes(x[1])).map(x=>`<i class="pc-mini" style="background:${x[4]}"></i>`).join('')}</span><b class="num">${money0(r.amt)}</b></summary><div class="ck-b">${splitList(splitRows(r))}
-      <div class="row" style="gap:6px;margin-top:10px"><button class="btn sm" id="landed-${r.id}" onclick="verifyLanded('${r.id}')">Check bank</button>${unverifiedId===r.id?`<button class="btn ghost sm" onclick="markGot('${r.id}',true)">Mark landed</button>`:''}<input class="inp" type="date" value="${r.d}" style="padding:6px 10px;font-size:13px;width:auto" onchange="setCheckDate('${r.id}',this.value)" aria-label="Expected date"><button class="btn ghost sm" onclick="delCheck('${r.id}')">Remove</button></div></div></details>`).join('')}</div>
+      <div class="row" style="gap:6px;margin-top:10px"><button class="btn sm" id="landed-${r.id}" onclick="verifyLanded('${r.id}')">Check bank</button>${unverifiedId===r.id?`<button class="btn ghost sm" onclick="markGot('${r.id}',true)">Mark landed</button>`:''}<input class="inp num" type="number" inputmode="decimal" value="${r.amt}" style="padding:6px 10px;font-size:13px;width:96px" onchange="setCheckAmt('${r.id}',this.value)" aria-label="Amount"><input class="inp" type="date" value="${r.d}" style="padding:6px 10px;font-size:13px;width:auto" onchange="setCheckDate('${r.id}',this.value)" aria-label="Expected date"><button class="btn ghost sm" onclick="delCheck('${r.id}')">Remove</button></div></div></details>`).join('')}</div>
     <form class="inline" style="margin-top:10px;flex-wrap:wrap" onsubmit="return addCheck(event)"><input class="inp" type="date" required style="max-width:160px"><input class="inp num" type="number" placeholder="amount" required min="1" style="max-width:120px"><input class="inp" placeholder="job"><button class="btn sm">Add check</button></form></div>`; }
 function streamsCard(){ const m=TODAY.slice(0,7), mo=incomeBy(m+'-01',TODAY), yr=incomeBy(THIS_Y+'-01-01',TODAY), tot=Object.values(mo).reduce((a,b)=>a+b,0);
   const recent=S.money.budget.txns.filter(isIncomeTx).slice(0,6);
@@ -8335,6 +8337,7 @@ function wfUpcoming(P){
     <form class="inline" style="margin-top:10px;flex-wrap:wrap" onsubmit="return addCheck(event)"><input class="inp" type="date" required style="max-width:160px"><input class="inp num" type="number" placeholder="amount" required min="1" style="max-width:120px"><input class="inp" placeholder="job / invoice"><button class="btn sm">Add check</button></form>
   </div>`;
 }
+function setCheckAmt(id,v){ const c=S.money.checks.find(c=>c.id===id), a=+v; if(!c||!(a>0)) return; c.amt=Math.round(a*100)/100; commit({skipXp:true}); toast('Check updated · split recalculated'); }
 function setCheckDate(id,v){ const c=S.money.checks.find(c=>c.id===id); if(!c||!/^\d{4}-\d{2}-\d{2}$/.test(v)) return; c.d=v; S.money.checks.sort((a,b)=>a.d.localeCompare(b.d)); commit({skipXp:true}); }
 let delCheckArmed=null;
 function delCheck(id){ if (delCheckArmed!==id){ delCheckArmed=id; toast('Tap Remove again to delete this check'); setTimeout(()=>{ if(delCheckArmed===id) delCheckArmed=null; },3000); return; } delCheckArmed=null; S.money.checks=S.money.checks.filter(c=>c.id!==id); commit({skipXp:true}); }
