@@ -6,3 +6,4 @@ test/*.png
 test/native.test.js
 test/_build.mjs
 .DS_Store
+__pycache__/
