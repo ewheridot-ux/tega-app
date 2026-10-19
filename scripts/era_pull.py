@@ -32,7 +32,8 @@ def acc(a):
     if isinstance(bal, dict): bal = pick(bal, 'current', 'amount')
     return {'account_group_key': pick(a, 'accountGroupKey', 'account_group_key', 'id'), 'connection_id': pick(a, 'connectionId'), 'name': pick(a, 'name', 'accountName'),
             'institution': pick(a, 'institutionName', 'institution', default=''), 'type': pick(a, 'type', 'accountType', 'subtype', default=''), 'account_mask': pick(a, 'mask', 'accountMask'),
-            'balance': {'current': bal, 'currency': pick(a, 'currencyCode', 'currency', default='USD')}, 'balance_as_of': pick(a, 'balanceAsOf', 'asOf')}
+            'balance': {'current': bal, 'currency': pick(a, 'currencyCode', 'currency', default='USD')}, 'balance_as_of': pick(a, 'balanceAsOf', 'asOf'),
+            'universal_type': pick(a, 'universalAccountType'), 'credit_limit': pick(a, 'creditLimit'), 'min_due': pick(a, 'nextPaymentMinimumAmount'), 'due_date': pick(a, 'nextPaymentDueDate')}
 def tx(t):
     k = pick(t, 'accountGroupKey', 'accountId', 'account_group_key')
     return {'transaction_id': pick(t, 'transactionId', 'id', 'transactionGroupKey', 'key'), 'date': str(pick(t, 'transactionDate', 'date', 'postedDate', default=''))[:10],
@@ -43,6 +44,9 @@ out.append(f"era: {len(A)} accounts, {len(T)} transactions ({sum(1 for t in T if
 if T:
     ids = sorted({str(pick(t,'id','transactionId',default=''))[:5] for t in T}); out.append('tx id prefixes: ' + ','.join(ids))
     ok = sum(1 for t in T if t.get('isCashOutflow') is not None and (float(t.get('amount') or 0) < 0) == bool(t['isCashOutflow'])); out.append(f'outflow=negative on {ok}/{len(T)}')
+if A:
+    out.append('account types: ' + ', '.join(sorted({f"{a.get('accountType')}/{a.get('universalAccountType')}" for a in A})))
+    out.append(f"cards with min due: {sum(1 for a in A if a.get('nextPaymentMinimumAmount') is not None)} · with due date: {sum(1 for a in A if a.get('nextPaymentDueDate'))}")
 if A: out.append('account fields: ' + ','.join(sorted(A[0].keys())))
 if T: out.append('tx fields: ' + ','.join(sorted(T[0].keys())))
 bad = sum(1 for t in feed['calls']['era_tx']['transactions'] if not t['transaction_id'] or not t['date'] or t['amount'] is None)
