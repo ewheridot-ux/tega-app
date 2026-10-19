@@ -26,6 +26,14 @@ if os.path.exists('ci/feed/feed.bin'):
             feed = json.loads(ChaCha20Poly1305(key).decrypt(nonce, ct, None))
         else:
             feed = json.loads(SealedBox(sk).decrypt(base64.b64decode(blob)))
+        # merge with the last feed so a bank-only push doesn't wipe Gmail/Instagram (and vice versa)
+        try:
+            old = requests.get(f'{URL}/rest/v1/docs?select=data&path=eq.feed/latest&user_id=eq.{uid}', headers=H, timeout=60).json()
+            oc = ((old[0].get('data') or {}).get('calls') or {}) if old else {}
+            nc = feed.get('calls') or {}
+            if isinstance(oc.get('ig'), dict) and isinstance(nc.get('ig'), dict): nc['ig'] = {**oc['ig'], **nc['ig']}
+            feed['calls'] = {**oc, **nc}
+        except Exception: pass
         r = requests.post(f'{URL}/rest/v1/docs?on_conflict=user_id,path', headers={**H, 'Prefer': 'resolution=merge-duplicates,return=minimal'}, json=[{'user_id': uid, 'path': 'feed/latest', 'data': feed}], timeout=60)
         status.append(f"feed {feed.get('at','?')}: {r.status_code} · {', '.join(sorted((feed.get('calls') or {}).keys()))}")
     except Exception as e:
