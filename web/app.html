@@ -1544,6 +1544,15 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 .g-body{max-width:340px!important;padding:6px 0;background:radial-gradient(48% 52% at 26% 48%,rgba(255,255,255,.07),transparent 70%),radial-gradient(48% 52% at 76% 48%,rgba(255,255,255,.07),transparent 70%);filter:drop-shadow(0 0 1.5px rgba(235,225,255,.9)) drop-shadow(0 0 10px rgba(255,255,255,.18))}
 [data-skin="arise"] .g-body{--gb-base:#6d55a0;--gb-line:#0e0618;filter:drop-shadow(0 0 1.5px #e6d6ff) drop-shadow(0 0 12px rgba(155,92,255,.65));background:radial-gradient(45% 50% at 26% 48%,rgba(155,92,255,.22),transparent 72%),radial-gradient(45% 50% at 76% 48%,rgba(155,92,255,.22),transparent 72%)}
 [data-skin="arise"] .g-body .g-bl{fill:#cdb3f0}
+
+/* b205 money */
+.pc-card .pc-amt{font-size:38px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.pc-bar{display:flex;height:12px;border-radius:6px;overflow:hidden;margin:14px 0 6px;gap:2px}.pc-bar i{display:block;min-width:3px}
+.pc-list{display:grid;gap:0}.pc-r{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line)}
+.pc-r:first-child{border-top:0}.pc-dot{width:10px;height:10px;border-radius:3px}.pc-l{min-width:0;display:flex;flex-direction:column}.pc-l small{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-r>b{font-size:17px}.pc-mini{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:3px}
+.st-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.st-s{border-radius:var(--r2);background:var(--card2);padding:10px 12px;border-left:3px solid var(--c);display:flex;flex-direction:column;gap:2px;min-width:0}.st-s b{font-size:20px}.st-s small{font-size:12px;color:var(--muted)}
+.ov-grid{gap:8px}.ov-t{border:0;text-align:left;cursor:pointer;font:inherit;color:inherit}
 </style>
 
 <div class="app" id="app"></div>
@@ -1553,7 +1562,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b204';
+const BUILD='b205';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2006,7 +2015,8 @@ function confetti(){ const c=document.getElementById('confetti'); const cols=['#
 const fixedMo = () => { const s=S.money.s; return s.rent + s.car + s.grocW*52/12 + s.elec + s.gas + (s.ins||0) + (s.net||0); };
 const efTarget = () => fixedMo() * S.money.s.efMonths;
 function waterfall(amt, ctx, dateKey){
-  // ctx: {ef, buf, cush, house}; returns row and mutates ctx. Order: tax → bills → flex → EF → retirement → cushion(2026) → sweep EF → house
+  // ctx: {ef, buf, cush, house, cards}; returns row and mutates ctx.
+  // Order (b205): tax → bills → spending → emergency fund → 2026 tax cushion → CREDIT CARDS (everything left, until $0) → house → retirement → sweep EF
   const s=S.money.s, PER=2, fixedCk=fixedMo()/PER, efCk=s.efMonthly/PER, retCk=s.retMonthly/PER, cushCk=s.cushionMonthly/PER, yr=+dateKey.slice(0,4);
   const tax = amt*s.taxRate; ctx.buf += tax;
   let left = amt - tax - fixedCk, draw = 0;
@@ -2014,14 +2024,15 @@ function waterfall(amt, ctx, dateKey){
   const flex = Math.min(s.flexPerCheck, left); left -= flex;
   const efRoom = Math.max(0, efTarget() - ctx.ef);
   let efAdd = Math.min(efCk, left, efRoom); ctx.ef += efAdd; left -= efAdd;
+  const cu = yr<=2026 ? Math.min(cushCk, left) : 0; left -= cu; ctx.cush += cu;
+  const cards = Math.min(left, Math.max(0, ctx.cards==null ? cardDebt() : ctx.cards)); left -= cards; if (ctx.cards!=null) ctx.cards -= cards;
   let house = 0; if (efRoom <= 0.5) { house = Math.min(efCk, left); ctx.house += house; left -= house; }
   const ret = Math.min(retCk, left); left -= ret;
-  const cu = yr<=2026 ? Math.min(cushCk, left) : 0; left -= cu; ctx.cush += cu;
   const sweep = Math.min(left, Math.max(0, efTarget()-ctx.ef)); ctx.ef += sweep; left -= sweep; efAdd += sweep;
-  return {amt, tax, bills:fixedCk, flex: flex+left, efAdd, draw, house, ret, cu, extra:left, efBal:ctx.ef, retLabel: yr<=2026?'Roth':'SEP'};
+  return {amt, tax, bills:fixedCk, flex: flex+left, efAdd, draw, house, ret, cu, cards, cardsLeft:ctx.cards, extra:left, efBal:ctx.ef, retLabel: yr<=2026?'Roth':'SEP'};
 }
 function projection(){
-  const s=S.money.s; const ctx={ef:s.efNow, buf:s.taxBufNow, cush:0, house:0};
+  const s=S.money.s; const ctx={ef:s.efNow, buf:s.taxBufNow, cush:0, house:0, cards:cardDebt()};
   const future = S.money.checks.filter(c=>!c.got).sort((a,b)=>a.d.localeCompare(b.d));
   const rows=[], payouts=[]; let duePtr=0;
   while (duePtr<DUES.length && DUES[duePtr][0] < TODAY) duePtr++; // dues already passed are ignored
@@ -5020,7 +5031,7 @@ function debtCard(){
   return `<div class="card sec"><div class="hdr"><h2>Debt payoff</h2><span class="sub num">${money0(debts.reduce((a,d)=>a+d.bal,0))} owed</span></div>
     <div class="stack" style="gap:10px">${debts.map((d,i)=>`<div class="db-r"><div><b>${esc(d.name)}</b><small>${money0(d.bal)} · min ${money0(d.min)}/mo · ~${Math.round(d.apr*100)}% APR</small></div><span class="num">${done[i]?when(done[i]):'—'}</span></div>`).join('')}</div>
     <label class="db-x">Extra toward debt each month <input class="inp num" type="number" inputmode="decimal" value="${extra}" onchange="S.money.debtExtra=+this.value||0;debtExtra=null;commit({skipXp:true})"></label>
-    <div class="help">Smallest balance first (Discover), then roll its payment into the car loan. APRs are estimates — put your real ones in by telling Claude. The Savings tally in Budget is where the extra comes from.</div></div>`;
+    <div class="help">Cards first, smallest balance first — every modeling check sends what's left after the emergency fund to them until they're $0. Then the car loan.</div></div>`;
 }
 
 
@@ -8079,7 +8090,7 @@ const NAV_QA={
   content:[['▶','Log a post',()=>{ go('content'); setTimeout(()=>openLog('post'),250); }],['◇','Ideas',TAB_GO('content',()=>ctTab='ideas')],['▦','Plan',TAB_GO('content',()=>ctTab='plan')]],
   datum:[['⚒︎','Bench',TAB_GO('datum',()=>dView='bench')],['◎','Casters',TAB_GO('datum',()=>dView='casters')],['$','Business',TAB_GO('datum',()=>dView='biz')]],
   gym:[['◆','Start workout',()=>window.tegaDeepLink('tegaexe://workout')],['♥','Recovery',TAB_GO('gym',()=>gTab='recovery')],['▦','Plan',TAB_GO('gym',()=>gTab='plan')]],
-  money:[['≡','Scan receipt',()=>receiptOpen()],['≈','Waterfall',TAB_GO('money',()=>moneyTab='waterfall')],['▦','Bills',TAB_GO('money',()=>moneyTab='bills')],['✂︎','Write-offs',TAB_GO('money',()=>moneyTab='deduct')]],
+  money:[['≡','Scan receipt',()=>receiptOpen()],['$','Next check',TAB_GO('money',()=>moneyTab='income')],['≈','Spending',TAB_GO('money',()=>moneyTab='spending')],['▦','Plan',TAB_GO('money',()=>moneyTab='plan')],['✂︎','Taxes',TAB_GO('money',()=>moneyTab='taxes')]],
 };
 let _navHold=null, _navHeldAt=0;
 function navHeld(){ return Date.now()-_navHeldAt<600; }
@@ -8129,9 +8140,69 @@ document.addEventListener('contextmenu',e=>{ const b=e.target.closest&&e.target.
 function t3fit(el){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
 { const _r=render; render=function(){ const out=_r.apply(this,arguments); try { document.querySelectorAll('.top3 textarea.t3in').forEach(t3fit); } catch(e){} return out; }; }
 
-let moneyTab = 'waterfall';
-function setMoneyTab(t){ moneyTab=t; render(); }
-function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['waterfall','Waterfall'],['bills','Bills'],['budget','Budget'],['deduct','Write-offs']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
+/* ===================== b205: Money = all your money · Overview · Income · Spending · Plan · Taxes ===================== */
+const STREAMS=[['model','Modeling','📸','#ff7ad9'],['datum','Datum','💎','#ffd166'],['cad','CAD / Upwork','⚙️','#7ee2ff'],['other','Other','➕','#a8b3c7']];
+const STREAM_OF=k=>STREAMS.find(x=>x[0]===k)||STREAMS[3];
+function incStream(t){ if (t.stream) return t.stream; const d=String(t.desc||'').toUpperCase();
+  if (/MODEL MANAGE|ONE MANAGEMENT|ACTIVE MODEL|MODELS INC/.test(d)) return 'model';
+  if (/UPWORK|FIVERR/.test(d)) return 'cad';
+  if (/SHOPIFY|ETSY|SQUARE|STRIPE|DATUM|GRILL/.test(d)) return 'datum';
+  return 'other'; }
+const isIncomeTx = t => t.amt>0 && !['transfer','ignore'].includes(t.cat) && !/REWARD|CASH ?BACK|REFUND|INTEREST PAID|DIVIDEND/i.test(t.desc||'');
+function incomeBy(from, to){ const o={model:0,datum:0,cad:0,other:0}; for (const t of S.money.budget.txns) if (t.d>=from && t.d<=to && isIncomeTx(t)) o[incStream(t)]+=t.amt; return o; }
+function setStream(id,k){ const t=S.money.budget.txns.find(t=>t.id===id); if(!t) return; t.stream=k; commit({skipXp:true}); }
+// Datum's own books: money in from Datum, money out on Datum (its write-offs)
+function datumBooks(from, to){ const inc=incomeBy(from,to).datum, exp=S.money.budget.deductibles.filter(x=>x.cat==='datum'&&x.d>=from&&x.d<=to).reduce((a,x)=>a+(+x.amt||0),0); return {inc, exp, profit:inc-exp}; }
+// one line, one number: where each dollar of a check goes
+function splitRows(r){ const cards=cardList().map(c=>c.name).join(' → ');
+  return [['📊','Taxes','Tax Buffer (Capital One)',r.tax,'#ff6b6b'],['🏠','Bills','stays in checking',r.bills,'#a8b3c7'],['🛍️','Spending','yours',r.flex,'#7ee2ff'],
+    ['🛡️','Emergency',r.draw?'covers the bills gap':'HYSA',r.draw?-r.draw:r.efAdd,'#2fbf71'],['🧮','Tax cushion','2026 only',r.cu,'#ffd166'],['💳','Credit cards',cards||'cards',r.cards,'#b98cff'],
+    ['🏡','House','HYSA bucket',r.house,'#f5c542'],['🌱',r.retLabel==='Roth'?'Roth IRA':'SEP IRA','Fidelity',r.ret,'#39ff9f']].filter(x=>Math.abs(x[3])>0.5); }
+function splitBar(rows,total){ return `<div class="pc-bar">${rows.filter(x=>x[3]>0).map(x=>`<i style="flex:${x[3]};background:${x[4]}"></i>`).join('')}</div>`; }
+function splitList(rows){ return `<div class="pc-list">${rows.map(([ic,l,where,v,c])=>`<div class="pc-r"><span class="pc-dot" style="background:${c}"></span><span class="pc-l"><b>${ic} ${l}</b><small>${esc(where)}</small></span><b class="num">${v<0?'−':''}${money0(Math.abs(v))}</b></div>`).join('')}</div>`; }
+function payCard(P){ const nx=P.rows[0]; if (!nx) return `<div class="card sec"><div class="empty">No modeling checks scheduled.</div></div>`;
+  const dd=daysBetween(TODAY,nx.d), rows=splitRows(nx);
+  return `<div class="card sec pc-card"><div class="row between" style="align-items:flex-end"><div><div class="tag">Next check</div><b class="num pc-amt">${money0(nx.amt)}</b></div><span class="sub" style="text-align:right">${nice(nx.d)}<br><b style="color:${dd<0?'var(--warn)':'var(--fg)'}">${dd<0?(-dd)+' days late':dd===0?'today':'in '+dd+' days'}</b></span></div>
+    ${splitBar(rows)}${splitList(rows)}</div>`; }
+function upcomingCompact(P){ const rows=P.rows.slice(1,7); if(!rows.length) return '';
+  return `<div class="card sec"><div class="hdr"><h2>After that</h2><span class="sub">${P.rows.length-1} more · ${money0(P.rows.slice(1).reduce((a,r)=>a+r.amt,0))}</span></div>
+    <div class="stack" style="gap:6px;grid-template-columns:minmax(0,1fr)">${rows.map(r=>`<details class="ck" ${wfOpen===r.id?'open':''} ontoggle="wfOpen=this.open?'${r.id}':(wfOpen==='${r.id}'?null:wfOpen)"><summary><span class="ck-d"><b>${nice(r.d)}</b></span><span class="ck-n">${splitRows(r).filter(x=>x[3]>0&&!['Bills','Spending'].includes(x[1])).map(x=>`<i class="pc-mini" style="background:${x[4]}"></i>`).join('')}</span><b class="num">${money0(r.amt)}</b></summary><div class="ck-b">${splitList(splitRows(r))}
+      <div class="row" style="gap:6px;margin-top:10px"><button class="btn sm" id="landed-${r.id}" onclick="verifyLanded('${r.id}')">Check bank</button>${unverifiedId===r.id?`<button class="btn ghost sm" onclick="markGot('${r.id}',true)">Mark landed</button>`:''}<input class="inp" type="date" value="${r.d}" style="padding:6px 10px;font-size:13px;width:auto" onchange="setCheckDate('${r.id}',this.value)" aria-label="Expected date"><button class="btn ghost sm" onclick="delCheck('${r.id}')">Remove</button></div></div></details>`).join('')}</div>
+    <form class="inline" style="margin-top:10px;flex-wrap:wrap" onsubmit="return addCheck(event)"><input class="inp" type="date" required style="max-width:160px"><input class="inp num" type="number" placeholder="amount" required min="1" style="max-width:120px"><input class="inp" placeholder="job"><button class="btn sm">Add check</button></form></div>`; }
+function streamsCard(){ const m=TODAY.slice(0,7), mo=incomeBy(m+'-01',TODAY), yr=incomeBy(THIS_Y+'-01-01',TODAY), tot=Object.values(mo).reduce((a,b)=>a+b,0);
+  const recent=S.money.budget.txns.filter(isIncomeTx).slice(0,6);
+  return `<div class="card sec"><div class="hdr"><h2>Income</h2><span class="sub">this month <b class="num" style="color:var(--fg)">${money0(tot)}</b></span></div>
+    <div class="st-grid">${STREAMS.map(([k,l,ic,c])=>`<div class="st-s" style="--c:${c}"><small>${ic} ${l}</small><b class="num">${money0(mo[k])}</b><span class="sub">${money0(yr[k])} in ${THIS_Y}</span></div>`).join('')}</div>
+    ${recent.length?`<div class="tag" style="margin:12px 0 4px">Latest deposits · tap to re-file</div>${recent.map(t=>`<div class="row between" style="gap:8px;flex-wrap:nowrap;padding:6px 0;border-top:1px solid var(--line)"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px">${nice(t.d)} · ${esc(t.desc)}</span><span class="row" style="gap:6px;flex-wrap:nowrap"><b class="num" style="color:var(--good)">+${money0(t.amt)}</b><select class="inp" style="width:auto;padding:4px 6px;font-size:12px" onchange="setStream('${t.id}',this.value)">${STREAMS.map(([k,l])=>`<option value="${k}" ${incStream(t)===k?'selected':''}>${l}</option>`).join('')}</select></span></div>`).join('')}`:''}</div>`; }
+function datumCard(){ const m=TODAY.slice(0,7), a=datumBooks(m+'-01',TODAY), y=datumBooks(THIS_Y+'-01-01',TODAY);
+  return `<div class="card sec"><div class="hdr"><h2>💎 Datum books</h2><span class="sub">separate from modeling</span></div>
+    <div class="home3"><div><b class="num" style="color:var(--good)">${money0(a.inc)}</b><small>sales · month</small></div><div><b class="num" style="color:var(--bad)">${money0(a.exp)}</b><small>costs · month</small></div><div><b class="num" style="color:${a.profit<0?'var(--bad)':'var(--good)'}">${a.profit<0?'−':''}${money0(Math.abs(a.profit))}</b><small>profit · month</small></div></div>
+    <div class="sub" style="margin-top:8px">${THIS_Y}: ${money0(y.inc)} in · ${money0(y.exp)} out · <b style="color:${y.profit<0?'var(--bad)':'var(--good)'}">${y.profit<0?'−':''}${money0(Math.abs(y.profit))}</b></div></div>`; }
+function vIncome(){ const b=moneyBits(); return `${wfTodo()}${payCard(b.P)}${upcomingCompact(b.P)}${streamsCard()}${datumCard()}${b.moreFold}`; }
+// Fidelity as a growth goal
+function invNow(){ return (S.money.budget.accounts||[]).filter(a=>a.bal!=null&&acctKind(a)==='invest').reduce((s,a)=>s+a.bal,0); }
+function invLog(){ const M=S.money; M.invHist ||= {}; const v=invNow(); if (v>0) M.invHist[TODAY]=Math.round(v*100)/100; }
+function growthCard(){ const M=S.money, G=(M.growth ||= {target:10000}), v=invNow(), pct=clamp(v/(G.target||1),0,1);
+  const H=Object.entries(M.invHist||{}).sort(), ago=H.filter(([d])=>d<=addDays(TODAY,-30)).pop(), ch=ago?v-ago[1]:null;
+  const cz=(()=>{ try { const r=projection().rows.find(r=>r.cardsLeft!=null&&r.cardsLeft<=0.5); return r?nice(r.d)+', '+r.d.slice(0,4):''; } catch(e){ return ''; } })();
+  return `<div class="card sec"><div class="hdr"><h2>🌱 Fidelity growth</h2><span class="sub num">${money0(v)} / <input class="inp num" type="number" inputmode="decimal" value="${G.target}" style="width:96px;padding:4px 8px;display:inline-block" onchange="S.money.growth.target=+this.value||10000;commit({skipXp:true})" aria-label="Growth target"></span></div>
+    <div class="bar" style="height:10px"><b style="width:${Math.round(pct*100)}%;background:var(--good)"></b></div>
+    <div class="sub" style="margin-top:8px">${ch!=null?`${ch>=0?'+':'−'}${money0(Math.abs(ch))} in 30 days · `:''}${cardDebt()>0.5?`Roth deposits paused until the cards hit $0${cz?' ('+cz+')':''}`:'Roth deposits are on'}</div></div>`; }
+function vMoneyPlan(){ const b=moneyBits(); return `${bucketsCard(b.sinceSep,b.paidTot,b.efFull)}${growthCard()}${vBills()}${debtCard()}`; }
+function vMoneyTaxes(){ const b=moneyBits(); return `${taxCard()}${b.taxFold}${vDeduct()}`; }
+function vMoneyOverview(){ const b=moneyBits(), F=flexNow(), m=TODAY.slice(0,7), inc=incomeBy(m+'-01',TODAY), inTot=Object.values(inc).reduce((a,v)=>a+v,0);
+  const out=S.money.budget.txns.filter(t=>t.d.startsWith(m)&&t.amt<0&&['flex','fixed','deduct'].includes(t.cat)).reduce((a,t)=>a-t.amt,0), nx=b.P.rows[0];
+  const cz=(()=>{ const r=b.P.rows.find(r=>r.cardsLeft!=null&&r.cardsLeft<=0.5); return r?nice(r.d):''; })();
+  const tile=(tab,big,small,col)=>`<button class="stat ov-t" onclick="setMoneyTab('${tab}')"><b class="num" style="${col?'color:'+col:''}">${big}</b><small>${small}</small></button>`;
+  return `${acctDash()}
+    <div class="card sec"><div class="hdr"><h2>${parseD(m+'-01').toLocaleDateString('en-US',{month:'long'})}</h2><span class="sub">in vs out</span></div>
+      <div class="home3"><div><b class="num" style="color:var(--good)">${money0(inTot)}</b><small>in</small></div><div><b class="num" style="color:var(--bad)">${money0(out)}</b><small>out</small></div><div><b class="num" style="color:${inTot-out<0?'var(--bad)':'var(--good)'}">${inTot-out<0?'−':'+'}${money0(Math.abs(inTot-out))}</b><small>net</small></div></div></div>
+    <div class="grid g2 sec ov-grid">${tile('income', nx?money0(nx.amt):'—', nx?'next check · '+nice(nx.d):'no check scheduled', 'var(--good)')}${tile('spending', F?money0(Math.max(0,F.left)):'—', 'safe to spend', F&&F.left<0?'var(--bad)':'')}${tile('plan', money0(cardDebt()), cz?'cards · $0 by '+cz:'on credit cards', 'var(--accent)')}${tile('plan', money0(invNow()), 'Fidelity · growth goal', '')}</div>`; }
+
+let moneyTab = 'overview';
+function setMoneyTab(t){ moneyTab=MONEY_ALIAS[t]||t; render(); }
+const MONEY_ALIAS={waterfall:'income', budget:'spending', tips:'spending', bills:'plan', deduct:'taxes'};
+function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['overview','Overview'],['income','Income'],['spending','Spending'],['plan','Plan'],['taxes','Taxes']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
 let bSearch='', bCatF='', txOpen=null, txN=30;
 function txRows(m){ const q=bSearch.trim().toLowerCase(); return S.money.budget.txns.filter(t=>t.d.startsWith(m) && (!bCatF||t.cat===bCatF) && (!q||t.desc.toLowerCase().includes(q))); }
 function txListHtml(m){ const rows=txRows(m), show=rows.slice(0,txN);
@@ -8156,8 +8227,7 @@ function vBudget(){
   return `
   ${spendCard(F, true)}
   ${vTips()}
-  <details class="card sec fold" ${bFoldOpen?'open':''} ontoggle="bFoldOpen=this.open"><summary><span>Accounts · where it went · transactions</span><span class="sub">›</span></summary><div class="more-in">
-  ${acctDash()}
+  <details class="card sec fold" ${bFoldOpen?'open':''} ontoggle="bFoldOpen=this.open"><summary><span>Where it went · transactions</span><span class="sub">›</span></summary><div class="more-in">
   ${(()=>{ const m = bMonth || TODAY.slice(0,7); const bd = spendingBreakdown(m); const label = parseD(m+'-01').toLocaleDateString('en-US',{month:'long',year:'numeric'}); const inc = B.txns.filter(t=>t.cat==='income'&&t.d.startsWith(m)).reduce((a,t)=>a+t.amt,0);
     return `<div class="card sec"><div class="hdr"><h2>Where it went</h2><div class="row" style="gap:6px;align-items:center"><button class="btn ghost sm" onclick="bMonthShift(-1)">‹</button><b style="min-width:120px;text-align:center">${label}</b><button class="btn ghost sm" onclick="bMonthShift(1)" ${m>=TODAY.slice(0,7)?'disabled':''}>›</button></div></div>
       ${(()=>{ const mt=B.txns.filter(t=>t.d.startsWith(m)&&t.amt<0), sp=mt.filter(isSpendTx).reduce((a,t)=>a-t.amt,0), bl=mt.filter(t=>t.cat==='fixed').reduce((a,t)=>a-t.amt,0), gr=mt.filter(t=>t.cat==='flex'&&isGrocTx(t)).reduce((a,t)=>a-t.amt,0); return `<div class="home3" style="margin-bottom:6px"><div><b class="num">${money0(sp)}</b><small>spending money</small></div><div><b class="num">${money0(bl)}</b><small>rent & bills</small></div><div><b class="num">${money0(gr)}</b><small>groceries</small></div></div><div class="help keep" style="margin-bottom:14px">Only the first counts toward your budget.</div>`; })()}
@@ -8215,8 +8285,11 @@ function vDeduct(){
 }
 /* ---- waterfall tab: landed-check to-dos, upcoming checks, auto-detected deposits ---- */
 const r2 = n => Math.round((+n||0)*100)/100;
-const MOVES = [['tax','Tax Buffer','taxBufNow','📊'],['ef','Emergency fund','efNow','🛡️'],['house','House fund','houseNow','🏠'],['ret','Retirement','rothYtd','🌱'],['cu','2026 tax cushion','cushNow','🧮']];
-function splitFor(c){ const s=S.money.s, r=waterfall(c.amt,{ef:+s.efNow||0,buf:0,cush:0,house:0},c.gotOn||c.d); const o={tax:r2(r.tax),ef:r2(r.efAdd),house:r2(r.house),ret:r2(r.ret),cu:r2(r.cu),retLabel:r.retLabel,draw:r2(r.draw)}; o.stay=r2(c.amt-o.tax-o.ef-o.house-o.ret-o.cu); return o; }
+const MOVES = [['tax','Tax Buffer','taxBufNow','📊'],['ef','Emergency fund','efNow','🛡️'],['cu','2026 tax cushion','cushNow','🧮'],['cards','Credit cards','cardsPaid','💳'],['house','House fund','houseNow','🏠'],['ret','Retirement','rothYtd','🌱']];
+function splitFor(c){ const s=S.money.s, r=waterfall(c.amt,{ef:+s.efNow||0,buf:0,cush:0,house:0,cards:cardDebt()},c.gotOn||c.d); const o={tax:r2(r.tax),ef:r2(r.efAdd),cu:r2(r.cu),cards:r2(r.cards),house:r2(r.house),ret:r2(r.ret),retLabel:r.retLabel,draw:r2(r.draw)}; o.stay=r2(c.amt-o.tax-o.ef-o.house-o.ret-o.cu-o.cards); return o; }
+// credit cards only (the auto loan keeps its normal payment); smallest balance first
+function cardList(){ return (S.money.budget?.accounts||[]).filter(a=>a.bal!=null && a.bal<0 && !/auto|loan|mortgage/i.test(a.name+' '+a.type)).map(a=>({name:a.name.replace(/ Card$/,'').replace(/^Discover it$/,'Discover'), bal:-a.bal})).sort((a,b)=>a.bal-b.bal); }
+function cardDebt(){ return cardList().reduce((a,c)=>a+c.bal,0); }
 function ensureSplits(){ for (const c of S.money.checks) if (c.got && !c.split && c.gotOn && daysBetween(c.gotOn,TODAY)<=10 && daysBetween(c.gotOn,TODAY)>=0){ c.split=splitFor(c); c.done={}; } }
 const openMoves = c => c.split && !c.dismissed ? MOVES.filter(([k])=>c.split[k]>0 && !(c.done||{})[k]) : [];
 function tickMove(id,k){ const c=S.money.checks.find(c=>c.id===id); if(!c||!c.split) return; c.done ||= {}; c.done[k]=!c.done[k]; const m=MOVES.find(m=>m[0]===k), f=(k==='ret'&&c.split.retLabel!=='Roth')?'sepYtd':m[2], s=S.money.s; s[f]=Math.max(0,r2((+s[f]||0)+(c.done[k]?1:-1)*c.split[k])); commit({skipXp:true}); if(!openMoves(c).length){ confetti(); toast('Check fully sorted. That\'s the system working.'); } }
@@ -8226,11 +8299,11 @@ function wfTodo(){
   const list=S.money.checks.filter(c=>c.got && openMoves(c).length).sort((a,b)=>(a.gotOn||a.d).localeCompare(b.gotOn||b.d));
   return list.map(c=>{ const sp=c.split, mv=MOVES.filter(([k])=>sp[k]>0), left=openMoves(c).length;
     return `<div class="card sec" style="background:linear-gradient(135deg,rgba(0,214,50,.14),transparent 70%),var(--card)"><div class="hdr" style="margin-bottom:6px"><h2>💵 ${money0(c.amt)} landed</h2><span class="sub">${nice(c.gotOn||c.d)}${c.verified?' · <span style="color:var(--good)">✓ bank</span>':''}</span></div>
-      <div class="sub" style="margin-bottom:10px">${esc((c.note||'').replace(' · ✓ bank',''))}${c.expAmt?` · expected ${money0(c.expAmt)}`:''} · ${left} move${left===1?'':'s'} left — tick each one as you make the transfer</div>
-      <div class="stack">${mv.map(([k,l,f,ic])=>{ const on=!!(c.done||{})[k]; return `<div class="check ${on?'on':''}" onclick="tickMove('${c.id}','${k}')"><div class="box">${on?'✓':''}</div><div class="txt">${ic} Move to <b>${k==='ret'?(sp.retLabel==='Roth'?'Roth IRA':'SEP IRA'):l}</b></div><b class="num" style="white-space:nowrap">${money0(sp[k])}</b></div>`; }).join('')}
-        <div class="check" style="cursor:default;opacity:.8"><div class="box" style="border-style:dashed"></div><div class="txt" style="text-decoration:none">🏦 Stays in checking <span class="sub">· bills + flex</span></div><b class="num" style="white-space:nowrap">${money0(sp.stay)}</b></div></div>
+      <div class="sub" style="margin-bottom:10px">${left} move${left===1?'':'s'} left · tick after each transfer</div>
+      <div class="stack">${mv.map(([k,l,f,ic])=>{ const on=!!(c.done||{})[k]; return `<div class="check ${on?'on':''}" onclick="tickMove('${c.id}','${k}')"><div class="box">${on?'✓':''}</div><div class="txt">${ic} ${k==='cards'?`Pay <b>${esc(cardList().map(c=>c.name).join(' → ')||'credit cards')}</b>`:`Move to <b>${k==='ret'?(sp.retLabel==='Roth'?'Roth IRA':'SEP IRA'):l}</b>`}</div><b class="num" style="white-space:nowrap">${money0(sp[k])}</b></div>`; }).join('')}
+        <div class="check" style="cursor:default;opacity:.8"><div class="box" style="border-style:dashed"></div><div class="txt" style="text-decoration:none">🏦 Stays in checking <span class="sub">· bills + spending</span></div><b class="num" style="white-space:nowrap">${money0(sp.stay)}</b></div></div>
       ${sp.draw>0?`<div class="help keep" style="margin-top:8px;color:var(--warn)">This check doesn't cover its share of bills — ${money0(sp.draw)} short.</div>`:''}
-      <div class="row between" style="margin-top:10px"><span class="help keep">Tick a move only after you've made the transfer — it adds the amount to that bucket.</span><button class="btn ghost sm" onclick="dismissMoves('${c.id}')">Already handled</button></div></div>`; }).join('');
+      <div class="row" style="margin-top:10px;justify-content:flex-end"><button class="btn ghost sm" onclick="dismissMoves('${c.id}')">Already handled</button></div></div>`; }).join('');
 }
 function wfTiles(P, nextPay){
   const owed=P.future.reduce((a,c)=>a+c.amt,0), nx=P.rows[0], dd=nx?daysBetween(TODAY,nx.d):0, yr=Math.max(S.money.checks.filter(c=>c.got&&(c.gotOn||c.d).startsWith(THIS_Y)).reduce((a,c)=>a+c.amt,0), stmtReceived(THIS_Y).reduce((a,r)=>a+r.amt,0)), tgap=Math.max(0,stmtReceived(THIS_Y).reduce((a,r)=>a+r.amt,0)*S.money.s.taxRate-(S.money.taxPaid||[]).reduce((a,p)=>a+p.amt,0)-(+S.money.s.taxBufNow||0));
@@ -8250,7 +8323,7 @@ function wfUpcoming(P){
     <div class="help" style="margin-bottom:10px">Dates are when each one is expected. When an agency deposit shows up in Bank of America it's matched to its check here and the moves appear at the top${B.syncedAt?` · last checked ${B.syncedDay===TODAY?'today':nice(B.syncedDay)}`:''}. Tap a check for its split.</div>
     <div class="stack" style="gap:6px;grid-template-columns:minmax(0,1fr)">${show.map((r,i)=>{ const m=r.d.slice(0,7), dd=daysBetween(TODAY,r.d); const hdr=m!==cur?`<div class="row between" style="margin:${i?10:0}px 2px 0"><span class="tag">${parseD(r.d).toLocaleDateString('en-US',{month:'long',year:'numeric'})}</span><span class="tag num">${money0(msum[m])}</span></div>`:''; cur=m;
       return hdr+`<details class="ck" ${wfOpen===r.id?'open':''} ontoggle="wfOpen=this.open?'${r.id}':(wfOpen==='${r.id}'?null:wfOpen)"><summary><span class="ck-d"><b>${nice(r.d)}</b><small style="${dd<0?'color:var(--warn)':''}">${dd<0?(-dd)+'d late':dd===0?'today':dd<=60?'in '+dd+'d':parseD(r.d).getFullYear()}</small></span><span class="ck-n">${esc(r.note||'')}</span><b class="num">${money0(r.amt)}</b></summary>
-        <div class="ck-b"><div class="row" style="gap:6px">${chip('Tax',r.tax)}${chip('Bills',r.bills)}${chip('Spending',r.flex)}${chip('Emergency',r.efAdd)}${chip('House',r.house)}${chip(r.retLabel,r.ret)}${chip('Cushion',r.cu)}${chip('Short',r.draw,'var(--bad)')}</div>
+        <div class="ck-b"><div class="row" style="gap:6px">${chip('Tax',r.tax)}${chip('Bills',r.bills)}${chip('Spending',r.flex)}${chip('Emergency',r.efAdd)}${chip('Cushion',r.cu)}${chip('Cards',r.cards,'var(--accent)')}${chip('House',r.house)}${chip(r.retLabel,r.ret)}${chip('Short',r.draw,'var(--bad)')}</div>
           <div class="row" style="gap:6px;margin-top:10px"><button class="btn sm" id="landed-${r.id}" onclick="verifyLanded('${r.id}')">Check bank now</button>${unverifiedId===r.id?`<button class="btn ghost sm" onclick="markGot('${r.id}',true)">Mark landed anyway</button>`:''}<input class="inp" type="date" value="${r.d}" style="padding:6px 10px;font-size:13px;width:auto" onchange="setCheckDate('${r.id}',this.value)" aria-label="Expected date"><button class="btn ghost sm" onclick="delCheck('${r.id}')">Remove</button></div></div></details>`; }).join('')||'<div class="empty">No checks scheduled. Add one below, or it will appear here by itself when an agency deposit lands.</div>'}</div>
     ${rows.length>6?`<button class="btn ghost sm" style="margin-top:10px;width:100%" onclick="wfAll=!wfAll;render()">${wfAll?'Show fewer':`Show all ${rows.length}`}</button>`:''}
     <form class="inline" style="margin-top:10px;flex-wrap:wrap" onsubmit="return addCheck(event)"><input class="inp" type="date" required style="max-width:160px"><input class="inp num" type="number" placeholder="amount" required min="1" style="max-width:120px"><input class="inp" placeholder="job / invoice"><button class="btn sm">Add check</button></form>
@@ -8280,60 +8353,61 @@ function detectDeposits(txs, keyAcct){
 }
 let mAdj=false;
 function bucketsCard(sinceSep, paidTot, efFull){ const s=S.money.s, taxNeed=Math.max(0,sinceSep*s.taxRate-paidTot);
-  const B=[['🛡️','Emergency fund','efNow',efTarget(),efFull?'full by '+nice(efFull.d):(+s.efNow>=efTarget()?'full':''),'var(--good)'],['📊','Tax buffer','taxBufNow',taxNeed,`should hold ${money0(taxNeed)}`,'var(--warn)'],['🌱',`Roth IRA ${THIS_Y}`,'rothYtd',s.rothLimit,'','var(--accent)'],['🧮','2026 tax cushion','cushNow',0,'for the April true-up','var(--fg)'],['🏠','House fund','houseNow',0,'starts when the emergency fund is full','var(--fg)']];
+  const cz=(()=>{ try { const r=projection().rows.find(r=>r.cardsLeft!=null&&r.cardsLeft<=0.5); return r?'$0 by '+nice(r.d)+', '+r.d.slice(0,4):''; } catch(e){ return ''; } })();
+  const B=[['🛡️','Emergency fund','efNow',efTarget(),efFull?'full by '+nice(efFull.d):(+s.efNow>=efTarget()?'full':''),'var(--good)'],['💳','Credit cards owed','__cards',0,(cardList().map(c=>c.name).join(' → ')||'none')+(cz?' · '+cz:''),'var(--accent)'],['📊','Tax buffer','taxBufNow',taxNeed,`should hold ${money0(taxNeed)}`,'var(--warn)'],['🌱',`Roth IRA ${THIS_Y}`,'rothYtd',s.rothLimit,'','var(--accent)'],['🧮','2026 tax cushion','cushNow',0,'for the April true-up','var(--fg)'],['🏠','House fund','houseNow',0,'starts when the emergency fund is full','var(--fg)']];
   return `<div class="card sec"><div class="hdr"><h2>Buckets</h2><button class="btn ${mAdj?'':'ghost'} sm" onclick="mAdj=!mAdj;render()">${mAdj?'Done':'Adjust'}</button></div>
-    <div class="stack" style="gap:14px;grid-template-columns:minmax(0,1fr)">${B.map(([ic,l,k,target,sub,col])=>{ const v=+s[k]||0; return `<div><div class="row between" style="gap:8px;flex-wrap:nowrap"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ic} <b>${l}</b></span>${mAdj?`<input class="inp num" type="number" inputmode="decimal" step="any" style="width:110px;padding:6px 10px;text-align:right" value="${v}" onchange="setMoney('${k}',this.value)" aria-label="${l} balance">`:`<b class="num" style="white-space:nowrap">${money0(v)}${target?`<span class="sub" style="font-weight:500"> / ${money0(target)}</span>`:''}</b>`}</div>${target?`<div class="bar" style="margin-top:6px;height:6px"><b style="width:${Math.round(clamp(v/Math.max(1,target),0,1)*100)}%;background:${col}"></b></div>`:''}${sub?`<div class="sub" style="font-size:11px;margin-top:3px">${sub}</div>`:''}</div>`; }).join('')}</div>
+    <div class="stack" style="gap:14px;grid-template-columns:minmax(0,1fr)">${B.map(([ic,l,k,target,sub,col])=>{ const v=k==='__cards'?cardDebt():+s[k]||0; return `<div><div class="row between" style="gap:8px;flex-wrap:nowrap"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ic} <b>${l}</b></span>${mAdj&&k!=='__cards'?`<input class="inp num" type="number" inputmode="decimal" step="any" style="width:110px;padding:6px 10px;text-align:right" value="${v}" onchange="setMoney('${k}',this.value)" aria-label="${l} balance">`:`<b class="num" style="white-space:nowrap">${money0(v)}${target?`<span class="sub" style="font-weight:500"> / ${money0(target)}</span>`:''}</b>`}</div>${target?`<div class="bar" style="margin-top:6px;height:6px"><b style="width:${Math.round(clamp(v/Math.max(1,target),0,1)*100)}%;background:${col}"></b></div>`:''}${sub?`<div class="sub" style="font-size:11px;margin-top:3px">${sub}</div>`:''}</div>`; }).join('')}</div>
     <div class="help" style="margin-top:12px">Balances go up when you tick a move on a landed check. Use Adjust to correct one by hand.</div></div>`; }
 function vMoney(){
   if (mcpLib && bankTriedDay!==TODAY && !bankBusy && S.money.budget.syncedDay!==TODAY && (dbReady || !dbRef)) setTimeout(()=>bankRefresh(false), 0); // first open of Money each day pulls fresh bank data
-  if (moneyTab==='budget') return moneyTabs() + vBudget();
-  if (moneyTab==='deduct') return moneyTabs() + vDeduct();
-  if (moneyTab==='bills') return moneyTabs() + vBills() + debtCard();
-  if (moneyTab==='tips') moneyTab='budget';
+  moneyTab = MONEY_ALIAS[moneyTab] || moneyTab;
+  if (moneyTab==='overview') return moneyTabs() + vMoneyOverview();
+  if (moneyTab==='spending') return moneyTabs() + vBudget();
+  if (moneyTab==='plan') return moneyTabs() + vMoneyPlan();
+  if (moneyTab==='taxes') return moneyTabs() + vMoneyTaxes();
+  return moneyTabs() + vIncome();
+}
+function moneyBits(){
   const s=S.money.s, P=projection(), got=S.money.checks.filter(c=>c.got), owed=P.future.reduce((a,c)=>a+c.amt,0);
   const nextPay=P.payouts.find(p=>p.d>=TODAY), efFull=P.rows.find(r=>r.efBal>=efTarget()-.5);
-  const sample = waterfall(4000, {ef:s.efNow,buf:s.taxBufNow,cush:0,house:0}, TODAY);
+  const sample = waterfall(4000, {ef:s.efNow,buf:s.taxBufNow,cush:0,house:0,cards:cardDebt()}, TODAY);
   const nextDue = DUES.find(d=>d[0]>=TODAY);
   const sinceSep = got.filter(c=>c.d>='2026-09-01').reduce((a,c)=>a+c.amt,0);
   const paidTot = S.money.taxPaid.reduce((a,p)=>a+p.amt,0);
   let curMo=null;
   const rowsHtml = P.rows.map(r=>{ const m=r.d.slice(0,7); const hdr = m!==curMo ? `<tr class="mo"><td colspan="9">${parseD(r.d).toLocaleDateString('en-US',{month:'long',year:'numeric'})}</td></tr>` : ''; curMo=m;
     return hdr+`<tr><td>${nice(r.d)}</td><td class="r num">${money0(r.amt)}</td><td class="r num">${money0(r.tax)}</td><td class="r num">${money0(r.bills)}</td><td class="r num">${money0(r.flex)}</td><td class="r num ${r.draw?'neg':''}">${r.draw?money0(-r.draw):'+'+money0(r.efAdd)}${r.house?` <span class="sub">🏠${money0(r.house)}</span>`:''}</td><td class="r num">${r.ret?money0(r.ret)+' '+r.retLabel:'—'}</td><td class="r num">${money0(r.efBal)}</td><td class="sub" style="white-space:normal;min-width:160px">${esc(r.note)} <button class="btn ghost sm" id="landed-${r.id}" onclick="verifyLanded('${r.id}')">landed?</button>${unverifiedId===r.id?`<button class="btn sm" style="margin-left:4px" onclick="markGot('${r.id}',true)">mark anyway</button>`:''}</td></tr>`; }).join('');
-  return moneyTabs() + `
-  ${wfTodo()}
-  ${wfTiles(P, nextPay)}
-  ${(()=>{ const st=stmtNow(), open=P.future.reduce((a,c)=>a+c.amt,0), diff=Math.round(open-st.balance); return `<div class="help sec keep" style="margin:-6px 4px 10px">${Math.abs(diff)<5?`✓ Matches ONE's ${nice(st.asOf)} statement ($${Math.round(st.balance).toLocaleString()})`:`Expected checks total ${money0(open)} vs ${money0(st.balance)} on ONE's ${nice(st.asOf)} statement`}</div>`; })()}
-  ${taxCard()}
-  ${wfUpcoming(P)}
-
-
-  ${bucketsCard(sinceSep, paidTot, efFull)}
-  <div class="card sec" style="padding:4px 18px">
+  return {P, nextPay, efFull, sinceSep, paidTot,
+    stmt: `${(()=>{ const st=stmtNow(), open=P.future.reduce((a,c)=>a+c.amt,0), diff=Math.round(open-st.balance); return `<div class="help sec keep" style="margin:-6px 4px 10px">${Math.abs(diff)<5?`✓ Matches ONE's ${nice(st.asOf)} statement ($${Math.round(st.balance).toLocaleString()})`:`Expected checks total ${money0(open)} vs ${money0(st.balance)} on ONE's ${nice(st.asOf)} statement`}</div>`; })()}`,
+    taxFold: `<div class="card sec" style="padding:4px 18px">
     ${infold('wtax','Tax payments',nextPay?`${money0(nextPay.pay)} due ${nice(nextPay.d)}`:'',`<div class="scroll"><table class="tbl"><tr><th>Due</th><th>Covers</th><th class="r">Pay</th></tr>${P.payouts.map(p=>`<tr><td>${nice(p.d)}, ${p.d.slice(0,4)}</td><td>${esc(p.label)}</td><td class="r num">${money0(p.pay)}</td></tr>`).join('')}</table></div>
       <div class="help keep" style="margin-top:10px">Next IRS/Illinois date: <b>${nextDue?nice(nextDue[0])+', '+nextDue[0].slice(0,4):'—'}</b> · ${nextDue?esc(nextDue[1]):''}. Split ~80% federal / 20% Illinois.</div>
       <form class="inline" style="margin-top:8px" onsubmit="return addTaxPaid(event)"><input class="inp" type="date" value="${TODAY}" required><select class="inp" style="width:auto"><option>Federal</option><option>Illinois</option></select><input class="inp num" type="number" placeholder="amount" required min="1"><button class="btn sm">Log payment</button></form>
       <div class="stack" style="margin-top:6px">${S.money.taxPaid.map(p=>`<div class="row between" style="font-size:13px"><span>${nice(p.d)} · ${esc(p.who)}</span><span class="row"><b class="num">${money0(p.amt)}</b><button class="x" onclick="delTaxPaid('${p.id}')">✕</button></span></div>`).join('')}</div>`)}
+  </div>`,
+    moreFold: `<div class="card sec" style="padding:4px 18px">
     ${infold('wsplit','Split any amount','',`<form class="inline" onsubmit="return calcDeposit(event)"><input class="inp num" type="number" id="depAmt" value="4000" min="1"><button class="btn">Split it</button></form>
       <div id="depOut" style="margin-top:10px">${depositHtml(sample)}</div>
-      <div class="help keep" style="margin-top:10px">Order: 32.2% → Tax Buffer · bills stay in checking · <b>$${s.flexPerCheck} spending money first</b> (groceries beyond the budget, gas, fun) · then emergency fund · then retirement (Roth in 2026, SEP from Jan 2027) · 2026-only $250 cushion for the April true-up. When the emergency fund is full, its $500/check becomes the <b>House</b> bucket.</div>`)}
+      <div class="help keep" style="margin-top:10px">Order: 32.2% → Tax Buffer · bills stay in checking · <b>$${s.flexPerCheck} spending money first</b> · then emergency fund · 2026-only $250 cushion for the April true-up · then <b>everything left pays down the credit cards</b> (smallest first: ${esc(cardList().map(c=>c.name).join(' → ')||'—')}) until they hit $0 · only then retirement (Roth in 2026, SEP from Jan 2027). When the emergency fund is full, its $500/check becomes the <b>House</b> bucket.</div>`)}
     ${infold('wland','Landed',`${got.length} · ${money0(got.reduce((a,c)=>a+c.amt,0))}`,`<div class="help" style="margin-bottom:10px">Agency deposits are picked up from Bank of America when Money refreshes each day. Rows with ✓ bank were matched to a real deposit; undo moves a check back to upcoming.</div>
       <div class="stack" style="gap:8px">${got.slice().sort((a,b)=>(b.gotOn||b.d).localeCompare(a.gotOn||a.d)).map(c=>`<div class="row between" style="gap:10px;padding:12px 14px;border-radius:var(--r2);background:var(--card2)"><div style="min-width:0"><b class="num">${money0(c.amt)}</b> <span class="sub">· ${nice(c.gotOn||c.d)}${c.verified||/from bank/.test(c.note||'')?' · <span style="color:var(--good)">✓ bank</span>':' · marked by hand'}</span><div class="sub" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.note||'')}</div></div><span class="row" style="gap:6px;flex-wrap:nowrap">${c.unsched&&S.money.checks.some(x=>!x.got)?`<select class="inp" style="padding:4px 26px 4px 8px;font-size:12px;max-width:120px" onchange="matchLanded('${c.id}',this.value)"><option value="">which job?</option>${S.money.checks.filter(x=>!x.got).slice(0,8).map(x=>`<option value="${x.id}">${nice(x.d)} · ${money0(x.amt)}</option>`).join('')}</select>`:''}<button class="btn ghost sm" onclick="unGot('${c.id}')">Undo</button></span></div>`).join('')||'<div class="empty">Nothing landed yet.</div>'}</div>`)}
     ${infold('wset','Settings','the standing numbers',`<div class="settings">
       ${[['taxRate','Tax set-aside (0.322)'],['rent','Rent /mo'],['car','Car note /mo'],['grocW','Groceries /wk'],['elec','Electric /mo'],['gas','Gas /mo'],['ins','Car insurance /mo'],['net','Internet /mo'],['efMonthly','Emergency /mo'],['retMonthly','Retirement /mo'],['cushionMonthly','2026 tax cushion /mo'],['flexPerCheck','Spending money per check'],['efMonths','EF target (months)'],['rothLimit','Roth limit']].map(([k,l])=>`<label>${l}<input class="inp num" type="number" step="any" value="${s[k]}" onchange="setMoney('${k}',this.value)"></label>`).join('')}
       </div>
       <div class="help keep" style="margin-top:8px">Fixed costs: <b class="num">${money0(fixedMo())}/mo</b> → ${money0(fixedMo()/2)} per check · Emergency target: <b class="num">${money0(efTarget())}</b> (${s.efMonths} months).</div>`)}
-  </div>`;
+  </div>` };
 }
 function depositHtml(r){ return `<div class="flow">
   <div class="fl"><small>→ Tax Buffer</small><b class="num" style="color:var(--bad)">${money0(r.tax)}</b><i>Capital One</i></div>
   <div class="fl"><small>Bills (stay)</small><b class="num">${money0(r.bills)}</b><i>checking</i></div>
   <div class="fl"><small>Spending (stay)</small><b class="num" style="color:var(--accent)">${money0(r.flex)}</b><i>yours</i></div>
   <div class="fl"><small>→ Emergency</small><b class="num" style="color:var(--good)">${r.draw?money0(-r.draw):money0(r.efAdd)}</b><i>HYSA</i></div>
+  ${r.cards?`<div class="fl"><small>→ Credit cards</small><b class="num" style="color:var(--accent)">${money0(r.cards)}</b><i>${esc(cardList().map(c=>c.name).join(' → ')||'cards')}</i></div>`:''}
   ${r.house?`<div class="fl"><small>→ House</small><b class="num">${money0(r.house)}</b><i>HYSA bucket</i></div>`:''}
   <div class="fl"><small>→ ${r.retLabel}</small><b class="num">${money0(r.ret)}</b><i>Fidelity</i></div>
   ${r.cu?`<div class="fl"><small>→ Tax cushion</small><b class="num">${money0(r.cu)}</b><i>2026 only</i></div>`:''}
 </div>`; }
-function calcDeposit(e){ e.preventDefault(); const amt=+document.getElementById('depAmt').value||0; const s=S.money.s; document.getElementById('depOut').innerHTML=depositHtml(waterfall(amt,{ef:s.efNow,buf:s.taxBufNow,cush:0,house:0},TODAY)); return false; }
+function calcDeposit(e){ e.preventDefault(); const amt=+document.getElementById('depAmt').value||0; const s=S.money.s; document.getElementById('depOut').innerHTML=depositHtml(waterfall(amt,{ef:s.efNow,buf:s.taxBufNow,cush:0,house:0,cards:cardDebt()},TODAY)); return false; }
 function setMoney(k,v){ S.money.s[k]=+v||0; commit(); }
 let mcpLib = null, unverifiedId = null;
 (async()=>{ try { if (window.claude && typeof claude.use==='function') mcpLib = await claude.use('mcp'); if (mcpLib && typeof view!=='undefined' && view==='money') render(); } catch(e){} })();
@@ -8341,6 +8415,7 @@ let mcpLib = null, unverifiedId = null;
 /* ---- live bank data: balances + new transactions, once a day ---- */
 let bankBusy=false, bankTriedDay='', bankErr='';
 const instAcct = i => /bank of america/i.test(i||'') ? 'BofA' : /discover/i.test(i||'') ? 'Discover' : /capital one/i.test(i||'') ? 'Capital One Savor' : null;
+function acctLabel(x){ const i=x.institution||'', n=x.name||''; if (/bank of america/i.test(i)) return 'BofA'; if (/discover/i.test(i)) return 'Discover'; if (/capital one/i.test(i)) return /savor/i.test(n)?'Capital One Savor':'Capital One '+n.replace(/^360 /,''); if (/pnc/i.test(i)) return 'PNC '+n; if (/fidelity/i.test(i)) return 'Fidelity '+n; return (i.split(/\s|-/)[0]||'Bank')+' '+n; }
 const isDebt = t => /credit|loan|mortgage/i.test(t||'');
 const acctKind = a => (isDebt(a.type) || (!a.type && a.bal<0)) ? 'debt' : /broker|invest|retire|ira|401/i.test((a.type||'')+' '+(a.name||'')) ? 'invest' : 'cash';
 function bankErrText(code){ return code==='server_not_connected' ? 'The finance connector (Era Context) isn\'t added for this view — add it in Claude Settings → Connectors.' : code==='needs_reauth' ? 'The finance connector needs to be reconnected in Claude Settings → Connectors.' : (code==='not_granted'||code==='not_in_manifest'||code==='consent_required') ? 'Bank access wasn\'t allowed for this page, so balances can\'t update. Tap Refresh to be asked again.' : (code==='blocked_by_policy'||code==='approval_required') ? 'Your organization blocks this page from reading bank data.' : code==='empty' ? 'The finance connector returned no accounts.' : 'Couldn\'t reach your bank data just now — showing the last saved numbers.'; }
@@ -8353,7 +8428,7 @@ async function bankRefresh(manual){
     const a = await call('accounts__list_financial_accounts', {});
     const list = Array.isArray(a.accounts) ? a.accounts : [];
     if (!list.length) throw {code:'empty'};
-    const keyAcct = {}; for (const x of list) keyAcct[x.account_group_key] = instAcct(x.institution);
+    const keyAcct = {}, keyInv = {}; for (const x of list){ keyAcct[x.account_group_key] = acctLabel(x); keyInv[x.account_group_key] = /broker|invest|retire|ira|401/i.test((x.type||'')+' '+(x.name||'')); }
     const stored = S.money.budget.txns.reduce((m,t)=>t.d>m?t.d:m, '');
     const from = addDays(!stored ? addDays(TODAY,-30) : stored > TODAY ? TODAY : stored, -4);
     const got = [];
@@ -8374,12 +8449,12 @@ async function bankRefresh(manual){
       if (!/^\d{4}-\d{2}-\d{2}$/.test(t.d) || isNaN(t.amt) || !t.desc) continue;
       haveTid.add(t.tid);
       if (loose[lk(t)] > 0){ loose[lk(t)]--; continue; } // already here from an earlier import or statement
-      t.cat = classifyTxn(t); t.sc = spendCat(t); B.txns.push(t); added++;
+      t.cat = keyInv[x.account_group_key] ? 'ignore' : classifyTxn(t); t.sc = spendCat(t); B.txns.push(t); added++;
       if (t.cat==='deduct') addDeductible(t, S);
     }
     B.txns.sort((x,y)=>y.d.localeCompare(x.d));
     B.accounts = list.map(x => { const cur = x.balance && x.balance.current!=null ? +x.balance.current : null; return {key:x.account_group_key, name:String(x.name||'Account'), inst:String(x.institution||''), mask:String(x.account_mask||''), type:String(x.type||''), bal: cur==null||isNaN(cur) ? null : (isDebt(x.type) ? -cur : cur), asOf:String(x.balance_as_of||'').slice(0,10)}; });
-    B.pulled = TODAY; B.syncedDay = TODAY; B.syncedAt = Date.now();
+    B.pulled = TODAY; B.syncedDay = TODAY; B.syncedAt = Date.now(); try { invLog(); } catch(e){}
     const landedN = detectDeposits(got, keyAcct);
     commit({skipXp:!landedN});
     if (landedN){ confetti(); toast(`💵 ${landedN} check${landedN===1?'':'s'} landed — the moves are on Waterfall`); bankBusy=false; render(); return; }
@@ -8403,7 +8478,7 @@ function acctDash(){
     </div>
     <div class="stack" style="gap:0;grid-template-columns:minmax(0,1fr)">${all.map(a=>{ const k=acctKind(a); return `<div class="row between" style="gap:10px;flex-wrap:nowrap;min-width:0;padding:10px 0;border-top:1px solid var(--line)"><div style="min-width:0;flex:1"><b style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px">${esc(a.name)}</b><div class="sub" style="font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.inst?esc(a.inst)+(a.mask?' ····'+esc(a.mask):''):esc(a.note||'')}${a.asOf?' · '+nice(a.asOf):''}</div></div><b class="num" style="white-space:nowrap;color:${a.bal==null?'var(--muted)':k==='debt'?'var(--bad)':'var(--fg)'}">${a.bal==null?'—':(a.bal<0?'−':'')+'$'+Math.abs(a.bal).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</b></div>`; }).join('')||'<div class="empty">No accounts yet — tap Refresh to pull them from your bank connection.</div>'}</div>
     ${bankErr?`<div class="help keep" style="margin-top:10px;color:var(--warn)">${esc(bankErr)}</div>`:''}
-    <div class="help keep" style="margin-top:10px">Updated ${when}. Balances and new transactions refresh by themselves the first time you open Money each day.${stale?` Your bank feed's newest balance is from ${nice(oldest)} — the banks haven't sent anything newer yet.`:''} Card and loan balances count as owed.</div></div>`;
+    <div class="help keep" style="margin-top:10px">Updated ${when}${stale?` · newest bank balance is from ${nice(oldest)}`:''}</div></div>`;
 }
 async function verifyLanded(id){
   const c=S.money.checks.find(c=>c.id===id); if(!c) return;
