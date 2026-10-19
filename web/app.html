@@ -1564,7 +1564,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b212';
+const BUILD='b213';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -8377,7 +8377,7 @@ function matchLanded(id, tid){ if(!tid) return; const c=S.money.checks.find(c=>c
 // agency deposits seen in the bank feed → land the matching scheduled check, or add the deposit if nothing was scheduled
 function detectDeposits(txs, keyAcct){
   const M=S.money; M.depTids ||= {}; let n=0;
-  const deps=txs.filter(x=>x && !x.is_pending && +x.amount>0 && x.transaction_id && keyAcct[x.account_group_key]==='BofA' && /1 MODEL MANAGE/i.test(x.description||'')).sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  const deps=txs.filter(x=>x && !x.is_pending && +x.amount>0 && x.transaction_id && keyAcct[x.account_group_key]==='BofA' && /MODEL MANAGE/i.test(x.description||'')).sort((a,b)=>String(a.date).localeCompare(String(b.date)));
   for (const x of deps){
     if (M.depTids[x.transaction_id]) continue; M.depTids[x.transaction_id]=1;
     const d=String(x.date).slice(0,10), amt=+x.amount; if(!/^\d{4}-\d{2}-\d{2}$/.test(d)) continue;
