@@ -1526,6 +1526,19 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 #navqa[data-hl="chrome"]{--lc:#07121c;--lb:linear-gradient(160deg,#f2f6fa,#8a9bb0 42%,#f7fafd 58%,#5f7086);--lg:rgba(200,215,230,.45)}
 #navqa[data-hl="arise"]{--lc:#f0e2ff;--lb:linear-gradient(180deg,#3e126e,#18062c);--lg:rgba(140,70,255,.75)}#navqa[data-hl="arise"] .nq-lift{border-radius:3px;box-shadow:inset 0 0 0 1px #9b5cff,0 0 22px rgba(140,70,255,.75)}
 #navqa[data-hl="lab"]{--lc:#03261c;--lb:radial-gradient(120% 120% at 30% 20%,#b6ffe3 0%,#3fd6a0 45%,#0c7a5c 100%);--lg:rgba(124,240,197,.55)}#navqa[data-hl="lab"] .nq-lift{border-radius:16px}
+
+/* b203: habit tiles always fit the row (no overlap), however many habits */
+.hrow{display:grid!important;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:6px;margin:0;padding:2px 0 4px}
+.hrow .hdot{width:auto;min-width:0}
+.hrow .hdot i{width:100%;max-width:50px;height:auto;aspect-ratio:1/1;box-sizing:border-box;font-size:clamp(16px,5.4vw,22px)}
+.hrow .hdot small{width:100%}
+
+/* b203: Top 3 shows the whole goal (wraps), the area tag sits underneath */
+.top3 .t3{grid-template-columns:36px minmax(0,1fr);grid-template-areas:"n i" "n s";row-gap:2px;align-items:start}
+.top3 .t3 .n{grid-area:n;align-self:center}
+.top3 .t3 textarea.t3in{grid-area:i;background:transparent;border:0;outline:none;resize:none;overflow:hidden;width:100%;min-width:0;padding:4px 0 0;font:inherit;font-size:15px;line-height:1.3;color:inherit;field-sizing:content;min-height:1.3em}
+.top3 .t3.on textarea.t3in{text-decoration:line-through;color:var(--muted)}
+.top3 .t3 select{grid-area:s;justify-self:start;font-size:12px;padding:3px 8px;max-width:100%}
 </style>
 
 <div class="app" id="app"></div>
@@ -1535,7 +1548,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b202';
+const BUILD='b203';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -3703,7 +3716,7 @@ function vToday(){
     <div class="top3">${d.top3.map((t,i)=>`
       <div class="t3 ${t.done?'on':''}">
         <div class="n" onclick="toggleTop3(${i})">${t.done?'✓':i+1}</div>
-        <input type="text" placeholder="${['Money move','Build','Life'][i]}" value="${esc(t.text)}" onchange="setTop3(${i},this.value)">
+        <textarea class="t3in" rows="1" placeholder="${['Money move','Build','Life'][i]}" onchange="setTop3(${i},this.value)" oninput="t3fit(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(t.text)}</textarea>
         ${trackSelect(t.track,`setTop3Track(${i},this.value)`)}
       </div>`).join('')}</div>
     ${(()=>{ const sg=d.top3.some(t=>!t.text.trim())&&curDay>=addDays(TODAY,-1)?t3Sug(curDay):[]; return sg.length?`<div class="t3sug">${sg.map(x=>`<button onclick="t3Fill(${JSON.stringify(x.text).replace(/"/g,'&quot;')},'${x.track||''}')">+ ${esc(x.text)}</button>`).join('')}</div>`:''; })()}
@@ -6060,8 +6073,8 @@ function pfpMini(stg){ const k=clipFor('char_idle'), r=k&&A_()[k], still=(r&&r.p
   if (!_dbSettled) return `<div class="av-ph pfp-ph"></div>`;
   return `<svg viewBox="34 58 132 132" preserveAspectRatio="xMidYMid slice">${avatarSVG(stg,'smile',36,S.evo||{}).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')}</svg>`; }
 // keep the playing videos across re-renders so they never restart or blank out
-(function(){ const kk=el=>el.dataset.keep||(el.matches('video,img.pfp-v')?['av-v','pfp-v','room-v'].find(c=>el.classList.contains(c))+'|'+el.getAttribute('src'):null);
-  const SEL='video.av-v,video.pfp-v,video.room-v,canvas.room-me,.pfp-sm img.pfp-v';
+(function(){ const kk=el=>el.dataset.keep||(el.matches('video,img.pfp-v,img.av-still')?['av-v','pfp-v','room-v','av-still'].find(c=>el.classList.contains(c))+'|'+el.getAttribute('src'):null);
+  const SEL='video.av-v,video.pfp-v,video.room-v,canvas.room-me,.pfp-sm img.pfp-v,.av-stack img.av-still';
   const _r=render; render=function(){ const keep=[...document.querySelectorAll(SEL)]; _r.apply(this,arguments);
   const fresh=[...document.querySelectorAll(SEL)];
   for (const o of keep){ const k=kk(o), n=fresh.find(v=>v!==o && kk(v)===k); if (n){ o.setAttribute('style', n.getAttribute('style')||''); n.replaceWith(o); if (o._px) o.insertAdjacentElement('afterend', o._px); if (o.play) o.play().catch(()=>{}); } } }; })();
@@ -7234,7 +7247,7 @@ function idleEyes(im){ if (idleEyes.v && idleEyes.v.im===im) return idleEyes.v; 
 function idleSmooth(c, m, im){ const hd=PXL_IMG.idleHD; if (hd && hd.complete && hd.naturalWidth) im=hd; const N=im.naturalHeight||64, k=N/64;
   const W=m.offsetWidth, H=m.offsetHeight; c.style.display='block'; Object.assign(c.style,{left:m.offsetLeft+'px', top:m.offsetTop+'px', width:W+'px', height:H+'px', borderRadius:getComputedStyle(m).borderRadius});
   devFit(c, W, H); const cw=c.width, ch=c.height, sc=Math.max(cw,ch)/N, ox=(cw-N*sc)/2, oy=(ch-N*sc)/2, t=performance.now();
-  const bob=Math.floor(t/1100)%2, cyc=t%4300, blink=cyc>4060?Math.floor((cyc-4060)/30):-1;
+  const bob=0, cyc=t%4300, blink=cyc>4060?Math.floor((cyc-4060)/30):-1;
   const key='is:'+cw+'x'+ch+':'+bob+':'+blink+':'+im.src.length; if (c._k===key) return true; c._k=key;
   const x=c.getContext('2d'); x.imageSmoothingEnabled=false; x.clearRect(0,0,cw,ch);
   const dx=Math.round(ox), dy=Math.round(oy)-bob*Math.max(1,Math.round(sc*k));   // whole device pixels only
@@ -7941,12 +7954,15 @@ const _confetti0 = confetti; confetti = function(){ nat('haptic','success'); ret
 const _lvl0 = levelScene; levelScene = function(){ nat('haptic','heavy'); return _lvl0.apply(this, arguments); };
 // ---- undo: every tick / delete you make can be taken back for 6 seconds
 let _userAct=0, _undoBase=null, _undoPrev=null, _undoT=null;
-function undoCapture(opts){ if (opts && opts.noUndo){ _undoBase=JSON.stringify(S); return; }
-  const user = Date.now()-_userAct < 1500;
-  if (user && _undoBase){ _undoPrev=_undoBase; setTimeout(undoShow,0); }
-  setTimeout(()=>{ try { _undoBase=JSON.stringify(S); } catch(e){} },0); }
+// Undo only pops up when something got deleted (a list got shorter) — ticks and edits stay quiet
+let _undoN=-1;
+function itemCount(o, d){ if (!o || typeof o!=='object' || d>5) return 0; let n=0; if (Array.isArray(o)){ n+=o.length; for (const x of o) if (x && typeof x==='object') n+=itemCount(x,d+1); } else for (const k in o){ const v=o[k]; if (v && typeof v==='object') n+=itemCount(v,d+1); } return n; }
+function undoCapture(opts){ if (opts && opts.noUndo){ _undoBase=JSON.stringify(S); _undoN=itemCount(S,0); return; }
+  const user = Date.now()-_userAct < 1500, n=itemCount(S,0);
+  if (user && _undoBase && _undoN>=0 && n<_undoN){ _undoPrev=_undoBase; setTimeout(undoShow,0); }
+  _undoN=n; setTimeout(()=>{ try { _undoBase=JSON.stringify(S); } catch(e){} },0); }
 function undoShow(){ let el=document.getElementById('undo'); if(!el){ el=document.createElement('div'); el.id='undo'; document.body.appendChild(el); }
-  el.innerHTML=`<span>Saved</span><button onclick="undoNow()">Undo</button>`; el.className='show'; clearTimeout(_undoT); _undoT=setTimeout(()=>{ el.className=''; _undoPrev=null; },6000); }
+  el.innerHTML=`<span>Deleted</span><button onclick="undoNow()">Undo</button>`; el.className='show'; clearTimeout(_undoT); _undoT=setTimeout(()=>{ el.className=''; _undoPrev=null; },6000); }
 function undoNow(){ if (!_undoPrev) return; try { S=migrate(JSON.parse(_undoPrev)); _undoPrev=null; document.getElementById('undo').className=''; gSheetClose(); commit({skipXp:true, noUndo:true}); render(); toast('Undone'); nat('haptic','medium'); } catch(e){ toast('Couldn’t undo'); } }
 // ---- pull down to refresh (top of any page)
 (function(){ let y0=null, pulling=false, dist=0; const ind=()=>{ let e=document.getElementById('ptr'); if(!e){ e=document.createElement('div'); e.id='ptr'; e.innerHTML='<i></i>'; document.body.appendChild(e); } return e; };
@@ -8081,6 +8097,7 @@ document.addEventListener('contextmenu',e=>{ const b=e.target.closest&&e.target.
 
 
 /* ===================== b201: re-renders keep every running animation where it was (no jumps, no replays) ===================== */
+{ const _r=render; render=function(){ const out=_r.apply(this,arguments); try { pxScan(); for (const m of pxItems) pxDraw(m); } catch(e){} return out; }; }
 // …and every sideways strip / inner scroller stays where you left it (tapping a date no longer snaps the strip back)
 { const ck=el=>el.tagName+'.'+(typeof el.className==='string'?el.className.split(' ')[0]:'');
   const _r=render; render=function(){ let pos=null; try { const cnt={}; for (const el of document.querySelectorAll('#app *')){ const k=ck(el), i=cnt[k]=(cnt[k]||0)+1; if (el.scrollLeft>0||el.scrollTop>0) (pos ||= new Map()).set(k+'#'+i,[el.scrollLeft,el.scrollTop]); } } catch(e){}
@@ -8103,6 +8120,9 @@ document.addEventListener('contextmenu',e=>{ const b=e.target.closest&&e.target.
   for (const ev of ['input','change','submit','keydown']) document.addEventListener(ev, ()=>{ _userAct=Date.now(); }, true);
   render=function(){ if (typing() && Date.now()-_userAct>900){ deferred=true; return; } deferred=false; return _r.apply(this,arguments); };
   document.addEventListener('focusout', ()=>{ if (deferred) setTimeout(()=>{ if (deferred && !typing()) render(); },30); }); }
+
+function t3fit(el){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
+{ const _r=render; render=function(){ const out=_r.apply(this,arguments); try { document.querySelectorAll('.top3 textarea.t3in').forEach(t3fit); } catch(e){} return out; }; }
 
 let moneyTab = 'waterfall';
 function setMoneyTab(t){ moneyTab=t; render(); }
