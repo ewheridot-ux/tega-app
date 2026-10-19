@@ -1,6 +1,6 @@
-# iPhone build #72 — success
+# iPhone build #73 — cancelled
 
-Mon Oct 19 08:35:11 UTC 2026
+Mon Oct 19 08:40:54 UTC 2026
 
 ```
 /Applications/Xcode_16.0.0.app
@@ -32,13 +32,13 @@ added 113 packages in 6s
 > node scripts/build-www.mjs
 
 www built with Supabase config
-✔ Adding native Xcode project in ios in 16.76ms
-✔ add in 17.06ms
-✔ Copying web assets from www to ios/App/App/public in 54.05ms
-✔ Creating capacitor.config.json in ios/App/App in 704.54μs
-✔ copy ios in 76.92ms
-✔ Updating iOS plugins in 831.04μs
-✔ Updating iOS native dependencies with pod install in 12.63s
+✔ Adding native Xcode project in ios in 21.58ms
+✔ add in 21.81ms
+✔ Copying web assets from www to ios/App/App/public in 53.76ms
+✔ Creating capacitor.config.json in ios/App/App in 503.67μs
+✔ copy ios in 73.28ms
+✔ Updating iOS plugins in 1.25ms
+✔ Updating iOS native dependencies with pod install in 12.83s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -50,15 +50,15 @@ www built with Supabase config
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 12.67s
+✔ update ios in 12.86s
 [success] ios platform added!
 Follow the Developer Workflow guide to get building:
 https://capacitorjs.com/docs/basics/workflow
-✔ Copying web assets from www to ios/App/App/public in 114.24ms
-✔ Creating capacitor.config.json in ios/App/App in 1.66ms
-✔ copy ios in 136.53ms
-✔ Updating iOS plugins in 934.71μs
-✔ Updating iOS native dependencies with pod install in 4.59s
+✔ Copying web assets from www to ios/App/App/public in 155.61ms
+✔ Creating capacitor.config.json in ios/App/App in 2.62ms
+✔ copy ios in 218.70ms
+✔ Updating iOS plugins in 1.13ms
+✔ Updating iOS native dependencies with pod install in 7.23s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -70,8 +70,8 @@ https://capacitorjs.com/docs/basics/workflow
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 4.61s
-[info] Sync finished in 4.783s
+✔ update ios in 7.29s
+[info] Sync finished in 7.59s
 app capabilities: ['IN_APP_PURCHASE', 'HEALTHKIT', 'IN_APP_PURCHASE', 'IN_APP_PURCHASE']
 com.ewheridot.tegaexe.widgets ok
 com.ewheridot.tegaexe.share ok
@@ -82,11 +82,4 @@ entitlements: healthkit keychain-access-groups
 TIER=full
 Running altool at path '/Applications/Xcode_26.3.app/Contents/SharedFrameworks/ContentDelivery.framework/Resources/altool'...
 
-2026-10-19 08:35:11.088  INFO: [ContentDelivery.Uploader.600003F584C0] 
-==========================================
-UPLOAD SUCCEEDED with no errors
-Delivery UUID: 74ee1820-8b37-49b2-9efc-c0d97197cc42
-Transferred 31504914 bytes in 0.528 seconds (59.7MB/s, 477.657Mbps)
-==========================================
-No errors uploading archive at '/Users/runner/work/_temp/out/App.ipa'.
 ```
