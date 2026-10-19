@@ -1554,6 +1554,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 .st-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.st-s{border-radius:var(--r2);background:var(--card2);padding:10px 12px;border-left:3px solid var(--c);display:flex;flex-direction:column;gap:2px;min-width:0}.st-s b{font-size:20px}.st-s small{font-size:12px;color:var(--muted)}
 .ov-grid{gap:8px}.ov-t{border:0;text-align:left;cursor:pointer;font:inherit;color:inherit}
 .pc-edit{margin-top:10px}.pc-edit summary{font-size:13px;color:var(--muted);cursor:pointer}
+.pc-arr summary{color:var(--good)!important;font-weight:700}
 </style>
 
 <div class="app" id="app"></div>
@@ -1563,7 +1564,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b208';
+const BUILD='b209';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -4998,8 +4999,14 @@ function syncChecksFromStmt(){
   try { const all=[ONE_STMT, ...((S.model&&S.model.stmts)||[])], st=stmtNow(), C=S.money.checks; let ch=false;
     const paidBy={}; for (const s0 of all) for (const p of s0.pays||[]) for (const j of p.jobs||[]) paidBy[j.inv]=p;
     for (const c of C){ if (c.got) continue; const m=/INV-\d+/.exec(c.note||''); if (m && paidBy[m[0]]){ const p=paidBy[m[0]]; c.got=true; c.gotOn=p.d; c.note=(c.note||'')+' · paid '+p.id; ch=true; } }
-    const have=new Set(C.map(c=>(/INV-\d+/.exec(c.note||'')||[])[0]).filter(Boolean));
+    const have=new Set([...C.flatMap(c=>(c.note||'').match(/INV-\d+/g)||[]), ...((S.money.s.planInvs)||[])]);
     const fresh=(st.inv||[]).filter(x=>!have.has(x.inv) && !paidBy[x.inv] && x.d>='2026-01-01');
+    const plan=S.money.s.payEvery===14 && S.money.s.payFrom;
+    if (fresh.length && plan){ let owed=fresh.reduce((a,x)=>a+x.net+(x.exp||0),0), last=C.filter(c=>!c.got).map(c=>c.d).sort().pop()||addDays(TODAY,0); const per=+S.money.s.payAmt||4000; let open=C.filter(c=>!c.got).sort((a,b)=>b.d.localeCompare(a.d))[0];
+      S.money.s.planInvs=[...new Set([...(S.money.s.planInvs||[]), ...fresh.map(x=>x.inv)])];
+      if (open && open.amt<per){ const top=Math.min(per-open.amt, owed); open.amt=Math.round((open.amt+top)*100)/100; owed-=top; }
+      while (owed>0.5){ last=addDays(last,14); const amt=Math.min(per, Math.round(owed*100)/100); C.push({id:uid(), d:last, amt, note:'1 Model Management · every 2 weeks', got:false}); owed-=amt; }
+      return true; }
     if (fresh.length){ let last=C.filter(c=>!c.got).map(c=>c.d).sort().pop()||TODAY; const slot=d=>{ const [y,m,dd]=d.split('-').map(Number); if (dd<15) return `${y}-${String(m).padStart(2,'0')}-15`; const e=new Date(y,m,0).getDate(); return dd<e?`${y}-${String(m).padStart(2,'0')}-${e}`:(m===12?`${y+1}-01-15`:`${y}-${String(m+1).padStart(2,'0')}-15`); };
       const grp={}; for (const x of fresh) (grp[x.inv] ||= []).push(x);
       for (const [inv,L] of Object.entries(grp)){ last=slot(addDays(last,1)); const amt=L.reduce((a,x)=>a+x.net+(x.exp||0),0); C.push({id:uid(), d:last, amt:Math.round(amt*100)/100, note:`CK ${L.map(x=>nice(x.d)).join(', ')} · ${inv}`.replace(/^CK/, /calvin/i.test(L[0].client)?'CK':L[0].client), got:false}); ch=true; } }
@@ -8165,6 +8172,7 @@ function payCard(P){ const nx=P.rows[0]; if (!nx) return `<div class="card sec">
   const dd=daysBetween(TODAY,nx.d), rows=splitRows(nx);
   return `<div class="card sec pc-card"><div class="row between" style="align-items:flex-end"><div><div class="tag">Next check</div><b class="num pc-amt">${money0(nx.amt)}</b></div><span class="sub" style="text-align:right">${nice(nx.d)}<br><b style="color:${dd<0?'var(--warn)':'var(--fg)'}">${dd<0?(-dd)+' days late':dd===0?'today':'in '+dd+' days'}</b></span></div>
     ${splitBar(rows)}${splitList(rows)}
+    <details class="pc-edit pc-arr"><summary>✓ It arrived</summary><div class="row" style="gap:6px;margin-top:8px;flex-wrap:wrap;align-items:flex-end"><label class="sub" style="font-size:12px">Arrived<input id="arrD" class="inp" type="date" value="${TODAY}" max="${TODAY}" style="width:auto;display:block"></label><label class="sub" style="font-size:12px">Amount<input id="arrA" class="inp num" type="number" inputmode="decimal" value="${S.money.s.payAmt||4000}" style="width:100px;display:block"></label><label class="sub" style="font-size:12px">Each check after <input id="arrP" class="inp num" type="number" inputmode="decimal" value="${S.money.s.payAmt||4000}" style="width:100px;display:block"></label><button class="btn sm" onclick="checkArrived('${nx.id}')">Save · every 2 weeks</button></div></details>
     <details class="pc-edit"><summary>Edit amount or date</summary><div class="row" style="gap:6px;margin-top:8px;flex-wrap:wrap"><input class="inp num" type="number" inputmode="decimal" value="${nx.amt}" style="width:110px" onchange="setCheckAmt('${nx.id}',this.value)" aria-label="Amount"><input class="inp" type="date" value="${nx.d}" style="width:auto" onchange="setCheckDate('${nx.id}',this.value)" aria-label="Date"><button class="btn sm" id="landed-${nx.id}" onclick="verifyLanded('${nx.id}')">Check bank</button></div></details></div>`; }
 function upcomingCompact(P){ const rows=P.rows.slice(1,7); if(!rows.length) return '';
   return `<div class="card sec"><div class="hdr"><h2>After that</h2><span class="sub">${P.rows.length-1} more · ${money0(P.rows.slice(1).reduce((a,r)=>a+r.amt,0))}</span></div>
@@ -8200,6 +8208,19 @@ function vMoneyOverview(){ const b=moneyBits(), F=flexNow(), m=TODAY.slice(0,7),
     <div class="card sec"><div class="hdr"><h2>${parseD(m+'-01').toLocaleDateString('en-US',{month:'long'})}</h2><span class="sub">in vs out</span></div>
       <div class="home3"><div><b class="num" style="color:var(--good)">${money0(inTot)}</b><small>in</small></div><div><b class="num" style="color:var(--bad)">${money0(out)}</b><small>out</small></div><div><b class="num" style="color:${inTot-out<0?'var(--bad)':'var(--good)'}">${inTot-out<0?'−':'+'}${money0(Math.abs(inTot-out))}</b><small>net</small></div></div></div>
     <div class="grid g2 sec ov-grid">${tile('income', nx?money0(nx.amt):'—', nx?'next check · '+nice(nx.d):'no check scheduled', 'var(--good)')}${tile('spending', F?money0(Math.max(0,F.left)):'—', 'safe to spend', F&&F.left<0?'var(--bad)':'')}${tile('plan', money0(cardDebt()), cz?'cards · $0 by '+cz:'on credit cards', 'var(--accent)')}${tile('plan', money0(invNow()), 'Fidelity · growth goal', '')}</div>`; }
+
+// "It arrived": land the next check on the day it came, then re-plan every check after it every 2 weeks from that day
+function checkArrived(id){ const c=S.money.checks.find(c=>c.id===id); if(!c) return; const d=document.getElementById('arrD')?.value||TODAY, a=+document.getElementById('arrA')?.value||c.amt, per=+document.getElementById('arrP')?.value||a;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || d>TODAY) return toast('Pick the day it arrived');
+  c.got=true; c.gotOn=d; c.d=d; if (Math.abs(a-c.amt)>1) c.expAmt=c.amt; c.amt=a; c.verified=false; c.note=(c.note||'')+' · marked by hand'; c.split=splitFor(c); c.done={}; delete c.dismissed;
+  const kr=S.quarters[quarterOf(d)]?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)&&!k.src); if(kr) kr.current++;
+  // keep what's still owed the same, re-cut into equal checks every 14 days
+  const rest=S.money.checks.filter(x=>!x.got).sort((x,y)=>x.d.localeCompare(y.d)); let owed=rest.reduce((t,x)=>t+x.amt,0) - Math.max(0,a-(c.expAmt||a));
+  S.money.s.planInvs=[...new Set([...(S.money.s.planInvs||[]), ...[c,...rest].flatMap(x=>(x.note||'').match(/INV-\d+/g)||[])])]; S.money.s.payAmt=per;
+  S.money.checks=S.money.checks.filter(x=>x.got); let k=1;
+  while (owed>0.5 && k<200){ const amt=Math.min(per, Math.round(owed*100)/100); S.money.checks.push({id:uid(), d:addDays(d,14*k), amt, note:'1 Model Management · every 2 weeks'}); owed-=amt; k++; }
+  S.money.checks.sort((x,y)=>x.d.localeCompare(y.d)); S.money.s.payEvery=14; S.money.s.payFrom=d;
+  commit(); confetti(); toast(`Logged ${money0(a)} on ${nice(d)} · next ${nice(addDays(d,14))}, then every 2 weeks`); }
 
 let moneyTab = 'overview';
 function setMoneyTab(t){ moneyTab=MONEY_ALIAS[t]||t; render(); }
