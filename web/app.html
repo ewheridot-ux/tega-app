@@ -1562,7 +1562,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b206';
+const BUILD='b207';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2016,23 +2016,23 @@ const fixedMo = () => { const s=S.money.s; return s.rent + s.car + s.grocW*52/12
 const efTarget = () => fixedMo() * S.money.s.efMonths;
 function waterfall(amt, ctx, dateKey){
   // ctx: {ef, buf, cush, house, cards}; returns row and mutates ctx.
-  // Order (b206): tax → bills → spending → 2026 TAX GAP (everything left until covered, checks before Apr 15 2027) → emergency fund → CREDIT CARDS (everything left, until $0) → house → retirement → sweep EF
+  // Order (b207): TAXES (32.2% + an even share of what you're behind, until Apr 15 2027) → bills → spending → emergency fund → CREDIT CARDS (everything left, until $0) → house → retirement → sweep EF
   const s=S.money.s, PER=2, fixedCk=fixedMo()/PER, efCk=s.efMonthly/PER, retCk=s.retMonthly/PER, cushCk=s.cushionMonthly/PER, yr=+dateKey.slice(0,4);
   const tax = amt*s.taxRate; ctx.buf += tax;
   let left = amt - tax - fixedCk, draw = 0;
   if (left < 0) { draw = -left; ctx.ef -= draw; left = 0; }
   const flex = Math.min(s.flexPerCheck, left); left -= flex;
-  const cu = dateKey < '2027-04-15' ? Math.min(left, Math.max(0, cushTarget() - (ctx.cush||0))) : 0; left -= cu; ctx.cush = (ctx.cush||0) + cu;
+  let cu = 0; if (dateKey < TAX_CATCHUP_BY && (ctx.behind||0) > 0.5){ const n=Math.max(1, ctx.nLeft||1); cu = Math.min(left, ctx.behind/n); ctx.behind -= cu; left -= cu; } if (dateKey < TAX_CATCHUP_BY) ctx.nLeft = Math.max(0,(ctx.nLeft||1)-1); ctx.buf += cu;
   const efRoom = Math.max(0, efTarget() - ctx.ef);
   let efAdd = Math.min(efCk, left, efRoom); ctx.ef += efAdd; left -= efAdd;
   const cards = Math.min(left, Math.max(0, ctx.cards==null ? cardDebt() : ctx.cards)); left -= cards; if (ctx.cards!=null) ctx.cards -= cards;
   let house = 0; if (efRoom <= 0.5) { house = Math.min(efCk, left); ctx.house += house; left -= house; }
   const ret = Math.min(retCk, left); left -= ret;
   const sweep = Math.min(left, Math.max(0, efTarget()-ctx.ef)); ctx.ef += sweep; left -= sweep; efAdd += sweep;
-  return {amt, tax, bills:fixedCk, flex: flex+left, efAdd, draw, house, ret, cu, cards, cardsLeft:ctx.cards, extra:left, efBal:ctx.ef, retLabel: yr<=2026?'Roth':'SEP'};
+  return {amt, tax: tax+cu, taxBase: tax, catchup: cu, bills:fixedCk, flex: flex+left, efAdd, draw, house, ret, cu: 0, cards, cardsLeft:ctx.cards, extra:left, efBal:ctx.ef, retLabel: yr<=2026?'Roth':'SEP'};
 }
 function projection(){
-  const s=S.money.s; const ctx={ef:s.efNow, buf:s.taxBufNow, cush:+s.cushNow||0, house:0, cards:cardDebt()};
+  const s=S.money.s; const ctx={ef:s.efNow, buf:s.taxBufNow, cush:0, house:0, cards:cardDebt(), behind:taxBehind(), nLeft:S.money.checks.filter(c=>!c.got&&c.d<TAX_CATCHUP_BY).length};
   const future = S.money.checks.filter(c=>!c.got).sort((a,b)=>a.d.localeCompare(b.d));
   const rows=[], payouts=[]; let duePtr=0;
   while (duePtr<DUES.length && DUES[duePtr][0] < TODAY) duePtr++; // dues already passed are ignored
@@ -8155,8 +8155,8 @@ function setStream(id,k){ const t=S.money.budget.txns.find(t=>t.id===id); if(!t)
 function datumBooks(from, to){ const inc=incomeBy(from,to).datum, exp=S.money.budget.deductibles.filter(x=>x.cat==='datum'&&x.d>=from&&x.d<=to).reduce((a,x)=>a+(+x.amt||0),0); return {inc, exp, profit:inc-exp}; }
 // one line, one number: where each dollar of a check goes
 function splitRows(r){ const cards=cardList().map(c=>c.name).join(' → ');
-  return [['📊','Taxes','Tax Buffer (Capital One)',r.tax,'#ff6b6b'],['🏠','Bills','stays in checking',r.bills,'#a8b3c7'],['🛍️','Spending','yours',r.flex,'#7ee2ff'],
-    ['🛡️','Emergency',r.draw?'covers the bills gap':'HYSA',r.draw?-r.draw:r.efAdd,'#2fbf71'],['🧮','2026 tax gap','for April 2027',r.cu,'#ffd166'],['💳','Credit cards',cards||'cards',r.cards,'#b98cff'],
+  return [['📊','Taxes',r.catchup>0.5?`Tax Buffer · 32.2% ${money0(r.taxBase)} + catch-up ${money0(r.catchup)}`:'Tax Buffer (Capital One)',r.tax,'#ff6b6b'],['🏠','Bills','stays in checking',r.bills,'#a8b3c7'],['🛍️','Spending','yours',r.flex,'#7ee2ff'],
+    ['🛡️','Emergency',r.draw?'covers the bills gap':'HYSA',r.draw?-r.draw:r.efAdd,'#2fbf71'],['💳','Credit cards',cards||'cards',r.cards,'#b98cff'],
     ['🏡','House','HYSA bucket',r.house,'#f5c542'],['🌱',r.retLabel==='Roth'?'Roth IRA':'SEP IRA','Fidelity',r.ret,'#39ff9f']].filter(x=>Math.abs(x[3])>0.5); }
 function splitBar(rows,total){ return `<div class="pc-bar">${rows.filter(x=>x[3]>0).map(x=>`<i style="flex:${x[3]};background:${x[4]}"></i>`).join('')}</div>`; }
 function splitList(rows){ return `<div class="pc-list">${rows.map(([ic,l,where,v,c])=>`<div class="pc-r"><span class="pc-dot" style="background:${c}"></span><span class="pc-l"><b>${ic} ${l}</b><small>${esc(where)}</small></span><b class="num">${v<0?'−':''}${money0(Math.abs(v))}</b></div>`).join('')}</div>`; }
@@ -8285,10 +8285,15 @@ function vDeduct(){
 }
 /* ---- waterfall tab: landed-check to-dos, upcoming checks, auto-detected deposits ---- */
 const r2 = n => Math.round((+n||0)*100)/100;
-const MOVES = [['tax','Tax Buffer','taxBufNow','📊'],['ef','Emergency fund','efNow','🛡️'],['cu','2026 tax gap','cushNow','🧮'],['cards','Credit cards','cardsPaid','💳'],['house','House fund','houseNow','🏠'],['ret','Retirement','rothYtd','🌱']];
-function splitFor(c){ const s=S.money.s, r=waterfall(c.amt,{ef:+s.efNow||0,buf:0,cush:+s.cushNow||0,house:0,cards:cardDebt()},c.gotOn||c.d); const o={tax:r2(r.tax),ef:r2(r.efAdd),cu:r2(r.cu),cards:r2(r.cards),house:r2(r.house),ret:r2(r.ret),retLabel:r.retLabel,draw:r2(r.draw)}; o.stay=r2(c.amt-o.tax-o.ef-o.house-o.ret-o.cu-o.cards); return o; }
+const MOVES = [['tax','Tax Buffer','taxBufNow','📊'],['ef','Emergency fund','efNow','🛡️'],['cards','Credit cards','cardsPaid','💳'],['house','House fund','houseNow','🏠'],['ret','Retirement','rothYtd','🌱']];
+function splitFor(c){ const s=S.money.s, r=waterfall(c.amt,{ef:+s.efNow||0,buf:0,cush:0,house:0,cards:cardDebt(),behind:Math.max(0,taxBehind()-c.amt*s.taxRate),nLeft:1+S.money.checks.filter(x=>!x.got&&x.d<TAX_CATCHUP_BY).length},c.gotOn||c.d); const o={tax:r2(r.tax),ef:r2(r.efAdd),cu:r2(r.cu),cards:r2(r.cards),house:r2(r.house),ret:r2(r.ret),retLabel:r.retLabel,draw:r2(r.draw)}; o.stay=r2(c.amt-o.tax-o.ef-o.house-o.ret-o.cu-o.cards); return o; }
 // credit cards only (the auto loan keeps its normal payment); smallest balance first
 function cardList(){ return (S.money.budget?.accounts||[]).filter(a=>a.bal!=null && a.bal<0 && !/auto|loan|mortgage/i.test(a.name+' '+a.type)).map(a=>({name:a.name.replace(/ Card$/,'').replace(/^Discover it$/,'Discover'), bal:-a.bal})).sort((a,b)=>a.bal-b.bal); }
+const TAX_CATCHUP_BY='2027-04-15';
+function taxReceived(){ let r=0; try { r=stmtReceived('2026').reduce((a,x)=>a+x.amt,0); } catch(e){} r+=S.money.checks.filter(c=>c.got&&(c.gotOn||c.d)>='2027-01-01').reduce((a,c)=>a+c.amt,0); return r; }
+function taxOwedSoFar(){ return taxReceived()*S.money.s.taxRate; }
+function taxBehind(){ const paid=(S.money.taxPaid||[]).filter(p=>!p.d||p.d>='2026-01-01').reduce((a,p)=>a+(+p.amt||0),0); return Math.max(0, taxOwedSoFar()-paid-(+S.money.s.taxBufNow||0)); }
+function taxShortApril(){ try { const P=projection(); return Math.max(0, taxBehind()-P.rows.filter(r=>r.d<TAX_CATCHUP_BY).reduce((t,r)=>t+(r.catchup||0),0)); } catch(e){ return 0; } }
 function cushTarget(){ const s=S.money.s; if (s.cushTarget!=null && s.cushTarget!=='') return +s.cushTarget||0; try { return Math.round(stmtReceived('2026').filter(r=>r.d<'2026-09-01').reduce((a,r)=>a+r.amt,0)*s.taxRate); } catch(e){ return 0; } }
 function cardDebt(){ return cardList().reduce((a,c)=>a+c.bal,0); }
 function ensureSplits(){ for (const c of S.money.checks) if (c.got && !c.split && c.gotOn && daysBetween(c.gotOn,TODAY)<=10 && daysBetween(c.gotOn,TODAY)>=0){ c.split=splitFor(c); c.done={}; } }
@@ -8355,7 +8360,7 @@ function detectDeposits(txs, keyAcct){
 let mAdj=false;
 function bucketsCard(sinceSep, paidTot, efFull){ const s=S.money.s, taxNeed=Math.max(0,sinceSep*s.taxRate-paidTot);
   const cz=(()=>{ try { const r=projection().rows.find(r=>r.cardsLeft!=null&&r.cardsLeft<=0.5); return r?'$0 by '+nice(r.d)+', '+r.d.slice(0,4):''; } catch(e){ return ''; } })();
-  const B=[['🛡️','Emergency fund','efNow',efTarget(),efFull?'full by '+nice(efFull.d):(+s.efNow>=efTarget()?'full':''),'var(--good)'],['💳','Credit cards owed','__cards',0,(cardList().map(c=>c.name).join(' → ')||'none')+(cz?' · '+cz:''),'var(--accent)'],['📊','Tax buffer','taxBufNow',taxNeed,`should hold ${money0(taxNeed)}`,'var(--warn)'],['🌱',`Roth IRA ${THIS_Y}`,'rothYtd',s.rothLimit,'','var(--accent)'],['🧮','2026 tax gap','cushNow',cushTarget(),'for April 2027 · tax on income before September','var(--warn)'],['🏠','House fund','houseNow',0,'starts when the emergency fund is full','var(--fg)']];
+  const B=[['🛡️','Emergency fund','efNow',efTarget(),efFull?'full by '+nice(efFull.d):(+s.efNow>=efTarget()?'full':''),'var(--good)'],['💳','Credit cards owed','__cards',0,(cardList().map(c=>c.name).join(' → ')||'none')+(cz?' · '+cz:''),'var(--accent)'],['📊','Tax buffer','taxBufNow',Math.max(0,taxOwedSoFar()-(S.money.taxPaid||[]).reduce((a,p)=>a+(+p.amt||0),0)),taxBehind()>0.5?(()=>{ const sh=taxShortApril(); return `behind ${money0(taxBehind())} · checks catch up by Apr 15`+(sh>50?` · <b style="color:var(--bad)">${money0(sh)} short</b>`:' · covered'); })():'on track','var(--warn)'],['🌱',`Roth IRA ${THIS_Y}`,'rothYtd',s.rothLimit,'','var(--accent)'],['🏠','House fund','houseNow',0,'starts when the emergency fund is full','var(--fg)']];
   return `<div class="card sec"><div class="hdr"><h2>Buckets</h2><button class="btn ${mAdj?'':'ghost'} sm" onclick="mAdj=!mAdj;render()">${mAdj?'Done':'Adjust'}</button></div>
     <div class="stack" style="gap:14px;grid-template-columns:minmax(0,1fr)">${B.map(([ic,l,k,target,sub,col])=>{ const v=k==='__cards'?cardDebt():+s[k]||0; return `<div><div class="row between" style="gap:8px;flex-wrap:nowrap"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ic} <b>${l}</b></span>${mAdj&&k!=='__cards'?`<input class="inp num" type="number" inputmode="decimal" step="any" style="width:110px;padding:6px 10px;text-align:right" value="${v}" onchange="setMoney('${k}',this.value)" aria-label="${l} balance">`:`<b class="num" style="white-space:nowrap">${money0(v)}${target?`<span class="sub" style="font-weight:500"> / ${money0(target)}</span>`:''}</b>`}</div>${target?`<div class="bar" style="margin-top:6px;height:6px"><b style="width:${Math.round(clamp(v/Math.max(1,target),0,1)*100)}%;background:${col}"></b></div>`:''}${sub?`<div class="sub" style="font-size:11px;margin-top:3px">${sub}</div>`:''}</div>`; }).join('')}</div>
     <div class="help" style="margin-top:12px">Balances go up when you tick a move on a landed check. Use Adjust to correct one by hand.</div></div>`; }
@@ -8371,7 +8376,7 @@ function vMoney(){
 function moneyBits(){
   const s=S.money.s, P=projection(), got=S.money.checks.filter(c=>c.got), owed=P.future.reduce((a,c)=>a+c.amt,0);
   const nextPay=P.payouts.find(p=>p.d>=TODAY), efFull=P.rows.find(r=>r.efBal>=efTarget()-.5);
-  const sample = waterfall(4000, {ef:s.efNow,buf:s.taxBufNow,cush:+s.cushNow||0,house:0,cards:cardDebt()}, TODAY);
+  const sample = waterfall(4000, {ef:s.efNow,buf:s.taxBufNow,cush:0,house:0,cards:cardDebt(),behind:taxBehind(),nLeft:1+S.money.checks.filter(x=>!x.got&&x.d<TAX_CATCHUP_BY).length}, TODAY);
   const nextDue = DUES.find(d=>d[0]>=TODAY);
   const sinceSep = got.filter(c=>c.d>='2026-09-01').reduce((a,c)=>a+c.amt,0);
   const paidTot = S.money.taxPaid.reduce((a,p)=>a+p.amt,0);
@@ -8389,11 +8394,11 @@ function moneyBits(){
     moreFold: `<div class="card sec" style="padding:4px 18px">
     ${infold('wsplit','Split any amount','',`<form class="inline" onsubmit="return calcDeposit(event)"><input class="inp num" type="number" id="depAmt" value="4000" min="1"><button class="btn">Split it</button></form>
       <div id="depOut" style="margin-top:10px">${depositHtml(sample)}</div>
-      <div class="help keep" style="margin-top:10px">Order: 32.2% → Tax Buffer · bills stay in checking · <b>$${s.flexPerCheck} spending money first</b> · then <b>everything left covers the 2026 tax gap</b> (${money0(cushTarget())} by Apr 15) · then emergency fund · then <b>everything left pays down the credit cards</b> (smallest first: ${esc(cardList().map(c=>c.name).join(' → ')||'—')}) until they hit $0 · only then retirement (Roth in 2026, SEP from Jan 2027). When the emergency fund is full, its $500/check becomes the <b>House</b> bucket.</div>`)}
+      <div class="help keep" style="margin-top:10px">Order: 32.2% + catch-up (${money0(taxBehind())} behind, spread to Apr 15) → Tax Buffer · bills stay in checking · <b>$${s.flexPerCheck} spending money first</b> · then emergency fund · then <b>everything left pays down the credit cards</b> (smallest first: ${esc(cardList().map(c=>c.name).join(' → ')||'—')}) until they hit $0 · only then retirement (Roth in 2026, SEP from Jan 2027). When the emergency fund is full, its $500/check becomes the <b>House</b> bucket.</div>`)}
     ${infold('wland','Landed',`${got.length} · ${money0(got.reduce((a,c)=>a+c.amt,0))}`,`<div class="help" style="margin-bottom:10px">Agency deposits are picked up from Bank of America when Money refreshes each day. Rows with ✓ bank were matched to a real deposit; undo moves a check back to upcoming.</div>
       <div class="stack" style="gap:8px">${got.slice().sort((a,b)=>(b.gotOn||b.d).localeCompare(a.gotOn||a.d)).map(c=>`<div class="row between" style="gap:10px;padding:12px 14px;border-radius:var(--r2);background:var(--card2)"><div style="min-width:0"><b class="num">${money0(c.amt)}</b> <span class="sub">· ${nice(c.gotOn||c.d)}${c.verified||/from bank/.test(c.note||'')?' · <span style="color:var(--good)">✓ bank</span>':' · marked by hand'}</span><div class="sub" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.note||'')}</div></div><span class="row" style="gap:6px;flex-wrap:nowrap">${c.unsched&&S.money.checks.some(x=>!x.got)?`<select class="inp" style="padding:4px 26px 4px 8px;font-size:12px;max-width:120px" onchange="matchLanded('${c.id}',this.value)"><option value="">which job?</option>${S.money.checks.filter(x=>!x.got).slice(0,8).map(x=>`<option value="${x.id}">${nice(x.d)} · ${money0(x.amt)}</option>`).join('')}</select>`:''}<button class="btn ghost sm" onclick="unGot('${c.id}')">Undo</button></span></div>`).join('')||'<div class="empty">Nothing landed yet.</div>'}</div>`)}
     ${infold('wset','Settings','the standing numbers',`<div class="settings">
-      ${[['taxRate','Tax set-aside (0.322)'],['rent','Rent /mo'],['car','Car note /mo'],['grocW','Groceries /wk'],['elec','Electric /mo'],['gas','Gas /mo'],['ins','Car insurance /mo'],['net','Internet /mo'],['efMonthly','Emergency /mo'],['retMonthly','Retirement /mo'],['cushTarget','2026 tax gap target'],['flexPerCheck','Spending money per check'],['efMonths','EF target (months)'],['rothLimit','Roth limit']].map(([k,l])=>`<label>${l}<input class="inp num" type="number" step="any" value="${k==='cushTarget'?cushTarget():s[k]}" onchange="setMoney('${k}',this.value)"></label>`).join('')}
+      ${[['taxRate','Tax set-aside (0.322)'],['rent','Rent /mo'],['car','Car note /mo'],['grocW','Groceries /wk'],['elec','Electric /mo'],['gas','Gas /mo'],['ins','Car insurance /mo'],['net','Internet /mo'],['efMonthly','Emergency /mo'],['retMonthly','Retirement /mo'],['flexPerCheck','Spending money per check'],['efMonths','EF target (months)'],['rothLimit','Roth limit']].map(([k,l])=>`<label>${l}<input class="inp num" type="number" step="any" value="${k==='cushTarget'?cushTarget():s[k]}" onchange="setMoney('${k}',this.value)"></label>`).join('')}
       </div>
       <div class="help keep" style="margin-top:8px">Fixed costs: <b class="num">${money0(fixedMo())}/mo</b> → ${money0(fixedMo()/2)} per check · Emergency target: <b class="num">${money0(efTarget())}</b> (${s.efMonths} months).</div>`)}
   </div>` };
@@ -8408,7 +8413,7 @@ function depositHtml(r){ return `<div class="flow">
   <div class="fl"><small>→ ${r.retLabel}</small><b class="num">${money0(r.ret)}</b><i>Fidelity</i></div>
   ${r.cu?`<div class="fl"><small>→ 2026 tax gap</small><b class="num">${money0(r.cu)}</b><i>for April</i></div>`:''}
 </div>`; }
-function calcDeposit(e){ e.preventDefault(); const amt=+document.getElementById('depAmt').value||0; const s=S.money.s; document.getElementById('depOut').innerHTML=depositHtml(waterfall(amt,{ef:s.efNow,buf:s.taxBufNow,cush:+s.cushNow||0,house:0,cards:cardDebt()},TODAY)); return false; }
+function calcDeposit(e){ e.preventDefault(); const amt=+document.getElementById('depAmt').value||0; const s=S.money.s; document.getElementById('depOut').innerHTML=depositHtml(waterfall(amt,{ef:s.efNow,buf:s.taxBufNow,cush:0,house:0,cards:cardDebt(),behind:taxBehind(),nLeft:1+S.money.checks.filter(x=>!x.got&&x.d<TAX_CATCHUP_BY).length},TODAY)); return false; }
 function setMoney(k,v){ S.money.s[k]=+v||0; commit(); }
 let mcpLib = null, unverifiedId = null;
 (async()=>{ try { if (window.claude && typeof claude.use==='function') mcpLib = await claude.use('mcp'); if (mcpLib && typeof view!=='undefined' && view==='money') render(); } catch(e){} })();
