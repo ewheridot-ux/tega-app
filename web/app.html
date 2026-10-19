@@ -1564,7 +1564,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b210';
+const BUILD='b211';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2014,12 +2014,14 @@ function toastXp(n){ toast(`+${n} XP`); }
 function confetti(){ const c=document.getElementById('confetti'); const cols=['#8b5cf6','#22d3ee','#fbbf24','#22c55e','#f97316','#ec4899']; for(let i=0;i<60;i++){ const p=document.createElement('i'); p.style.left=Math.random()*100+'vw'; p.style.background=cols[i%cols.length]; p.style.animationDelay=(Math.random()*.4)+'s'; p.style.transform=`rotate(${Math.random()*360}deg)`; c.appendChild(p); setTimeout(()=>p.remove(),2000);} }
 
 /* ===================== money engine ===================== */
+// checks per month: 26 a year when paid every 2 weeks, 2 a month otherwise
+const perMo = () => S.money.s.payEvery===14 ? 26/12 : 2;
 const fixedMo = () => { const s=S.money.s; return s.rent + s.car + s.grocW*52/12 + s.elec + s.gas + (s.ins||0) + (s.net||0); };
 const efTarget = () => fixedMo() * S.money.s.efMonths;
 function waterfall(amt, ctx, dateKey){
   // ctx: {ef, buf, cush, house, cards}; returns row and mutates ctx.
   // Order (b207): TAXES (32.2% + an even share of what you're behind, until Apr 15 2027) → bills → spending → emergency fund → CREDIT CARDS (everything left, until $0) → house → retirement → sweep EF
-  const s=S.money.s, PER=2, fixedCk=fixedMo()/PER, efCk=s.efMonthly/PER, retCk=s.retMonthly/PER, cushCk=s.cushionMonthly/PER, yr=+dateKey.slice(0,4);
+  const s=S.money.s, PER=perMo(), fixedCk=fixedMo()/PER, efCk=s.efMonthly/PER, retCk=s.retMonthly/PER, cushCk=s.cushionMonthly/PER, yr=+dateKey.slice(0,4);
   const tax = amt*s.taxRate; ctx.buf += tax;
   let left = amt - tax - fixedCk, draw = 0;
   if (left < 0) { draw = -left; ctx.ef -= draw; left = 0; }
@@ -4122,7 +4124,7 @@ function setDed(id, k, v){ const x=S.money.budget.deductibles.find(x=>x.id===id)
 function delDed(id){ const x=S.money.budget.deductibles.find(x=>x.id===id); if (x?.txn){ const t=S.money.budget.txns.find(t=>t.id===x.txn); if (t) t.cat='flex'; } S.money.budget.deductibles = S.money.budget.deductibles.filter(x=>x.id!==id); commit({skipXp:true}); }
 function addDedManual(e){ e.preventDefault(); const d=document.getElementById('ddD').value, desc=document.getElementById('ddDesc').value.trim(), amt=Math.abs(num(document.getElementById('ddAmt').value)), cat=document.getElementById('ddCat').value, acct=document.getElementById('ddAcct').value; if(!d||!desc||!amt){ toast('Date, description and amount needed'); return false; } S.money.budget.deductibles.push({id:uid(), txn:null, d, desc, amt, acct, cat, ok:true, note:''}); commit({skipXp:true}); return false; }
 function copyDeductibles(){ const rows=[['Date','Business','Description','Amount','Account','Category','Confirmed','Note']].concat(S.money.budget.deductibles.slice().sort((a,b)=>a.d.localeCompare(b.d)).map(x=>[x.d,DCAT_BIZ[x.cat]||'',x.desc,x.amt.toFixed(2),x.acct,DCATS[x.cat]||x.cat,x.ok?'yes':'review',x.note||''])); const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n'); navigator.clipboard?.writeText(csv).then(()=>toast('Deductibles copied as CSV'),()=>toast('Copy blocked — select the table instead')); }
-const flexForCheck = c => { const s=S.money.s; return Math.max(0, Math.min(s.flexPerCheck, c.amt*(1-s.taxRate) - fixedMo()/2)); };
+const flexForCheck = c => { const s=S.money.s; return Math.max(0, Math.min(s.flexPerCheck, c.amt*(1-s.taxRate) - fixedMo()/perMo())); };
 
 /* ===================== bills (amounts from Gmail + BofA, Oct 2026) ===================== */
 const GM = id => `https://mail.google.com/mail/?authuser=ewheridot@gmail.com#all/thread-f:${id}`;
@@ -4163,7 +4165,7 @@ function vBills(){
   <div class="card sec">
     <div class="tag">Fixed bills · per month</div>
     <div class="row between" style="align-items:baseline;margin-top:4px"><h2 class="num" style="font-size:36px;font-weight:800;letter-spacing:-.04em">${money0(fixedBills)}</h2><span class="sub num">+ ${money0(groc)} groceries = ${money0(fixedMo())}</span></div>
-    <div class="sub" style="margin-top:4px"><b class="num">${money0(fixedMo()/2)}</b> held per check · ${dueSoon.length?`<b>${dueSoon.length}</b> due in 10 days`:'nothing due in 10 days'}</div>
+    <div class="sub" style="margin-top:4px"><b class="num">${money0(fixedMo()/perMo())}</b> held per check · ${dueSoon.length?`<b>${dueSoon.length}</b> due in 10 days`:'nothing due in 10 days'}</div>
   </div>
   <div class="card sec" style="padding:6px 8px">
     ${rows.map(b=>{ const dd=daysBetween(TODAY,b.next), open=billOpen===b.id;
@@ -4232,7 +4234,7 @@ function vTips(){
   if (!S.money.billPaid?.paypal) add('paypal','⚠️','PayPal −$500','Pay first — collections.',0,2);
   tips.sort((a,b)=>(b.pri-a.pri)||(b.save-a.save));
   const possible=tips.reduce((a,t)=>a+t.save,0), doing=tips.filter(t=>T[t.id]).reduce((a,t)=>a+t.save,0), nDoing=tips.filter(t=>T[t.id]).length;
-  const lastAmt=F?.last?.amt||4000, room=Math.max(0,lastAmt*(1-s.taxRate)-fixedMo()/2), v=Math.round(Math.min(avg, room*0.5)/25)*25;
+  const lastAmt=F?.last?.amt||4000, room=Math.max(0,lastAmt*(1-s.taxRate)-fixedMo()/perMo()), v=Math.round(Math.min(avg, room*0.5)/25)*25;
   const perCheck = x => x/ (30.4/14);
   const tipHtml = t => `<div class="tip ${T[t.id]?'on':''}"><span class="tip-i">${t.icon}</span><div class="tip-m"><b>${t.title}</b><span>${t.body}</span></div><div class="tip-r">${t.save>=5?`<span class="tip-s num">${money0(t.save)}</span>`:''}<button class="tip-c ${T[t.id]?'on':''}" onclick="tipToggle('${t.id}')" aria-label="${T[t.id]?'Doing it':'Try this'}">${T[t.id]?'✓':'+'}</button></div></div>`;
   return `<div class="card sec">
@@ -8427,7 +8429,7 @@ function moneyBits(){
     ${infold('wset','Settings','the standing numbers',`<div class="settings">
       ${[['taxRate','Tax set-aside (0.322)'],['rent','Rent /mo'],['car','Car note /mo'],['grocW','Groceries /wk'],['elec','Electric /mo'],['gas','Gas /mo'],['ins','Car insurance /mo'],['net','Internet /mo'],['efMonthly','Emergency /mo'],['retMonthly','Retirement /mo'],['flexPerCheck','Spending money per check'],['efMonths','EF target (months)'],['rothLimit','Roth limit']].map(([k,l])=>`<label>${l}<input class="inp num" type="number" step="any" value="${k==='cushTarget'?cushTarget():s[k]}" onchange="setMoney('${k}',this.value)"></label>`).join('')}
       </div>
-      <div class="help keep" style="margin-top:8px">Fixed costs: <b class="num">${money0(fixedMo())}/mo</b> → ${money0(fixedMo()/2)} per check · Emergency target: <b class="num">${money0(efTarget())}</b> (${s.efMonths} months).</div>`)}
+      <div class="help keep" style="margin-top:8px">Fixed costs: <b class="num">${money0(fixedMo())}/mo</b> → ${money0(fixedMo()/perMo())} per check · Emergency target: <b class="num">${money0(efTarget())}</b> (${s.efMonths} months).</div>`)}
   </div>` };
 }
 function depositHtml(r){ return `<div class="flow">
