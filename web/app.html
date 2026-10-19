@@ -1562,7 +1562,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b205';
+const BUILD='b206';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2016,15 +2016,15 @@ const fixedMo = () => { const s=S.money.s; return s.rent + s.car + s.grocW*52/12
 const efTarget = () => fixedMo() * S.money.s.efMonths;
 function waterfall(amt, ctx, dateKey){
   // ctx: {ef, buf, cush, house, cards}; returns row and mutates ctx.
-  // Order (b205): tax → bills → spending → emergency fund → 2026 tax cushion → CREDIT CARDS (everything left, until $0) → house → retirement → sweep EF
+  // Order (b206): tax → bills → spending → 2026 TAX GAP (everything left until covered, checks before Apr 15 2027) → emergency fund → CREDIT CARDS (everything left, until $0) → house → retirement → sweep EF
   const s=S.money.s, PER=2, fixedCk=fixedMo()/PER, efCk=s.efMonthly/PER, retCk=s.retMonthly/PER, cushCk=s.cushionMonthly/PER, yr=+dateKey.slice(0,4);
   const tax = amt*s.taxRate; ctx.buf += tax;
   let left = amt - tax - fixedCk, draw = 0;
   if (left < 0) { draw = -left; ctx.ef -= draw; left = 0; }
   const flex = Math.min(s.flexPerCheck, left); left -= flex;
+  const cu = dateKey < '2027-04-15' ? Math.min(left, Math.max(0, cushTarget() - (ctx.cush||0))) : 0; left -= cu; ctx.cush = (ctx.cush||0) + cu;
   const efRoom = Math.max(0, efTarget() - ctx.ef);
   let efAdd = Math.min(efCk, left, efRoom); ctx.ef += efAdd; left -= efAdd;
-  const cu = yr<=2026 ? Math.min(cushCk, left) : 0; left -= cu; ctx.cush += cu;
   const cards = Math.min(left, Math.max(0, ctx.cards==null ? cardDebt() : ctx.cards)); left -= cards; if (ctx.cards!=null) ctx.cards -= cards;
   let house = 0; if (efRoom <= 0.5) { house = Math.min(efCk, left); ctx.house += house; left -= house; }
   const ret = Math.min(retCk, left); left -= ret;
@@ -2032,7 +2032,7 @@ function waterfall(amt, ctx, dateKey){
   return {amt, tax, bills:fixedCk, flex: flex+left, efAdd, draw, house, ret, cu, cards, cardsLeft:ctx.cards, extra:left, efBal:ctx.ef, retLabel: yr<=2026?'Roth':'SEP'};
 }
 function projection(){
-  const s=S.money.s; const ctx={ef:s.efNow, buf:s.taxBufNow, cush:0, house:0, cards:cardDebt()};
+  const s=S.money.s; const ctx={ef:s.efNow, buf:s.taxBufNow, cush:+s.cushNow||0, house:0, cards:cardDebt()};
   const future = S.money.checks.filter(c=>!c.got).sort((a,b)=>a.d.localeCompare(b.d));
   const rows=[], payouts=[]; let duePtr=0;
   while (duePtr<DUES.length && DUES[duePtr][0] < TODAY) duePtr++; // dues already passed are ignored
@@ -8156,7 +8156,7 @@ function datumBooks(from, to){ const inc=incomeBy(from,to).datum, exp=S.money.bu
 // one line, one number: where each dollar of a check goes
 function splitRows(r){ const cards=cardList().map(c=>c.name).join(' → ');
   return [['📊','Taxes','Tax Buffer (Capital One)',r.tax,'#ff6b6b'],['🏠','Bills','stays in checking',r.bills,'#a8b3c7'],['🛍️','Spending','yours',r.flex,'#7ee2ff'],
-    ['🛡️','Emergency',r.draw?'covers the bills gap':'HYSA',r.draw?-r.draw:r.efAdd,'#2fbf71'],['🧮','Tax cushion','2026 only',r.cu,'#ffd166'],['💳','Credit cards',cards||'cards',r.cards,'#b98cff'],
+    ['🛡️','Emergency',r.draw?'covers the bills gap':'HYSA',r.draw?-r.draw:r.efAdd,'#2fbf71'],['🧮','2026 tax gap','for April 2027',r.cu,'#ffd166'],['💳','Credit cards',cards||'cards',r.cards,'#b98cff'],
     ['🏡','House','HYSA bucket',r.house,'#f5c542'],['🌱',r.retLabel==='Roth'?'Roth IRA':'SEP IRA','Fidelity',r.ret,'#39ff9f']].filter(x=>Math.abs(x[3])>0.5); }
 function splitBar(rows,total){ return `<div class="pc-bar">${rows.filter(x=>x[3]>0).map(x=>`<i style="flex:${x[3]};background:${x[4]}"></i>`).join('')}</div>`; }
 function splitList(rows){ return `<div class="pc-list">${rows.map(([ic,l,where,v,c])=>`<div class="pc-r"><span class="pc-dot" style="background:${c}"></span><span class="pc-l"><b>${ic} ${l}</b><small>${esc(where)}</small></span><b class="num">${v<0?'−':''}${money0(Math.abs(v))}</b></div>`).join('')}</div>`; }
@@ -8285,10 +8285,11 @@ function vDeduct(){
 }
 /* ---- waterfall tab: landed-check to-dos, upcoming checks, auto-detected deposits ---- */
 const r2 = n => Math.round((+n||0)*100)/100;
-const MOVES = [['tax','Tax Buffer','taxBufNow','📊'],['ef','Emergency fund','efNow','🛡️'],['cu','2026 tax cushion','cushNow','🧮'],['cards','Credit cards','cardsPaid','💳'],['house','House fund','houseNow','🏠'],['ret','Retirement','rothYtd','🌱']];
-function splitFor(c){ const s=S.money.s, r=waterfall(c.amt,{ef:+s.efNow||0,buf:0,cush:0,house:0,cards:cardDebt()},c.gotOn||c.d); const o={tax:r2(r.tax),ef:r2(r.efAdd),cu:r2(r.cu),cards:r2(r.cards),house:r2(r.house),ret:r2(r.ret),retLabel:r.retLabel,draw:r2(r.draw)}; o.stay=r2(c.amt-o.tax-o.ef-o.house-o.ret-o.cu-o.cards); return o; }
+const MOVES = [['tax','Tax Buffer','taxBufNow','📊'],['ef','Emergency fund','efNow','🛡️'],['cu','2026 tax gap','cushNow','🧮'],['cards','Credit cards','cardsPaid','💳'],['house','House fund','houseNow','🏠'],['ret','Retirement','rothYtd','🌱']];
+function splitFor(c){ const s=S.money.s, r=waterfall(c.amt,{ef:+s.efNow||0,buf:0,cush:+s.cushNow||0,house:0,cards:cardDebt()},c.gotOn||c.d); const o={tax:r2(r.tax),ef:r2(r.efAdd),cu:r2(r.cu),cards:r2(r.cards),house:r2(r.house),ret:r2(r.ret),retLabel:r.retLabel,draw:r2(r.draw)}; o.stay=r2(c.amt-o.tax-o.ef-o.house-o.ret-o.cu-o.cards); return o; }
 // credit cards only (the auto loan keeps its normal payment); smallest balance first
 function cardList(){ return (S.money.budget?.accounts||[]).filter(a=>a.bal!=null && a.bal<0 && !/auto|loan|mortgage/i.test(a.name+' '+a.type)).map(a=>({name:a.name.replace(/ Card$/,'').replace(/^Discover it$/,'Discover'), bal:-a.bal})).sort((a,b)=>a.bal-b.bal); }
+function cushTarget(){ const s=S.money.s; if (s.cushTarget!=null && s.cushTarget!=='') return +s.cushTarget||0; try { return Math.round(stmtReceived('2026').filter(r=>r.d<'2026-09-01').reduce((a,r)=>a+r.amt,0)*s.taxRate); } catch(e){ return 0; } }
 function cardDebt(){ return cardList().reduce((a,c)=>a+c.bal,0); }
 function ensureSplits(){ for (const c of S.money.checks) if (c.got && !c.split && c.gotOn && daysBetween(c.gotOn,TODAY)<=10 && daysBetween(c.gotOn,TODAY)>=0){ c.split=splitFor(c); c.done={}; } }
 const openMoves = c => c.split && !c.dismissed ? MOVES.filter(([k])=>c.split[k]>0 && !(c.done||{})[k]) : [];
@@ -8323,7 +8324,7 @@ function wfUpcoming(P){
     <div class="help" style="margin-bottom:10px">Dates are when each one is expected. When an agency deposit shows up in Bank of America it's matched to its check here and the moves appear at the top${B.syncedAt?` · last checked ${B.syncedDay===TODAY?'today':nice(B.syncedDay)}`:''}. Tap a check for its split.</div>
     <div class="stack" style="gap:6px;grid-template-columns:minmax(0,1fr)">${show.map((r,i)=>{ const m=r.d.slice(0,7), dd=daysBetween(TODAY,r.d); const hdr=m!==cur?`<div class="row between" style="margin:${i?10:0}px 2px 0"><span class="tag">${parseD(r.d).toLocaleDateString('en-US',{month:'long',year:'numeric'})}</span><span class="tag num">${money0(msum[m])}</span></div>`:''; cur=m;
       return hdr+`<details class="ck" ${wfOpen===r.id?'open':''} ontoggle="wfOpen=this.open?'${r.id}':(wfOpen==='${r.id}'?null:wfOpen)"><summary><span class="ck-d"><b>${nice(r.d)}</b><small style="${dd<0?'color:var(--warn)':''}">${dd<0?(-dd)+'d late':dd===0?'today':dd<=60?'in '+dd+'d':parseD(r.d).getFullYear()}</small></span><span class="ck-n">${esc(r.note||'')}</span><b class="num">${money0(r.amt)}</b></summary>
-        <div class="ck-b"><div class="row" style="gap:6px">${chip('Tax',r.tax)}${chip('Bills',r.bills)}${chip('Spending',r.flex)}${chip('Emergency',r.efAdd)}${chip('Cushion',r.cu)}${chip('Cards',r.cards,'var(--accent)')}${chip('House',r.house)}${chip(r.retLabel,r.ret)}${chip('Short',r.draw,'var(--bad)')}</div>
+        <div class="ck-b"><div class="row" style="gap:6px">${chip('Tax',r.tax)}${chip('Bills',r.bills)}${chip('Spending',r.flex)}${chip('Emergency',r.efAdd)}${chip('Tax gap',r.cu)}${chip('Cards',r.cards,'var(--accent)')}${chip('House',r.house)}${chip(r.retLabel,r.ret)}${chip('Short',r.draw,'var(--bad)')}</div>
           <div class="row" style="gap:6px;margin-top:10px"><button class="btn sm" id="landed-${r.id}" onclick="verifyLanded('${r.id}')">Check bank now</button>${unverifiedId===r.id?`<button class="btn ghost sm" onclick="markGot('${r.id}',true)">Mark landed anyway</button>`:''}<input class="inp" type="date" value="${r.d}" style="padding:6px 10px;font-size:13px;width:auto" onchange="setCheckDate('${r.id}',this.value)" aria-label="Expected date"><button class="btn ghost sm" onclick="delCheck('${r.id}')">Remove</button></div></div></details>`; }).join('')||'<div class="empty">No checks scheduled. Add one below, or it will appear here by itself when an agency deposit lands.</div>'}</div>
     ${rows.length>6?`<button class="btn ghost sm" style="margin-top:10px;width:100%" onclick="wfAll=!wfAll;render()">${wfAll?'Show fewer':`Show all ${rows.length}`}</button>`:''}
     <form class="inline" style="margin-top:10px;flex-wrap:wrap" onsubmit="return addCheck(event)"><input class="inp" type="date" required style="max-width:160px"><input class="inp num" type="number" placeholder="amount" required min="1" style="max-width:120px"><input class="inp" placeholder="job / invoice"><button class="btn sm">Add check</button></form>
@@ -8354,7 +8355,7 @@ function detectDeposits(txs, keyAcct){
 let mAdj=false;
 function bucketsCard(sinceSep, paidTot, efFull){ const s=S.money.s, taxNeed=Math.max(0,sinceSep*s.taxRate-paidTot);
   const cz=(()=>{ try { const r=projection().rows.find(r=>r.cardsLeft!=null&&r.cardsLeft<=0.5); return r?'$0 by '+nice(r.d)+', '+r.d.slice(0,4):''; } catch(e){ return ''; } })();
-  const B=[['🛡️','Emergency fund','efNow',efTarget(),efFull?'full by '+nice(efFull.d):(+s.efNow>=efTarget()?'full':''),'var(--good)'],['💳','Credit cards owed','__cards',0,(cardList().map(c=>c.name).join(' → ')||'none')+(cz?' · '+cz:''),'var(--accent)'],['📊','Tax buffer','taxBufNow',taxNeed,`should hold ${money0(taxNeed)}`,'var(--warn)'],['🌱',`Roth IRA ${THIS_Y}`,'rothYtd',s.rothLimit,'','var(--accent)'],['🧮','2026 tax cushion','cushNow',0,'for the April true-up','var(--fg)'],['🏠','House fund','houseNow',0,'starts when the emergency fund is full','var(--fg)']];
+  const B=[['🛡️','Emergency fund','efNow',efTarget(),efFull?'full by '+nice(efFull.d):(+s.efNow>=efTarget()?'full':''),'var(--good)'],['💳','Credit cards owed','__cards',0,(cardList().map(c=>c.name).join(' → ')||'none')+(cz?' · '+cz:''),'var(--accent)'],['📊','Tax buffer','taxBufNow',taxNeed,`should hold ${money0(taxNeed)}`,'var(--warn)'],['🌱',`Roth IRA ${THIS_Y}`,'rothYtd',s.rothLimit,'','var(--accent)'],['🧮','2026 tax gap','cushNow',cushTarget(),'for April 2027 · tax on income before September','var(--warn)'],['🏠','House fund','houseNow',0,'starts when the emergency fund is full','var(--fg)']];
   return `<div class="card sec"><div class="hdr"><h2>Buckets</h2><button class="btn ${mAdj?'':'ghost'} sm" onclick="mAdj=!mAdj;render()">${mAdj?'Done':'Adjust'}</button></div>
     <div class="stack" style="gap:14px;grid-template-columns:minmax(0,1fr)">${B.map(([ic,l,k,target,sub,col])=>{ const v=k==='__cards'?cardDebt():+s[k]||0; return `<div><div class="row between" style="gap:8px;flex-wrap:nowrap"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ic} <b>${l}</b></span>${mAdj&&k!=='__cards'?`<input class="inp num" type="number" inputmode="decimal" step="any" style="width:110px;padding:6px 10px;text-align:right" value="${v}" onchange="setMoney('${k}',this.value)" aria-label="${l} balance">`:`<b class="num" style="white-space:nowrap">${money0(v)}${target?`<span class="sub" style="font-weight:500"> / ${money0(target)}</span>`:''}</b>`}</div>${target?`<div class="bar" style="margin-top:6px;height:6px"><b style="width:${Math.round(clamp(v/Math.max(1,target),0,1)*100)}%;background:${col}"></b></div>`:''}${sub?`<div class="sub" style="font-size:11px;margin-top:3px">${sub}</div>`:''}</div>`; }).join('')}</div>
     <div class="help" style="margin-top:12px">Balances go up when you tick a move on a landed check. Use Adjust to correct one by hand.</div></div>`; }
@@ -8370,7 +8371,7 @@ function vMoney(){
 function moneyBits(){
   const s=S.money.s, P=projection(), got=S.money.checks.filter(c=>c.got), owed=P.future.reduce((a,c)=>a+c.amt,0);
   const nextPay=P.payouts.find(p=>p.d>=TODAY), efFull=P.rows.find(r=>r.efBal>=efTarget()-.5);
-  const sample = waterfall(4000, {ef:s.efNow,buf:s.taxBufNow,cush:0,house:0,cards:cardDebt()}, TODAY);
+  const sample = waterfall(4000, {ef:s.efNow,buf:s.taxBufNow,cush:+s.cushNow||0,house:0,cards:cardDebt()}, TODAY);
   const nextDue = DUES.find(d=>d[0]>=TODAY);
   const sinceSep = got.filter(c=>c.d>='2026-09-01').reduce((a,c)=>a+c.amt,0);
   const paidTot = S.money.taxPaid.reduce((a,p)=>a+p.amt,0);
@@ -8388,11 +8389,11 @@ function moneyBits(){
     moreFold: `<div class="card sec" style="padding:4px 18px">
     ${infold('wsplit','Split any amount','',`<form class="inline" onsubmit="return calcDeposit(event)"><input class="inp num" type="number" id="depAmt" value="4000" min="1"><button class="btn">Split it</button></form>
       <div id="depOut" style="margin-top:10px">${depositHtml(sample)}</div>
-      <div class="help keep" style="margin-top:10px">Order: 32.2% → Tax Buffer · bills stay in checking · <b>$${s.flexPerCheck} spending money first</b> · then emergency fund · 2026-only $250 cushion for the April true-up · then <b>everything left pays down the credit cards</b> (smallest first: ${esc(cardList().map(c=>c.name).join(' → ')||'—')}) until they hit $0 · only then retirement (Roth in 2026, SEP from Jan 2027). When the emergency fund is full, its $500/check becomes the <b>House</b> bucket.</div>`)}
+      <div class="help keep" style="margin-top:10px">Order: 32.2% → Tax Buffer · bills stay in checking · <b>$${s.flexPerCheck} spending money first</b> · then <b>everything left covers the 2026 tax gap</b> (${money0(cushTarget())} by Apr 15) · then emergency fund · then <b>everything left pays down the credit cards</b> (smallest first: ${esc(cardList().map(c=>c.name).join(' → ')||'—')}) until they hit $0 · only then retirement (Roth in 2026, SEP from Jan 2027). When the emergency fund is full, its $500/check becomes the <b>House</b> bucket.</div>`)}
     ${infold('wland','Landed',`${got.length} · ${money0(got.reduce((a,c)=>a+c.amt,0))}`,`<div class="help" style="margin-bottom:10px">Agency deposits are picked up from Bank of America when Money refreshes each day. Rows with ✓ bank were matched to a real deposit; undo moves a check back to upcoming.</div>
       <div class="stack" style="gap:8px">${got.slice().sort((a,b)=>(b.gotOn||b.d).localeCompare(a.gotOn||a.d)).map(c=>`<div class="row between" style="gap:10px;padding:12px 14px;border-radius:var(--r2);background:var(--card2)"><div style="min-width:0"><b class="num">${money0(c.amt)}</b> <span class="sub">· ${nice(c.gotOn||c.d)}${c.verified||/from bank/.test(c.note||'')?' · <span style="color:var(--good)">✓ bank</span>':' · marked by hand'}</span><div class="sub" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.note||'')}</div></div><span class="row" style="gap:6px;flex-wrap:nowrap">${c.unsched&&S.money.checks.some(x=>!x.got)?`<select class="inp" style="padding:4px 26px 4px 8px;font-size:12px;max-width:120px" onchange="matchLanded('${c.id}',this.value)"><option value="">which job?</option>${S.money.checks.filter(x=>!x.got).slice(0,8).map(x=>`<option value="${x.id}">${nice(x.d)} · ${money0(x.amt)}</option>`).join('')}</select>`:''}<button class="btn ghost sm" onclick="unGot('${c.id}')">Undo</button></span></div>`).join('')||'<div class="empty">Nothing landed yet.</div>'}</div>`)}
     ${infold('wset','Settings','the standing numbers',`<div class="settings">
-      ${[['taxRate','Tax set-aside (0.322)'],['rent','Rent /mo'],['car','Car note /mo'],['grocW','Groceries /wk'],['elec','Electric /mo'],['gas','Gas /mo'],['ins','Car insurance /mo'],['net','Internet /mo'],['efMonthly','Emergency /mo'],['retMonthly','Retirement /mo'],['cushionMonthly','2026 tax cushion /mo'],['flexPerCheck','Spending money per check'],['efMonths','EF target (months)'],['rothLimit','Roth limit']].map(([k,l])=>`<label>${l}<input class="inp num" type="number" step="any" value="${s[k]}" onchange="setMoney('${k}',this.value)"></label>`).join('')}
+      ${[['taxRate','Tax set-aside (0.322)'],['rent','Rent /mo'],['car','Car note /mo'],['grocW','Groceries /wk'],['elec','Electric /mo'],['gas','Gas /mo'],['ins','Car insurance /mo'],['net','Internet /mo'],['efMonthly','Emergency /mo'],['retMonthly','Retirement /mo'],['cushTarget','2026 tax gap target'],['flexPerCheck','Spending money per check'],['efMonths','EF target (months)'],['rothLimit','Roth limit']].map(([k,l])=>`<label>${l}<input class="inp num" type="number" step="any" value="${k==='cushTarget'?cushTarget():s[k]}" onchange="setMoney('${k}',this.value)"></label>`).join('')}
       </div>
       <div class="help keep" style="margin-top:8px">Fixed costs: <b class="num">${money0(fixedMo())}/mo</b> → ${money0(fixedMo()/2)} per check · Emergency target: <b class="num">${money0(efTarget())}</b> (${s.efMonths} months).</div>`)}
   </div>` };
@@ -8405,9 +8406,9 @@ function depositHtml(r){ return `<div class="flow">
   ${r.cards?`<div class="fl"><small>→ Credit cards</small><b class="num" style="color:var(--accent)">${money0(r.cards)}</b><i>${esc(cardList().map(c=>c.name).join(' → ')||'cards')}</i></div>`:''}
   ${r.house?`<div class="fl"><small>→ House</small><b class="num">${money0(r.house)}</b><i>HYSA bucket</i></div>`:''}
   <div class="fl"><small>→ ${r.retLabel}</small><b class="num">${money0(r.ret)}</b><i>Fidelity</i></div>
-  ${r.cu?`<div class="fl"><small>→ Tax cushion</small><b class="num">${money0(r.cu)}</b><i>2026 only</i></div>`:''}
+  ${r.cu?`<div class="fl"><small>→ 2026 tax gap</small><b class="num">${money0(r.cu)}</b><i>for April</i></div>`:''}
 </div>`; }
-function calcDeposit(e){ e.preventDefault(); const amt=+document.getElementById('depAmt').value||0; const s=S.money.s; document.getElementById('depOut').innerHTML=depositHtml(waterfall(amt,{ef:s.efNow,buf:s.taxBufNow,cush:0,house:0,cards:cardDebt()},TODAY)); return false; }
+function calcDeposit(e){ e.preventDefault(); const amt=+document.getElementById('depAmt').value||0; const s=S.money.s; document.getElementById('depOut').innerHTML=depositHtml(waterfall(amt,{ef:s.efNow,buf:s.taxBufNow,cush:+s.cushNow||0,house:0,cards:cardDebt()},TODAY)); return false; }
 function setMoney(k,v){ S.money.s[k]=+v||0; commit(); }
 let mcpLib = null, unverifiedId = null;
 (async()=>{ try { if (window.claude && typeof claude.use==='function') mcpLib = await claude.use('mcp'); if (mcpLib && typeof view!=='undefined' && view==='money') render(); } catch(e){} })();
