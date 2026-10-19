@@ -1564,7 +1564,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b209';
+const BUILD='b210';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -8210,16 +8210,18 @@ function vMoneyOverview(){ const b=moneyBits(), F=flexNow(), m=TODAY.slice(0,7),
     <div class="grid g2 sec ov-grid">${tile('income', nx?money0(nx.amt):'—', nx?'next check · '+nice(nx.d):'no check scheduled', 'var(--good)')}${tile('spending', F?money0(Math.max(0,F.left)):'—', 'safe to spend', F&&F.left<0?'var(--bad)':'')}${tile('plan', money0(cardDebt()), cz?'cards · $0 by '+cz:'on credit cards', 'var(--accent)')}${tile('plan', money0(invNow()), 'Fidelity · growth goal', '')}</div>`; }
 
 // "It arrived": land the next check on the day it came, then re-plan every check after it every 2 weeks from that day
-function checkArrived(id){ const c=S.money.checks.find(c=>c.id===id); if(!c) return; const d=document.getElementById('arrD')?.value||TODAY, a=+document.getElementById('arrA')?.value||c.amt, per=+document.getElementById('arrP')?.value||a;
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || d>TODAY) return toast('Pick the day it arrived');
-  c.got=true; c.gotOn=d; c.d=d; if (Math.abs(a-c.amt)>1) c.expAmt=c.amt; c.amt=a; c.verified=false; c.note=(c.note||'')+' · marked by hand'; c.split=splitFor(c); c.done={}; delete c.dismissed;
-  const kr=S.quarters[quarterOf(d)]?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)&&!k.src); if(kr) kr.current++;
-  // keep what's still owed the same, re-cut into equal checks every 14 days
+// keep what's still owed the same, re-cut into equal checks every 14 days from the day this one landed
+function replanBiweekly(c, d, per){ per=+per||+S.money.s.payAmt||4000; const a=c.amt;
   const rest=S.money.checks.filter(x=>!x.got).sort((x,y)=>x.d.localeCompare(y.d)); let owed=rest.reduce((t,x)=>t+x.amt,0) - Math.max(0,a-(c.expAmt||a));
   S.money.s.planInvs=[...new Set([...(S.money.s.planInvs||[]), ...[c,...rest].flatMap(x=>(x.note||'').match(/INV-\d+/g)||[])])]; S.money.s.payAmt=per;
   S.money.checks=S.money.checks.filter(x=>x.got); let k=1;
   while (owed>0.5 && k<200){ const amt=Math.min(per, Math.round(owed*100)/100); S.money.checks.push({id:uid(), d:addDays(d,14*k), amt, note:'1 Model Management · every 2 weeks'}); owed-=amt; k++; }
-  S.money.checks.sort((x,y)=>x.d.localeCompare(y.d)); S.money.s.payEvery=14; S.money.s.payFrom=d;
+  S.money.checks.sort((x,y)=>x.d.localeCompare(y.d)); S.money.s.payEvery=14; S.money.s.payFrom=d; }
+function checkArrived(id){ const c=S.money.checks.find(c=>c.id===id); if(!c) return; const d=document.getElementById('arrD')?.value||TODAY, a=+document.getElementById('arrA')?.value||c.amt, per=+document.getElementById('arrP')?.value||a;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || d>TODAY) return toast('Pick the day it arrived');
+  c.got=true; c.gotOn=d; c.d=d; if (Math.abs(a-c.amt)>1) c.expAmt=c.amt; c.amt=a; c.verified=false; c.note=(c.note||'')+' · marked by hand'; c.split=splitFor(c); c.done={}; delete c.dismissed;
+  const kr=S.quarters[quarterOf(d)]?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)&&!k.src); if(kr) kr.current++;
+  replanBiweekly(c, d, per);
   commit(); confetti(); toast(`Logged ${money0(a)} on ${nice(d)} · next ${nice(addDays(d,14))}, then every 2 weeks`); }
 
 let moneyTab = 'overview';
@@ -8375,6 +8377,7 @@ function detectDeposits(txs, keyAcct){
     let hit=open.filter(c=>Math.abs(c.amt-amt)<=2 && Math.abs(daysBetween(c.d,d))<=60).sort(near)[0] || open.filter(c=>Math.abs(daysBetween(c.d,d))<=10).sort(near)[0];
     if (hit){ if (Math.abs(hit.amt-amt)>2) hit.expAmt=hit.amt; hit.amt=amt; hit.got=true; hit.gotOn=d; hit.verified=true; hit.note=(hit.note||'')+' · ✓ bank'; }
     else { hit={id:uid(), d, amt, note:'1 Model Management · from bank', got:true, gotOn:d, verified:true, unsched:true}; M.checks.push(hit); M.checks.sort((a,b)=>a.d.localeCompare(b.d)); }
+    try { if (!M.s.payFrom || d>M.s.payFrom) replanBiweekly(hit, d, M.s.payAmt||4000); } catch(e){ console.warn('replan',e); }
     hit.split=splitFor(hit); hit.done={}; delete hit.dismissed;
     const kr=S.quarters[quarterOf(d)]?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)&&!k.src); if(kr) kr.current++;
     S.wins.push({id:uid(), d:TODAY, text:`💵 ${money0(amt)} landed (from bank) — move ${money0(hit.split.tax)} to Tax Buffer`}); n++;
