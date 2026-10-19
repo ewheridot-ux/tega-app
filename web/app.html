@@ -1586,7 +1586,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b219';
+const BUILD='b220';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -8241,7 +8241,7 @@ function netCard(){ const B=S.money.budget, A=(B.accounts||[]).filter(a=>a.bal!=
 function cardsCard(P){ const L=cardList(); if(!L.length) return ''; const tot=L.reduce((t,c)=>t+c.bal,0), cz=P.rows.find(r=>r.cardsLeft!=null&&r.cardsLeft<=0.5), s=S.money.s;
   const meta={Savor:{lim:1000,min:+s.minCap1||25,due:27},Discover:{lim:3000,min:+s.minDisc||35,due:3}};
   return `<div class="card sec"><div class="hdr"><h2>💳 Cards</h2><span class="sub num">${money0(tot)} owed</span></div>
-    ${L.map(c=>{ const m=meta[c.name]||{lim:c.bal,min:0,due:null}, pct=clamp(c.bal/(m.lim||c.bal||1),0,1.2); return `<div class="cc-r"><div class="row between"><b>${esc(c.name)}</b><b class="num">${money0(c.bal)}<span class="sub" style="font-weight:500"> / ${money0(m.lim)}</span></b></div><div class="bar" style="height:8px;margin:6px 0 4px"><b style="width:${Math.min(100,Math.round(pct*100))}%;background:${pct>=1?'var(--bad)':'var(--accent)'}"></b></div><div class="sub" style="font-size:12px">min ${money0(m.min)}${m.due?` · due the ${m.due}${m.due===3?'rd':'th'}`:''}${pct>1?' · over limit':''}</div></div>`; }).join('')}
+    ${L.map(c=>{ const m0=meta[c.name]||{lim:c.bal,min:0,due:null}, m={lim:c.limit||m0.lim, min:c.minDue!=null?c.minDue:m0.min, due:c.dueDate?+c.dueDate.slice(8):m0.due}, pct=clamp(c.bal/(m.lim||c.bal||1),0,1.2); return `<div class="cc-r"><div class="row between"><b>${esc(c.name)}</b><b class="num">${money0(c.bal)}<span class="sub" style="font-weight:500"> / ${money0(m.lim)}</span></b></div><div class="bar" style="height:8px;margin:6px 0 4px"><b style="width:${Math.min(100,Math.round(pct*100))}%;background:${pct>=1?'var(--bad)':'var(--accent)'}"></b></div><div class="sub" style="font-size:12px">min ${money0(m.min)}${m.due?` · due the ${m.due}${m.due===3?'rd':'th'}`:''}${pct>1?' · over limit':''}</div></div>`; }).join('')}
     <div class="sub" style="margin-top:8px">Every check's leftover goes here, smallest first, until both are $0.</div></div>`; }
 function goalsCard(b){ const s=S.money.s, M=S.money, G=(M.growth ||= {target:10000}), inv=invNow(), ef=+s.efNow||0, eft=efTarget();
   const row=(ic,l,v,t,sub,k,col)=>`<div class="gl-r"><div class="row between"><span>${ic} <b>${l}</b></span><b class="num">${money0(v)}<span class="sub" style="font-weight:500"> / ${k==='growth'?`<input class="inp num" type="number" inputmode="decimal" value="${t}" style="width:84px;padding:2px 6px;display:inline-block" onchange="S.money.growth.target=+this.value||10000;commit({skipXp:true})">`:money0(t)}</span></b></div><div class="bar" style="height:8px;margin:6px 0 4px"><b style="width:${Math.round(clamp(v/(t||1),0,1)*100)}%;background:${col}"></b></div>${sub?`<div class="sub" style="font-size:12px">${sub}</div>`:''}</div>`;
@@ -8400,7 +8400,7 @@ const r2 = n => Math.round((+n||0)*100)/100;
 const MOVES = [['tax','Tax Buffer','taxBufNow','📊'],['ef','Emergency fund','efNow','🛡️'],['cards','Credit cards','cardsPaid','💳'],['house','House fund','houseNow','🏠'],['ret','Retirement','rothYtd','🌱']];
 function splitFor(c){ const s=S.money.s, r=waterfall(c.amt,{ef:+s.efNow||0,buf:0,cush:0,house:0,cards:cardDebt(),behind:Math.max(0,taxBehind()-c.amt*s.taxRate),nLeft:1+S.money.checks.filter(x=>!x.got&&x.d<TAX_CATCHUP_BY).length,nextD:(S.money.checks.filter(x=>!x.got&&x.d>(c.gotOn||c.d)).map(x=>x.d).sort()[0]||null)},c.gotOn||c.d); const o={tax:r2(r.tax),ef:r2(r.efAdd),cu:r2(r.cu),cards:r2(r.cards),house:r2(r.house),ret:r2(r.ret),retLabel:r.retLabel,draw:r2(r.draw)}; o.stay=r2(c.amt-o.tax-o.ef-o.house-o.ret-o.cu-o.cards); return o; }
 // credit cards only (the auto loan keeps its normal payment); smallest balance first
-function cardList(){ return (S.money.budget?.accounts||[]).filter(a=>a.bal!=null && a.bal<0 && !/auto|loan|mortgage/i.test(a.name+' '+a.type)).map(a=>({name:a.name.replace(/ Card$/,'').replace(/^Discover it$/,'Discover'), bal:-a.bal})).sort((a,b)=>a.bal-b.bal); }
+function cardList(){ return (S.money.budget?.accounts||[]).filter(a=>a.bal!=null && a.bal<0 && !/auto|loan|mortgage/i.test(a.name+' '+a.type)).map(a=>({name:a.name.replace(/ Card$/,'').replace(/^Discover it$/,'Discover'), bal:-a.bal, minDue:a.minDue, dueDate:a.dueDate, limit:a.limit})).sort((a,b)=>a.bal-b.bal); }
 const TAX_CATCHUP_BY='2027-04-15';
 function taxReceived(){ let r=0; try { r=stmtReceived('2026').reduce((a,x)=>a+x.amt,0); } catch(e){} r+=S.money.checks.filter(c=>c.got&&(c.gotOn||c.d)>='2027-01-01').reduce((a,c)=>a+c.amt,0); return r; }
 function dedTotal(from){ return ((S.money.budget||{}).deductibles||[]).filter(x=>x.ok&&(x.d||'')>=from).reduce((a,x)=>a+(+x.amt||0),0); }
@@ -8572,7 +8572,8 @@ async function bankRefresh(manual){
       if (t.cat==='deduct') addDeductible(t, S);
     }
     B.txns.sort((x,y)=>y.d.localeCompare(x.d));
-    B.accounts = list.map(x => { const cur = x.balance && x.balance.current!=null ? +x.balance.current : null; return {key:x.account_group_key, name:String(x.name||'Account'), inst:String(x.institution||''), mask:String(x.account_mask||''), type:String(x.type||''), bal: cur==null||isNaN(cur) ? null : (isDebt(x.type) ? -cur : cur), asOf:String(x.balance_as_of||'').slice(0,10)}; });
+    B.accounts = list.map(x => { const cur = x.balance && x.balance.current!=null ? +x.balance.current : null; return {key:x.account_group_key, name:String(x.name||'Account'), inst:String(x.institution||''), mask:String(x.account_mask||''), type:String(x.type||''), bal: cur==null||isNaN(cur) ? null : (isDebt(x.type) ? -cur : cur), asOf:String(x.balance_as_of||'').slice(0,10), minDue:x.min_due!=null?+x.min_due:null, dueDate:x.due_date?String(x.due_date).slice(0,10):null, limit:x.credit_limit!=null?+x.credit_limit:null}; });
+    try { for (const a of B.accounts){ if (a.minDue==null) continue; const k=/savor|capital/i.test(a.name+' '+a.inst)?'minCap1':/discover/i.test(a.name+' '+a.inst)?'minDisc':null; if (k) S.money.s[k]=a.minDue; } } catch(e){}
     B.pulled = TODAY; B.syncedDay = TODAY; B.syncedAt = Date.now(); try { invLog(); } catch(e){}
     const landedN = detectDeposits(got, keyAcct);
     commit({skipXp:!landedN});
