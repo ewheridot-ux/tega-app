@@ -40,6 +40,9 @@ def tx(t):
             'account_group_key': k, 'account_name': pick(t, 'accountName', default=names.get(k)), 'is_pending': bool(pick(t, 'isPending', 'pending', default=False))}
 feed = {'at': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'), 'calls': {'era_accounts': {'accounts': [acc(a) for a in A]}, 'era_tx': {'transactions': [tx(t) for t in T]}}}
 out.append(f"era: {len(A)} accounts, {len(T)} transactions ({sum(1 for t in T if pick(t,'isPending','pending'))} pending)")
+if T:
+    ids = sorted({str(pick(t,'id','transactionId',default=''))[:5] for t in T}); out.append('tx id prefixes: ' + ','.join(ids))
+    ok = sum(1 for t in T if t.get('isCashOutflow') is not None and (float(t.get('amount') or 0) < 0) == bool(t['isCashOutflow'])); out.append(f'outflow=negative on {ok}/{len(T)}')
 if A: out.append('account fields: ' + ','.join(sorted(A[0].keys())))
 if T: out.append('tx fields: ' + ','.join(sorted(T[0].keys())))
 bad = sum(1 for t in feed['calls']['era_tx']['transactions'] if not t['transaction_id'] or not t['date'] or t['amount'] is None)
