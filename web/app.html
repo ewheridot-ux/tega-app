@@ -1586,7 +1586,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b218';
+const BUILD='b219';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -7977,7 +7977,7 @@ function liveRefresh(why){ const now=Date.now(), force=why==='pull'||why==='onli
   if (force) nat('pull');
   if (window.native) q.push(()=>nativeSync());
   if (typeof mcpLib!=='undefined' && mcpLib){
-    try { if ((force || (S.money.budget.syncedDay!==TODAY && bankTriedDay!==TODAY)) && !bankBusy) q.push(()=>bankRefresh(false)); } catch(e){}
+    try { if ((force || bankStale()) && !bankBusy) q.push(()=>bankRefresh(false)); } catch(e){}
     try { if ((force || mState().syncDay!==TODAY) && !mBusy) q.push(()=>mSync(false)); } catch(e){}
     try { if (!igBusy && (force || now-(igData().t||0)>6*3600e3)) q.push(()=>{ igLastTry=Date.now(); return igRefresh(false); }); } catch(e){}
     try { if (force || (S.circle||{}).syncDay!==TODAY) q.push(()=>socSync(false)); } catch(e){}
@@ -8481,7 +8481,7 @@ function bucketsCard(sinceSep, paidTot, efFull){ const s=S.money.s, taxNeed=Math
     <div class="stack" style="gap:14px;grid-template-columns:minmax(0,1fr)">${B.map(([ic,l,k,target,sub,col])=>{ const v=k==='__cards'?cardDebt():+s[k]||0; return `<div><div class="row between" style="gap:8px;flex-wrap:nowrap"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ic} <b>${l}</b></span>${mAdj&&k!=='__cards'?`<input class="inp num" type="number" inputmode="decimal" step="any" style="width:110px;padding:6px 10px;text-align:right" value="${v}" onchange="setMoney('${k}',this.value)" aria-label="${l} balance">`:`<b class="num" style="white-space:nowrap">${money0(v)}${target?`<span class="sub" style="font-weight:500"> / ${money0(target)}</span>`:''}</b>`}</div>${target?`<div class="bar" style="margin-top:6px;height:6px"><b style="width:${Math.round(clamp(v/Math.max(1,target),0,1)*100)}%;background:${col}"></b></div>`:''}${sub?`<div class="sub" style="font-size:11px;margin-top:3px">${sub}</div>`:''}</div>`; }).join('')}</div>
     <div class="help" style="margin-top:12px">Balances go up when you tick a move on a landed check. Use Adjust to correct one by hand.</div></div>`; }
 function vMoney(){
-  if (mcpLib && bankTriedDay!==TODAY && !bankBusy && S.money.budget.syncedDay!==TODAY && (dbReady || !dbRef)) setTimeout(()=>bankRefresh(false), 0); // first open of Money each day pulls fresh bank data
+  if (mcpLib && !bankBusy && bankStale() && (dbReady || !dbRef)) setTimeout(()=>bankRefresh(false), 0); // first open of Money each day pulls fresh bank data
   moneyTab = MONEY_ALIAS[moneyTab] || moneyTab;
   if (moneyTab==='spending') return moneyTabs() + freshLine() + vBudget();
   if (moneyTab==='taxes') return moneyTabs() + vMoneyTaxes();
@@ -8531,7 +8531,8 @@ let mcpLib = null, unverifiedId = null;
 (async()=>{ try { if (window.claude && typeof claude.use==='function') mcpLib = await claude.use('mcp'); if (mcpLib && typeof view!=='undefined' && view==='money') render(); } catch(e){} })();
 // "landed?" — look for the deposit in the bank before believing it
 /* ---- live bank data: balances + new transactions, once a day ---- */
-let bankBusy=false, bankTriedDay='', bankErr='';
+let bankBusy=false, bankTriedDay='', bankTriedAt=0, bankErr='';
+function bankStale(){ return Date.now()-(S.money.budget.syncedAt||0)>3600e3 && Date.now()-bankTriedAt>3600e3; }
 const instAcct = i => /bank of america/i.test(i||'') ? 'BofA' : /discover/i.test(i||'') ? 'Discover' : /capital one/i.test(i||'') ? 'Capital One Savor' : null;
 function acctLabel(x){ const i=x.institution||'', n=x.name||''; if (/bank of america/i.test(i)) return 'BofA'; if (/discover/i.test(i)) return 'Discover'; if (/capital one/i.test(i)) return /savor/i.test(n)?'Capital One Savor':'Capital One '+n.replace(/^360 /,''); if (/pnc/i.test(i)) return 'PNC '+n; if (/fidelity/i.test(i)) return 'Fidelity '+n; return (i.split(/\s|-/)[0]||'Bank')+' '+n; }
 const isDebt = t => /credit|loan|mortgage/i.test(t||'');
@@ -8540,7 +8541,7 @@ function bankErrText(code){ return code==='server_not_connected' ? 'The finance 
 async function bankRefresh(manual){
   if (bankBusy) return;
   if (!mcpLib){ if (manual) toast('Bank connection isn\'t available in this view'); return; }
-  bankBusy=true; bankTriedDay=TODAY; bankErr=''; if (manual) render();
+  bankBusy=true; bankTriedDay=TODAY; bankTriedAt=Date.now(); bankErr=''; if (manual) render();
   try {
     const call = (tool, input) => mcpLib.callTool('Era Context', tool, input).then(r => (r && r.payload && typeof r.payload==='object') ? r.payload : {});
     const a = await call('accounts__list_financial_accounts', {});
