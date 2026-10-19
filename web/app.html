@@ -1561,6 +1561,22 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 .nw-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}.nw-3 span{display:flex;flex-direction:column}.nw-3 b{font-size:17px}.nw-3 small{font-size:12px;color:var(--muted)}
 .cc-r,.gl-r{padding:8px 0;border-top:1px solid var(--line)}.cc-r:first-of-type,.gl-r:first-of-type{border-top:0}
 .im-list{display:grid}.im-r{display:grid;grid-template-columns:10px minmax(0,1fr) auto 76px;gap:10px;align-items:center;padding:7px 0;border-top:1px solid var(--line)}.im-r:first-child{border-top:0}.im-r .sub{text-align:right;font-size:12px}
+
+.mn-fresh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 4px 12px;font-size:13px;color:var(--mut)}
+.mn-fresh b{color:var(--fg)} .mn-fresh em{font-style:normal;opacity:.8}
+.nc-when{display:block;font-size:30px;font-weight:800;letter-spacing:-.03em;margin:2px 0}
+.nc-amt{margin-top:10px;font-size:14px;color:var(--mut)}.nc-amt b{color:var(--warn)}
+.nc-ref{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:13px;color:var(--mut)}.nc-ref b{color:var(--fg)}
+.nc-steps{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:st}
+.nc-steps li{display:grid;grid-template-columns:28px minmax(0,1fr) auto;grid-template-areas:"i t a" "i s s";align-items:center;column-gap:8px;padding:9px 0;border-top:1px solid var(--line)}
+.nc-steps li:first-child{border-top:0}
+.nc-steps li>span{grid-area:i;font-size:18px;text-align:center}.nc-steps li>b{grid-area:t}.nc-steps li>em{grid-area:a;font-style:normal;font-weight:700}.nc-steps li>small{grid-area:s;color:var(--mut);font-size:12px}
+.du-list{display:grid;gap:2px}
+.du-r{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}.du-r:first-child{border-top:0}
+.du-d{display:flex;flex-direction:column;align-items:center;line-height:1.05;font-size:18px;font-weight:800;padding:4px 0;border-radius:10px;background:var(--card2)}
+.du-d b{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);font-weight:700}.du-d.hot{color:var(--warn)}
+.du-n{display:flex;flex-direction:column;min-width:0}.du-n b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.du-n small{color:var(--mut);font-size:12px}
+.ec-r{padding:6px 0;border-top:1px solid var(--line);flex-wrap:nowrap;gap:8px}.ec-r:first-child{border-top:0}
 </style>
 
 <div class="app" id="app"></div>
@@ -1570,7 +1586,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b217';
+const BUILD='b218';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -3544,7 +3560,7 @@ function renderReset(){
      <div class="row between" style="margin:16px 0 6px"><span class="tag">Rate each track</span><button class="btn ghost sm" onclick="rsAutoTracks()">Fill from what I ticked</button></div>
      <div class="stack" style="gap:6px;grid-template-columns:minmax(0,1fr)">${TRACKS.map(t=>`<div class="row between" style="gap:8px;flex-wrap:nowrap;padding:6px 10px;border-radius:var(--r2);background:var(--card2)"><span style="min-width:0;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.icon} ${esc(t.name)}</span><span class="row" style="gap:4px;flex-wrap:nowrap">${[['ok','✅'],['warn','⚠️'],['bad','❌']].map(([v,e])=>`<button class="iconbtn" style="background:${(rv.tracks||{})[t.key]===v?'var(--fg)':'var(--card)'}" onclick="rsTrack('${t.key}','${v}')" aria-pressed="${(rv.tracks||{})[t.key]===v}" aria-label="${t.name} ${v}">${e}</button>`).join('')}</span></div>`).join('')}</div>`,
     `<h2 style="font-size:22px">Money this week</h2><div class="sub" style="margin-bottom:12px">Know the split before the check lands.</div>
-     ${nx?`<div class="card" style="background:var(--card2);padding:14px;margin-bottom:12px"><div class="row between"><b>Next check · ${money0(nx.amt)}</b><span class="sub">${nice(nx.d)}${nx.d<TODAY?' · late':` · in ${daysBetween(TODAY,nx.d)}d`}</span></div>
+     ${nx?`<div class="card" style="background:var(--card2);padding:14px;margin-bottom:12px"><div class="row between"><b>Next check · amount TBD</b><span class="sub">${nice(nx.d)}${nx.d<TODAY?' · late':` · in ${daysBetween(TODAY,nx.d)}d`}</span></div>
        <div class="stack" style="gap:4px;margin-top:10px;font-size:13px">${MOVES.filter(([k])=>sp[k]>0).map(([k,l,,ic])=>`<div class="row between"><span>${ic} ${k==='ret'&&sp.retLabel?esc(sp.retLabel):l}</span><b class="num">${money0(sp[k])}</b></div>`).join('')}<div class="row between" style="border-top:1px solid var(--line,rgba(128,128,128,.25));padding-top:6px;margin-top:4px"><span>Stays for bills + flex</span><b class="num">${money0(sp.stay)}</b></div></div></div>`:`<div class="empty" style="margin-bottom:12px">No checks on the schedule.</div>`}
      ${F?`<div class="row between" style="font-size:14px;margin-bottom:8px"><span>Spending money left</span><b class="num" style="color:${F.left<0?'var(--bad)':'var(--fg)'}">${money0(F.left)}</b></div>`:''}
      ${soon.length?`<div class="tag" style="margin:12px 0 6px">Due in the next week</div><div class="stack" style="gap:4px;font-size:13px">${soon.slice(0,5).map(x=>`<div class="row between"><span style="min-width:0">${esc(x.text)}</span><span class="sub">${nice(x.d)}</span></div>`).join('')}</div>`:''}
@@ -3589,7 +3605,7 @@ function voiceFacts(){
   else f.push('nothing logged today yet');
   f.push(`habits: ${S.habits.map(h=>`${h.name} (${d?.habits?.[h.id]?'done':'not yet'})`).join(', ')}`);
   if (F) f.push(`flex spending money left on this paycheck: ${money0(F.left)}`);
-  const nx=S.money.checks.filter(c=>!c.got).sort((p,q)=>p.d<q.d?-1:1)[0]; if (nx) f.push(`next paycheck: ${money0(nx.amt)} around ${nx.d}`);
+  const nx=S.money.checks.filter(c=>!c.got).sort((p,q)=>p.d<q.d?-1:1)[0]; if (nx) f.push(`next paycheck expected around ${nx.d} (amount unknown until it lands)`);
   const dls=(S.dl||[]).filter(x=>!x.done).sort((p,q)=>p.d<q.d?-1:1).slice(0,4); if (dls.length) f.push(`deadlines: ${dls.map(x=>`"${x.text}" ${x.d<TODAY?`${daysBetween(x.d,TODAY)}d LATE`:`in ${daysBetween(TODAY,x.d)}d`}`).join('; ')}`);
   const bm=benchMinsByWeek(); f.push(`Datum (his custom grillz / jewelry startup) bench minutes this week: ${bm[THIS_WEEK]||0}`);
   const arf=artStats(); f.push(arf.n?`art wall: ${arf.n} pieces, ${arf.wk} this week, last one ${arf.gap} days ago`:'art wall: empty, he draws in Procreate and on paper');
@@ -8112,7 +8128,7 @@ const NAV_QA={
   content:[['▶','Log a post',()=>{ go('content'); setTimeout(()=>openLog('post'),250); }],['◇','Ideas',TAB_GO('content',()=>ctTab='ideas')],['▦','Plan',TAB_GO('content',()=>ctTab='plan')]],
   datum:[['⚒︎','Bench',TAB_GO('datum',()=>dView='bench')],['◎','Casters',TAB_GO('datum',()=>dView='casters')],['$','Business',TAB_GO('datum',()=>dView='biz')]],
   gym:[['◆','Start workout',()=>window.tegaDeepLink('tegaexe://workout')],['♥','Recovery',TAB_GO('gym',()=>gTab='recovery')],['▦','Plan',TAB_GO('gym',()=>gTab='plan')]],
-  money:[['≡','Scan receipt',()=>receiptOpen()],['$','Next check',TAB_GO('money',()=>moneyTab='income')],['≈','Spending',TAB_GO('money',()=>moneyTab='spending')],['▦','Plan',TAB_GO('money',()=>moneyTab='plan')],['✂︎','Taxes',TAB_GO('money',()=>moneyTab='taxes')]],
+  money:[['≡','Scan receipt',()=>receiptOpen()],['$','Now',TAB_GO('money',()=>moneyTab='now')],['≈','Spending',TAB_GO('money',()=>moneyTab='spending')],['✂︎','Taxes',TAB_GO('money',()=>moneyTab='taxes')],['▦','Accounts',TAB_GO('money',()=>moneyTab='accounts')]],
 };
 let _navHold=null, _navHeldAt=0;
 function navHeld(){ return Date.now()-_navHeldAt<600; }
@@ -8219,23 +8235,23 @@ function growthCard(){ const M=S.money, G=(M.growth ||= {target:10000}), v=invNo
 function vMoneyPlan(){ const b=moneyBits(); return `${netCard()}${cardsCard(b.P)}${goalsCard(b)}${vBills()}`; }
 function netCard(){ const B=S.money.budget, A=(B.accounts||[]).filter(a=>a.bal!=null), sum=k=>A.filter(a=>acctKind(a)===k).reduce((t,a)=>t+a.bal,0), cash=sum('cash'), inv=sum('invest'), debt=-sum('debt'), net=cash+inv-debt;
   const when=B.syncedAt?(B.syncedDay===TODAY?'today':nice(B.syncedDay)):'never';
-  return `<div class="card sec"><div class="row between" style="align-items:flex-start"><div><div class="tag">Net worth</div><b class="num nw-big" style="color:${net<0?'var(--bad)':'var(--good)'}">${net<0?'−':''}${money0(Math.abs(net))}</b></div><button class="btn ghost sm" onclick="bankRefresh(true)" ${bankBusy?'disabled':''}>${bankBusy?'…':'↻'}</button></div>
+  return `<div class="card sec"><div class="row between" style="align-items:flex-start"><div><div class="tag">Net worth</div><b class="num nw-big" style="color:${net<0?'var(--bad)':'var(--good)'}">${net<0?'−':''}${money0(Math.abs(net))}</b></div></div>
     <div class="nw-3"><span><b class="num" style="color:var(--good)">${money0(cash)}</b><small>cash</small></span><span><b class="num">${money0(inv)}</b><small>invested</small></span><span><b class="num" style="color:var(--bad)">${money0(debt)}</b><small>owed</small></span></div>
     <details class="pc-edit"><summary>${(B.accounts||[]).length} accounts · updated ${when}</summary>${(B.accounts||[]).map(a=>`<div class="row between" style="gap:8px;flex-wrap:nowrap;padding:7px 0;border-top:1px solid var(--line)"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px">${esc(a.name)} <span class="sub" style="font-size:12px">${esc((a.inst||'').split(/ - /)[0])}</span></span><b class="num" style="${a.bal<0?'color:var(--bad)':''}">${a.bal==null?'—':(a.bal<0?'−':'')+money0(Math.abs(a.bal))}</b></div>`).join('')}${bankErr?`<div class="help keep" style="color:var(--warn)">${esc(bankErr)}</div>`:''}</details></div>`; }
 function cardsCard(P){ const L=cardList(); if(!L.length) return ''; const tot=L.reduce((t,c)=>t+c.bal,0), cz=P.rows.find(r=>r.cardsLeft!=null&&r.cardsLeft<=0.5), s=S.money.s;
   const meta={Savor:{lim:1000,min:+s.minCap1||25,due:27},Discover:{lim:3000,min:+s.minDisc||35,due:3}};
-  return `<div class="card sec"><div class="hdr"><h2>💳 Cards</h2><span class="sub">${cz?`<b style="color:var(--good)">$0 by ${nice(cz.d)}</b>`:''}</span></div>
+  return `<div class="card sec"><div class="hdr"><h2>💳 Cards</h2><span class="sub num">${money0(tot)} owed</span></div>
     ${L.map(c=>{ const m=meta[c.name]||{lim:c.bal,min:0,due:null}, pct=clamp(c.bal/(m.lim||c.bal||1),0,1.2); return `<div class="cc-r"><div class="row between"><b>${esc(c.name)}</b><b class="num">${money0(c.bal)}<span class="sub" style="font-weight:500"> / ${money0(m.lim)}</span></b></div><div class="bar" style="height:8px;margin:6px 0 4px"><b style="width:${Math.min(100,Math.round(pct*100))}%;background:${pct>=1?'var(--bad)':'var(--accent)'}"></b></div><div class="sub" style="font-size:12px">min ${money0(m.min)}${m.due?` · due the ${m.due}${m.due===3?'rd':'th'}`:''}${pct>1?' · over limit':''}</div></div>`; }).join('')}
-    <div class="sub" style="margin-top:8px">${money0(tot)} total · every check sends what's left after bills to these until they're $0</div></div>`; }
+    <div class="sub" style="margin-top:8px">Every check's leftover goes here, smallest first, until both are $0.</div></div>`; }
 function goalsCard(b){ const s=S.money.s, M=S.money, G=(M.growth ||= {target:10000}), inv=invNow(), ef=+s.efNow||0, eft=efTarget();
   const row=(ic,l,v,t,sub,k,col)=>`<div class="gl-r"><div class="row between"><span>${ic} <b>${l}</b></span><b class="num">${money0(v)}<span class="sub" style="font-weight:500"> / ${k==='growth'?`<input class="inp num" type="number" inputmode="decimal" value="${t}" style="width:84px;padding:2px 6px;display:inline-block" onchange="S.money.growth.target=+this.value||10000;commit({skipXp:true})">`:money0(t)}</span></b></div><div class="bar" style="height:8px;margin:6px 0 4px"><b style="width:${Math.round(clamp(v/(t||1),0,1)*100)}%;background:${col}"></b></div>${sub?`<div class="sub" style="font-size:12px">${sub}</div>`:''}</div>`;
   return `<div class="card sec"><div class="hdr"><h2>Goals</h2><button class="btn ${mAdj?'':'ghost'} sm" onclick="mAdj=!mAdj;render()">${mAdj?'Done':'Edit'}</button></div>
     ${mAdj?`<div class="settings"><label>Emergency fund now<input class="inp num" type="number" value="${ef}" onchange="setMoney('efNow',this.value)"></label><label>House fund now<input class="inp num" type="number" value="${+s.houseNow||0}" onchange="setMoney('houseNow',this.value)"></label></div>`:''}
-    ${row('🛡️','Emergency fund',ef,eft,b.efFull?'full by '+nice(b.efFull.d):'starts after the cards and taxes','emergency','var(--good)')}
+    ${row('🛡️','Emergency fund',ef,eft,'starts after the cards and taxes','emergency','var(--good)')}
     ${row('🌱','Fidelity',inv,G.target,cardDebt()>0.5?'Roth deposits resume once the cards and taxes are done':'','growth','var(--accent2)')}
     ${(+s.houseNow||0)>0?row('🏡','House',+s.houseNow,0,'','house','var(--warn)'):''}</div>`; }
 function vMoneyTaxes(){ const b=moneyBits(), s=S.money.s, sh=taxShortApril(); return `${taxCard()}
-  ${taxBehind()>0.5?`<div class="help sec keep" style="margin:-6px 4px 12px">Catch-up starts once the cards hit $0${sh>50?` · about ${money0(sh)} gets paid after Apr 15`:''}.</div>`:''}
+  ${taxBehind()>0.5?`<div class="help sec keep" style="margin:-6px 4px 12px">Catch-up starts once the cards hit $0.</div>`:''}
   ${b.taxFold}${datumCard()}${vDeduct()}`; }
 function vMoneyOverview(){ const b=moneyBits(), F=flexNow(), m=TODAY.slice(0,7), inc=incomeBy(m+'-01',TODAY), inTot=Object.values(inc).reduce((a,v)=>a+v,0);
   const out=S.money.budget.txns.filter(t=>t.d.startsWith(m)&&t.amt<0&&['flex','fixed','deduct'].includes(t.cat)).reduce((a,t)=>a-t.amt,0), nx=b.P.rows[0];
@@ -8261,10 +8277,45 @@ function checkArrived(id){ const c=S.money.checks.find(c=>c.id===id); if(!c) ret
   replanBiweekly(c, d, per);
   commit(); confetti(); toast(`Logged ${money0(a)} on ${nice(d)} · next ${nice(addDays(d,14))}, then every 2 weeks`); }
 
-let moneyTab = 'income';
+/* b218 money: one ordered page — what landed, what's next (no guessed amounts), what's due, debt, goals */
+function bankThrough(){ const T=(S.money.budget?.txns||[]); let m=''; for (const t of T) if (t.d>m) m=t.d; return m; }
+function freshLine(){ const B=S.money.budget, th=bankThrough(), age=th?daysBetween(th,TODAY):null;
+  return `<div class="mn-fresh"><span>🏦 Bank data through <b>${th?nice(th):'—'}</b>${age>2?` <em>· banks lag 2–4 days</em>`:''}</span><button class="btn ghost sm" onclick="bankRefresh(true)" ${bankBusy?'disabled':''}>${bankBusy?'…':'↻'}</button></div>${bankErr?`<div class="help keep" style="color:var(--warn);margin:-4px 6px 10px">${esc(bankErr)}</div>`:''}`; }
+function lastLanded(){ return S.money.checks.filter(c=>c.got).sort((a,b)=>(b.gotOn||b.d).localeCompare(a.gotOn||a.d))[0]; }
+function nextCheckCard(P){ const nx=P.rows[0]; if (!nx) return `<div class="card sec"><div class="tag">Next check</div><div class="sub" style="margin-top:6px">Nothing expected. A new one appears here by itself when an agency deposit lands.</div></div>`;
+  const dd=daysBetween(TODAY,nx.d), ll=lastLanded(), owe=(()=>{ try { return stmtNow().balance; } catch(e){ return 0; } })();
+  const nn=P.rows[1], bills=Math.round(nx.bills||0), flex=Math.round(nx.flex||0), cd=cardDebt(), tb=taxBehind();
+  const rest=[cd>0.5?['💳','Credit cards',`${money0(cd)} left`]:null, tb>0.5?['📊','Tax catch-up',`${money0(tb)} behind`]:null, (+S.money.s.efNow||0)<efTarget()-.5?['🛡️','Emergency fund',`${money0(+S.money.s.efNow||0)} of ${money0(efTarget())}`]:null, ['🌱','Roth IRA','']].filter(Boolean);
+  return `<div class="card sec nc-card">
+    <div class="tag">Next check</div><b class="nc-when">${dd<0?'Any day now':dd===0?'Today':nice(nx.d)}</b><div class="sub">${dd<0?`was expected ${nice(nx.d)} · shows up here once the bank posts it`:dd===0?'expected today':`expected in ${dd} days`}</div>
+    <div class="nc-amt">Amount: <b>unknown until it lands</b></div>
+    <div class="nc-ref">${ll?`<span>Last check <b class="num">${money0(ll.amt)}</b> · ${nice(ll.gotOn||ll.d)}</span>`:''}${owe>0.5?`<span>ONE still owes you <b class="num">${money0(owe)}</b></span>`:''}</div>
+    <div class="tag" style="margin:14px 0 6px">When it lands, in this order</div>
+    <ol class="nc-steps">
+      <li><span>📊</span><b>Taxes</b><em>32% of it</em><small>Tax Buffer</small></li>
+      <li><span>🏠</span><b>Bills</b><em class="num">${money0(bills)}</em><small>${nx.billNames&&nx.billNames.length?'due before the next check: '+esc(nx.billNames.join(', '))+' + groceries':'groceries until the next check'}</small></li>
+      <li><span>🛍️</span><b>Spending</b><em class="num">${money0(flex)}</em><small>yours</small></li>
+      <li><span>${rest[0][0]}</span><b>Everything left</b><em>→ ${rest[0][1]}</em><small>${rest[0][2]?rest[0][2]+' · ':''}${rest.length>1?'then '+rest.slice(1).map(r=>r[1].toLowerCase()).join(' → '):''}</small></li>
+    </ol>
+    <details class="pc-edit"><summary>Change expected date</summary><div class="row" style="gap:6px;margin-top:8px;flex-wrap:wrap"><input class="inp" type="date" value="${nx.d}" style="width:auto" onchange="setCheckDate('${nx.id}',this.value)" aria-label="Expected date"><button class="btn sm" id="landed-${nx.id}" onclick="verifyLanded('${nx.id}')">Check bank</button>${unverifiedId===nx.id?`<button class="btn ghost sm" onclick="markGot('${nx.id}',true)">Mark landed</button>`:''}</div></details></div>`; }
+function dueSoonCard(days=14){ const s=S.money.s, end=addDays(TODAY,days);
+  const rows=[...BILLS,...CARDS].map(b=>{ const paid=billPaidThisCycle(b), due=billDueThisMonth(b.day), late=!paid&&due<TODAY, next=paid?billNext(b.day,addDays(due,1)):late?due:due; return {...b, amt:+s[b.key]||0, paid, late, next}; })
+    .filter(r=>!r.paid && r.next<=end).sort((a,b)=>a.next.localeCompare(b.next));
+  const tot=rows.reduce((a,r)=>a+r.amt,0);
+  return `<div class="card sec"><div class="hdr"><h2>Due next 2 weeks</h2><span class="sub num">${money0(tot)}</span></div>
+    ${rows.length?`<div class="du-list">${rows.map(r=>{ const dd=daysBetween(TODAY,r.next); return `<div class="du-r"><span class="du-d ${r.late||dd<=3?'hot':''}"><b>${parseD(r.next).toLocaleDateString('en-US',{month:'short'})}</b>${parseD(r.next).getDate()}</span><span class="du-n"><b>${r.icon} ${esc(r.name.replace(/ minimum$/,' card'))}</b><small>${r.late?(r.auto?'not seen in the bank yet':'was due — pay it'):dd===0?'today':dd===1?'tomorrow':'in '+dd+' days'} · ${r.auto?'autopay':'pay by hand'}</small></span><b class="num">${money0(r.amt)}</b></div>`; }).join('')}</div>`:'<div class="sub">Nothing due in the next 2 weeks.</div>'}
+    <button class="btn ghost sm" style="margin-top:10px;width:100%;justify-content:center" onclick="setMoneyTab('accounts');setTimeout(()=>document.getElementById('billsAll')?.scrollIntoView({behavior:'smooth'}),60)">All bills</button></div>`; }
+function vMoneyNow(){ const b=moneyBits(); return `${freshLine()}${wfTodo()}${nextCheckCard(b.P)}${dueSoonCard()}${cardsCard(b.P)}${goalsCard(b)}`; }
+function vMoneyAccounts(){ const b=moneyBits(); return `${netCard()}${incomeMini()}<div id="billsAll">${vBills()}</div>${checksCard(b.P)}${b.moreFold}`; }
+function checksCard(P){ const rows=P.rows; if(!rows.length) return '';
+  return `<div class="card sec"><div class="hdr"><h2>Expected checks</h2><span class="sub">${rows.length} · dates only</span></div>
+    <div class="ec-list">${rows.slice(0,8).map(r=>{ const dd=daysBetween(TODAY,r.d); return `<div class="row between ec-r"><input class="inp" type="date" value="${r.d}" style="padding:6px 10px;font-size:14px;width:auto" onchange="setCheckDate('${r.id}',this.value)" aria-label="Expected date"><span class="row" style="gap:10px;flex-wrap:nowrap"><span class="sub" style="font-size:12px">${dd<0?'waiting on bank':'in '+dd+' days'}</span><button class="x" onclick="delCheck('${r.id}')" aria-label="Remove">✕</button></span></div>`; }).join('')}</div>
+    <div class="help keep" style="margin-top:8px">Amounts aren't guessed — each check fills in from the bank when it lands.</div></div>`; }
+
+let moneyTab = 'now';
 function setMoneyTab(t){ moneyTab=MONEY_ALIAS[t]||t; render(); }
-const MONEY_ALIAS={waterfall:'income', budget:'spending', tips:'spending', bills:'plan', deduct:'taxes', overview:'plan'};
-function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['income','Paycheck'],['spending','Spending'],['plan','Plan'],['taxes','Taxes']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
+const MONEY_ALIAS={waterfall:'now', income:'now', budget:'spending', tips:'spending', bills:'accounts', plan:'now', deduct:'taxes', overview:'now'};
+function moneyTabs(){ return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['now','Now'],['spending','Spending'],['taxes','Taxes'],['accounts','Accounts']].map(([k,l])=>`<button class="${moneyTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px;white-space:nowrap" onclick="setMoneyTab('${k}')">${l}</button>`).join('')}</div><button class="btn ghost sm sec rc-btn" onclick="receiptOpen()">📷 Scan receipt</button>`; }
 let bSearch='', bCatF='', txOpen=null, txN=30;
 function txRows(m){ const q=bSearch.trim().toLowerCase(); return S.money.budget.txns.filter(t=>t.d.startsWith(m) && (!bCatF||t.cat===bCatF) && (!q||t.desc.toLowerCase().includes(q))); }
 function txListHtml(m){ const rows=txRows(m), show=rows.slice(0,txN);
@@ -8432,11 +8483,10 @@ function bucketsCard(sinceSep, paidTot, efFull){ const s=S.money.s, taxNeed=Math
 function vMoney(){
   if (mcpLib && bankTriedDay!==TODAY && !bankBusy && S.money.budget.syncedDay!==TODAY && (dbReady || !dbRef)) setTimeout(()=>bankRefresh(false), 0); // first open of Money each day pulls fresh bank data
   moneyTab = MONEY_ALIAS[moneyTab] || moneyTab;
-  if (moneyTab==='overview') return moneyTabs() + vMoneyOverview();
-  if (moneyTab==='spending') return moneyTabs() + vBudget();
-  if (moneyTab==='plan') return moneyTabs() + vMoneyPlan();
+  if (moneyTab==='spending') return moneyTabs() + freshLine() + vBudget();
   if (moneyTab==='taxes') return moneyTabs() + vMoneyTaxes();
-  return moneyTabs() + vIncome();
+  if (moneyTab==='accounts') return moneyTabs() + vMoneyAccounts();
+  moneyTab='now'; return moneyTabs() + vMoneyNow();
 }
 function moneyBits(){
   const s=S.money.s, P=projection(), got=S.money.checks.filter(c=>c.got), owed=P.future.reduce((a,c)=>a+c.amt,0);
@@ -8583,7 +8633,7 @@ function dlAll(){
   for (const x of out){ const m=dlKr(x); if(m){ linked.add(m.k.id); x.kr=m; } }
   const P=projection(); for (const x of out) if (x.type==='tax'){ const pay=P.payouts.find(p=>p.d===x.d); if (pay) x.amt=pay.pay; }
   for (const [q,Q] of Object.entries(S.quarters||{})) for (const o of Q.objectives) for (const k of o.krs){ const d=krDue(k,q); if (d && !linked.has(k.id) && !krHit(k)) out.push({id:'kr-'+k.id, d, text:k.text.replace(/\s*\([^)]*\)\s*$/,''), type:({grillz:'datum',content:'content',cad:'cad',financial:'money',modeling:'money'})[o.track]||'other', done:'', src:'kr', from:'key result', go:`curQ='${q}';qOpen='${o.id}';go('quarter')`}); }
-  for (const c of S.money.checks) if (!c.got && daysBetween(TODAY,c.d)<=45) out.push({id:'ck-'+c.id, d:c.d, text:`${money0(c.amt)} check expected`, type:'money', done:'', src:'check', from:'expected check', go:"moneyTab='waterfall';go('money')"});
+  for (const c of S.money.checks) if (!c.got && daysBetween(TODAY,c.d)<=45) out.push({id:'ck-'+c.id, d:c.d, text:`Modeling check expected`, type:'money', done:'', src:'check', from:'expected check', go:"moneyTab='waterfall';go('money')"});
   const H=(S.hid||{}).dl||{};
   return out.filter(x=>!H[x.id]).sort((a,b)=>a.d.localeCompare(b.d));
 }
