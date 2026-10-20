@@ -1583,6 +1583,30 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 .ln-form{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}
 .ln-form .ln-dol{font-weight:800;font-size:18px}
 .ln-form input[name=a]{width:120px}.ln-form input[name=d]{width:auto}
+
+.mr-card{display:grid;gap:8px;padding:12px 14px;border-radius:var(--r2);background:var(--card);border:1px solid var(--line)}
+.mr-steps{display:flex;gap:4px}.mr-steps i{flex:1;text-align:center;font-style:normal;padding:4px 0;border-radius:8px;background:var(--card2);opacity:.35;font-size:15px}
+.mr-steps i.done{opacity:.75}.mr-steps i.on{opacity:1;background:color-mix(in srgb,#f5c542 30%,var(--card2));box-shadow:0 0 0 1.5px #f5c542 inset}
+.mr-t{display:flex;flex-direction:column;gap:2px}.mr-t>b{font-size:17px}.mr-t span{font-size:12.5px;color:var(--mut)}.mr-t span b{color:var(--fg)}
+.cc-line{margin:-4px 0 10px;font-size:13px;padding:7px 10px;border-radius:10px;background:color-mix(in srgb,#f5c542 16%,transparent)}
+.coin-chip{display:flex;gap:10px;align-items:center;padding:10px 14px;margin:0 0 14px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.coin-chip>span{font-size:22px}.coin-chip b{font-size:17px}.coin-chip.up b{color:var(--good)}.coin-chip.down b{color:var(--bad)}.coin-chip small{display:block;color:var(--mut);font-size:11.5px}
+.cb-b{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line);opacity:.6}
+.cb-b:first-of-type{border-top:0}.cb-b.on{opacity:1}.cb-b.dead{opacity:.5}
+.cb-ic{font-size:30px;text-align:center}.cb-b.on .cb-ic{animation:stFloat 3s ease-in-out infinite}
+.cb-b .hp{margin:6px 0 4px}.cb-b .hp>b{background:linear-gradient(90deg,#ff453a,#ff9f0a)}
+.mq-card{border-color:color-mix(in srgb,#f5c542 50%,var(--line))}
+.pd-ov{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:24px;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);animation:pdIn .25s ease}
+.pd-box{width:min(360px,100%);text-align:center;display:grid;gap:10px}
+.pd-k{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#f5c542;font-weight:800}
+.pd-amt{font-size:46px;font-weight:900;color:#39ff9f;letter-spacing:-.03em;animation:pdPop .5s cubic-bezier(.2,1.6,.4,1) both}
+.pd-bk{display:grid;gap:8px;margin-top:6px}
+.pd-b{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:8px;padding:11px 14px;border-radius:14px;background:#15171c;border:1px solid color-mix(in srgb,var(--c) 60%,transparent);color:#fff;text-align:left;opacity:0;animation:pdDrop .45s cubic-bezier(.2,1.4,.4,1) both;animation-delay:calc(.45s + var(--i)*.28s)}
+.pd-b em{font-style:normal;font-weight:800;color:var(--c)}
+.pd-tap{font-size:12.5px;color:#cbd5e1;margin-top:6px;opacity:0;animation:pdIn .4s ease both;animation-delay:2.2s}
+@keyframes pdIn{from{opacity:0}to{opacity:1}}
+@keyframes pdPop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes pdDrop{0%{opacity:0;transform:translateY(-38px) scale(.9)}100%{opacity:1;transform:none}}
 </style>
 
 <div class="app" id="app"></div>
@@ -1592,7 +1616,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b222';
+const BUILD='b223';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -1917,6 +1941,7 @@ function computeXP(){
   xp += rpgExtraXP();
   xp += datumXP();
   xp += gymXP();
+  xp += moneyXP();
   return xp;
 }
 function questXP(){
@@ -5056,7 +5081,7 @@ function taxCard(){
   const dInc=datumInc(y+'-01-01'), ded=dedTotal(y+'-01-01'), rv=((S.money.budget||{}).deductibles||[]).filter(x=>!x.ok&&(x.d||'')>=y+'-01-01').length, taxable=Math.max(0,rec+dInc-ded);
   const need=taxable*s.taxRate, paid=(S.money.taxPaid||[]).filter(p=>(p.d||'').startsWith(y)||!p.d).reduce((a,p)=>a+p.amt,0), buf=+s.taxBufNow||0, gap=Math.max(0,need-paid-buf);
   return `<div class="card sec tx-card"><div class="row between"><span class="tag">${y} taxes</span><span class="sub" style="font-size:12px">Jan 15 est. due</span></div>
-    <div class="st-flow" style="margin-top:10px">${[['Modeling paid in '+y,rec],...(dInc?[['+ Datum sales',dInc]]:[]),['− write-offs',-ded],['× '+Math.round(s.taxRate*100)+'% on '+money0(taxable),need],['− estimated payments made',-paid],['− in your Tax Buffer',-buf],['= gap',gap]].map(([l,v])=>`<div><span>${l}</span><b class="num">${v<0?'−'+money0(-v).replace('−',''):money0(v)}</b></div>`).join('')}</div>
+    <div class="st-flow" style="margin-top:10px">${[['Modeling paid in '+y,rec],...(dInc?[['+ Datum sales',dInc]]:[]),['− write-offs',-ded],['× '+Math.round(s.taxRate*100)+'% on '+money0(taxable),need],['− estimated payments made',-paid],['− in your Tax Buffer',-buf],['= gap · 🐉 Tax Wyrm HP',gap]].map(([l,v])=>`<div><span>${l}</span><b class="num">${v<0?'−'+money0(-v).replace('−',''):money0(v)}</b></div>`).join('')}</div>
     ${ded?`<div class="help keep" style="margin-top:8px;color:var(--good)">Write-offs cut what you owe by ${money0(Math.min(rec+dInc,ded)*s.taxRate)}.</div>`:''}${rv?`<button class="btn sm ghost" style="margin-top:8px" onclick="dedN=20;setDedFilter('review');setTimeout(()=>document.getElementById('dedList')?.scrollIntoView({behavior:'smooth'}),60)">${rv} write-off${rv===1?'':'s'} to confirm → lowers the tax</button>`:''}
     <div class="help" style="margin-top:8px">You're taxed when ONE actually pays you, not when you shoot — so the $${Math.round(stmtNow().balance).toLocaleString()} they still owe is taxed in the year it lands. ${pre?`${money0(pre)} landed before September, when the waterfall's set-aside started. `:''}Ask the CPA how much of this your Schneider W-2 withholding already covers.</div>
     <form class="ct-add" style="margin-top:10px" onsubmit="return wyrmFeed(event)"><input class="inp" type="number" min="1" step="1" inputmode="decimal" placeholder="$ just set aside for taxes"><button class="btn sm">Set aside</button></form></div>`;
@@ -5394,8 +5419,8 @@ const VAULT_PH=[[.75,'Sealed','🔒'],[.5,'Cracked','🔓'],[.25,'Breached','�
 function vault(){ return rpgC('vault',()=>{ try { const P=mPipe(), st=stmtNow(), hits=(S.money.budget?.txns||[]).filter(t=>t.amt>0&&/MODEL MANAGE/i.test(t.desc)&&t.d>st.asOf).map(t=>({d:t.d,amt:t.amt})).sort((a,b)=>b.d.localeCompare(a.d)); const hp=mOwed(P), max=hp+hits.reduce((a,h)=>a+h.amt,0); return {hp,max,hits,pct:max?hp/max:0}; } catch(e){ return {hp:0,max:0,hits:[],pct:0}; } }); }
 function phaseOf(p){ for (const ph of VAULT_PH) if (p>=ph[0]) return ph; return VAULT_PH[VAULT_PH.length-1]; }
 const WYRM_PH=[[.66,'Coiled','🐉'],[.33,'Wounded','🩸'],[0.0001,'Cornered','⚔️'],[0,'Slain','🗡️']];
-function wyrm(){ return rpgC('wyrm',()=>{ const s=S.money.s, y=THIS_Y; let rec=0; try { rec=stmtReceived(y).reduce((a,r)=>a+r.amt,0); } catch(e){}
-  const need=rec*s.taxRate, paidL=(S.money.taxPaid||[]).filter(p=>(p.d||'').startsWith(y)||!p.d), paid=paidL.reduce((a,p)=>a+p.amt,0), buf=+s.taxBufNow||0, hp=Math.max(0,need-paid-buf);
+function wyrm(){ return rpgC('wyrm',()=>{ const s=S.money.s; let need=0; try { need=taxOwedSoFar(); } catch(e){}
+  const paidL=(S.money.taxPaid||[]).filter(p=>!p.d||p.d>='2026-01-01'), paid=paidL.reduce((a,p)=>a+p.amt,0), buf=+s.taxBufNow||0, hp=Math.max(0,need-paid-buf);
   const hits=[...paidL.map(p=>({d:p.d||'',amt:p.amt,l:'estimated payment'})), ...R_().wyrm.map(h=>({d:h.d,amt:h.amt,l:'set aside'}))].sort((a,b)=>(b.d||'').localeCompare(a.d||''));
   return {hp, max:Math.max(need,1), need, hits, pct:need?hp/need:0}; }); }
 function wyrmFeed(ev){ ev.preventDefault(); const v=+ev.target.querySelector('input').value; if (!(v>0)) return false; S.money.s.taxBufNow=(+S.money.s.taxBufNow||0)+v; R_().wyrm.push({d:TODAY, amt:v}); _bossHit.wyrm=v; commit(); confetti(); toast(`🗡️ ${money0(v)} hit on the Tax Wyrm`); return false; }
@@ -5513,7 +5538,7 @@ function raidCard(which){ const B=which==='vault'?vault():wyrm(); if (!B.max || 
   return `<div class="card sec boss ${which}"><div class="row between"><span class="tag">Raid boss</span><span class="chip">${ph[2]} ${ph[1]}</span></div>
     <h2 style="margin:6px 0 2px">${name}</h2><div class="sub" style="font-size:12.5px">${sub}</div><div class="arena">${(()=>{ const hit=bossHitCheck(which,B); return (pxOn() && PXW[which+'_idle']) ? bossSprite(which,B,hit) : which==='vault'?vaultArt(B,hit):wyrmArt(B,hit); })()}</div>
     <div class="hp big"><b style="width:${Math.max(B.hp>0?1:0,Math.round(B.pct*100))}%"></b><span class="num">${money0(B.hp)} / ${money0(B.max)}</span></div>
-    ${which==='wyrm'?`<button class="btn ghost sm" style="margin-top:10px" onclick="gSheetClose();moneyTab='waterfall';go('money')">⚔️ Hit it: set money aside in Money ›</button>`:''}
+    ${which==='wyrm'?`<div class="sub" style="margin-top:8px;font-size:12.5px">HP = your tax gap after write-offs. Every Tax Buffer move you tick on a check is a hit.</div><button class="btn ghost sm" style="margin-top:8px" onclick="gSheetClose();moneyTab='taxes';go('money')">⚔️ Hit it ›</button>`:''}
     ${B.hits.length?`<div class="hits">${B.hits.slice(0,5).map(h=>`<div><span class="sub num">${h.d?nice(h.d):'—'}</span><b class="num" style="color:var(--good)">−${money0(h.amt).replace('$','$')}</b>${h.l?`<small class="sub">${esc(h.l)}</small>`:''}</div>`).join('')}</div>`:`<div class="help keep" style="margin-top:8px">No hits yet.</div>`}</div>`; }
 function raidMini(){ try { return raidCard('vault')+raidCard('wyrm')+wardenCard(); } catch(e){ return ''; } }
 
@@ -7906,7 +7931,7 @@ window.tegaNativeSync = ()=>liveRefresh('resume');
 // every section belongs to one of the 7 areas; its chip opens that area's level + skill trees
 const AREA_VIEW={model:'MODEL',datum:'DATUM',content:'CONTENT',gym:'BODY',money:'MONEY',social:'SOCIAL'};
 function areaChip(k){ try { const A=areaInfo(k); if(!A) return ''; const span=A.toNext>0?(AREA_STEPS[A.lvl]-(AREA_STEPS[A.lvl-1]||0)):1, got=A.toNext>0?span-A.toNext:1;
-  return `<button class="ar-chip sec" style="--c:${A.c}" onclick="areaOpen('${k}')" aria-label="${esc(A.n)} level ${A.lvl}, open skill trees"><b>${A.k}</b><span class="num">LV ${A.lvl}</span><small>${esc(A.rank||'')}</small><i><u style="width:${Math.round(got/span*100)}%"></u></i><em>›</em></button>`; } catch(e){ return ''; } }
+  return `<button class="ar-chip sec" style="--c:${A.c}" onclick="areaOpen('${k}')" aria-label="${esc(A.n)} level ${A.lvl}, open skill trees"><b>${A.k}</b><span class="num">LV ${A.lvl}</span><small>${esc(k==='money'?(()=>{ try { const R=moneyRank(); return R.r[1]; } catch(e){ return A.rank||''; } })():(A.rank||''))}</small><i><u style="width:${Math.round(got/span*100)}%"></u></i><em>›</em></button>`; } catch(e){ return ''; } }
 function statPick(html, titles){ const t=document.createElement('template'); t.innerHTML=html; return [...t.content.children].filter(e=>titles.includes((e.querySelector('h2')?.textContent||'').trim())).map(e=>e.outerHTML).join(''); }
 function statDrop(html, titles){ const t=document.createElement('template'); t.innerHTML=html; return [...t.content.children].filter(e=>!titles.includes((e.querySelector('h2')?.textContent||'').trim())).map(e=>e.outerHTML).join(''); }
 // stats that belong to one area live in that area's sheet, not on Character
@@ -8313,7 +8338,7 @@ function dueSoonCard(days=14){ const s=S.money.s, end=addDays(TODAY,days);
   return `<div class="card sec"><div class="hdr"><h2>Due next 2 weeks</h2><span class="sub num">${money0(tot)}</span></div>
     ${rows.length?`<div class="du-list">${rows.map(r=>{ const dd=daysBetween(TODAY,r.next); return `<div class="du-r"><span class="du-d ${r.late||dd<=3?'hot':''}"><b>${parseD(r.next).toLocaleDateString('en-US',{month:'short'})}</b>${parseD(r.next).getDate()}</span><span class="du-n"><b>${r.icon} ${esc(r.name.replace(/ minimum$/,' card'))}</b><small>${r.late?(r.auto?'not seen in the bank yet':'was due — pay it'):dd===0?'today':dd===1?'tomorrow':'in '+dd+' days'} · ${r.auto?'autopay':'pay by hand'}</small></span><b class="num">${money0(r.amt)}</b></div>`; }).join('')}</div>`:'<div class="sub">Nothing due in the next 2 weeks.</div>'}
     <button class="btn ghost sm" style="margin-top:10px;width:100%;justify-content:center" onclick="setMoneyTab('accounts');setTimeout(()=>document.getElementById('billsAll')?.scrollIntoView({behavior:'smooth'}),60)">All bills</button></div>`; }
-function vMoneyNow(){ if (!S.money.m221) setTimeout(()=>{ try { m221(); } catch(e){} }, 0); const b=moneyBits(); return `${freshLine()}${payNoticeCard()}${wfTodo()}${nextCheckCard(b.P)}${dueSoonCard()}${cardsCard(b.P)}${goalsCard(b)}`; }
+function vMoneyNow(){ if (!S.money.m221) setTimeout(()=>{ try { m221(); } catch(e){} }, 0); try { moneyQuest(); cardKills(); } catch(e){} const b=moneyBits(); return `${rankCard()}${freshLine()}${payNoticeCard()}${wfTodo()}${mqCard()}${nextCheckCard(b.P)}${coinChip()}${dueSoonCard()}${bossesCard()}${goalsCard(b)}`; }
 function vMoneyAccounts(){ const b=moneyBits(); return `${netCard()}${incomeMini()}<div id="billsAll">${vBills()}</div>${checksCard(b.P)}${b.moreFold}`; }
 function checksCard(P){ const rows=P.rows; if(!rows.length) return '';
   return `<div class="card sec"><div class="hdr"><h2>Expected checks</h2><span class="sub">${rows.length} · dates only</span></div>
@@ -8326,24 +8351,80 @@ function payNoticeScan(ths){ for (const th of ths||[]) for (const m of (th.messa
 function landCheck(amt, d){ amt=Math.round((+amt||0)*100)/100; d=d||TODAY; if (!(amt>0)) return toast('Type the amount you see in the bank');
   const M=S.money; let c=M.checks.filter(x=>!x.got).sort((a,b)=>a.d.localeCompare(b.d))[0];
   if (!c){ c={id:uid(), d, amt, note:'1 Model Management'}; M.checks.push(c); }
-  if (Math.abs(c.amt-amt)>1) c.expAmt=c.amt; c.amt=amt; c.got=true; c.gotOn=d; c.d=d; c.verified=false; c.byHand=true; c.note=(c.note||'').replace(/ · (marked|entered) by (hand|you)/g,'')+' · entered by you';
+  if (Math.abs(c.amt-amt)>1) c.expAmt=c.amt; c.amt=amt; c.got=true; c.gotOn=d; c.d=d; c.landedAt=TODAY; c.verified=false; c.byHand=true; c.note=(c.note||'').replace(/ · (marked|entered) by (hand|you)/g,'')+' · entered by you';
   try { replanBiweekly(c, d, M.s.payAmt||amt); } catch(e){}
   c.split=splitFor(c); c.done={}; delete c.dismissed; M.checks.sort((a,b)=>a.d.localeCompare(b.d));
-  S.wins.push({id:uid(), d:TODAY, text:`💵 ${money0(amt)} landed — split ready`}); commit(); confetti(); toast(`${money0(amt)} landed · split below`); }
+  S.wins.push({id:uid(), d:TODAY, text:`💵 ${money0(amt)} landed — split ready`}); commit(); paydayShow(c); }
 function landForm(){ return `<form class="ln-form" onsubmit="event.preventDefault();landCheck(this.a.value,this.d.value)"><span class="ln-dol">$</span><input name="a" class="inp num" type="number" inputmode="decimal" step="0.01" min="1" placeholder="amount" required aria-label="Amount in your bank"><input name="d" class="inp" type="date" value="${TODAY}" max="${TODAY}" aria-label="Day it arrived"><button class="btn sm">It's in my bank</button></form>`; }
 function payNoticeCard(){ const n=S.money.payNotice; if (!n || daysBetween(n.d,TODAY)>7) return '';
   if (S.money.checks.some(c=>c.got && (c.gotOn||c.d)>=n.d)) return '';
   return `<div class="card sec pn-card"><div class="tag">💸 Payment sent</div><b class="pn-t">ONE sent a payment ${nice(n.d)}</b><div class="sub">Lands in 1–2 business days. Your bank app shows it days before this app does — type the amount when you see it and the split appears right away.</div>${landForm()}${n.url?`<a class="sub" style="display:inline-block;margin-top:8px" href="${n.url}" target="_blank" rel="noopener">Open the email (breakdown attached) ›</a>`:''}</div>`; }
 function m221(){ const M=S.money; if (M.m221) return; M.m221=1;
   try { const has=M.checks.some(c=>c.got && (c.gotOn||c.d)>='2026-10-15');
-    if (!has) landCheck(3940, '2026-10-19');
+    if (!has){ window._quietPay=1; landCheck(3940, '2026-10-19'); window._quietPay=0; document.getElementById('payday')?.remove(); }
     else { const c=M.checks.filter(c=>c.got).sort((a,b)=>(b.gotOn||b.d).localeCompare(a.gotOn||a.d))[0]; replanBiweekly(c, '2026-10-19', M.s.payAmt||c.amt); commit({skipXp:true}); } } catch(e){ console.warn('m221',e); } }
 
 /* b222: card money split per card — smallest balance first, each paid to $0 before the next */
 function cardAllocFor(total){ let left=+total||0; const out=[]; for (const c of cardList()){ if (left<0.5) break; const a=Math.min(left, c.bal); out.push([c.name, Math.round(a*100)/100, a>=c.bal-0.5, Math.round(c.bal*100)/100]); left-=a; } return out; }
 function cardAlloc(c){ const sp=c.split; if (!sp || !(sp.cards>0)) return []; if (!sp.cardAlloc) sp.cardAlloc=cardAllocFor(sp.cards); return sp.cardAlloc; }
 function tickCard(id,i){ const c=S.money.checks.find(c=>c.id===id); if(!c||!c.split) return; c.done ||= {}; const A=cardAlloc(c); c.done['card'+i]=!c.done['card'+i];
+  (c.doneAt ||= {})['card'+i]=TODAY; if (c.done['card'+i]) { _bossHit['card']=A[i][1]; toast(`💥 ${money0(A[i][1])} hit on ${A[i][0]}`); }
   const all=A.every((_,j)=>c.done['card'+j]); if (all!==!!c.done.cards) tickMove(id,'cards'); else commit({skipXp:true}); }
+
+/* ===================== b223: money, gamified — card bosses · clean-check combo · coins · ranks · payday drop · weekly quest ===================== */
+const CARD_LIM={Savor:1000, Discover:3000};
+const CARD_BOSS={Savor:['🦂','The Stinger'], Discover:['🐲','The Orange Drake']};
+function cardsAll(){ return (S.money.budget?.accounts||[]).filter(a=>a.bal!=null && acctKind(a)==='debt' && !/auto|loan|mortgage/i.test(a.name+' '+a.type)).map(a=>({name:a.name.replace(/ Card$/,'').replace(/^Discover it$/,'Discover'), bal:Math.max(0,-a.bal), limit:a.limit})).sort((a,b)=>a.bal-b.bal); }
+function cardHits(){ const out=[]; for (const c of S.money.checks){ const A=c.split?.cardAlloc; if (!A) continue; A.forEach(([nm,amt],i)=>{ if ((c.done||{})['card'+i] || (c.done||{}).cards) out.push({name:nm, amt, d:(c.doneAt||{})['card'+i]||c.gotOn||c.d}); }); } return out.sort((a,b)=>b.d.localeCompare(a.d)); }
+function cardBosses(){ const M=S.money; M.cardMax ||= {}; const H=cardHits();
+  return cardsAll().map(c=>{ M.cardMax[c.name]=Math.max(+M.cardMax[c.name]||0, c.bal); const max=Math.max(M.cardMax[c.name],1), hits=H.filter(h=>h.name===c.name);
+    return {...c, max, hp:c.bal, pct:clamp(c.bal/max,0,1), dead:c.bal<=0.5, hits, ic:(CARD_BOSS[c.name]||['💳'])[0], title:(CARD_BOSS[c.name]||['','Card'])[1], lim:c.limit||CARD_LIM[c.name]||0}; })
+    .sort((a,b)=>(a.dead-b.dead)||a.bal-b.bal); }
+function bossesCard(){ const B=cardBosses(); if (!B.length) return ''; const live=B.filter(b=>!b.dead), cur=live[0];
+  return `<div class="card sec cb-card"><div class="hdr"><h2>⚔️ Card bosses</h2><span class="sub num">${money0(live.reduce((a,b)=>a+b.hp,0))} HP left</span></div>
+    ${B.map(b=>{ const on=b===cur, ph=b.dead?'Slain':b.pct>.66?'Full power':b.pct>.33?'Wounded':'Cornered';
+      return `<div class="cb-b ${on?'on':''} ${b.dead?'dead':''}"><div class="cb-ic">${b.dead?'💀':b.ic}</div><div class="cb-m"><div class="row between"><b>${esc(b.name)} <span class="sub" style="font-weight:500">· ${b.title}</span></b><span class="chip">${on?'⚔️ fighting':b.dead?'🏆':'waiting'}</span></div>
+        <div class="hp"><b style="width:${Math.max(b.dead?0:2,Math.round(b.pct*100))}%"></b><span class="num">${b.dead?'$0':money0(b.hp)} / ${money0(b.max)}</span></div>
+        <div class="sub" style="font-size:12px">${b.dead?`Paid off · +500 XP`:`${b.lim&&b.hp>b.lim+1?`<b style="color:var(--bad)">over its ${money0(b.lim)} limit</b> · `:''}${ph}${b.hits.length?` · last hit ${money0(b.hits[0].amt)} ${nice(b.hits[0].d)}`:''}`}</div></div></div>`; }).join('')}
+    <div class="sub" style="margin-top:8px">Every card payment you tick is a hit. 10 XP per $100 · 500 XP per kill. Smallest boss first.</div></div>`; }
+// clean check: every move ticked within 48h of landing. Chain them for a combo.
+function cleanChain(){ const L=S.money.checks.filter(c=>c.got && c.split && (c.gotOn||'')>='2026-10-19').sort((a,b)=>(a.gotOn||a.d).localeCompare(b.gotOn||b.d)); let run=0, best=0, xp=0; const res=[];
+  for (const c of L){ const st=c.landedAt||c.gotOn, clean=!c.dismissed && c.sortedOn && daysBetween(st,c.sortedOn)<=2, open=!c.sortedOn && !c.dismissed && daysBetween(st,TODAY)<=2;
+    if (clean){ run++; best=Math.max(best,run); xp+=50*Math.min(3,run); res.push([c.id,'clean',run]); } else if (open){ res.push([c.id,'open',run]); } else { run=0; res.push([c.id,'missed',0]); } }
+  return {run, best, xp, res}; }
+function comboLine(c){ const C=cleanChain(), r=C.res.find(x=>x[0]===c.id); if (!r || r[1]!=='open') return ''; const h=Math.max(0, 72-Math.round((Date.now()-parseD(c.landedAt||c.gotOn).getTime())/36e5));
+  return `<div class="cc-line">⏱ <b>${h}h</b> left for a clean check · <b>+${50*Math.min(3,r[2]+1)} XP</b>${r[2]?` · combo ×${Math.min(3,r[2]+1)}`:''}</div>`; }
+// spending coins: what's left of the $250 at the daily pace, through the bank's latest day
+function coins(){ const F=flexNow(); if (!F) return null; const per=F.earned/Math.max(1,F.days), thru=bankThrough()||TODAY, last=thru<F.since?F.since:(thru>TODAY?TODAY:thru), el=Math.max(0,Math.min(F.days, daysBetween(F.since,last)+1));
+  const spent=F.spentTx.filter(t=>t.d<=last).reduce((a,t)=>a-t.amt,0); return {banked:Math.round(per*el-spent), per, el, spent, thru:last, days:F.days}; }
+function coinXP(){ let xp=0; try { const L=S.money.checks.filter(c=>c.got&&(c.gotOn||c.d)>='2026-10-19').sort((a,b)=>(a.gotOn||a.d).localeCompare(b.gotOn||b.d)), thru=bankThrough()||TODAY;
+  L.forEach((c,i)=>{ const st=c.gotOn||c.d, nx=L[i+1], en=nx?(nx.gotOn||nx.d):addDays(st,14), per=flexForCheck(c)/Math.max(1,daysBetween(st,en));
+    for (let d=st; d<en && d<=thru && d<TODAY; d=addDays(d,1)){ const sp=S.money.budget.txns.filter(t=>t.d===d && isSpendTx(t)).reduce((a,t)=>a-t.amt,0); if (sp<=per) xp+=5; } }); } catch(e){} return xp; }
+function coinChip(){ const C=coins(); if (!C) return ''; const up=C.banked>=0;
+  return `<div class="coin-chip ${up?'up':'down'}"><span>🪙</span><div><b class="num">${up?'+':'−'}${money0(Math.abs(C.banked))}</b> ${up?'banked':'over pace'}<small>spending pace ${money0(C.per)}/day · through ${nice(C.thru)} · 5 XP per day under</small></div></div>`; }
+// ranks: real milestones, in order
+const MRANKS=[['🌊','Underwater','a card is over its limit'],['🏊','Surfaced','both cards under their limits'],['🔓','Debt-free','cards at $0'],['🧾','Covered','taxes caught up'],['🛡️','Cushioned','3 months of bills saved'],['📈','Compounding','Fidelity at your growth target']];
+function moneyRank(){ const C=cardsAll(), s=S.money.s; const tests=[()=>C.every(c=>!(c.limit||CARD_LIM[c.name])||c.bal<=(c.limit||CARD_LIM[c.name])+1), ()=>C.every(c=>c.bal<=0.5), ()=>taxBehind()<=0.5, ()=>(+s.efNow||0)>=fixedMo()*3, ()=>invNow()>=(+(S.money.growth||{}).target||10000)];
+  let i=0; while (i<tests.length && tests[i]()) i++; const nx=MRANKS[i+1];
+  const hint=(()=>{ if (i===0){ const o=C.filter(c=>c.bal>(c.limit||CARD_LIM[c.name]||1e12)+1); return o.map(c=>`${c.name} ${money0(c.bal-(c.limit||CARD_LIM[c.name]))} over`).join(' · '); } if (i===1) return `${money0(C.reduce((a,c)=>a+c.bal,0))} left on cards`; if (i===2) return `${money0(taxBehind())} tax gap`; if (i===3) return `${money0(Math.max(0,fixedMo()*3-(+s.efNow||0)))} to go`; if (i===4) return `${money0(Math.max(0,(+(S.money.growth||{}).target||10000)-invNow()))} to go`; return ''; })();
+  return {i, r:MRANKS[i], next:nx, hint}; }
+function rankCard(){ const R=moneyRank(), M=S.money;
+  if ((M.rankMax??-1)<R.i){ if (M.rankMax!=null) setTimeout(()=>{ confetti(); toast(`${R.r[0]} Rank up: ${R.r[1]}`); S.wins.push({id:uid(), d:TODAY, text:`${R.r[0]} Money rank: ${R.r[1]}`}); commit(); },300); M.rankMax=R.i; }
+  return `<div class="mr-card sec"><div class="mr-steps">${MRANKS.map((r,j)=>`<i class="${j<R.i?'done':j===R.i?'on':''}" title="${r[1]}">${r[0]}</i>`).join('')}</div>
+    <div class="mr-t"><b>${R.r[0]} ${R.r[1]}</b>${R.next?`<span>next: ${R.next[0]} ${R.next[1]} — ${R.next[2]}${R.hint?` · <b>${R.hint}</b>`:''}</span>`:'<span>top rank</span>'}</div></div>`; }
+function moneyXP(){ let x=0; try { x+=Math.floor(cardHits().reduce((a,h)=>a+h.amt,0)/100)*10 + cardsAll().filter(c=>c.bal<=0.5 && (S.money.cardMax||{})[c.name]>0.5).length*500 + cleanChain().xp + coinXP(); } catch(e){} return x; }
+function cardKills(){ const M=S.money; M.cardDead ||= {}; for (const b of cardBosses()) if (b.dead && b.max>0.5 && !M.cardDead[b.name]){ M.cardDead[b.name]=TODAY; setTimeout(()=>{ confetti(); toast(`💀 ${b.name} slain — paid off!`); S.wins.push({id:uid(), d:TODAY, text:`💀 Slew ${b.name} (${b.title}) — card paid off`}); commit(); },400); } }
+// payday: the split drops into its buckets
+function paydayShow(c){ try { if (!c||!c.split) return; const sp=c.split, A=cardAlloc(c), rows=[['📊','Tax Buffer',sp.tax,'#ff6b6b'], ...A.map(([nm,a])=>['💳',nm,a,'#b98cff']), ['🛡️','Emergency',sp.ef,'#2fbf71'], ['🌱',sp.retLabel==='Roth'?'Roth IRA':'SEP IRA',sp.ret,'#39ff9f'], ['🏡','House',sp.house,'#f5c542'], ['🏦','Stays · bills + spending',sp.stay,'#a8b3c7']].filter(r=>r[2]>0.5);
+  document.getElementById('payday')?.remove(); const el=document.createElement('div'); el.id='payday'; el.className='pd-ov'; el.onclick=()=>{ el.remove(); setMoneyTab('now'); if (view!=='money') go('money'); };
+  el.innerHTML=`<div class="pd-box"><div class="pd-k">💵 Payday</div><div class="pd-amt num">+${money0(c.amt)}</div><div class="pd-bk">${rows.map((r,i)=>`<div class="pd-b" style="--i:${i};--c:${r[3]}"><span>${r[0]}</span><b>${esc(r[1])}</b><em class="num">${money0(r[2])}</em></div>`).join('')}</div><div class="pd-tap">Tap to start moving it · tick all within 48h for a clean check</div></div>`;
+  document.body.appendChild(el); confetti(); } catch(e){} }
+// weekly money quest (one per week, joins your quests)
+function moneyQuest(){ const wk=isoWeek(TODAY), M=S.money; if (M.mqWeek===wk) return; M.mqWeek=wk; const cur=cardBosses().find(b=>!b.dead), F=flexNow();
+  const opts=[cur?`Hit ${cur.name} with an extra $50 this week`:null, 'No food delivery apps this week', F?`Stay under the ${money0(F.earned/Math.max(1,F.days)*7)}/week spending pace`:null, 'Check your bank app twice this week and type any new check into Money', 'Cancel or pause one subscription you don’t use'].filter(Boolean);
+  const t=opts[(parseInt(wk.slice(-2))||0)%opts.length]; S.quests ||= []; S.quests.push({id:uid(), text:'💰 '+t, size:'M', track:'financial', defn:'', created:TODAY, done:'', mq:wk}); setTimeout(()=>commit({skipXp:true}),0); }
+function mqCard(){ const q=(S.quests||[]).find(q=>q.mq===isoWeek(TODAY)); if (!q) return '';
+  return `<div class="card sec mq-card"><div class="row between"><span class="tag">Weekly money quest · +${QSIZE.M.xp} XP</span>${q.done?'<span class="chip">✓ done</span>':''}</div><div class="check ${q.done?'on':''}" style="margin-top:8px" onclick="${q.done?'':`questDone('${q.id}')`}"><div class="box">${q.done?'✓':''}</div><div class="txt">${esc(q.text.replace(/^💰 /,''))}</div></div></div>`; }
 
 let moneyTab = 'now';
 function setMoneyTab(t){ moneyTab=MONEY_ALIAS[t]||t; render(); }
@@ -8445,14 +8526,16 @@ function cushTarget(){ const s=S.money.s; if (s.cushTarget!=null && s.cushTarget
 function cardDebt(){ return cardList().reduce((a,c)=>a+c.bal,0); }
 function ensureSplits(){ for (const c of S.money.checks) if (c.got && !c.split && c.gotOn && daysBetween(c.gotOn,TODAY)<=10 && daysBetween(c.gotOn,TODAY)>=0){ c.split=splitFor(c); c.done={}; } }
 const openMoves = c => c.split && !c.dismissed ? MOVES.filter(([k])=>c.split[k]>0 && !(c.done||{})[k]) : [];
-function tickMove(id,k){ const c=S.money.checks.find(c=>c.id===id); if(!c||!c.split) return; c.done ||= {}; c.done[k]=!c.done[k]; const m=MOVES.find(m=>m[0]===k), f=(k==='ret'&&c.split.retLabel!=='Roth')?'sepYtd':m[2], s=S.money.s; s[f]=Math.max(0,r2((+s[f]||0)+(c.done[k]?1:-1)*c.split[k])); commit({skipXp:true}); if(!openMoves(c).length){ confetti(); toast('Check fully sorted. That\'s the system working.'); } }
+function tickMove(id,k){ const c=S.money.checks.find(c=>c.id===id); if(!c||!c.split) return; c.done ||= {}; c.done[k]=!c.done[k]; (c.doneAt ||= {})[k]=TODAY;
+  if (k==='tax'){ const W=R_().wyrm; if (c.done.tax){ W.push({d:TODAY, amt:c.split.tax, chk:c.id}); _bossHit.wyrm=c.split.tax; } else { const j=W.findIndex(h=>h.chk===c.id); if (j>=0) W.splice(j,1); } }
+  if (!openMoves(c).length){ c.sortedOn ||= TODAY; } else delete c.sortedOn; const m=MOVES.find(m=>m[0]===k), f=(k==='ret'&&c.split.retLabel!=='Roth')?'sepYtd':m[2], s=S.money.s; s[f]=Math.max(0,r2((+s[f]||0)+(c.done[k]?1:-1)*c.split[k])); commit({skipXp:true}); if(!openMoves(c).length){ confetti(); const r=cleanChain().res.find(x=>x[0]===c.id); toast(r&&r[1]==='clean'?`⚡ Clean check! +${50*Math.min(3,r[2])} XP${r[2]>1?` · combo ×${Math.min(3,r[2])}`:''}`:'Check fully sorted. That\'s the system working.'); } else if (k==='cards'||k==='tax') toast(c.done[k]?(k==='tax'?`🗡️ ${money0(c.split.tax)} hit on the Tax Wyrm`:'💥 Hit landed'):'Undone'); }
 function dismissMoves(id){ const c=S.money.checks.find(c=>c.id===id); if(c){ c.dismissed=true; commit({skipXp:true}); } }
 function wfTodo(){
   ensureSplits();
   const list=S.money.checks.filter(c=>c.got && openMoves(c).length).sort((a,b)=>(a.gotOn||a.d).localeCompare(b.gotOn||b.d));
   return list.map(c=>{ const sp=c.split, mv=MOVES.filter(([k])=>sp[k]>0), left=openMoves(c).length;
     return `<div class="card sec" style="background:linear-gradient(135deg,rgba(0,214,50,.14),transparent 70%),var(--card)"><div class="hdr" style="margin-bottom:6px"><h2>💵 ${money0(c.amt)} landed</h2><span class="sub">${nice(c.gotOn||c.d)}${c.verified?' · <span style="color:var(--good)">✓ bank</span>':''}</span></div>
-      <div class="sub" style="margin-bottom:10px">${left} move${left===1?'':'s'} left · tick after each transfer</div>
+      <div class="sub" style="margin-bottom:10px">${left} move${left===1?'':'s'} left · tick after each transfer</div>${comboLine(c)}
       <div class="stack">${mv.map(([k,l,f,ic])=>{ const on=!!(c.done||{})[k]; if (k==='cards' && cardAlloc(c).length) return cardAlloc(c).map(([nm,amt,zero,bal],i)=>{ const o=!!(c.done||{})['card'+i]||on; return `<div class="check ${o?'on':''}" onclick="tickCard('${c.id}',${i})"><div class="box">${o?'✓':''}</div><div class="txt">💳 Pay <b>${esc(nm)}</b> <span class="sub">${zero?'· pays it off':`· ${money0(bal-amt)} left after`}</span></div><b class="num" style="white-space:nowrap">${money0(amt)}</b></div>`; }).join(''); return `<div class="check ${on?'on':''}" onclick="tickMove('${c.id}','${k}')"><div class="box">${on?'✓':''}</div><div class="txt">${ic} ${k==='cards'?`Pay <b>${esc(cardList().map(c=>c.name).join(' → ')||'credit cards')}</b>`:`Move to <b>${k==='ret'?(sp.retLabel==='Roth'?'Roth IRA':'SEP IRA'):l}</b>`}</div><b class="num" style="white-space:nowrap">${money0(sp[k])}</b></div>`; }).join('')}
         <div class="check" style="cursor:default;opacity:.8"><div class="box" style="border-style:dashed"></div><div class="txt" style="text-decoration:none">🏦 Stays in checking <span class="sub">· bills + spending</span></div><b class="num" style="white-space:nowrap">${money0(sp.stay)}</b></div></div>
       ${sp.draw>0?`<div class="help keep" style="margin-top:8px;color:var(--warn)">This check doesn't cover its share of bills — ${money0(sp.draw)} short.</div>`:''}
@@ -8502,7 +8585,7 @@ function detectDeposits(txs, keyAcct){
     if (hit){ if (Math.abs(hit.amt-amt)>2) hit.expAmt=hit.amt; hit.amt=amt; hit.got=true; hit.gotOn=d; hit.verified=true; hit.note=(hit.note||'')+' · ✓ bank'; }
     else { hit={id:uid(), d, amt, note:'1 Model Management · from bank', got:true, gotOn:d, verified:true, unsched:true}; M.checks.push(hit); M.checks.sort((a,b)=>a.d.localeCompare(b.d)); }
     try { if (!M.s.payFrom || d>M.s.payFrom) replanBiweekly(hit, d, M.s.payAmt||4000); } catch(e){ console.warn('replan',e); }
-    hit.split=splitFor(hit); hit.done={}; delete hit.dismissed;
+    hit.split=splitFor(hit); hit.done={}; hit.landedAt ||= TODAY; delete hit.dismissed;
     const kr=S.quarters[quarterOf(d)]?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)&&!k.src); if(kr) kr.current++;
     S.wins.push({id:uid(), d:TODAY, text:`💵 ${money0(amt)} landed (from bank) — move ${money0(hit.split.tax)} to Tax Buffer`}); n++;
   }
@@ -8518,7 +8601,7 @@ function bucketsCard(sinceSep, paidTot, efFull){ const s=S.money.s, taxNeed=Math
 function vMoney(){
   if (mcpLib && !bankBusy && bankStale() && (dbReady || !dbRef)) setTimeout(()=>bankRefresh(false), 0); // first open of Money each day pulls fresh bank data
   moneyTab = MONEY_ALIAS[moneyTab] || moneyTab;
-  if (moneyTab==='spending') return moneyTabs() + freshLine() + vBudget();
+  if (moneyTab==='spending') return moneyTabs() + freshLine() + coinChip() + vBudget();
   if (moneyTab==='taxes') return moneyTabs() + vMoneyTaxes();
   if (moneyTab==='accounts') return moneyTabs() + vMoneyAccounts();
   moneyTab='now'; return moneyTabs() + vMoneyNow();
@@ -8612,7 +8695,7 @@ async function bankRefresh(manual){
     B.pulled = TODAY; B.syncedDay = TODAY; B.syncedAt = Date.now(); try { invLog(); } catch(e){}
     const landedN = detectDeposits(got, keyAcct);
     commit({skipXp:!landedN});
-    if (landedN){ confetti(); toast(`💵 ${landedN} check${landedN===1?'':'s'} landed — the moves are on Waterfall`); bankBusy=false; render(); return; }
+    if (landedN){ bankBusy=false; render(); try { paydayShow(S.money.checks.filter(c=>c.got).sort((a,b)=>(b.gotOn||b.d).localeCompare(a.gotOn||a.d))[0]); } catch(e){} return; }
     if (manual || added) toast(added ? `Bank data updated · ${added} new transaction${added===1?'':'s'}` : 'Bank data updated · nothing new');
   } catch(e){ bankErr = bankErrText(e && e.code || ''); }
   bankBusy=false; render();
