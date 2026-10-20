@@ -21,7 +21,7 @@ jobs:
           mkdir -p /tmp/xp
           python scripts/xp_state.py | tee ci/xpcheck.md
           : > /tmp/xp/versions.txt
-          for c in 956c0a5:b215 bd3cb73:b222 adbaa6c:b224 4762035:b225 4f9b178:b226 af31321:b228 HEAD:now; do s=${c%%:*}; n=${c##*:}; git show $s:web/app.html > /tmp/xp/$n.html && echo $n >> /tmp/xp/versions.txt; done
+          for c in bd3cb73:b222 5c87d2e:b229 fb936ad:b230 HEAD:now; do s=${c%%:*}; n=${c##*:}; git show $s:web/app.html > /tmp/xp/$n.html && echo $n >> /tmp/xp/versions.txt; done
           node scripts/xpcheck.js | tee -a ci/xpcheck.md
           rm -rf /tmp/xp
       - name: Save
