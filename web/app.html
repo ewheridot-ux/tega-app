@@ -1616,7 +1616,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b223';
+const BUILD='b224';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -4353,7 +4353,7 @@ function mPipe0(){
     out[j.id]=o; }
   return out;
 }
-const mOwed = P => { const st=stmtNow(), after=(S.money.budget?.txns||[]).filter(t=>t.amt>0&&/MODEL MANAGE/i.test(t.desc)&&t.d>st.asOf).reduce((a,t)=>a+t.amt,0); const E=mAll(), newer=E.filter(e=>P[e.id]&&P[e.id].stage==='shot'&&e.start>st.asOf).reduce((a,e)=>a+P[e.id].net,0); return Math.max(0, st.balance - after + newer); };
+const mOwed = P => { const st=stmtNow(), after=agencyDeposits().filter(t=>t.d>st.asOf).reduce((a,t)=>a+t.amt,0); const E=mAll(), newer=E.filter(e=>P[e.id]&&P[e.id].stage==='shot'&&e.start>st.asOf).reduce((a,e)=>a+P[e.id].net,0); return Math.max(0, st.balance - after + newer); };
 function mPipeSet(id, st){ const M=mState(); M.pipe ||= {}; if (M.pipe[id]===st) delete M.pipe[id]; else M.pipe[id]=st; commit({skipXp:true}); mSheet(id); }
 const STC = {option:'#f5a524',confirmed:'#38bdf8',shot:'#f97316',invoiced:'#a78bfa',paid:'#22c55e'};
 
@@ -4455,7 +4455,7 @@ function mClients(E){
 }
 function mBook(E, P){
   const jobs=E.filter(e=>e.t==='job'&&e.s!=='cancelled'), yr=TODAY.slice(0,4);
-  const dep=(S.money.budget?.txns||[]).filter(t=>t.amt>0&&/MODEL MANAGE/i.test(t.desc)).sort((a,b)=>b.d.localeCompare(a.d));
+  const dep=agencyDeposits().sort((a,b)=>b.d.localeCompare(a.d));
   const depY=dep.filter(t=>t.d.startsWith(yr)).reduce((a,t)=>a+t.amt,0);
   const jy=jobs.filter(j=>j.start.startsWith(yr)), gy=jy.reduce((a,j)=>a+mGross(j),0), unk=jy.filter(j=>!j.rn).length;
   const stmt = d => MODEL_PAY.find(p=>{ const x=daysBetween(p.d,d); return x>=0&&x<=5; });
@@ -5074,7 +5074,7 @@ function syncChecksFromStmt(){
 }
 function stmtReceived(year){ const st=stmtNow(), all=[ONE_STMT, ...((S.model&&S.model.stmts)||[])], seen=new Set(), rows=[];
   for (const s0 of all) for (const p of s0.pays||[]) if (p.d.startsWith(year) && !seen.has(p.id)){ seen.add(p.id); rows.push({d:p.d, amt:p.amt}); }
-  for (const t of (S.money.budget?.txns||[])) if (t.amt>0 && /MODEL MANAGE/i.test(t.desc) && t.d.startsWith(year) && t.d>st.asOf) rows.push({d:t.d, amt:t.amt});
+  for (const t of agencyDeposits()) if (t.d.startsWith(year) && t.d>st.asOf) rows.push({d:t.d, amt:t.amt});
   return rows; }
 function taxCard(){
   const s=S.money.s, y=THIS_Y, R=stmtReceived(y), rec=R.reduce((a,r)=>a+r.amt,0), pre=R.filter(r=>r.d<y+'-09-01').reduce((a,r)=>a+r.amt,0);
@@ -5416,7 +5416,7 @@ function world(){ return rpgC('world',()=>{ const W={}; for (const z of ZONES) W
 
 /* ---------- raids ---------- */
 const VAULT_PH=[[.75,'Sealed','🔒'],[.5,'Cracked','🔓'],[.25,'Breached','💥'],[0.0001,'Wide Open','🏦'],[0,'Broken','👑']];
-function vault(){ return rpgC('vault',()=>{ try { const P=mPipe(), st=stmtNow(), hits=(S.money.budget?.txns||[]).filter(t=>t.amt>0&&/MODEL MANAGE/i.test(t.desc)&&t.d>st.asOf).map(t=>({d:t.d,amt:t.amt})).sort((a,b)=>b.d.localeCompare(a.d)); const hp=mOwed(P), max=hp+hits.reduce((a,h)=>a+h.amt,0); return {hp,max,hits,pct:max?hp/max:0}; } catch(e){ return {hp:0,max:0,hits:[],pct:0}; } }); }
+function vault(){ return rpgC('vault',()=>{ try { const P=mPipe(), st=stmtNow(), hits=agencyDeposits().filter(t=>t.d>st.asOf).map(t=>({d:t.d,amt:t.amt})).sort((a,b)=>b.d.localeCompare(a.d)); const hp=mOwed(P), max=hp+hits.reduce((a,h)=>a+h.amt,0); return {hp,max,hits,pct:max?hp/max:0}; } catch(e){ return {hp:0,max:0,hits:[],pct:0}; } }); }
 function phaseOf(p){ for (const ph of VAULT_PH) if (p>=ph[0]) return ph; return VAULT_PH[VAULT_PH.length-1]; }
 const WYRM_PH=[[.66,'Coiled','🐉'],[.33,'Wounded','🩸'],[0.0001,'Cornered','⚔️'],[0,'Slain','🗡️']];
 function wyrm(){ return rpgC('wyrm',()=>{ const s=S.money.s; let need=0; try { need=taxOwedSoFar(); } catch(e){}
@@ -8219,7 +8219,11 @@ function incStream(t){ if (t.stream) return t.stream; const d=String(t.desc||'')
   if (/SHOPIFY|ETSY|SQUARE|STRIPE|DATUM|GRILL/.test(d)) return 'datum';
   return 'other'; }
 const isIncomeTx = t => t.amt>0 && !['transfer','ignore'].includes(t.cat) && !/REWARD|CASH ?BACK|REFUND|INTEREST PAID|DIVIDEND/i.test(t.desc||'');
-function incomeBy(from, to){ const o={model:0,datum:0,cad:0,other:0}; for (const t of S.money.budget.txns) if (t.d>=from && t.d<=to && isIncomeTx(t)) o[incStream(t)]+=t.amt; return o; }
+function incomeBy(from, to){ const o={model:0,datum:0,cad:0,other:0}; for (const t of S.money.budget.txns) if (t.d>=from && t.d<=to && isIncomeTx(t)) o[incStream(t)]+=t.amt; for (const t of agencyDeposits()) if (t.hand && t.d>=from && t.d<=to) o.model+=t.amt; return o; }
+// one list of agency money: what the bank shows + checks you typed in that the bank hasn't posted yet (every page reads this)
+function agencyDeposits(){ const T=(S.money.budget?.txns||[]).filter(t=>t.amt>0&&/MODEL MANAGE/i.test(t.desc)).map(t=>({d:t.d, amt:t.amt, desc:t.desc, id:t.id}));
+  for (const c of S.money.checks||[]) if (c.got && c.byHand && !c.verified){ const d=c.gotOn||c.d; if (!T.some(t=>Math.abs(daysBetween(t.d,d))<=6 && (Math.abs(t.amt-c.amt)<1))) T.push({d, amt:c.amt, desc:'1 MODEL MANAGE · in your bank, posting', hand:1}); }
+  return T.sort((a,b)=>b.d.localeCompare(a.d)); }
 function setStream(id,k){ const t=S.money.budget.txns.find(t=>t.id===id); if(!t) return; t.stream=k; commit({skipXp:true}); }
 // Datum's own books: money in from Datum, money out on Datum (its write-offs)
 function datumBooks(from, to){ const inc=incomeBy(from,to).datum, exp=S.money.budget.deductibles.filter(x=>x.cat==='datum'&&x.d>=from&&x.d<=to).reduce((a,x)=>a+(+x.amt||0),0); return {inc, exp, profit:inc-exp}; }
@@ -8353,6 +8357,7 @@ function landCheck(amt, d){ amt=Math.round((+amt||0)*100)/100; d=d||TODAY; if (!
   if (!c){ c={id:uid(), d, amt, note:'1 Model Management'}; M.checks.push(c); }
   if (Math.abs(c.amt-amt)>1) c.expAmt=c.amt; c.amt=amt; c.got=true; c.gotOn=d; c.d=d; c.landedAt=TODAY; c.verified=false; c.byHand=true; c.note=(c.note||'').replace(/ · (marked|entered) by (hand|you)/g,'')+' · entered by you';
   try { replanBiweekly(c, d, M.s.payAmt||amt); } catch(e){}
+  try { const kr=S.quarters[quarterOf(d)]?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)&&!k.src); if(kr && !c.krCounted){ kr.current++; c.krCounted=1; } } catch(e){}
   c.split=splitFor(c); c.done={}; delete c.dismissed; M.checks.sort((a,b)=>a.d.localeCompare(b.d));
   S.wins.push({id:uid(), d:TODAY, text:`💵 ${money0(amt)} landed — split ready`}); commit(); paydayShow(c); }
 function landForm(){ return `<form class="ln-form" onsubmit="event.preventDefault();landCheck(this.a.value,this.d.value)"><span class="ln-dol">$</span><input name="a" class="inp num" type="number" inputmode="decimal" step="0.01" min="1" placeholder="amount" required aria-label="Amount in your bank"><input name="d" class="inp" type="date" value="${TODAY}" max="${TODAY}" aria-label="Day it arrived"><button class="btn sm">It's in my bank</button></form>`; }
