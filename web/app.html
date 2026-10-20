@@ -1719,7 +1719,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b235';
+const BUILD='b236';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -3889,7 +3889,7 @@ function vToday(){
       <div class="stack" style="margin-top:8px">${S.wins.filter(x=>x.d===curDay).map(x=>`<div class="check on" style="cursor:default"><div class="box">★</div><div class="txt" style="text-decoration:none;color:var(--fg)">${esc(x.text)}</div><button class="x" onclick="delWin('${x.id}')">✕</button></div>`).join('')}</div>`;
   const habitsBlock = `<div class="tag" style="margin:14px 0 8px">Habits · ${hdone}/${S.habits.length}${hdone===S.habits.length&&hdone?' · perfect day +15':''}</div>
       <div class="hrow">${S.habits.filter(h=>!travelPaused(d).includes(h.id)).map(h=>{ const road=h.id==='datum'&&awayOn(curDay); return `<button class="hdot ${d.habits[h.id]?'on':''}" onclick="${road&&!d.habits[h.id]?'roadOpen()':`toggleHabit('${h.id}')`}" aria-pressed="${!!d.habits[h.id]}" aria-label="${esc(h.name)}"><i>${road?'✈️':h.icon}</i><small>${road?'Road':esc(hShort(h))}</small></button>`; }).join('')}</div>`;
-  return `
+  return `${rescueCard()}
   <div class="hero sec" style="grid-template-columns:minmax(0,1fr);gap:16px">
     <div class="lvl">
       <div class="avwrap">${isToday?shadowPeek():''}<div class="avatar ringed ${isToday&&!d.checkin?'wants':''}" style="--ringc:conic-gradient(from 0deg,transparent ${Math.round(pctLvl*100)}%,var(--card2) 0),${ringCss(lvl)}" onclick="petAvatar()" title="${isToday&&!d.checkin?'Start the day':`${Math.round(pctLvl*100)}% to Lv ${lvl+1}`}">${charAnim(120)||avWait(120)||avatarSVG(stg, mood, 120, S.evo||{})}<span class="lvlpip num" onclick="event.stopPropagation();go('evolve')">${lvl}</span>${idleEmote(mood,isToday,d)}</div></div>
@@ -8941,6 +8941,18 @@ function cloudHist(){ if (!dbHandle || !dbHandle.history) return '';
 async function cloudRestore(id,days){ if (!dbHandle?.restore) return; if (window._restoreArm!==id){ window._restoreArm=id; toast(`Tap Restore again to put back the ${days}-day copy`); setTimeout(()=>{ if (window._restoreArm===id) window._restoreArm=null; },6000); return; } window._restoreArm=null;
   try { await dbHandle.restore(id); const s=await dbHandle.doc('okr/state').get(); if (s.exists){ S=migrate(thaw(s.data())); avatarCache.clear(); lastProg=snapshotProgress(); saveLocal(); _hist=null; render(); toast(`☁️ Restored · ${Object.keys(S.days||{}).length} days back`); } } catch(e){ toast('Restore failed: '+String(e&&e.message||e).slice(0,80)); } }
 
+/* b236: rescue copy — an encrypted copy of your history ships with the app; only the code from the chat opens it */
+const RESCUE={file:'rescue/2026-10-20.json', d:'2026-10-20', days:19, lvl:6};
+function rescueDue(){ return Object.keys(S.days||{}).length < 5 && !S.rescueDone; }
+function rescueCard(){ if (!rescueDue()) return ''; return `<div class="card sec" style="border-color:var(--good)"><div class="tag">🛟 Your history is here</div><h2 style="margin:6px 0 2px">${RESCUE.days} days · Level ${RESCUE.lvl} · ${nice(RESCUE.d)}</h2><div class="sub">Type the rescue code from the chat and it all comes back.</div><div class="row" style="gap:6px;margin-top:10px"><input class="inp" id="rsc-code" placeholder="rescue code" autocapitalize="none" autocorrect="off" spellcheck="false" style="flex:1;min-width:0"><button class="btn sm" onclick="rescueGo()">Restore</button></div></div>`; }
+async function rescueGo(){ const code=(document.getElementById('rsc-code')?.value||'').trim().toLowerCase().replace(/\s+/g,'-'); if(!code) return toast('Type the rescue code'); const btn=document.querySelector('#rsc-code+button'); if (btn) btn.textContent='…';
+  try { const j=await fetch(RESCUE.file).then(r=>{ if(!r.ok) throw 1; return r.json(); }); const b=x=>Uint8Array.from(atob(x),c=>c.charCodeAt(0));
+    const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(code),'PBKDF2',false,['deriveKey']); const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b(j.salt),iterations:300000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
+    let pt; try { pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b(j.iv)},key,b(j.ct)); } catch(e){ throw 2; }
+    if (j.gz) pt=await new Response(new Blob([pt]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+    const o=JSON.parse(new TextDecoder().decode(pt)); if(!o||o.v!==2||!o.days) throw 1; o.rescueDone=1; S=migrate(o); avatarCache.clear(); lastProg=snapshotProgress(); commit({skipXp:true}); confetti(); render(); toast(`🛟 ${Object.keys(S.days).length} days restored`); }
+  catch(e){ if (btn) btn.textContent='Restore'; toast(e===2?'Wrong code — check the dashes and the number':e===1?'The rescue copy isn’t in this build yet':'Restore failed: '+String(e&&e.message||e).slice(0,60)); } }
+
 let moneyTab = 'now';
 function setMoneyTab(t){ moneyTab=MONEY_ALIAS[t]||t; render(); }
 const MONEY_ALIAS={waterfall:'now', income:'now', budget:'spending', tips:'spending', bills:'accounts', plan:'now', deduct:'taxes', overview:'now'};
@@ -9599,7 +9611,7 @@ function backupCard(){
   return `<div class="card sec"><div class="hdr"><h2>Backup</h2><span class="sub">${S.lastBackup?`file saved ${age===0?'today':nice(S.lastBackup)}`:'no file saved yet'}</span></div>
     <div class="help" style="margin-bottom:10px">Saves everything in the app to one file you keep. ${age===null||age>14?'<b style="color:var(--warn)">Worth doing now.</b> ':''}${S.lastSnap?`A cloud snapshot is also kept weekly — last one ${nice(S.lastSnap)}.`:'A cloud snapshot is also kept weekly.'}</div>
     ${restorePending?`<div style="padding:12px 14px;border-radius:var(--r2);background:var(--card2);margin-bottom:10px"><b>Replace everything with this backup?</b><div class="sub" style="margin:4px 0 10px">${Object.keys(restorePending.days||{}).length} days logged · last changed ${restorePending.updatedAt?new Date(restorePending.updatedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'unknown'}. What's in the app now will be overwritten.</div><div class="row" style="gap:6px"><button class="btn danger sm" onclick="backupRestore(true)">Restore it</button><button class="btn ghost sm" onclick="backupRestore(false)">Cancel</button></div></div>`:''}
-    ${cloudHist()}
+    ${rescueCard()}${cloudHist()}
     <div class="row" style="gap:6px"><button class="btn sm" onclick="backupSave()">Save backup file</button><label class="btn ghost sm" style="cursor:pointer">Restore from file<input type="file" accept=".json,application/json" style="display:none" onchange="backupPick(this)"></label><button class="btn ghost sm" onclick="exportJson()">Copy</button></div></div>`;
 }
 
