@@ -1676,6 +1676,9 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 @keyframes baFlap{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.6)}}
 @keyframes baSmoke{0%{transform:translate(0,0) scale(.6);opacity:.7}100%{transform:translate(-6px,-26px) scale(1.6);opacity:0}}
 @media (prefers-reduced-motion: reduce){.ba *, .bp-arena{animation:none!important}}
+
+.g-blk{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;margin:14px 2px 6px;padding-top:4px;min-width:0;max-width:100%}.g-blk small{min-width:0}.g-blk b{font-size:13px;letter-spacing:.06em;text-transform:uppercase}.g-blk small{color:var(--mut);font-size:11.5px}
+.g-blk-warm b{color:var(--warn)}.g-blk-cool b{color:#7cc8ff}.g-blk-main b{color:var(--good)}
 </style>
 
 <div class="app" id="app"></div>
@@ -1685,7 +1688,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b228';
+const BUILD='b229';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -1996,7 +1999,12 @@ const fullStackWeek = w => { const tr = S.weeks[w]?.review?.tracks || {}; return
 const streaks = () => ({ daily:dailyStreak(), review:weekStreak(reviewDone), gym:weekStreak(gymWeek), post:weekStreak(postWeek), expense:weekStreak(expenseWeek) });
 
 function allKRs(){ const out=[]; for(const q of Object.values(S.quarters)) for(const o of q.objectives) for(const k of o.krs) out.push(k); for(const y of Object.values(S.years)) for(const o of y.objectives) for(const k of o.krs) out.push(k); return out; }
-function computeXP(){
+// HISTORY IS PERMANENT: XP earned on days already finished can never go down because the app changed.
+// (Today can still move both ways — undoing a mistake today works.)
+function computeXP(){ const raw=computeXP0(); try { if (typeof S==='undefined'||!S) return raw; const F=S.xpFloor||null;
+    if (!F || F.d!==TODAY){ const base=F?Math.max(F.v, F.raw??F.v):raw; S.xpFloor={d:TODAY, v:F?base:raw, raw}; } else S.xpFloor.raw=raw;
+    return Math.max(raw, S.xpFloor.v); } catch(e){ return raw; } }
+function computeXP0(){
   let xp=0;
   for (const [dk,d] of Object.entries(S.days)) { const t=d.top3.filter(x=>x.done).length, h=Object.values(d.habits).filter(Boolean).length, base=t*XP.top3 + h*XP.habit + (h>=habitNeed(d) && S.habits.length? XP.dayBonus:0) + (d.checkin?XP.checkin:0); xp += base + rareXp(dk, base) + rpgAdj(dk, base); }
   xp += S.wins.length*XP.win;
@@ -6424,6 +6432,24 @@ const GX_RAW = [
  ['st_glute','Figure-4 Glute Stretch','bw','glutes','','stretch',0,0,1,'On your back, ankle over knee, pull the leg in.'],
  ['st_tri','Overhead Triceps Stretch','bw','triceps','','stretch',0,0,1,'Hand behind your head, gently push the elbow down.'],
  ['st_abs','Cobra Stretch','bw','abs','','stretch',0,0,0,'Lie face down, press up through your hands, hips stay down.'],
+ ['st_hipflex','Kneeling Hip Flexor Stretch','bw','glutes','quads','stretch',0,0,1,'Back knee down, tuck your pelvis, shift forward until the front of the hip opens.'],
+ ['st_pigeon','Pigeon Stretch','bw','glutes','','stretch',0,0,1,'Front shin across, back leg long, fold over the front leg and breathe.'],
+ ['st_calf','Wall Calf Stretch','bw','calves','','stretch',0,0,1,'Hands on a wall, back heel down, lean in.'],
+ ['st_bicep','Wall Biceps Stretch','bw','biceps','','stretch',0,0,1,'Palm flat on a wall behind you, turn your chest away.'],
+ ['st_child','Child’s Pose','bw','back','shoulders','stretch',0,0,0,'Knees wide, reach long, sink your hips to your heels.'],
+ ['st_neck','Neck & Upper Trap Stretch','bw','shoulders','','stretch',0,0,1,'Ear to shoulder, gently press with the same-side hand.'],
+ ['wu_jacks','Jumping Jacks','bw','quads','shoulders calves','stretch',0,0,0,'Easy pace — just get warm and breathing.'],
+ ['wu_armcirc','Arm Circles','bw','shoulders','chest back','stretch',0,0,0,'Small to big circles forward, then backward.'],
+ ['wu_bandpa','Band Pull-Apart','band','back','shoulders','stretch',0,0,0,'Arms straight, pull the band to your chest, squeeze shoulder blades.'],
+ ['wu_scappu','Scapular Push-Up','bw','chest','shoulders back','stretch',0,0,0,'Plank, arms locked — let your chest sink between your shoulders, then push away.'],
+ ['wu_catcow','Cat-Cow','bw','back','abs','stretch',0,0,0,'On all fours, round up then arch, slow with your breath.'],
+ ['wu_tspine','Thoracic Rotation','bw','back','shoulders','stretch',0,0,1,'On all fours, hand behind your head, rotate the elbow to the ceiling.'],
+ ['wu_legswing','Leg Swings','bw','hamstrings','glutes quads','stretch',0,0,1,'Hold a wall, swing front-to-back, then side-to-side.'],
+ ['wu_bwsquat','Bodyweight Squat','bw','quads','glutes','stretch',0,0,0,'Slow reps, sit deep, chest up.'],
+ ['wu_glutebr','Glute Bridge','bw','glutes','hamstrings','stretch',0,0,0,'Drive through your heels, squeeze at the top.'],
+ ['wu_wgs','World’s Greatest Stretch','bw','hamstrings','glutes back','stretch',0,0,1,'Lunge, elbow to instep, then rotate that arm to the ceiling.'],
+ ['wu_inchworm','Inchworm','bw','hamstrings','abs shoulders','stretch',0,0,0,'Fold down, walk your hands out to a plank, walk back.'],
+ ['wu_wristcirc','Wrist & Elbow Circles','bw','biceps','triceps','stretch',0,0,0,'Loosen wrists and elbows both directions.'],
 ];
 const GX = Object.fromEntries(GX_RAW.map(([id,n,eq,p,s,k,base,inc,side,cue])=>[id,{id,n,eq:eq.split(' '),p:p?p.split(' '):[],s:s?s.split(' '):[],k,base,inc,side,cue}]));
 const gLift = x => ['c','i'].includes(GX[x]?.k);
@@ -6440,8 +6466,8 @@ const GDAY = {recovered:['Recovered muscles',Object.keys(GMUS)], full:['Full bod
 const GINJ = {shoulder:['Shoulder',['ohp','dips','skull','incl_bb','pike_pu','arnold','bb_bench']], lowback:['Lower back',['deadlift','bb_row','rdl','squat','kb_swing','russian']], knee:['Knee',['lunge','bulgarian','leg_ext','squat','step_up','rope']], wrist:['Wrist',['pushup','diamond','skull','bb_curl','plank','pike_pu']], elbow:['Elbow',['skull','oh_ext','cg_bench','dips','bench_dip']]};
 const GVAR = {low:.25, med:.9, high:1.8};
 
-function G_(){ const g=(S.gym ||= {}); g.sessions ||= []; g.trash ||= []; g.excl ||= {}; g.pref ||= {}; g.saved ||= []; g.notes ||= {}; g.recOv ||= {}; g.rest ||= {};
-  const su=(g.setup ||= {done:false}); for (const [k,v] of Object.entries({goal:'lean', days:3, mins:45, exp:'mid', equip:'full', focus:['shoulders','arms','abs'], unit:'lb', lifts:{}, split:'full', warm:true, cool:false, cardio:false, ss:false, vary:'med', inj:[], bw:''})) if (su[k]===undefined) su[k]=v;
+function G_(){ const g=(S.gym ||= {}); if (g.setup && !g.setup.wuMig){ g.setup.wuMig=1; g.setup.warmup=true; g.setup.cool=true; if (g.plan) g.plan.prof=-1; } g.sessions ||= []; g.trash ||= []; g.excl ||= {}; g.pref ||= {}; g.saved ||= []; g.notes ||= {}; g.recOv ||= {}; g.rest ||= {};
+  const su=(g.setup ||= {done:false}); for (const [k,v] of Object.entries({goal:'lean', days:3, mins:45, exp:'mid', equip:'full', focus:['shoulders','arms','abs'], unit:'lb', lifts:{}, split:'full', warm:true, warmup:true, cool:true, cardio:false, ss:false, vary:'med', inj:[], bw:''})) if (su[k]===undefined) su[k]=v;
   g.profiles ||= [{id:'main', name:'My gym', have:GPROF.full.slice()}]; for (const p of g.profiles){ if (p.have.includes('bb')&&!p.have.includes('rack')) p.have.push('rack'); }
   g.prof ||= 'main'; g.splitIdx ||= 0; return g; }
 function gProf(){ const g=G_(); return g.profiles.find(p=>p.id===g.prof)||g.profiles[0]; }
@@ -6520,8 +6546,26 @@ function gBuild(xs, opt={}){ const g=G_(), su=g.setup; let maxUsed=false; const 
     return {x, sets:gSuggest(x,{warm:su.warm&&first&&gLift(x), max}), max:max||undefined}; });
   if (su.ss){ let gid=0; for (let i=0;i<ex.length-1;i++){ const a=GX[ex[i].x], b=GX[ex[i+1].x]; if (a.k==='i'&&b.k==='i'&&!ex[i].grp&&a.p[0]!==b.p[0]&&a.p[0]!=='abs'&&b.p[0]!=='abs'){ ex[i].grp=ex[i+1].grp='s'+(++gid); i++; } } }
   if (su.cardio && !opt.noExtras){ const c=['treadmill','stairs','bike','rope'].find(x=>gHas(x)&&!g.excl[x]); if (c) ex.push({x:c, sets:gSuggest(c)}); }
-  if (su.cool && !opt.noExtras){ const ms=[...new Set(ex.flatMap(e=>GX[e.x].p))]; const st=Object.keys(GX).filter(x=>GX[x].k==='stretch'&&ms.includes(GX[x].p[0])).slice(0,3); for (const x of st) ex.push({x, sets:gSuggest(x)}); }
+  const ms=[...new Set(ex.filter(e=>gLift(e.x)||GX[e.x].k==='t').flatMap(e=>GX[e.x].p))];
+  if (su.cool && !opt.noExtras){ const st=gPickMoves(x=>!isWarmX(x), ms, su.coolN||4, 'c'); for (const x of st) ex.push({x, sets:[{w:0,r:x==='st_child'?45:30,t:'n'}], blk:'cool'}); }
+  if (su.warmup!==false && !opt.noExtras && ex.length){ const wu=gPickMoves(x=>isWarmX(x), ms, su.warmN||4, 'w'); ex.unshift(...wu.map(x=>({x, sets:[{w:0,r:x==='wu_jacks'?60:40,t:'n'}], blk:'warm'}))); }
   return ex; }
+const isWarmX = x => x.startsWith('wu_');
+// Fitbod-style active recovery: a 15-minute flow that hits whatever is most fatigued
+function gMobility(){ const g=G_(), R=gFatigue(), sore=Object.keys(GMUS).sort((a,b)=>R[a].pct-R[b].pct).slice(0,6);
+  const wu=gPickMoves(x=>isWarmX(x), sore, 5, 'w'), st=gPickMoves(x=>!isWarmX(x), sore, 7, 'c');
+  g.plan={d:TODAY, n:((g.plan&&g.plan.n)||0)+1, prof:g.prof, mode:'mobility', muscles:null, mods:null, name:'Mobility & recovery',
+    ex:[...wu.map(x=>({x, sets:[{w:0,r:45,t:'n'}], blk:'warm'})), ...st.map(x=>({x, sets:[{w:0,r:45,t:'n'}], blk:'cool'}))]};
+  commit({skipXp:true}); toast('🧘 Mobility day — easy on the sore muscles'); }
+// pick n timed moves that cover the worked muscles: one general opener for warm-ups, then best muscle matches, no repeats
+function gPickMoves(ok, ms, n, kind){ const g=G_(), pool=Object.keys(GX).filter(x=>GX[x].k==='stretch'&&ok(x)&&gHas(x)&&!g.excl[x]), out=[], cov=new Set();
+  if (kind==='w'){ const o=pool.find(x=>x==='wu_jacks'); if (o){ out.push(o); } }
+  const score=x=>{ const X=GX[x]; let v=0; for (const m of X.p) if (ms.includes(m)&&!cov.has(m)) v+=3; for (const m of X.s) if (ms.includes(m)&&!cov.has(m)) v+=1; return v+((g.pref[x]||0)*.5); };
+  while (out.length<n){ const c=pool.filter(x=>!out.includes(x)).sort((a,b)=>score(b)-score(a))[0]; if (!c || score(c)<=0) break; out.push(c); GX[c].p.forEach(m=>cov.add(m)); }
+  return out; }
+function gBlkHdr(e, prev){ if (!e) return ''; const b=e.blk||'main', pb=prev?(prev.blk||'main'):null; if (b===pb) return '';
+  const L={warm:['🔥 Warm-up','dynamic moves · ~4 min · timed, no weight'], main:['💪 Workout',''], cool:['🧘 Cool-down','stretches · ~3 min · breathe slow']}[b];
+  return (pb===null && b==='main') ? '' : `<div class="g-blk g-blk-${b}"><b>${L[0]}</b>${L[1]?`<small>${L[1]}</small>`:''}</div>`; }
 function gName(xs){ const c={}; for (const x of xs) if (gLift(x)||GX[x].k==='t') for (const m of GX[x].p) c[m]=(c[m]||0)+1; return Object.entries(c).filter(([m])=>m!=='abs'||Object.keys(c).length<3).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([m])=>GMUS[m]).join(' · ')||'Workout'; }
 function gPlan(force){ const g=G_(); const P=g.plan;
   if (force || !P || P.d!==TODAY || P.prof!==g.prof){ const mode=(P&&P.d===TODAY&&P.mode)||(g.setup.split==='full'?'recovered':gDayType()), mus=P&&P.d===TODAY?P.muscles:null, mods=P&&P.d===TODAY?P.mods:null, n=force?((P&&P.n)||0)+1:0;
@@ -6549,7 +6593,7 @@ function vGym(){ const g=G_();
   return seg + (gTab==='recovery'?gRecoveryView():gTab==='log'?gLogView():gTab==='results'?gResultsView():gTab==='plan'?gSetupView():gWorkoutView()); }
 const GXIMG=new Set(["abductor", "arnold", "band_apart", "band_curl", "band_row", "bb_bench", "bb_curl", "bb_row", "bench_dip", "bicycle", "bike", "bridge", "bulgarian", "bw_squat", "c_lat_raise", "cable_crunch", "cable_curl", "cable_fly", "cable_row", "calf_bw", "calf_db", "calf_m", "cg_bench", "chinup", "cs_row", "db_bench", "db_curl", "db_fly", "db_rdl", "db_row", "db_sp", "db_thrust", "dead_bug", "deadlift", "diamond", "dips", "face_pull", "goblet", "hammer", "hip_thrust", "hlr", "incl_bb", "incl_curl", "incl_db", "inv_row", "kb_swing", "kickback", "lat_raise", "leg_curl", "leg_ext", "leg_press", "lunge", "m_chest", "m_sp", "oh_ext", "ohp", "pec_deck", "pike_pu", "plank", "pulldown", "pullup", "pushdown", "pushup", "rdl", "rear_fly", "rope", "russian", "sa_pulldown", "side_plank", "skull", "sl_rdl", "squat", "st_abs", "st_chest", "st_glute", "st_ham", "st_lat", "st_quad", "st_shoulder", "st_tri", "stairs", "step_up", "treadmill"]);
 function gImg(x,f){ return 'ex/'+x+'_'+(f||0)+'.webp'; }
-function gThumb(x){ const X=GX[x], m=X.p[0], ic=X.k==='cardio'?'🫀':X.k==='stretch'?'🧘':GEQI[X.eq.find(e=>e!=='bench'&&e!=='rack')||X.eq[0]]||'💪'; return `<span class="g-th${GXIMG.has(x)?' g-ph':''}" style="--c:${GMC[m]||'#8d8d8d'}">${ic}${GXIMG.has(x)?`<img src="${gImg(x)}" alt="" loading="lazy" decoding="async" onerror="this.remove()">`:''}</span>`; }
+function gThumb(x){ const X=GX[x], m=X.p[0], ic=X.k==='cardio'?'🫀':isWarmX(x)?'🔥':X.k==='stretch'?'🧘':GEQI[X.eq.find(e=>e!=='bench'&&e!=='rack')||X.eq[0]]||'💪'; return `<span class="g-th${GXIMG.has(x)?' g-ph':''}" style="--c:${GMC[m]||'#8d8d8d'}">${ic}${GXIMG.has(x)?`<img src="${gImg(x)}" alt="" loading="lazy" decoding="async" onerror="this.remove()">`:''}</span>`; }
 function gSetsTxt(e){ const X=GX[e.x], w=e.sets.filter(z=>z.t!=='w'), z=w[0]||e.sets[0]; if (X.k==='cardio') return `${z.r} min`; if (X.k==='stretch'||X.k==='t') return `${w.length} × ${z.r}s${X.side?' each side':''}`;
   const same=w.every(q=>q.r===z.r&&q.w===z.w); return `${w.length} × ${z.r}${same?'':'…'} reps · ${gWtxt(e.x,z.w)}${X.side?' · per side':''}`; }
 
@@ -6560,7 +6604,7 @@ function gWorkoutView(){ const g=G_(), P=gPlan(), R=gFatigue(), su=g.setup, wc=g
   let prevGrp=null; const rows=P.ex.map((e,i)=>{ const X=GX[e.x], gs=e.grp&&e.grp!==prevGrp; const ge=e.grp&&P.ex[i+1]?.grp!==e.grp; prevGrp=e.grp;
     return `${gs?`<div class="g-ss-l">Superset</div>`:''}<div class="g-ex fb-ex ${e.grp?'in-ss':''} ${ge?'ss-end':''}">
       <button class="g-ex-main" onclick="gExInfo('${e.x}')">${gThumb(e.x)}<span class="g-ex-t"><b>${esc(X.n)}${e.max?' <em class="g-max">MAX EFFORT</em>':''}</b><small>${gSetsTxt(e)}${e.sets.some(z=>z.t==='w')?' · warm-up':''}</small><span class="fb-mtags">${X.p.map(m=>`<i style="--c:${GMC[m]||'#888'}">${GMUS[m]}</i>`).join('')}</span></span></button>
-      <button class="g-ic" onclick="gExMenu('plan',${i})" aria-label="More">⋯</button></div>`; }).join('');
+      <button class="g-ic" onclick="gExMenu('plan',${i})" aria-label="More">⋯</button></div>`; }).map((h,i)=>gBlkHdr(P.ex[i],P.ex[i-1])+h).join('');
   const gate=P.ex.some(e=>e.max); let st=null; try { st=aStats(); aRankCheck(st); } catch(e){}
   let q=null, Bw=null; try { q=aQuest(); Bw=aBoss(); } catch(e){}
   const allM=Object.keys(GMUS).sort((a,b)=>(mus.includes(b)-mus.includes(a))||R[b].pct-R[a].pct);
@@ -6576,6 +6620,7 @@ function gWorkoutView(){ const g=G_(), P=gPlan(), R=gFatigue(), su=g.setup, wc=g
     <button class="fb-body" onclick="gTab='recovery';render()" aria-label="Muscle recovery map">${gBodyMap(R,mus)}</button><div class="fb-mus">${allM.slice(0,10).map(m=>`<button class="${mus.includes(m)?'on':''}" style="--c:${gRecCol(R[m].pct)};--p:${R[m].pct}" onclick="gMuscleSheet()"><i></i><b class="num">${R[m].pct}%</b><small>${GMUS[m]}</small></button>`).join('')}</div>
     <div class="fb-sec"><span>Exercises</span><button onclick="gAddSheet('plan')" aria-label="Add exercise">＋</button></div>
     <div class="fb-list">${rows}</div>
+    ${P.mode==='mobility'?`<button class="btn ghost sm" style="width:100%;max-width:100%;justify-content:center;margin-top:8px;white-space:normal" onclick="G_().plan=null;commit({skipXp:true})">💪 Back to a normal workout</button>`:`<button class="btn ghost sm" style="width:100%;max-width:100%;justify-content:center;margin-top:8px;white-space:normal;text-align:center" onclick="gMobility()">🧘 Mobility day instead · 15 min</button>`}
     <div class="fb-week">${Array.from({length:su.days},(_,i)=>`<i class="${i<wc?'on':''}"></i>`).join('')}<span>${wc}/${su.days} this week${streak?` · 🔥 ${streak}-week streak`:''}</span></div>
     <div class="fb-cta"><button class="btn g-start a-hold ${gate?'a-gate':''}" ${g.live?'onclick="gStart()"':'onpointerdown="aHoldStart(event,this)" onpointerup="aHoldEnd(this)" onpointerleave="aHoldEnd(this)" onpointercancel="aHoldEnd(this)" oncontextmenu="return false"'}><span>${g.live?'Resume workout':gate?'Hold to enter the gate':'Hold to accept quest'}</span></button></div>
   </div>`; }
@@ -6693,7 +6738,7 @@ function gSetupView(){ const g=G_(), su=g.setup, ex=Object.keys(g.excl).filter(x
     <div class="g-q"><span>Days per week</span><div class="g-opts">${[2,3,4,5,6].map(n=>opt('days',n,n)).join('')}</div></div>
     <div class="g-q"><span>Workout duration</span><div class="g-opts">${[15,30,45,60,75,90].map(n=>opt('mins',n,n+' min')).join('')}</div></div>
     <div class="g-q"><span>Experience</span><div class="g-opts">${[['new','Beginner'],['mid','Intermediate'],['adv','Advanced']].map(([k,l])=>opt('exp',k,l)).join('')}</div></div>
-    <div class="g-q"><span>Workout preferences</span><div class="g-opts">${tog('warm','Warm-up sets')}${tog('cool','Cooldown stretches')}${tog('cardio','Cardio finisher')}${tog('ss','Supersets')}</div></div>
+    <div class="g-q"><span>Workout preferences</span><div class="g-opts">${tog('warmup','Warm-up moves')}${tog('warm','Warm-up sets')}${tog('cool','Cool-down stretches')}${tog('cardio','Cardio finisher')}${tog('ss','Supersets')}</div></div>
     <div class="g-q"><span>Exercise variability</span><div class="g-opts">${[['low','Low'],['med','Balanced'],['high','High']].map(([k,l])=>opt('vary',k,l)).join('')}</div></div>
     <div class="g-q"><span>Focus (up to 3)</span><div class="g-opts">${Object.keys(GFOCUS).map(f=>`<button class="${(su.focus||[]).includes(f)?'on':''}" onclick="gFocus('${f}')">${f[0].toUpperCase()+f.slice(1)}</button>`).join('')}</div></div>
     <div class="g-q"><span>Injuries & limitations</span><div class="g-opts">${Object.entries(GINJ).map(([k,[l]])=>`<button class="${(su.inj||[]).includes(k)?'on':''}" onclick="gInj('${k}')">${l}</button>`).join('')}</div></div>
@@ -6734,7 +6779,7 @@ function gWizard(){ const su=G_().setup, steps=[
   const chip=(on,l,act)=>`<button class="g-wz-o ${on?'on':''}" onclick="${act}"><b>${l}</b></button>`;
   const body = key==='focus' ? `<div class="g-wz-grid">${Object.keys(GFOCUS).map(f=>chip((su.focus||[]).includes(f),f[0].toUpperCase()+f.slice(1),`gFocus('${f}')`)).join('')}</div><div class="help keep">Pick up to 3. They get trained a bit more often.</div>`
     : key==='inj' ? `<div class="g-wz-grid">${Object.entries(GINJ).map(([k,[l]])=>chip((su.inj||[]).includes(k),l,`gInj('${k}')`)).join('')}</div><div class="help keep">Exercises that load these get left out. Skip if none.</div>`
-    : key==='prefs' ? `<div class="g-wz-grid">${[['warm','Warm-up sets'],['cool','Cooldown stretches'],['cardio','Cardio finisher'],['ss','Supersets']].map(([k,l])=>chip(su[k],l,`gSet('${k}',${!su[k]})`)).join('')}</div><div class="help keep">Supersets pair two exercises back-to-back to save time. Cardio finisher helps you lean out.</div>`
+    : key==='prefs' ? `<div class="g-wz-grid">${[['warmup','Warm-up moves'],['warm','Warm-up sets'],['cool','Cool-down stretches'],['cardio','Cardio finisher'],['ss','Supersets']].map(([k,l])=>chip(su[k],l,`gSet('${k}',${!su[k]})`)).join('')}</div><div class="help keep">Supersets pair two exercises back-to-back to save time. Cardio finisher helps you lean out.</div>`
     : key==='lifts' ? `<div class="g-opts" style="margin-bottom:10px">${['lb','kg'].map(u=>`<button class="${su.unit===u?'on':''}" onclick="G_().setup.unit='${u}';render()">${u}</button>`).join('')}</div>${gLiftInputs()}<label class="g-dur" style="margin-top:8px">Body weight <input class="inp" inputmode="decimal" value="${esc(su.bw||'')}" placeholder="${gU()}" onchange="G_().setup.bw=this.value.trim()"></label><div class="help keep">The weight you can do about 8 clean reps with. Skip what you don't know — the first workouts start light and learn from what you log.</div>`
     : `<div class="stack" style="gap:8px">${opts.map(([v,l,sub])=>`<button class="g-wz-o ${su[key]===v?'on':''}" onclick="gWz('${key}',${typeof v==='number'?v:`'${v}'`})"><b>${l}</b>${sub?`<small>${sub}</small>`:''}</button>`).join('')}</div>`;
   return `<div class="card sec g-wz"><div class="g-wz-p">${steps.map((_,i)=>`<i class="${i<=gStep?'on':''}"></i>`).join('')}</div>
@@ -6775,7 +6820,7 @@ function gAdd(where,x){ const L=where==='plan'?gPlan().ex:G_().live.ex; L.push({
 
 /* ---------- live workout ---------- */
 let gTick=null;
-function gStart(){ const g=G_(); if (!g.live){ glOpen={}; const P=gPlan(); g.live={id:'w'+uid(), d:TODAY, t0:Date.now(), name:P.name, mode:P.mode, ex:P.ex.map(e=>({x:e.x, grp:e.grp, max:e.max, sets:e.sets.map(s=>({w:s.w, r:s.r, t:s.t||'n', ok:false}))})), restEnd:0}; gSaveLive(); } gLiveOpen(); }
+function gStart(){ const g=G_(); if (!g.live){ glOpen={}; const P=gPlan(); g.live={id:'w'+uid(), d:TODAY, t0:Date.now(), name:P.name, mode:P.mode, ex:P.ex.map(e=>({x:e.x, grp:e.grp, max:e.max, blk:e.blk, sets:e.sets.map(s=>({w:s.w, r:s.r, t:s.t||'n', ok:false}))})), restEnd:0}; gSaveLive(); } gLiveOpen(); }
 function gSaveLive(){ clearTimeout(gSaveLive.t); gSaveLive.t=setTimeout(()=>commit({skipXp:true}),250); }
 function gLiveOpen(){ let m=document.getElementById('g-live'); if(!m){ m=document.createElement('div'); m.id='g-live'; document.body.appendChild(m); } document.body.classList.add('g-noscroll'); gLiveRender(); clearInterval(gTick); gTick=setInterval(gLiveTick,500); }
 function gLiveClose(){ document.getElementById('g-live')?.remove(); document.body.classList.remove('g-noscroll'); clearInterval(gTick); render(); }
@@ -6807,7 +6852,7 @@ function gLiveRender(){ const m=document.getElementById('g-live'), L=G_().live; 
       <span class="gl-st"><button onclick="gAdj(${i},${j},'r',-1)">−</button><input inputmode="numeric" value="${z.r}" onchange="gIn(${i},${j},'r',this.value)"><button onclick="gAdj(${i},${j},'r',1)">+</button></span>
       <button class="gl-ok" onclick="gTick1(${i},${j})" aria-label="Set done">${z.ok?'✓':''}</button></div>`; }).join('')}
     ${e.max?`<div class="gl-note">🔥 Max effort: on the MAX set, do as many clean reps as you can. It recalibrates your weights.</div>`:''}
-    <div class="row" style="gap:6px">${fin&&glOpen[i]?`<button class="btn ghost sm" onclick="delete glOpen[${i}];gLiveRender()">Collapse</button>`:''}<button class="btn ghost sm" onclick="gSetAdd(${i})">+ Set</button>${e.sets.length>1?`<button class="btn ghost sm" onclick="gSetDel(${i})">− Set</button>`:''}${e.rir!=null?`<span class="gl-rir">RiR ${e.rir===4?'4+':e.rir}</span>`:''}</div></div></div>${ge?'</div>':''}`; }).join('');
+    <div class="row" style="gap:6px">${fin&&glOpen[i]?`<button class="btn ghost sm" onclick="delete glOpen[${i}];gLiveRender()">Collapse</button>`:''}<button class="btn ghost sm" onclick="gSetAdd(${i})">+ Set</button>${e.sets.length>1?`<button class="btn ghost sm" onclick="gSetDel(${i})">− Set</button>`:''}${e.rir!=null?`<span class="gl-rir">RiR ${e.rir===4?'4+':e.rir}</span>`:''}</div></div></div>${ge?'</div>':''}`; }).map((h,i)=>gBlkHdr(L.ex[i],L.ex[i-1])+h).join('');
   m.innerHTML=`<div class="gl-top"><button class="gl-min" onclick="gDiscardAsk()" aria-label="Discard">✕</button><div class="gl-tt"><b id="gl-clock" class="num">0:00</b><small>${esc(L.name)} · ${done}/${all} sets</small></div><button class="gl-min" onclick="gLiveClose()" aria-label="Minimize">⌄</button><button class="gl-min" onclick="gAddSheet('live')" aria-label="Add exercise">＋</button><button class="btn sm gl-fin" onclick="gFinishAsk()">Finish</button></div>${glHud(L)}
   <div class="gl-body">${cards}<button class="btn ghost" style="width:100%;justify-content:center;margin:6px 0 100px" onclick="gAddSheet('live')">+ Add exercise</button></div>
   <div class="gl-rest" id="gl-rest" hidden><div class="gl-rr"><svg viewBox="0 0 64 64" class="gl-ring"><circle cx="32" cy="32" r="28" class="bg"/><circle cx="32" cy="32" r="28" class="fg" id="gl-rfill" pathLength="100"/></svg><b id="gl-rtime" class="num">0:00</b></div>
