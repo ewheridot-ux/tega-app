@@ -1,0 +1,122 @@
+[
+ {
+  "id": "golem",
+  "kind": "image",
+  "size": 96,
+  "desc": "pixel art boss monster: The Molten Golem, a hulking giant made of cracked black volcanic rock with bright orange molten lava glowing through the cracks, a blazing molten gold core in its chest, glowing yellow eyes, huge rocky fists dripping lava, small embers floating, front view, menacing, detailed shading, game boss sprite"
+ },
+ {
+  "id": "algo",
+  "kind": "image",
+  "size": 96,
+  "desc": "pixel art boss monster: The Algorithm, a floating dark hydra creature with one giant glowing cyan eye in the center and six long tentacle stalks each ending in a smaller eye, neon cyan circuitry patterns on its body, glitchy digital aura, front view, menacing, detailed shading, game boss sprite"
+ },
+ {
+  "id": "hermit",
+  "kind": "image",
+  "size": 96,
+  "desc": "pixel art boss monster: The Hermit King, a gaunt hooded shadow figure wearing a crooked golden crown, slumped on a worn purple couch used as a throne, face lit only by the glow of a phone screen in his hands, cobwebs, front view, eerie, detailed shading, game boss sprite"
+ },
+ {
+  "id": "fog",
+  "kind": "image",
+  "size": 96,
+  "desc": "pixel art boss monster: The Fog, a huge swirling cloud of grey-lilac mist with two glowing pink eyes and a wide faint grin, wisps curling out like arms, front view, eerie, soft detailed shading, game boss sprite"
+ },
+ {
+  "id": "stinger",
+  "kind": "image",
+  "size": 96,
+  "desc": "pixel art boss monster: The Stinger, a scorpion whose body is a dark grey credit card with a gold chip, red armored pincers and legs, a long curled red tail with a glowing gold stinger, two red eyes on top of the card, side three-quarter view, menacing, detailed shading, game boss sprite"
+ },
+ {
+  "id": "drake",
+  "kind": "image",
+  "size": 96,
+  "desc": "pixel art boss monster: The Orange Drake, a small chubby orange dragon with credit-card shaped scales, spread bat wings, golden horns, a round orange coin emblem on its belly, smoke from its nostrils, front view, menacing but a bit cute, detailed shading, game boss sprite"
+ },
+ {
+  "id": "golem_idle",
+  "kind": "anim",
+  "from": "golem",
+  "frames": 8,
+  "action": "idle: breathes slowly, the molten core pulses brighter and dimmer, lava drips from its fists, embers drift up"
+ },
+ {
+  "id": "algo_idle",
+  "kind": "anim",
+  "from": "algo",
+  "frames": 8,
+  "action": "idle: hovers, the tentacle stalks sway slowly, the eyes blink one after another and the big eye looks left and right"
+ },
+ {
+  "id": "hermit_idle",
+  "kind": "anim",
+  "from": "hermit",
+  "frames": 8,
+  "action": "idle: slowly scrolls the glowing phone, the screen light flickers on his face, the crown tilts as he shifts, a tiny zzz floats up"
+ },
+ {
+  "id": "fog_idle",
+  "kind": "anim",
+  "from": "fog",
+  "frames": 8,
+  "action": "idle: the mist swirls and drifts, wisps curl in and out, the pink eyes blink slowly"
+ },
+ {
+  "id": "stinger_idle",
+  "kind": "anim",
+  "from": "stinger",
+  "frames": 8,
+  "action": "idle: snaps its pincers, the tail sways and the stinger pulses gold, legs shuffle"
+ },
+ {
+  "id": "drake_idle",
+  "kind": "anim",
+  "from": "drake",
+  "frames": 8,
+  "action": "idle: wings flap slowly, it bobs in the air, smoke puffs from its nostrils"
+ },
+ {
+  "id": "golem_dead",
+  "kind": "anim",
+  "from": "golem",
+  "frames": 8,
+  "action": "defeated: the lava glow cools to grey, cracks spread and it crumbles into a pile of dark rocks with one dim ember"
+ },
+ {
+  "id": "algo_dead",
+  "kind": "anim",
+  "from": "algo",
+  "frames": 8,
+  "action": "defeated: all eyes close one by one, the cyan glow flickers out and it sinks and dissolves into pixels"
+ },
+ {
+  "id": "hermit_dead",
+  "kind": "anim",
+  "from": "hermit",
+  "frames": 8,
+  "action": "defeated: he drops the phone, the crown falls off and rolls away, he fades into smoke leaving an empty couch"
+ },
+ {
+  "id": "fog_dead",
+  "kind": "anim",
+  "from": "fog",
+  "frames": 8,
+  "action": "defeated: sunlight breaks through, the mist thins and evaporates until only a few wisps remain and vanish"
+ },
+ {
+  "id": "stinger_dead",
+  "kind": "anim",
+  "from": "stinger",
+  "frames": 8,
+  "action": "defeated: the tail droops, it flips onto its back and the card cracks in half"
+ },
+ {
+  "id": "drake_dead",
+  "kind": "anim",
+  "from": "drake",
+  "frames": 8,
+  "action": "defeated: it coughs a last puff of smoke, wings fold and it falls asleep curled on the ground, grey"
+ }
+]
