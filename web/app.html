@@ -1607,6 +1607,21 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 @keyframes pdIn{from{opacity:0}to{opacity:1}}
 @keyframes pdPop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
 @keyframes pdDrop{0%{opacity:0;transform:translateY(-38px) scale(.9)}100%{opacity:1;transform:none}}
+
+.br-r{display:grid;grid-template-columns:42px minmax(0,1fr) 14px;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:10px 0;color:inherit;cursor:pointer}
+.br-r:first-of-type{border-top:0}.br-r.dead{opacity:.5}
+.br-ic{font-size:28px;text-align:center;filter:drop-shadow(0 0 8px color-mix(in srgb,var(--c) 55%,transparent))}
+.br-m{display:flex;flex-direction:column;gap:4px;min-width:0}.br-t{display:flex;justify-content:space-between;gap:8px}.br-t em{font-style:normal;font-size:10.5px;letter-spacing:.08em;color:var(--c);font-weight:800}
+.br-hp{display:block;height:7px;border-radius:9px;background:var(--card2);overflow:hidden}.br-hp u{display:block;height:100%;background:linear-gradient(90deg,var(--c),color-mix(in srgb,var(--c) 50%,#ff453a))}
+.br-m small{color:var(--mut);font-size:11.5px}.br-go{color:var(--mut)}
+.ab-arena{display:grid;place-items:center;height:150px;margin:10px 0;border-radius:18px;background:radial-gradient(60% 70% at 50% 60%,color-mix(in srgb,var(--c) 35%,transparent),transparent 70%),var(--card2);overflow:hidden}
+.ab-arena span{font-size:84px;animation:stFloat 3.6s ease-in-out infinite;filter:drop-shadow(0 6px 18px color-mix(in srgb,var(--c) 70%,transparent))}
+.ab-arena.ph1 span{filter:saturate(.8) drop-shadow(0 6px 14px var(--c))}.ab-arena.ph2 span{animation:abShake 1.4s ease-in-out infinite;filter:saturate(.6) hue-rotate(-20deg)}.ab-arena.ph3 span{animation:none;filter:grayscale(1);opacity:.7}
+@keyframes abShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px) rotate(-3deg)}40%{transform:translateX(4px) rotate(3deg)}60%{transform:translateX(-2px)}}
+.ab-lore{font-size:13.5px;line-height:1.5;color:var(--fg);opacity:.85;margin:10px 0}
+.ab-ph{display:flex;gap:4px;margin-bottom:12px}.ab-ph span{flex:1;text-align:center;font-size:11px;padding:5px 2px;border-radius:8px;background:var(--card2);color:var(--mut)}.ab-ph span.on{background:var(--c);color:#111;font-weight:800}
+.ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:420px){.ab-grid{grid-template-columns:1fr}}
+.ab-li{font-size:13px;padding:5px 0;border-bottom:1px solid var(--line)}
 </style>
 
 <div class="app" id="app"></div>
@@ -1616,7 +1631,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b224';
+const BUILD='b225';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -1666,14 +1681,13 @@ const TRACKS = [
   {key:'modeling',name:'Modeling',icon:'📸',color:'var(--modeling)'},
   {key:'grillz',name:'Datum Grillz',icon:'🔥',color:'var(--grillz)'},
   {key:'content',name:'Content',icon:'📱',color:'var(--content)'},
-  {key:'cad',name:'CAD Hustle',icon:'⚙️',color:'var(--cad)'},
   {key:'financial',name:'Financial',icon:'💰',color:'var(--financial)'},
   {key:'personal',name:'Personal',icon:'🧠',color:'var(--personal)'},
   {key:'relationships',name:'Relationships',icon:'🤝',color:'var(--relationships)'},
   {key:'fitness',name:'Fitness',icon:'💪',color:'var(--fitness)'},
   {key:'learning',name:'Learning',icon:'📚',color:'var(--learning)'},
 ];
-const T = Object.fromEntries(TRACKS.map(t=>[t.key,t]));
+const T = Object.fromEntries(TRACKS.map(t=>[t.key,t])); T.cad={key:'cad',name:'CAD (archived)',icon:'⚙️',color:'var(--cad)'};
 const tIcon = k => T[k]?.icon || '🎯';
 const tColor = k => T[k]?.color || 'var(--accent)';
 
@@ -1682,7 +1696,7 @@ const XP = { checkin:15, top3:10, habit:5, dayBonus:15, win:10, init:15, review:
 const QSIZE = { S:{name:'Small',xp:5,icon:'🗡️',hint:'under 30 min'}, M:{name:'Medium',xp:15,icon:'⚔️',hint:'an hour or two'}, B:{name:'Boss',xp:40,icon:'👹',hint:'a real fight · one at a time'} };
 
 const DUES = [['2027-01-15','Q4 2026 est. (size via A − B)'],['2027-04-15','2026 return + Q1 2027'],['2027-06-15','Q2 2027'],['2027-09-15','Q3 2027'],['2028-01-18','Q4 2027']];
-const DEADLINES = [['2026-10-02','Schneider 401k call'],['2026-10-06','Fidelity accounts + Tax Buffer bucket'],['2026-10-12','TikTok/IG handles + bios'],['2026-10-19','Upwork profile live'],['2026-10-31','Own grillz set cast & fitting'],['2026-11-16','CPA intro calls done'],['2026-11-30','Datum price sheet · DBA · EIN'],['2026-12-28','Q4 review → write Q1 2027 OKRs'],['2026-12-31','5 Datum sales · first CAD delivery'],['2027-01-15','Q4 taxes due'],['2027-04-15','2026 return + Q1 est.'],['2027-06-15','Q2 est. taxes'],['2027-09-15','Q3 est. taxes'],['2028-01-18','Q4 2027 est. taxes']];
+const DEADLINES = [['2026-10-02','Schneider 401k call'],['2026-10-06','Fidelity accounts + Tax Buffer bucket'],['2026-10-12','TikTok/IG handles + bios'],['2026-10-31','Own grillz set cast & fitting'],['2026-11-16','CPA intro calls done'],['2026-11-30','Datum price sheet · DBA · EIN'],['2026-12-28','Q4 review → write Q1 2027 OKRs'],['2026-12-31','5 Datum sales · first CAD delivery'],['2027-01-15','Q4 taxes due'],['2027-04-15','2026 return + Q1 est.'],['2027-06-15','Q2 est. taxes'],['2027-09-15','Q3 est. taxes'],['2028-01-18','Q4 2027 est. taxes']];
 
 /* ===================== seed state ===================== */
 function seed(){
@@ -1695,7 +1709,6 @@ function seed(){
       milestones:[
         {id:uid(),year:'2027',track:'financial',text:'Emergency fund full ($15,347) → the $500/check becomes the House bucket',done:false},
         {id:uid(),year:'2027',track:'grillz',text:'Datum Grillz: 20 orders, gold option, Shopify storefront',done:false},
-        {id:uid(),year:'2027',track:'cad',text:'CAD freelance at $1K/mo with 5+ five-star reviews',done:false},
         {id:uid(),year:'2027',track:'financial',text:'SEP-IRA funded at 20% of net · CPA files the 2026 return',done:false},
         {id:uid(),year:'2028',track:'modeling',text:'$40K+/yr modeling with 2–4 bookings a month',done:false},
         {id:uid(),year:'2028',track:'content',text:'10K followers · "the engineer who makes grillz" is a known account',done:false},
@@ -1712,7 +1725,6 @@ function seed(){
         obj('modeling','Make modeling the stable base',[kr('Modeling income (Sep–Dec)',16000,'$'),kr('Every check: 32.2% moved same day',8,'checks')]),
         obj('grillz','Prove Datum Grillz is a real product',[kr('Sets made end-to-end',2,''),kr('Paid orders',5,''),kr('Revenue',500,'$')]),
         obj('content','Start the account that owns the angle',[kr('Posts published',26,''),kr('Combined followers',100,'')]),
-        obj('cad','Keep the engineering degree warm and paid',[kr('Upwork profile + catalog live',1,''),kr('Proposals sent',15,''),kr('Paid deliveries',1,'')]),
         obj('financial','Run self-employment like a business',[kr('401(k) rolled to Fidelity',1,''),kr('SEP-IRA + Rollover IRA opened',1,''),kr('Tax Buffer bucket funded at 32.2%',1,''),kr('CPA engaged',1,'')]),
         obj('personal','Organized, honest, consistent',[kr('Journal entries',60,''),kr('Books finished',1,'')]),
         obj('relationships','Build the Chicago circle',[kr('Hangouts / events',8,''),kr('People seen twice',3,'')]),
@@ -1725,7 +1737,6 @@ function seed(){
         obj('modeling','$8K/mo in, taxes handled same day',[kr('Checks received',6,''),kr('32.2% moved same day',6,'checks'),kr('Client / agency outreach touches',24,'')]),
         obj('grillz','MVP: make it twice, sell it 5 times',[kr('Own set cast & fitting (Oct 31)',1,''),kr('Friend prototype + price sheet (Nov 30)',1,''),kr('DBA · EIN · business checking',1,''),kr('Paid orders (Dec 31)',5,''),kr('Revenue',500,'$')]),
         obj('content','2 posts a week, every week',[kr('Handles + bios + link (Oct 12)',1,''),kr('Posts published',26,''),kr('Weeks with 2 posts',13,''),kr('Combined followers',100,'')]),
-        obj('cad','Profile live → 15 proposals → 1 paid delivery',[kr('Portfolio pieces rendered',3,''),kr('Upwork profile 100% + catalog (Oct 19)',1,''),kr('Proposals sent',15,''),kr('Paid delivery + review (Dec 31)',1,'')]),
         obj('financial','Accounts, buffer, pro',[kr('Schneider 401(k) rolled over',1,''),kr('SEP-IRA + Rollover IRA open (Oct 6)',1,''),kr('Tax Buffer bucket created',1,''),kr('CPA intro calls (Nov 16)',2,''),kr('Jan 15 amount computed (A − B)',1,'')]),
         obj('personal','Organize · journal · read',[kr('Journal days',40,''),kr('Weekly reviews done',13,''),kr('Book finished',1,'')]),
         obj('relationships','3–5 real friends in Chicago',[kr('Hangouts / events',8,''),kr('New people met',5,'')]),
@@ -1740,8 +1751,6 @@ function seed(){
       {id:uid(),track:'grillz',text:'1 landing-page section or 1 product photo'},
       {id:uid(),track:'content',text:'Film 2 pieces (Sunday batch)'},
       {id:uid(),track:'content',text:'Post Tue + Fri · engage with 10 accounts'},
-      {id:uid(),track:'cad',text:'Send 3 Upwork proposals'},
-      {id:uid(),track:'cad',text:'Polish 1 portfolio piece / deliver 1 milestone'},
       {id:uid(),track:'financial',text:'Log business expenses'},
       {id:uid(),track:'financial',text:'Next step from the Master Action Plan'},
       {id:uid(),track:'personal',text:'Journal 5× · organize the calendar'},
@@ -1774,7 +1783,13 @@ const LS = 'okrquest-v2';
 let S;
 try { S = JSON.parse(localStorage.getItem(LS)) || null; } catch(e){ S = null; }
 if (!S || S.v !== 2) S = seed();
-function migrate(st){
+function cadArchive(st){ if (st.cadOff) return; st.cadOff=1; const A=((st.archive ||= {}).cad ||= {objectives:[], milestones:[], weekly:[], deadlines:[], quests:[]}), isC=x=>x&&x.track==='cad';
+  for (const [q,Q] of Object.entries(st.quarters||{})){ if (!Q||!Q.objectives) continue; A.objectives.push(...Q.objectives.filter(isC).map(o=>({q,...o}))); Q.objectives=Q.objectives.filter(o=>!isC(o)); }
+  if (st.vision&&st.vision.milestones){ A.milestones.push(...st.vision.milestones.filter(isC)); st.vision.milestones=st.vision.milestones.filter(m=>!isC(m)); }
+  if (Array.isArray(st.weeklyTemplate)){ A.weekly.push(...st.weeklyTemplate.filter(isC)); st.weeklyTemplate=st.weeklyTemplate.filter(x=>!isC(x)); }
+  if (Array.isArray(st.dl)){ const c=x=>/upwork|\bcad\b/i.test(x.text||'')||x.type==='cad'; A.deadlines.push(...st.dl.filter(c)); st.dl=st.dl.filter(x=>!c(x)); }
+  if (Array.isArray(st.quests)){ A.quests.push(...st.quests.filter(q=>isC(q)&&!q.done)); st.quests=st.quests.filter(q=>!(isC(q)&&!q.done)); } }
+function migrate(st){ try { cadArchive(st); } catch(e){}
   if (!st.habits.some(h=>h.id==='datum')) st.habits.splice(2,0,{id:'datum',name:'Bench session',icon:'◆'});
   const d = seed();
   st.money ||= d.money; st.money.s = {...d.money.s, ...(st.money.s||{})}; st.money.checks ||= []; st.money.taxPaid ||= [];
@@ -1942,6 +1957,7 @@ function computeXP(){
   xp += datumXP();
   xp += gymXP();
   xp += moneyXP();
+  xp += bossXP();
   return xp;
 }
 function questXP(){
@@ -2033,7 +2049,6 @@ const BADGES = [
   {key:'ef',name:'Emergency Fund',icon:'🛡️',hint:'HYSA hits the 6-month target',auto:()=>S.money.s.efNow>=efTarget(),prog:()=>[S.money.s.efNow,efTarget()]},
   {key:'tax',name:'Tax Master',icon:'📊',hint:'Jan 15 payment logged, buffer funded',auto:()=>S.money.taxPaid.some(p=>p.d>='2027-01-01')},
   {key:'sale',name:'First Sale',icon:'💎',hint:'First paid Datum Grillz order',manual:true},
-  {key:'client',name:'First Client',icon:'⚙️',hint:'First paid CAD delivery',manual:true},
   {key:'rolled',name:'Rolled Over',icon:'🏦',hint:'Schneider 401(k) lands at Fidelity',manual:true},
   {key:'pro',name:'Hired a Pro',icon:'🤝',hint:'CPA engaged before Jan 31',manual:true},
   {key:'friend',name:'Friend Builder',icon:'🫂',hint:'3 people hung out with twice',manual:true},
@@ -2648,6 +2663,7 @@ const trackSelect = (val, onchange) => `<select onchange="${onchange}"><option v
 let _derived=null; let _nsKick=false;
 function render(){
   if (typeof S!=='undefined' && S && _derived!==S){ _derived=S; try { deriveAll(); saveLocal(); } catch(e){} }
+  if (typeof S!=='undefined' && S && S.money && !S.money.m221 && (typeof _dbSettled==='undefined' || _dbSettled)) setTimeout(()=>{ try { if (!S.money.m221) m221(); } catch(e){} }, 0);
   if (!_nsKick && typeof _dbSettled!=='undefined' && _dbSettled){ _nsKick=true; setTimeout(()=>liveRefresh('open'), 1200); }
   _mVer++;
   try { const want = view==='gym' ? 'arise' : view==='model' ? 'holo' : view==='datum' ? 'chrome' : view==='money' ? 'lab' : view==='content' ? 'vf' : (()=>{ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(S&&S.skin)||'crt'; })(); if (document.documentElement.getAttribute('data-skin')!==want) document.documentElement.setAttribute('data-skin', want); } catch(e){}
@@ -2719,7 +2735,7 @@ const QUOTES = {
   neutral:[
     'tick one thing. farm the dopamine.','log the expense or tip the government.','two posts. not three. not zero.','one DM > 5k views from nobodies.',
     'uber to ORD = write-off. uber to the function = lesson.','nine tracks. one body. pick the one that pays.','nobody’s coming to make the grillz.','“research” on your phone is just scrolling.',
-    'logging the win is the win. lowkey.','stop negotiating with a checkbox.','shoot now. edit later. later exists.','the CAD file does not care about your feelings.',
+    'logging the win is the win. lowkey.','stop negotiating with a checkbox.','shoot now. edit later. later exists.',
     'be him or be an NPC. choose.','mid day. post anyway.',
   ],
   focused:[
@@ -2737,7 +2753,7 @@ const QUOTES = {
   ],
   pet:['ayy.','say less.','still here. still building.','fr.','ong.','grillz by december. lock in.','that’s love.','run it back tmrw.',
        'why are you petting me. go post.','I’m an svg. anyway, thanks.','deductible.','not the top 3 tho.','ORD or LGA? log it either way.','aura +1. that’s it.','fit check: pass. barely.','me when the check clears.'],
-  petDone:['ok go do the top 3.','that’s enough. go be productive.','logging this as “pets avatar instead of working.”','the CAD file misses you.','chat he’s stalling.'],
+  petDone:['ok go do the top 3.','that’s enough. go be productive.','logging this as “pets avatar instead of working.”','chat he’s stalling.'],
   checkin:['checked in. go be him.','day started. three things. nothing else is real.','good. money one first. yes first.','locked. go earn the flex.','vibes recorded. now receipts.','streak safe. government still owed. go.'],
 };
 function pick(a, salt=0){ const i=(parseInt(TODAY.replace(/-/g,''),10)+salt+a.length)%a.length; return a[i]; }
@@ -3185,7 +3201,7 @@ function skMetrics(){
   return {
     benchH:Math.round(ps.reduce((a,p)=>a+(+p.hours||0),0)*10)/10, benchLong:Math.max(0,...sess.map(l=>+l.mins||0)), sketches:A.filter(a=>a.proto).length, pins:(D.mood||[]).length,
     learned:(D.learning||[]).filter(l=>l.output).length, pieces:ps.length, photos:dlogs.filter(l=>l.photo).length, cast:atLeast('cast'), done:atLeast('complete'), shot:ps.filter(p=>(p.log||[]).some(l=>l.photo)).length,
-    sold:(D.orders||[]).filter(o=>o.status==='delivered'||o.status==='closed').length, revenue:dRevenue(),
+    sold:(D.orders||[]).filter(o=>o.status==='delivered'||o.status==='closed').length, revenue:Math.round(incomeBy('2000-01-01',TODAY).datum),
     art:A.length, paper:A.filter(a=>a.kind==='paper').length, digi:A.filter(a=>a.kind==='procreate').length, process:A.filter(a=>a.imgs.length>1).length, artWeeks:wkOf(A.map(a=>a.d)), artBest:Math.max(0,...Object.values(byWk)),
     gSess:gl.length, gH:Math.round(gl.reduce((a,l)=>a+l.mins,0)/6)/10, gLong:Math.max(0,...gl.map(l=>l.mins)), songs:(G.songs||[]).length, canPlay:(G.songs||[]).filter(x=>x.status>=1).length, clean:(G.songs||[]).filter(x=>x.status===2).length, riffs:(G.riffs||[]).length, gWeeks:wkOf(gl.map(l=>l.d)),
     posts:L.filter(l=>l.kind==='post').length, weeks2:Object.values(pw).filter(n=>n>=2).length, ideas:(S.ideas||[]).length, ideasShot:(S.ideas||[]).filter(x=>x.done).length, outreach:L.filter(l=>l.kind==='outreach').length, pitches:L.filter(l=>l.kind==='proposal').length,
@@ -3194,14 +3210,14 @@ function skMetrics(){
     resets:Object.values(S.weeks||{}).filter(w=>w.review&&w.review.done).length, pWeeks:perfectWeeks(), quests:(S.quests||[]).filter(q=>q.done).length, dls:(S.dl||[]).filter(x=>x.done).length,
     split:S.money.checks.filter(c=>c.got&&c.split&&!openMoves(c).length).length, tax:+S.money.s.taxBufNow||0, ef:+S.money.s.efNow||0,
     benchSess:sess.length, wins:S.wins.length, landed:S.money.checks.filter(c=>c.got).length, income:Math.round(S.money.checks.filter(c=>c.got).reduce((a,c)=>a+c.amt,0)),
-    roth:+S.money.s.rothYtd||0, house:+S.money.s.houseNow||0, net:Math.round((S.money.budget.accounts||[]).filter(a=>a.bal!=null).reduce((a,x)=>a+x.bal,0)),
+    roth:+S.money.s.rothYtd||0, house:+S.money.s.houseNow||0, net:Math.round(netWorth()),
     ...(()=>{ let E=[]; try{ E=liveBookings(); }catch(e){} const jobs=E.filter(e=>e.t==='job'), past=k=>k<=TODAY;
-      const gw={}; for (const k of days) if (S.days[k].habits&&S.days[k].habits.gym) gw[isoWeek(k)]=(gw[isoWeek(k)]||0)+1; for (const x of ((S.gym||{}).sessions||[])) { if(!S.days[x.d]?.habits?.gym) gw[isoWeek(x.d)]=(gw[isoWeek(x.d)]||0)+1; }
+      const gw={}; for (const k of gymDays()) gw[isoWeek(k)]=(gw[isoWeek(k)]||0)+1;
       let soc=[]; try { soc=socAll(); } catch(e){}
       return { setDays:jobs.reduce((a,e)=>a+(e.d||[]).filter(past).length,0), castings:E.filter(e=>['casting','selftape','test','fitting'].includes(e.t)&&(e.d||[]).some(past)).length,
         mIncome:Math.round(jobs.reduce((a,e)=>a+(+e.rn||0)*(e.d||[]).filter(past).length,0)), gymWeeks:Object.values(gw).filter(n=>n>=3).length,
         prs:((S.gym||{}).sessions||[]).reduce((a,x)=>a+((x.prs||[]).length),0), hang:(()=>{ try { return hangDays().size; } catch(e){ return 0; } })(), people:((S.circle||{}).people||[]).length, nights:soc.length }; })(),
-    gym:days.filter(k=>S.days[k].habits&&S.days[k].habits.gym).length, read:days.filter(k=>S.days[k].habits&&S.days[k].habits.read).length, journal:days.filter(k=>S.days[k].habits&&S.days[k].habits.journal).length, morning:days.filter(k=>S.days[k].habits&&S.days[k].habits.morning).length,
+    gym:gymDays().size, read:days.filter(k=>S.days[k].habits&&S.days[k].habits.read).length, journal:days.filter(k=>S.days[k].habits&&S.days[k].habits.journal).length, morning:days.filter(k=>S.days[k].habits&&S.days[k].habits.morning).length,
   };
 }
 // Each tree has three lanes of twelve steps and a capstone. A step: [icon, name, metric, target]. Rows are paced as five years.
@@ -4353,6 +4369,7 @@ function mPipe0(){
     out[j.id]=o; }
   return out;
 }
+const agencyOwed = () => { try { return mOwed(mPipe()); } catch(e){ return 0; } };
 const mOwed = P => { const st=stmtNow(), after=agencyDeposits().filter(t=>t.d>st.asOf).reduce((a,t)=>a+t.amt,0); const E=mAll(), newer=E.filter(e=>P[e.id]&&P[e.id].stage==='shot'&&e.start>st.asOf).reduce((a,e)=>a+P[e.id].net,0); return Math.max(0, st.balance - after + newer); };
 function mPipeSet(id, st){ const M=mState(); M.pipe ||= {}; if (M.pipe[id]===st) delete M.pipe[id]; else M.pipe[id]=st; commit({skipXp:true}); mSheet(id); }
 const STC = {option:'#f5a524',confirmed:'#38bdf8',shot:'#f97316',invoiced:'#a78bfa',paid:'#22c55e'};
@@ -4710,7 +4727,8 @@ const KR_STOP=new Set('with that this from your have done make made first each i
 const krWords=t=>((t||'').toLowerCase().replace(/\([^)]*\)/g,' ').match(/[a-z0-9&]{4,}/g)||[]).filter(w=>!KR_STOP.has(w)).map(w=>w.length>5?w.replace(/(ing|ed|es)$/,''):w).map(w=>w.length>4?w.replace(/s$/,''):w);
 function krDataKey(k){ const t=k.text||''; return /hangouts|nights out/i.test(t)?'events':/new people met/i.test(t)?'people':/days on set/i.test(t)?'setdays':/^booked \(\$\)|^booked/i.test(t)?'booked':/castings attended/i.test(t)?'castings':/weeks under spending budget/i.test(t)?'budgetweeks':/datum posts/i.test(t)?'datumposts':/^check-ins/i.test(t)?'checkins':/datum session days/i.test(t)?'datumdays':/gym sessions/i.test(t)?'gym':/journal days/i.test(t)?'journal':/weekly reviews/i.test(t)?'reviews':/combined followers/i.test(t)?'followers':/paid orders/i.test(t)?'orders':/^revenue/i.test(t)?'revenue':/sets made end-to-end/i.test(t)?'sets':null; }
 function krDataCount(key,q){ const [a,b]=qRange(q), cur=q===THIS_Q, inQ=k=>k>=a&&k<=b;
-  if (key==='gym'||key==='journal') return Object.entries(S.days||{}).filter(([k,d])=>inQ(k)&&d.habits?.[key]).length;
+  if (key==='gym') return gymDays(a,b).size;
+  if (key==='journal') return Object.entries(S.days||{}).filter(([k,d])=>inQ(k)&&d.habits?.[key]).length;
   if (key==='events'){ try { return socAll().filter(e=>inQ(e.d)).length; } catch(e){ return null; } }
   if (key==='people') return ((S.circle||{}).people||[]).filter(p=>inQ(p.first)).length;
   if (key==='checkins') return Object.entries(S.days||{}).filter(([k,d])=>inQ(k)&&d.checkin).length;
@@ -4837,8 +4855,6 @@ const OKR_SUGGEST = {
     K_('Gym sessions',30,'','','Gym habit'),K_('Check-ins',60,'','','Morning check-ins'),K_('Journal days',35,'','','Journal habit'),K_('Weekly reviews done',11,'','','Sunday Reviews locked')]},
   {track:'relationships',title:'Build the circle (NYC + Chicago)',why:'Moving around a lot makes it easy to go a month without real people.',done:'Regular nights out, new faces, parents in the loop weekly.',krs:[
     K_('Hangouts / events',8,'','','Tick a Top 3 that mentions a hangout or event'),K_('New people met',5),K_('Parent calls',10,'','','Tick “call parents” in Top 3')]},
-  {track:'cad',title:'CAD side lane — keep it warm',why:'Optional while modeling is full time; one paid delivery keeps the option open.',done:'Profile live and a few proposals out.',optional:1,krs:[
-    K_('Upwork profile 100% + catalog (Oct 31)',1,'','2026-10-31'),K_('Proposals sent',5,'','','Logged proposals'),K_('Portfolio pieces rendered',3)]}
  ]},
  '2027-Q1': {theme:'LA season, debt down, Datum earns',objectives:[
   {track:'modeling',title:'LA season: new market, new clients',why:'January–February in LA, then London and Milan in spring.',done:'Booked in LA, new clients beyond CK, spring travel set.',krs:[
@@ -4891,7 +4907,7 @@ function renderOkrSug(){
     ${G.objectives.map((o,i)=>`<div class="okrs-o ${okrPick[i]?'on':''}" style="--tc:${tColor(o.track)}"><button class="okrs-h" onclick="okrPick[${i}]=!okrPick[${i}];renderOkrSug()"><span class="krbox ${okrPick[i]?'on':''}">${okrPick[i]?'✓':''}</span><span style="flex:1;min-width:0"><b>${tIcon(o.track)} ${esc(o.title)}</b>${o.why?`<small>${esc(o.why)}</small>`:''}</span></button>
       <div class="okrs-k">${o.krs.map(k=>`<div><span>${esc(k.text)}</span><b class="num">${k.target===1?'✓':k.unit==='$'?money0(k.target):k.target}</b></div>`).join('')}${o.done?`<div class="okrs-d">Done looks like: ${esc(o.done)}</div>`:''}</div></div>`).join('')}`
     :'<div class="empty">No suggestions yet for this quarter.</div>'}
-    <div class="okc"><div class="tag" style="margin-bottom:6px">💬 Talk it through</div><div class="okc-log">${okrChat.map(m=>`<div class="okc-m ${m.r}">${esc(m.t)}</div>`).join('')||`<div class="sub" style="font-size:12.5px">Try: “drop CAD, I want Datum to be the big one” · “make modeling more about new clients” · “too much — cut it to 4”</div>`}${okrChatBusy?'<div class="okc-m ai">…</div>':''}</div>
+    <div class="okc"><div class="tag" style="margin-bottom:6px">💬 Talk it through</div><div class="okc-log">${okrChat.map(m=>`<div class="okc-m ${m.r}">${esc(m.t)}</div>`).join('')||`<div class="sub" style="font-size:12.5px">Try: “I want Datum to be the big one” · “make modeling more about new clients” · “too much — cut it to 4”</div>`}${okrChatBusy?'<div class="okc-m ai">…</div>':''}</div>
       <form class="ct-add" onsubmit="return okrSend(event)"><input id="okrMsg" class="inp" placeholder="${sampleLib?'tell Tega what to change':'Tega needs a connection'}" ${sampleLib?'':'disabled'} autocomplete="off"><button class="btn sm" ${okrChatBusy||!sampleLib?'disabled':''}>Send</button></form></div>
     ${sampleLib?`<button class="btn ghost" style="width:100%;justify-content:center;margin-top:10px" ${okrSugBusy?'disabled':''} onclick="okrAsk()">${okrSugBusy?'Thinking…':'✨ Ask Tega for a fresh take'}</button>`:''}
     ${G?`<button class="btn good" style="width:100%;justify-content:center;margin-top:8px" onclick="okrApply()">${has?'Replace '+q+' with these':'Use these for '+q}</button>${has?`<div class="help keep" style="margin-top:6px;text-align:center">Progress carries over to matching key results. Old objectives are kept in an archive, not deleted.</div>`:''}`:''}
@@ -5077,13 +5093,12 @@ function stmtReceived(year){ const st=stmtNow(), all=[ONE_STMT, ...((S.model&&S.
   for (const t of agencyDeposits()) if (t.d.startsWith(year) && t.d>st.asOf) rows.push({d:t.d, amt:t.amt});
   return rows; }
 function taxCard(){
-  const s=S.money.s, y=THIS_Y, R=stmtReceived(y), rec=R.reduce((a,r)=>a+r.amt,0), pre=R.filter(r=>r.d<y+'-09-01').reduce((a,r)=>a+r.amt,0);
-  const dInc=datumInc(y+'-01-01'), ded=dedTotal(y+'-01-01'), rv=((S.money.budget||{}).deductibles||[]).filter(x=>!x.ok&&(x.d||'')>=y+'-01-01').length, taxable=Math.max(0,rec+dInc-ded);
-  const need=taxable*s.taxRate, paid=(S.money.taxPaid||[]).filter(p=>(p.d||'').startsWith(y)||!p.d).reduce((a,p)=>a+p.amt,0), buf=+s.taxBufNow||0, gap=Math.max(0,need-paid-buf);
-  return `<div class="card sec tx-card"><div class="row between"><span class="tag">${y} taxes</span><span class="sub" style="font-size:12px">Jan 15 est. due</span></div>
-    <div class="st-flow" style="margin-top:10px">${[['Modeling paid in '+y,rec],...(dInc?[['+ Datum sales',dInc]]:[]),['− write-offs',-ded],['× '+Math.round(s.taxRate*100)+'% on '+money0(taxable),need],['− estimated payments made',-paid],['− in your Tax Buffer',-buf],['= gap · 🐉 Tax Wyrm HP',gap]].map(([l,v])=>`<div><span>${l}</span><b class="num">${v<0?'−'+money0(-v).replace('−',''):money0(v)}</b></div>`).join('')}</div>
+  const s=S.money.s, y=THIS_Y, R=stmtReceived(y), pre=R.filter(r=>r.d<y+'-09-01').reduce((a,r)=>a+r.amt,0);
+  const T=taxState(), rec=T.rec, dInc=T.dInc, ded=T.ded, taxable=T.taxable, need=T.need, paid=T.paid, buf=T.buf, gap=T.gap, rv=((S.money.budget||{}).deductibles||[]).filter(x=>!x.ok&&(x.d||'')>=y+'-01-01').length;
+  return `<div class="card sec tx-card"><div class="row between"><span class="tag">Taxes · since Jan 2026</span><span class="sub" style="font-size:12px">Jan 15 est. due</span></div>
+    <div class="st-flow" style="margin-top:10px">${[['Modeling paid since Jan 1',rec],...(dInc?[['+ Datum sales',dInc]]:[]),['− write-offs',-ded],['× '+Math.round(s.taxRate*100)+'% on '+money0(taxable),need],['− estimated payments made',-paid],['− in your Tax Buffer',-buf],['= gap · 🐉 Tax Wyrm HP',gap]].map(([l,v])=>`<div><span>${l}</span><b class="num">${v<0?'−'+money0(-v).replace('−',''):money0(v)}</b></div>`).join('')}</div>
     ${ded?`<div class="help keep" style="margin-top:8px;color:var(--good)">Write-offs cut what you owe by ${money0(Math.min(rec+dInc,ded)*s.taxRate)}.</div>`:''}${rv?`<button class="btn sm ghost" style="margin-top:8px" onclick="dedN=20;setDedFilter('review');setTimeout(()=>document.getElementById('dedList')?.scrollIntoView({behavior:'smooth'}),60)">${rv} write-off${rv===1?'':'s'} to confirm → lowers the tax</button>`:''}
-    <div class="help" style="margin-top:8px">You're taxed when ONE actually pays you, not when you shoot — so the $${Math.round(stmtNow().balance).toLocaleString()} they still owe is taxed in the year it lands. ${pre?`${money0(pre)} landed before September, when the waterfall's set-aside started. `:''}Ask the CPA how much of this your Schneider W-2 withholding already covers.</div>
+    <div class="help" style="margin-top:8px">You're taxed when ONE actually pays you, not when you shoot — so the $${Math.round(agencyOwed()).toLocaleString()} they still owe is taxed in the year it lands. ${pre?`${money0(pre)} landed before September, when the waterfall's set-aside started. `:''}Ask the CPA how much of this your Schneider W-2 withholding already covers.</div>
     <form class="ct-add" style="margin-top:10px" onsubmit="return wyrmFeed(event)"><input class="inp" type="number" min="1" step="1" inputmode="decimal" placeholder="$ just set aside for taxes"><button class="btn sm">Set aside</button></form></div>`;
 }
 let debtExtra=null;
@@ -5420,7 +5435,7 @@ function vault(){ return rpgC('vault',()=>{ try { const P=mPipe(), st=stmtNow(),
 function phaseOf(p){ for (const ph of VAULT_PH) if (p>=ph[0]) return ph; return VAULT_PH[VAULT_PH.length-1]; }
 const WYRM_PH=[[.66,'Coiled','🐉'],[.33,'Wounded','🩸'],[0.0001,'Cornered','⚔️'],[0,'Slain','🗡️']];
 function wyrm(){ return rpgC('wyrm',()=>{ const s=S.money.s; let need=0; try { need=taxOwedSoFar(); } catch(e){}
-  const paidL=(S.money.taxPaid||[]).filter(p=>!p.d||p.d>='2026-01-01'), paid=paidL.reduce((a,p)=>a+p.amt,0), buf=+s.taxBufNow||0, hp=Math.max(0,need-paid-buf);
+  const paidL=(S.money.taxPaid||[]).filter(p=>!p.d||p.d>='2026-01-01'), hp=taxState().gap;
   const hits=[...paidL.map(p=>({d:p.d||'',amt:p.amt,l:'estimated payment'})), ...R_().wyrm.map(h=>({d:h.d,amt:h.amt,l:'set aside'}))].sort((a,b)=>(b.d||'').localeCompare(a.d||''));
   return {hp, max:Math.max(need,1), need, hits, pct:need?hp/need:0}; }); }
 function wyrmFeed(ev){ ev.preventDefault(); const v=+ev.target.querySelector('input').value; if (!(v>0)) return false; S.money.s.taxBufNow=(+S.money.s.taxBufNow||0)+v; R_().wyrm.push({d:TODAY, amt:v}); _bossHit.wyrm=v; commit(); confetti(); toast(`🗡️ ${money0(v)} hit on the Tax Wyrm`); return false; }
@@ -5565,8 +5580,7 @@ const YEAR_SUGGEST = {
   {track:'modeling',title:'Three markets, $150K booked',why:'~30 Calvin Klein days at ~$5k in the last 12 months — the base is real. Now widen it past one client.',done:'$150K booked, 4+ new clients, worked LA and Europe.',krs:[K_('Booked ($)',150000,'$','','Day rates of confirmed jobs'),K_('Days on set',30,'','','From Modeling'),K_('New clients booked',4),K_('Castings attended',60,'','','From Modeling'),K_('Markets worked (LA, London, Milan)',3)]},
   {track:'financial',title:'Debt-free, tax-proof, funded',why:'ONE owes you $85K and ~$14K of tax is due — the money is coming; the system has to catch it.',done:'No consumer debt, emergency fund full, every estimate paid on time.',krs:[K_('Tax set aside same day (checks)',20),K_('Quarterly estimates paid on time',4),K_('Emergency fund ($)',15347,'$'),K_('Car loan paid off (Sep 30)',1,'','2027-09-30'),K_('SEP-IRA contributions ($)',15000,'$'),K_('CPA files 2026 return (Apr 15)',1,'','2027-04-15')]},
   {track:'grillz',title:'Datum Grillz: 20 orders and a storefront',why:'Your 5-year plan puts 20 orders, a gold option and Shopify in 2027.',done:'A store that takes money while you’re on set.',krs:[K_('Paid orders',20),K_('Revenue',8000,'$'),K_('Sets made end-to-end',12),K_('Shopify storefront live (Jun 30)',1,'','2027-06-30'),K_('Gold option launched (Sep 30)',1,'','2027-09-30')]},
-  {track:'content',title:'Own the angle: the model who makes grillz',why:'1,316 followers and 2 posts this quarter — the audience is there, the reps aren’t.',done:'2 posts a week all year and a Datum audience that buys.',krs:[K_('Posts published',100),K_('Weeks with 2 posts',40),K_('Datum posts',40),K_('Combined followers',2000),K_('Brand collab (Dec 31)',1,'','2027-12-31')]},
-  {track:'cad',optional:1,title:'CAD freelance at $1K a month',why:'Keeps the engineering degree paid between bookings.',done:'5 five-star reviews and repeat clients.',krs:[K_('Proposals sent',60),K_('Paid deliveries',12),K_('5-star reviews',5)]},
+  {track:'content',title:'Own the angle: the model who makes grillz',why:'1,316 followers and 2 posts this quarter — the audience is there, the reps aren’t.',done:'2 posts a week all year and a Datum audience that buys.',krs:[K_('Posts published',100),K_('Weeks with 2 posts',40),K_('Datum posts',40),K_('Combined followers',2000),K_('Brand collab (Dec 31)',1,'','2027-12-31')]},,
   {track:'fitness',title:'Camera-ready all year',why:'Your body is the job on set — gym was 0 days this quarter.',done:'3× a week, even on the road.',krs:[K_('Gym sessions',150),K_('Home-cooked meals',100)]},
   {track:'relationships',title:'A real Chicago circle',why:'Most of this quarter’s hangouts happened while traveling.',done:'3–5 people you see every month.',krs:[K_('Hangouts / events',40),K_('New people met',15),K_('Friends at Close bond',3)]},
   {track:'personal',title:'Honest, organized, consistent',why:'The weekly review is the engine of everything else.',done:'48 reviews, a journal habit, books finished.',krs:[K_('Weekly reviews done',48),K_('Journal days',200),K_('Books finished',6)]}]}};
@@ -6467,6 +6481,7 @@ function gPlan(force){ const g=G_(); const P=g.plan;
     g.plan={d:TODAY, n, prof:g.prof, mode, muscles:mus||null, mods:mods||null}; const xs=gGenerate(TODAY+':'+n+':'+g.prof+':'+mode, mode, mus, mods&&mods.mins); g.plan.ex=gBuild(xs); g.plan.name=gName(xs); }
   return g.plan; }
 function gRegen(patch){ const g=G_(); gPlan(); Object.assign(g.plan, patch||{}); gPlan(true); commit({skipXp:true}); }
+function gymDays(a='0000',b='9999'){ const ds=new Set(((S.gym||{}).sessions||[]).map(s=>s.d).filter(k=>k>=a&&k<=b)); for (const [k,d] of Object.entries(S.days||{})) if (k>=a&&k<=b&&d&&d.habits&&d.habits.gym) ds.add(k); return ds; }
 function gWeekCount(wk){ wk=wk||isoWeek(TODAY); const ds=new Set(G_().sessions.filter(s=>isoWeek(s.d)===wk).map(s=>s.d)); for (const [k,d] of Object.entries(S.days||{})) if (d&&d.habits&&d.habits.gym&&isoWeek(k)===wk) ds.add(k); return ds.size; }
 function gWeekStreak(){ const g=G_(); let n=0, w=isoWeek(TODAY); if (gWeekCount(w)<g.setup.days) w=weekShift(w,-1); while (gWeekCount(w)>=g.setup.days && n<200){ n++; w=weekShift(w,-1); } return n; }
 function gymXP(){ try { const g=S.gym; if(!g) return 0; return (g.sessions||[]).reduce((a,s)=>a+25+(s.prs||[]).length*10,0)+aQuestXP(); } catch(e){ return 0; } }
@@ -7068,7 +7083,7 @@ const KSRC = [
   ['Datum','orders','Paid orders','🧾','',(a,b)=>ensureDatum().orders.filter(o=>['deposit','in-production','delivered','closed'].includes(o.status)&&(!o.opened||(o.opened>=a&&o.opened<=b))).length],
   ['Datum','revenue','Datum revenue ($)','💎','$',()=>Math.round(dRevenue()),1],
   ['Datum','sets','Sets finished','🦷','',()=>ensureDatum().prototypes.filter(p=>p.status==='complete').length,1],
-  ['Days','gym','Gym workouts','💪','',(a,b)=>{ const ds=new Set(((S.gym||{}).sessions||[]).map(s=>s.d).filter(k=>k>=a&&k<=b)); for (const [k,d] of Object.entries(S.days||{})) if (k>=a&&k<=b&&d.habits?.gym) ds.add(k); return ds.size; }],
+  ['Days','gym','Gym workouts','💪','',(a,b)=>gymDays(a,b).size],
   ['Days','checkins','Check-ins','☀️','',(a,b)=>dCount(a,b,d=>d.checkin)],
   ['Days','top3','Top 3 items done','✅','',(a,b)=>Object.entries(S.days||{}).filter(([k])=>k>=a&&k<=b).reduce((s,[,d])=>s+(d.top3||[]).filter(t=>t.done).length,0)],
   ['Days','top3days','Days with all Top 3 done','🔥','',(a,b)=>dCount(a,b,d=>(d.top3||[]).length&&d.top3.every(t=>t.done&&t.text))],
@@ -7515,7 +7530,7 @@ function goalRings(v){ try {
   } catch(e){ console.warn('goal rings',e); return ''; } }
 
 /* ===================== weekly goals: 7 repeating, one per area (b183) ===================== */
-const WK7=[['modeling','Reach out to 2 clients · log every deposit','outreach',2],['grillz','2 bench sessions (Mon + Fri)','benchn',2],['content','Post Tue + Fri','posts',2],['cad','Send 3 Upwork proposals','proposals',3],['financial','Money check-in · log expenses',null,0],['fitness','Gym ×3','gym',3],['personal','Journal 5× · 1 hangout','habit:journal',5]];
+const WK7=[['modeling','Reach out to 2 clients · log every deposit','outreach',2],['grillz','2 bench sessions (Mon + Fri)','benchn',2],['content','Post Tue + Fri','posts',2],['financial','Money check-in · log expenses',null,0],['fitness','Gym ×3','gym',3],['personal','Journal 5× · 1 hangout','habit:journal',5]];
 function wk7Migrate(){ if (S.wk7V) return; S.wk7V=1;
   S.weeklyTemplate=WK7.map(([track,text,src,target])=>{ const i={id:uid(),track,text,srcTried:1}; if (src){ i.src=src; i.target=target; } return i; });
   const wk=ensureWeek(THIS_WEEK); const gen=(wk.extra||[]).filter(x=>x.gen); if (gen.length){ wk.extraOld=(wk.extraOld||[]).concat(gen); wk.extra=wk.extra.filter(x=>!x.gen); } wk.movesAt=wk.movesAt||TODAY; }
@@ -7594,8 +7609,7 @@ function vHQ(){
   return `<div class="card sec hq-card"><div class="row between" style="padding:0 2px 6px;gap:8px"><span class="tag">HQ · Year ${CY.year} of 5</span><span class="sub" style="font-size:11.5px">${CY.eraName}${nx?` → ${nx[1]} at ${nx[0]} levels`:' · max'}</span></div>
     <div class="hq-era"><i><u style="width:${pctE}%"></u></i><span class="num">${CY.sum}/35</span></div>${hqLive()}</div>
   <div class="card sec hq-more" style="padding-top:6px;padding-bottom:6px">
-    ${lazyFold('hq_boss','⚔️ Bosses',bossSub,()=>raidMini()||'<div class="empty">No bosses awake.</div>')}
-    ${W?lazyFold('hq_world','✈️ World',`${ws.cities} cities · ${ws.countries} countries`,()=>wmCard(W)+wmPassport(W)):''}
+        ${W?lazyFold('hq_world','✈️ World',`${ws.cities} cities · ${ws.countries} countries`,()=>wmCard(W)+wmPassport(W)):''}
     ${lazyFold('hq_season',`${se.ic} Season ${se.no}`,`${se.left}d left`,()=>seasonCard())}
     ${lazyFold('hq_dates','📅 Dates he’s keeping',an?`${an} today`:'next up',()=>annCard())}
     ${lazyFold('hq_map','🗺️ Landmarks',`${lm.done.length} of ${lm.done.length+lm.todo.length}`,()=>{ const h=vJourney(); const t=document.createElement('template'); t.innerHTML=h; const c=[...t.content.children].find(e=>/The map/.test(e.querySelector('h2')?.textContent||'')); return c?c.outerHTML:''; })}
@@ -7999,7 +8013,7 @@ function wardenCard(){ try { const B=aBoss(); if (!B.max) return ''; const pct=B
     <div class="hp big"><b style="width:${Math.max(B.hp>0?1:0,Math.round(pct*100))}%"></b><span class="num">${w(B.hp)} / ${w(B.max)} ${u}</span></div>
     ${hits.length?`<div class="hits">${hits.map(h=>`<div><span class="sub num">${nice(h.d)}</span><b class="num" style="color:var(--good)">−${w(h.dmg)}</b>${h.crit?`<small class="sub">${h.crit} crit${h.crit>1?'s':''}</small>`:''}</div>`).join('')}</div>`:`<div class="help keep" style="margin-top:8px">No hits this month yet.</div>`}
     <button class="btn ghost sm" style="margin-top:10px" onclick="go('gym')">⚔️ Train to hit it ›</button></div>`; } catch(e){ return ''; } }
-function bossOpen(){ dFold.hq_boss=true; stMode='progress'; go('evolve'); setTimeout(()=>document.querySelector('.hq-more')?.scrollIntoView({behavior:'smooth',block:'start'}),350); }
+function bossOpen(){ stMode='progress'; go('evolve'); setTimeout(()=>document.querySelector('.br-card')?.scrollIntoView({behavior:'smooth',block:'start'}),350); }
 
 /* ===================== b192: one live loop + XP multiplier ===================== */
 // Every source refreshes when the app opens or comes back, so bosses, levels, rings, the city and Circle all move with new data
@@ -8211,15 +8225,15 @@ function t3fit(el){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'
 { const _r=render; render=function(){ const out=_r.apply(this,arguments); try { document.querySelectorAll('.top3 textarea.t3in').forEach(t3fit); } catch(e){} return out; }; }
 
 /* ===================== b205: Money = all your money · Overview · Income · Spending · Plan · Taxes ===================== */
-const STREAMS=[['model','Modeling','📸','#ff7ad9'],['datum','Datum','💎','#ffd166'],['cad','CAD / Upwork','⚙️','#7ee2ff'],['other','Other','➕','#a8b3c7']];
+const STREAMS=[['model','Modeling','📸','#ff7ad9'],['datum','Datum','💎','#ffd166'],['other','Other','➕','#a8b3c7']];
 const STREAM_OF=k=>STREAMS.find(x=>x[0]===k)||STREAMS[3];
 function incStream(t){ if (t.stream) return t.stream; const d=String(t.desc||'').toUpperCase();
   if (/MODEL MANAGE|ONE MANAGEMENT|ACTIVE MODEL|MODELS INC/.test(d)) return 'model';
-  if (/UPWORK|FIVERR/.test(d)) return 'cad';
   if (/SHOPIFY|ETSY|SQUARE|STRIPE|DATUM|GRILL/.test(d)) return 'datum';
   return 'other'; }
 const isIncomeTx = t => t.amt>0 && !['transfer','ignore'].includes(t.cat) && !/REWARD|CASH ?BACK|REFUND|INTEREST PAID|DIVIDEND/i.test(t.desc||'');
-function incomeBy(from, to){ const o={model:0,datum:0,cad:0,other:0}; for (const t of S.money.budget.txns) if (t.d>=from && t.d<=to && isIncomeTx(t)) o[incStream(t)]+=t.amt; for (const t of agencyDeposits()) if (t.hand && t.d>=from && t.d<=to) o.model+=t.amt; return o; }
+function incomeBy(from, to){ const o={model:0,datum:0,cad:0,other:0}; const ords=datumOrdersIn(addDays(from,-14),addDays(to,14)), used=new Set(); for (const t of S.money.budget.txns) if (t.d>=from && t.d<=to && isIncomeTx(t)){ const k=incStream(t); if (k==='datum'){ const m=ords.find(x=>!used.has(x.id) && Math.abs((+x.price||0)-t.amt)<1); if (m){ used.add(m.id); } } o[k]+=t.amt; }
+  for (const x of datumOrdersIn(from,to)) if (!used.has(x.id)) o.datum+=(+x.price||0); for (const t of agencyDeposits()) if (t.hand && t.d>=from && t.d<=to) o.model+=t.amt; return o; }
 // one list of agency money: what the bank shows + checks you typed in that the bank hasn't posted yet (every page reads this)
 function agencyDeposits(){ const T=(S.money.budget?.txns||[]).filter(t=>t.amt>0&&/MODEL MANAGE/i.test(t.desc)).map(t=>({d:t.d, amt:t.amt, desc:t.desc, id:t.id}));
   for (const c of S.money.checks||[]) if (c.got && c.byHand && !c.verified){ const d=c.gotOn||c.d; if (!T.some(t=>Math.abs(daysBetween(t.d,d))<=6 && (Math.abs(t.amt-c.amt)<1))) T.push({d, amt:c.amt, desc:'1 MODEL MANAGE · in your bank, posting', hand:1}); }
@@ -8269,6 +8283,7 @@ function growthCard(){ const M=S.money, G=(M.growth ||= {target:10000}), v=invNo
     <div class="bar" style="height:10px"><b style="width:${Math.round(pct*100)}%;background:var(--good)"></b></div>
     <div class="sub" style="margin-top:8px">${ch!=null?`${ch>=0?'+':'−'}${money0(Math.abs(ch))} in 30 days · `:''}${cardDebt()>0.5?`Roth deposits paused until the cards hit $0${cz?' ('+cz+')':''}`:'Roth deposits are on'}</div></div>`; }
 function vMoneyPlan(){ const b=moneyBits(); return `${netCard()}${cardsCard(b.P)}${goalsCard(b)}${vBills()}`; }
+function netWorth(){ return (S.money.budget?.accounts||[]).filter(a=>a.bal!=null).reduce((a,x)=>a+x.bal,0); }
 function netCard(){ const B=S.money.budget, A=(B.accounts||[]).filter(a=>a.bal!=null), sum=k=>A.filter(a=>acctKind(a)===k).reduce((t,a)=>t+a.bal,0), cash=sum('cash'), inv=sum('invest'), debt=-sum('debt'), net=cash+inv-debt;
   const when=B.syncedAt?(B.syncedDay===TODAY?'today':nice(B.syncedDay)):'never';
   return `<div class="card sec"><div class="row between" style="align-items:flex-start"><div><div class="tag">Net worth</div><b class="num nw-big" style="color:${net<0?'var(--bad)':'var(--good)'}">${net<0?'−':''}${money0(Math.abs(net))}</b></div></div>
@@ -8319,7 +8334,7 @@ function freshLine(){ const B=S.money.budget, th=bankThrough(), age=th?daysBetwe
   return `<div class="mn-fresh"><span>🏦 Bank data through <b>${th?nice(th):'—'}</b>${age>2?` <em>· banks lag 2–4 days</em>`:''}</span><button class="btn ghost sm" onclick="bankRefresh(true)" ${bankBusy?'disabled':''}>${bankBusy?'…':'↻'}</button></div>${bankErr?`<div class="help keep" style="color:var(--warn);margin:-4px 6px 10px">${esc(bankErr)}</div>`:''}`; }
 function lastLanded(){ return S.money.checks.filter(c=>c.got).sort((a,b)=>(b.gotOn||b.d).localeCompare(a.gotOn||a.d))[0]; }
 function nextCheckCard(P){ const nx=P.rows[0]; if (!nx) return `<div class="card sec"><div class="tag">Next check</div><div class="sub" style="margin-top:6px">Nothing expected. A new one appears here by itself when an agency deposit lands.</div></div>`;
-  const dd=daysBetween(TODAY,nx.d), ll=lastLanded(), owe=(()=>{ try { return stmtNow().balance; } catch(e){ return 0; } })();
+  const dd=daysBetween(TODAY,nx.d), ll=lastLanded(), owe=agencyOwed();
   const nn=P.rows[1], bills=Math.round(nx.bills||0), flex=Math.round(nx.flex||0), cd=cardDebt(), tb=taxBehind();
   const CL=cardList(), rest=[cd>0.5?['💳',CL[0]?CL[0].name:'Credit cards',CL.map(c=>`${c.name} ${money0(c.bal)}`).join(' → ')+' · smallest first']:null, tb>0.5?['📊','Tax catch-up',`${money0(tb)} behind`]:null, (+S.money.s.efNow||0)<efTarget()-.5?['🛡️','Emergency fund',`${money0(+S.money.s.efNow||0)} of ${money0(efTarget())}`]:null, ['🌱','Roth IRA','']].filter(Boolean);
   return `<div class="card sec nc-card">
@@ -8431,6 +8446,79 @@ function moneyQuest(){ const wk=isoWeek(TODAY), M=S.money; if (M.mqWeek===wk) re
 function mqCard(){ const q=(S.quests||[]).find(q=>q.mq===isoWeek(TODAY)); if (!q) return '';
   return `<div class="card sec mq-card"><div class="row between"><span class="tag">Weekly money quest · +${QSIZE.M.xp} XP</span>${q.done?'<span class="chip">✓ done</span>':''}</div><div class="check ${q.done?'on':''}" style="margin-top:8px" onclick="${q.done?'':`questDone('${q.id}')`}"><div class="box">${q.done?'✓':''}</div><div class="txt">${esc(q.text.replace(/^💰 /,''))}</div></div></div>`; }
 
+/* ===================== b225: a boss for every area — monthly gates, real data, they fight back ===================== */
+const ABOSS={
+  datum:{area:'DATUM', c:'#ffe14d', ic:'🌋', name:'The Molten Golem', title:'Lord of the Unpoured Gold', hp:150,
+    lore:'A furnace-born giant built from every piece you haven’t cast yet. It hardens a little every day the bench sits cold.',
+    phases:['Molten','Cooling','Cracked','Shattered'], hits:[['Bench time','12 per hour'],['A piece moves a stage','20'],['Order delivered','40 · crit']],
+    attack:['Cold Bench','7 days with no bench session → it heals 15'], loot:'Golem Core · 300 XP', go:"go('datum')"},
+  content:{area:'CONTENT', c:'#4dd8ff', ic:'👁️', name:'The Algorithm', title:'Hydra of the Feed', hp:100,
+    lore:'A many-eyed thing that forgets you the moment you go quiet. Feed it on schedule and it bends toward you.',
+    phases:['All-seeing','Distracted','Blinking','Blind'], hits:[['Post published','15'],['Idea shot','6'],['Art piece','5'],['Guitar session','3']],
+    attack:['Ghosted','7 days without a post → it heals 10'], loot:'Third Eye · 300 XP', go:"go('content')"},
+  social:{area:'SOCIAL', c:'#b98cff', ic:'🕳️', name:'The Hermit King', title:'Warden of the Empty Calendar', hp:100,
+    lore:'He rules from a couch in a quiet apartment and wins by default. Every plan you make costs him a subject.',
+    phases:['Enthroned','Restless','Exposed','Dethroned'], hits:[['Hangout or event','20'],['New person met','25'],['Called your parents','8']],
+    attack:['Isolation','10 days with no hangout → he heals 15'], loot:'Crown of the Hermit · 300 XP', go:"go('social')"},
+  mind:{area:'MIND', c:'#ff9ad5', ic:'🌫️', name:'The Fog', title:'Eater of Mornings', hp:0,
+    lore:'It rolls in when the routine slips — snoozing, scrolling, forgetting why. Clear days burn it off.',
+    phases:['Thick','Thinning','Patchy','Clear Skies'], hits:[['Check-in','2'],['Read 30 min','2'],['Journal','2'],['Morning routine','2'],['Perfect day (all Top 3)','4 · crit'],['Weekly review','10']],
+    attack:['Lost Day','a past day with no check-in → it heals 3'], loot:'Lantern of Clear Days · 300 XP', go:"go('today')"}
+};
+const monthDays = m => new Date(+m.slice(0,4), +m.slice(5,7), 0).getDate();
+function aBossEvents(k, m){ const E=[], inM=d=>d&&String(d).slice(0,7)===m, past=d=>d<=TODAY;
+  if (k==='datum'){ const D=ensureDatum(); for (const p of D.prototypes||[]){ for (const l of p.log||[]) if (l.kind==='session' && inM(l.d)) E.push({d:l.d, dmg:Math.round((+l.mins||0)/60*12), l:`Bench ${fmtMins(+l.mins||0)}`}); for (const [st,d] of Object.entries(p.stageAt||{})) if (inM(d)) E.push({d, dmg:20, l:`${p.name||'Piece'} → ${st}`}); }
+    for (const o of D.orders||[]) if (inM(o.delivered)) E.push({d:o.delivered, dmg:40, l:`Delivered: ${o.who||'order'}`, crit:1});
+    const sd=[...new Set(E.filter(e=>/^Bench/.test(e.l)).map(e=>e.d))].sort(); heals(E, m, sd, 7, 15, 'Cold Bench'); }
+  if (k==='content'){ for (const l of S.logs||[]) if (l.kind==='post' && inM(l.d)) E.push({d:l.d, dmg:15, l:'Post'}); for (const x of S.ideas||[]) if (inM(x.done)) E.push({d:x.done, dmg:6, l:'Idea shot'});
+    for (const a of S.art||[]) if (inM(a.d)) E.push({d:a.d, dmg:5, l:'Art piece'}); for (const g of (S.gtr||{}).log||[]) if (inM(g.d)) E.push({d:g.d, dmg:3, l:'Guitar session'});
+    heals(E, m, (S.logs||[]).filter(l=>l.kind==='post').map(l=>l.d).sort(), 7, 10, 'Ghosted'); }
+  if (k==='social'){ const hd=[...hangDays()].filter(inM).sort(); for (const d of hd) E.push({d, dmg:20, l:'Hangout / event'}); for (const p0 of ((S.circle||{}).people||[])) if (inM(p0.first)) E.push({d:p0.first, dmg:25, l:`Met ${p0.name}`});
+    for (const [d,day] of Object.entries(S.days||{})) if (inM(d)) for (const t of day.top3||[]) if (t.done && /parent|mom|dad/i.test(t.text||'')) E.push({d, dmg:8, l:'Called your parents'});
+    heals(E, m, [...hangDays()].sort(), 10, 15, 'Isolation'); }
+  if (k==='mind'){ for (const [d,day] of Object.entries(S.days||{})){ if (!inM(d)) continue; const h=day.habits||{}; let n=0; if (day.checkin) n+=2; for (const x of ['read','journal','morning']) if (h[x]) n+=2;
+      if (n) E.push({d, dmg:n, l:'Clear day'}); const t3=(day.top3||[]).filter(t=>(t.text||'').trim()); if (t3.length && t3.every(t=>t.done)) E.push({d, dmg:4, l:'Perfect day', crit:1}); }
+    for (const [w,x] of Object.entries(S.weeks||{})){ const end=addDays(weekMonday(w),6); if (x.review?.done && inM(end)) E.push({d:end, dmg:10, l:'Weekly review'}); }
+    const first=m+'-01', last=m===TODAY.slice(0,7)?addDays(TODAY,-1):m+'-'+monthDays(m); for (let d=first; d<=last; d=addDays(d,1)) if (d>='2026-10-01' && !(S.days[d]||{}).checkin) E.push({d, dmg:-3, l:'Lost Day', heal:1}); }
+  return E.filter(e=>e.d<=TODAY && e.dmg).sort((a,b)=>b.d.localeCompare(a.d)); }
+function heals(E, m, dates, gap, amt, label){ const first=m+'-01', end=m===TODAY.slice(0,7)?TODAY:m+'-'+monthDays(m); let lastHit=dates.filter(d=>d<first).pop()||addDays(first,-1);
+  const inside=dates.filter(d=>d>=first&&d<=end); let cur=first; for (const d of [...inside, addDays(end,1)]){ let k=addDays(lastHit,gap); while (k<d && k<=end){ if (k>=first && k>='2026-10-01') E.push({d:k, dmg:-amt, l:label, heal:1}); k=addDays(k,gap); } lastHit=d; } }
+function aBossState(k, m){ m=m||TODAY.slice(0,7); return rpgC('ab:'+k+m,()=>{ const B=ABOSS[k], E=aBossEvents(k,m), max=k==='mind'?monthDays(m)*5:B.hp;
+  let hp=max; for (const e of E.slice().reverse()){ hp=Math.min(max, Math.max(0, hp-e.dmg)); if (hp<=0) break; } const dead=hp<=0, pct=hp/max, ph=dead?3:pct>.66?0:pct>.33?1:2;
+  return {...B, k, m, E, hp, max, pct, dead, phase:B.phases[ph], dmg:E.filter(e=>e.dmg>0).reduce((a,e)=>a+e.dmg,0)}; }); }
+function bossXP(){ let x=0; try { for (const k of Object.keys(ABOSS)){ let m='2026-10'; const now=TODAY.slice(0,7); while (m<=now){ if (aBossState(k,m).dead) x+=300; const d=new Date(+m.slice(0,4), +m.slice(5,7), 1); m=dkey(d).slice(0,7); } } } catch(e){} return x; }
+// one row per area: the area's boss, alive or dead, with its HP
+function rosterRows(){ const R=[];
+  try { const V=vault(); if (V.max) R.push({k:'vault', area:'MODEL', c:'#ff3df2', ic:'🏦', name:'The Vault', title:'Hoard of the Agency', pct:V.pct, hp:money0(V.hp), max:money0(V.max), dead:V.hp<=0, phase:phaseOf(V.pct)[1]}); } catch(e){}
+  for (const k of ['datum','content']) { const B=aBossState(k); R.push({k, area:B.area, c:B.c, ic:B.ic, name:B.name, title:B.title, pct:B.pct, hp:Math.round(B.hp), max:B.max, dead:B.dead, phase:B.phase}); }
+  try { const W=aBoss(); if (W.max) R.push({k:'warden', area:'BODY', c:'#ff5a5a', ic:'🗿', name:'The Iron Warden', title:'Keeper of the Monthly Gate', pct:W.hp/W.max, hp:Math.round(gShowW(W.hp)).toLocaleString(), max:Math.round(gShowW(W.max)).toLocaleString()+' '+gU(), dead:!!W.dead, phase:wardenPhase(W.hp/W.max)[1]}); } catch(e){}
+  try { const Wy=wyrm(); if (Wy.need>1) R.push({k:'wyrm', area:'MONEY', c:'#39ff9f', ic:'🐉', name:'The Tax Wyrm', title:'Coiled on the Buffer', pct:Wy.pct, hp:money0(Wy.hp), max:money0(Wy.max), dead:Wy.hp<=0, phase:(WYRM_PH.find(p=>Wy.pct>=p[0])||WYRM_PH[3])[1]}); } catch(e){}
+  try { const cb=cardBosses().find(b=>!b.dead); if (cb) R.push({k:'cards', area:'MONEY', c:'#39ff9f', ic:cb.ic, name:cb.name, title:cb.title, pct:cb.pct, hp:money0(cb.hp), max:money0(cb.max), dead:false, phase:cb.pct>.66?'Full power':cb.pct>.33?'Wounded':'Cornered'}); } catch(e){}
+  for (const k of ['social','mind']) { const B=aBossState(k); R.push({k, area:B.area, c:B.c, ic:B.ic, name:B.name, title:B.title, pct:B.pct, hp:Math.round(B.hp), max:B.max, dead:B.dead, phase:B.phase}); }
+  return R; }
+function bossRoster(){ const R=rosterRows(), up=R.filter(r=>!r.dead).length;
+  return `<div class="card sec br-card"><div class="hdr"><h2>⚔️ Bosses</h2><span class="sub">${up} awake · ${R.length-up} down · ${MON3[+TODAY.slice(5,7)-1]} gates</span></div>
+    ${R.map(r=>`<button class="br-r ${r.dead?'dead':''}" style="--c:${r.c}" onclick="bossSheet('${r.k}')"><span class="br-ic">${r.dead?'💀':r.ic}</span><span class="br-m"><span class="br-t"><b>${esc(r.name)}</b><em>${r.area}</em></span><i class="br-hp"><u style="width:${Math.max(r.dead?0:2,Math.round(r.pct*100))}%"></u></i><small>${r.dead?'Defeated':esc(r.phase)} · ${r.hp} / ${r.max}</small></span><span class="br-go">›</span></button>`).join('')}
+    <div class="sub" style="margin-top:8px">Every boss runs on what you actually do. Monthly gates reset on the 1st — beat one before then for 300 XP.</div></div>`; }
+function bossSheet(k){ let html='';
+  if (k==='vault') html=raidCard('vault')+`<div class="help keep" style="padding:0 6px">The money ONE still owes you. Every agency check — typed in or found by the bank — is a hit.</div>`;
+  else if (k==='wyrm') html=raidCard('wyrm');
+  else if (k==='warden') html=wardenCard();
+  else if (k==='cards') html=bossesCard();
+  else { const B=aBossState(k), hit=B.E.filter(e=>!e.heal).slice(0,8), hl=B.E.filter(e=>e.heal).slice(0,3);
+    html=`<div class="ab-sheet" style="--c:${B.c}"><div class="row between"><span class="tag">${B.area} boss · ${MON3[+B.m.slice(5)-1]} gate</span><span class="chip">${B.dead?'💀 Defeated':B.phase}</span></div>
+      <h2 style="margin:6px 0 0">${B.name}</h2><div class="sub" style="font-style:italic">${B.title}</div>
+      <div class="ab-arena ph${B.dead?3:B.phases.indexOf(B.phase)}"><span>${B.dead?'💀':B.ic}</span></div>
+      <div class="hp big"><b style="width:${Math.max(B.dead?0:1,Math.round(B.pct*100))}%"></b><span class="num">${Math.round(B.hp)} / ${B.max} HP</span></div>
+      <p class="ab-lore">${B.lore}</p>
+      <div class="ab-ph">${B.phases.map((p,i)=>`<span class="${p===B.phase||(B.dead&&i===3)?'on':''}">${p}</span>`).join('')}</div>
+      <div class="ab-grid"><div><div class="tag">⚔️ How to hit it</div>${B.hits.map(([a,b])=>`<div class="row between ab-li"><span>${a}</span><b>${b}</b></div>`).join('')}</div>
+        <div><div class="tag">🩸 Its attack</div><div class="ab-li"><b>${B.attack[0]}</b><div class="sub">${B.attack[1]}</div></div><div class="tag" style="margin-top:10px">🎁 Loot</div><div class="ab-li">${B.loot}</div></div></div>
+      <div class="tag" style="margin-top:12px">This month</div>${hit.length?`<div class="hits">${hit.map(h=>`<div><span class="sub num">${nice(h.d)}</span><b class="num" style="color:var(--good)">−${h.dmg}</b><small class="sub">${esc(h.l)}${h.crit?' · crit':''}</small></div>`).join('')}</div>`:'<div class="help keep">No hits yet this month.</div>'}
+      ${hl.length?`<div class="hits" style="margin-top:6px">${hl.map(h=>`<div><span class="sub num">${nice(h.d)}</span><b class="num" style="color:var(--bad)">+${-h.dmg}</b><small class="sub">${esc(h.l)}</small></div>`).join('')}</div>`:''}
+      <button class="btn sm" style="margin-top:12px;width:100%;justify-content:center" onclick="gSheetClose();${B.go}">⚔️ Go hit it ›</button></div>`; }
+  gSheet(html); }
+
 let moneyTab = 'now';
 function setMoneyTab(t){ moneyTab=MONEY_ALIAS[t]||t; render(); }
 const MONEY_ALIAS={waterfall:'now', income:'now', budget:'spending', tips:'spending', bills:'accounts', plan:'now', deduct:'taxes', overview:'now'};
@@ -8524,8 +8612,12 @@ const TAX_CATCHUP_BY='2027-04-15';
 function taxReceived(){ let r=0; try { r=stmtReceived('2026').reduce((a,x)=>a+x.amt,0); } catch(e){} r+=S.money.checks.filter(c=>c.got&&(c.gotOn||c.d)>='2027-01-01').reduce((a,c)=>a+c.amt,0); return r; }
 function dedTotal(from){ return ((S.money.budget||{}).deductibles||[]).filter(x=>x.ok&&(x.d||'')>=from).reduce((a,x)=>a+(+x.amt||0),0); }
 function datumInc(from){ try { return incomeBy(from, TODAY).datum||0; } catch(e){ return 0; } }
-function taxOwedSoFar(){ return Math.max(0, taxReceived()+datumInc('2026-01-01')-dedTotal('2026-01-01'))*S.money.s.taxRate; }
-function taxBehind(){ const paid=(S.money.taxPaid||[]).filter(p=>!p.d||p.d>='2026-01-01').reduce((a,p)=>a+(+p.amt||0),0); return Math.max(0, taxOwedSoFar()-paid-(+S.money.s.taxBufNow||0)); }
+function datumOrdersIn(from,to){ try { return ensureDatum().orders.filter(o=>(o.status==='delivered'||o.status==='closed') && (o.delivered||o.opened||'')>=from && (o.delivered||o.opened||'')<=to); } catch(e){ return []; } }
+function taxOwedSoFar(){ return taxState().need; }
+function taxPaidSince(from='2026-01-01'){ return (S.money.taxPaid||[]).filter(p=>!p.d||p.d>=from).reduce((a,p)=>a+(+p.amt||0),0); }
+function taxState(){ const s=S.money.s, rec=taxReceived(), dInc=datumInc('2026-01-01'), ded=dedTotal('2026-01-01'), taxable=Math.max(0,rec+dInc-ded), need=taxable*s.taxRate, paid=taxPaidSince(), buf=+s.taxBufNow||0;
+  return {rec, dInc, ded, taxable, need, paid, buf, gap:Math.max(0,need-paid-buf), saved:Math.min(rec+dInc,ded)*s.taxRate}; }
+function taxBehind(){ return taxState().gap; }
 function taxShortApril(){ try { const P=projection(); return Math.max(0, taxBehind()-P.rows.filter(r=>r.d<TAX_CATCHUP_BY).reduce((t,r)=>t+(r.catchup||0),0)); } catch(e){ return 0; } }
 function cushTarget(){ const s=S.money.s; if (s.cushTarget!=null && s.cushTarget!=='') return +s.cushTarget||0; try { return Math.round(stmtReceived('2026').filter(r=>r.d<'2026-09-01').reduce((a,r)=>a+r.amt,0)*s.taxRate); } catch(e){ return 0; } }
 function cardDebt(){ return cardList().reduce((a,c)=>a+c.bal,0); }
@@ -8747,7 +8839,7 @@ function addTaxPaid(e){ e.preventDefault(); const [d,a]=e.target.querySelectorAl
 function delTaxPaid(id){ S.money.taxPaid=S.money.taxPaid.filter(p=>p.id!==id); commit({skipXp:true}); }
 
 /* ---------- DEADLINES ---------- */
-const DLTYPES = {tax:'Tax', money:'Money', datum:'Datum', content:'Content', cad:'CAD', other:'Other'};
+const DLTYPES = {tax:'Tax', money:'Money', datum:'Datum', content:'Content', other:'Other'};
 function dlTypeOf(t){ return /401|fidelity|\bira\b|buffer|cpa|bank/i.test(t) ? 'money' : /tax|return|\best\b/i.test(t) ? 'tax' : /datum|grillz|dba|ein/i.test(t) ? 'datum' : /tiktok|\big\b|post|handle|follower/i.test(t) ? 'content' : /upwork|cad|proposal|portfolio/i.test(t) ? 'cad' : /401|fidelity|ira|buffer|cpa|bank/i.test(t) ? 'money' : 'other'; }
 function seedDeadlines(st){ if (Array.isArray(st.dl)) return; st.dl = DEADLINES.map(([d,text])=>({id:uid(), d, text, type:dlTypeOf(text), done:''})); }
 const dlWords = t => (t||'').toLowerCase().match(/[a-z]{4,}/g) || [];
@@ -9065,7 +9157,7 @@ function vEvolve(){
   if (stMode==='circle'){ stMode='progress'; setTimeout(()=>go('social'),0); }
   if (!['progress','settings'].includes(stMode)) stMode='progress';
   const body = stMode==='settings' ? vSettingsAll() :
-    statSheet()+vHQ()+foldCards(statDrop(vStats(),['Furthest behind','Money','Bench time'])+tellsCard()+rivalCard(), ['Consistency','XP per week','Shadow','Your tells','Records'], '', {Consistency:`${[...Array(30)].filter((_,i)=>dayActive(addDays(TODAY,-i))).length} of the last 30 days`, Records:`best streak ${bestDailyStreak()}`});
+    statSheet()+bossRoster()+vHQ()+foldCards(statDrop(vStats(),['Furthest behind','Money','Bench time'])+tellsCard()+rivalCard(), ['Consistency','XP per week','Shadow','Your tells','Records'], '', {Consistency:`${[...Array(30)].filter((_,i)=>dayActive(addDays(TODAY,-i))).length} of the last 30 days`, Records:`best streak ${bestDailyStreak()}`});
   return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['progress','Character'],['settings','Settings']].map(([k,l])=>`<button class="${stMode===k?'on':''}" style="flex:1 1 auto;min-width:0;padding:9px 6px;font-size:12px;letter-spacing:-.01em" onclick="stMode='${k}';render();window.scrollTo(0,0)">${l}</button>`).join('')}</div>` + body;
 }
 function vTrophies(){ stMode='settings'; setTab='trophies'; return vEvolve(); }
