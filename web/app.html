@@ -1719,7 +1719,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b236';
+const BUILD='b237';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -1878,6 +1878,7 @@ function cadArchive(st){ if (st.cadOff) return; st.cadOff=1; const A=((st.archiv
   if (Array.isArray(st.dl)){ const c=x=>/upwork|\bcad\b/i.test(x.text||'')||x.type==='cad'; A.deadlines.push(...st.dl.filter(c)); st.dl=st.dl.filter(x=>!c(x)); }
   if (Array.isArray(st.quests)){ A.quests.push(...st.quests.filter(q=>isC(q)&&!q.done)); st.quests=st.quests.filter(q=>!(isC(q)&&!q.done)); } }
 function migrate(st){ try { cadArchive(st); } catch(e){}
+  try { if (st.rescueDone && !st.streakRescued){ st.shieldUsed ||= {}; for (const k of ['2026-10-18','2026-10-19']) if (!(st.days?.[k]&&(st.days[k].checkin))) st.shieldUsed[k]=1; st.streakRescued=1; } } catch(e){}
   if (!st.habits.some(h=>h.id==='datum')) st.habits.splice(2,0,{id:'datum',name:'Bench session',icon:'◆'});
   const d = seed();
   st.money ||= d.money; st.money.s = {...d.money.s, ...(st.money.s||{})}; st.money.checks ||= []; st.money.taxPaid ||= [];
