@@ -1577,6 +1577,12 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 .du-d b{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);font-weight:700}.du-d.hot{color:var(--warn)}
 .du-n{display:flex;flex-direction:column;min-width:0}.du-n b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.du-n small{color:var(--mut);font-size:12px}
 .ec-r{padding:6px 0;border-top:1px solid var(--line);flex-wrap:nowrap;gap:8px}.ec-r:first-child{border-top:0}
+
+.pn-card{border-color:var(--good);background:linear-gradient(135deg,rgba(0,214,50,.12),transparent 70%),var(--card)}
+.pn-t{display:block;font-size:20px;font-weight:800;margin:4px 0 2px}
+.ln-form{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}
+.ln-form .ln-dol{font-weight:800;font-size:18px}
+.ln-form input[name=a]{width:120px}.ln-form input[name=d]{width:auto}
 </style>
 
 <div class="app" id="app"></div>
@@ -1586,7 +1592,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b220';
+const BUILD='b221';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -4497,6 +4503,7 @@ async function mSync(manual){
   try {
     const r=await mcpLib.callTool('Gmail','search_threads',{query:'(from:onemanagement.com OR from:activemodelmanagement.com) newer_than:30d', pageSize:40});
     const ths=mThreads(r&&r.payload!==undefined?r.payload:r); if(!ths) throw new Error('no threads');
+    try { payNoticeScan(ths); } catch(e){}
     const M=mState(), before=mAll().filter(e=>e.auto).length; for (const th of ths){ const e=mParse(th); if(!e) continue; M.auto[e.id]={...(M.auto[e.id]||{}), ...e}; } const n=Math.max(0,mAll().filter(e=>e.auto).length-before);
     M.syncDay=TODAY; M.syncAt=Date.now(); M.syncN=n; mBusy=false; commit({skipXp:true}); if (manual) toast(n?`${n} new from your agents`:'Up to date');
   } catch(e){ mBusy=false; mState().syncDay=TODAY; if (view==='model') render(); if (manual) toast('Couldn’t reach Gmail just now'); }
@@ -8297,6 +8304,7 @@ function nextCheckCard(P){ const nx=P.rows[0]; if (!nx) return `<div class="card
       <li><span>🛍️</span><b>Spending</b><em class="num">${money0(flex)}</em><small>yours</small></li>
       <li><span>${rest[0][0]}</span><b>Everything left</b><em>→ ${rest[0][1]}</em><small>${rest[0][2]?rest[0][2]+' · ':''}${rest.length>1?'then '+rest.slice(1).map(r=>r[1].toLowerCase()).join(' → '):''}</small></li>
     </ol>
+    ${payNoticeCard()?'':`<details class="pc-edit"><summary>Already in your bank?</summary><div class="sub" style="margin:6px 0 2px">The bank feed runs ~4 days behind. Type what your bank app shows and the split appears now.</div>${landForm()}</details>`}
     <details class="pc-edit"><summary>Change expected date</summary><div class="row" style="gap:6px;margin-top:8px;flex-wrap:wrap"><input class="inp" type="date" value="${nx.d}" style="width:auto" onchange="setCheckDate('${nx.id}',this.value)" aria-label="Expected date"><button class="btn sm" id="landed-${nx.id}" onclick="verifyLanded('${nx.id}')">Check bank</button>${unverifiedId===nx.id?`<button class="btn ghost sm" onclick="markGot('${nx.id}',true)">Mark landed</button>`:''}</div></details></div>`; }
 function dueSoonCard(days=14){ const s=S.money.s, end=addDays(TODAY,days);
   const rows=[...BILLS,...CARDS].map(b=>{ const paid=billPaidThisCycle(b), due=billDueThisMonth(b.day), late=!paid&&due<TODAY, next=paid?billNext(b.day,addDays(due,1)):late?due:due; return {...b, amt:+s[b.key]||0, paid, late, next}; })
@@ -8305,12 +8313,31 @@ function dueSoonCard(days=14){ const s=S.money.s, end=addDays(TODAY,days);
   return `<div class="card sec"><div class="hdr"><h2>Due next 2 weeks</h2><span class="sub num">${money0(tot)}</span></div>
     ${rows.length?`<div class="du-list">${rows.map(r=>{ const dd=daysBetween(TODAY,r.next); return `<div class="du-r"><span class="du-d ${r.late||dd<=3?'hot':''}"><b>${parseD(r.next).toLocaleDateString('en-US',{month:'short'})}</b>${parseD(r.next).getDate()}</span><span class="du-n"><b>${r.icon} ${esc(r.name.replace(/ minimum$/,' card'))}</b><small>${r.late?(r.auto?'not seen in the bank yet':'was due — pay it'):dd===0?'today':dd===1?'tomorrow':'in '+dd+' days'} · ${r.auto?'autopay':'pay by hand'}</small></span><b class="num">${money0(r.amt)}</b></div>`; }).join('')}</div>`:'<div class="sub">Nothing due in the next 2 weeks.</div>'}
     <button class="btn ghost sm" style="margin-top:10px;width:100%;justify-content:center" onclick="setMoneyTab('accounts');setTimeout(()=>document.getElementById('billsAll')?.scrollIntoView({behavior:'smooth'}),60)">All bills</button></div>`; }
-function vMoneyNow(){ const b=moneyBits(); return `${freshLine()}${wfTodo()}${nextCheckCard(b.P)}${dueSoonCard()}${cardsCard(b.P)}${goalsCard(b)}`; }
+function vMoneyNow(){ if (!S.money.m221) setTimeout(()=>{ try { m221(); } catch(e){} }, 0); const b=moneyBits(); return `${freshLine()}${payNoticeCard()}${wfTodo()}${nextCheckCard(b.P)}${dueSoonCard()}${cardsCard(b.P)}${goalsCard(b)}`; }
 function vMoneyAccounts(){ const b=moneyBits(); return `${netCard()}${incomeMini()}<div id="billsAll">${vBills()}</div>${checksCard(b.P)}${b.moreFold}`; }
 function checksCard(P){ const rows=P.rows; if(!rows.length) return '';
   return `<div class="card sec"><div class="hdr"><h2>Expected checks</h2><span class="sub">${rows.length} · dates only</span></div>
     <div class="ec-list">${rows.slice(0,8).map(r=>{ const dd=daysBetween(TODAY,r.d); return `<div class="row between ec-r"><input class="inp" type="date" value="${r.d}" style="padding:6px 10px;font-size:14px;width:auto" onchange="setCheckDate('${r.id}',this.value)" aria-label="Expected date"><span class="row" style="gap:10px;flex-wrap:nowrap"><span class="sub" style="font-size:12px">${dd<0?'waiting on bank':'in '+dd+' days'}</span><button class="x" onclick="delCheck('${r.id}')" aria-label="Remove">✕</button></span></div>`; }).join('')}</div>
     <div class="help keep" style="margin-top:8px">Amounts aren't guessed — each check fills in from the bank when it lands.</div></div>`; }
+
+/* b221: land a check the day it hits the bank (bank feed lags ~4 days); ONE's "Payment" email is the heads-up */
+function payNoticeScan(ths){ for (const th of ths||[]) for (const m of (th.messages||[])){ const subj=String(m.subject||''), sn=String(m.snippet||''), from=String(m.sender||m.from||'');
+    if (/onemanagement\.com/i.test(from) && /^\s*payment\s*$/i.test(subj) && /transferred to your bank/i.test(sn)){ const d=String(m.date||'').slice(0,10); if (/^\d{4}-\d{2}-\d{2}$/.test(d) && (!S.money.payNotice || d>S.money.payNotice.d)) S.money.payNotice={d, url:m.viewUrl||th.viewUrl||''}; } } }
+function landCheck(amt, d){ amt=Math.round((+amt||0)*100)/100; d=d||TODAY; if (!(amt>0)) return toast('Type the amount you see in the bank');
+  const M=S.money; let c=M.checks.filter(x=>!x.got).sort((a,b)=>a.d.localeCompare(b.d))[0];
+  if (!c){ c={id:uid(), d, amt, note:'1 Model Management'}; M.checks.push(c); }
+  if (Math.abs(c.amt-amt)>1) c.expAmt=c.amt; c.amt=amt; c.got=true; c.gotOn=d; c.d=d; c.verified=false; c.byHand=true; c.note=(c.note||'').replace(/ · (marked|entered) by (hand|you)/g,'')+' · entered by you';
+  try { replanBiweekly(c, d, M.s.payAmt||amt); } catch(e){}
+  c.split=splitFor(c); c.done={}; delete c.dismissed; M.checks.sort((a,b)=>a.d.localeCompare(b.d));
+  S.wins.push({id:uid(), d:TODAY, text:`💵 ${money0(amt)} landed — split ready`}); commit(); confetti(); toast(`${money0(amt)} landed · split below`); }
+function landForm(){ return `<form class="ln-form" onsubmit="event.preventDefault();landCheck(this.a.value,this.d.value)"><span class="ln-dol">$</span><input name="a" class="inp num" type="number" inputmode="decimal" step="0.01" min="1" placeholder="amount" required aria-label="Amount in your bank"><input name="d" class="inp" type="date" value="${TODAY}" max="${TODAY}" aria-label="Day it arrived"><button class="btn sm">It's in my bank</button></form>`; }
+function payNoticeCard(){ const n=S.money.payNotice; if (!n || daysBetween(n.d,TODAY)>7) return '';
+  if (S.money.checks.some(c=>c.got && (c.gotOn||c.d)>=n.d)) return '';
+  return `<div class="card sec pn-card"><div class="tag">💸 Payment sent</div><b class="pn-t">ONE sent a payment ${nice(n.d)}</b><div class="sub">Lands in 1–2 business days. Your bank app shows it days before this app does — type the amount when you see it and the split appears right away.</div>${landForm()}${n.url?`<a class="sub" style="display:inline-block;margin-top:8px" href="${n.url}" target="_blank" rel="noopener">Open the email (breakdown attached) ›</a>`:''}</div>`; }
+function m221(){ const M=S.money; if (M.m221) return; M.m221=1;
+  try { const has=M.checks.some(c=>c.got && (c.gotOn||c.d)>='2026-10-15');
+    if (!has) landCheck(3940, '2026-10-19');
+    else { const c=M.checks.filter(c=>c.got).sort((a,b)=>(b.gotOn||b.d).localeCompare(a.gotOn||a.d))[0]; replanBiweekly(c, '2026-10-19', M.s.payAmt||c.amt); commit({skipXp:true}); } } catch(e){ console.warn('m221',e); } }
 
 let moneyTab = 'now';
 function setMoneyTab(t){ moneyTab=MONEY_ALIAS[t]||t; render(); }
@@ -8461,6 +8488,8 @@ function detectDeposits(txs, keyAcct){
   for (const x of deps){
     if (M.depTids[x.transaction_id]) continue; M.depTids[x.transaction_id]=1;
     const d=String(x.date).slice(0,10), amt=+x.amount; if(!/^\d{4}-\d{2}-\d{2}$/.test(d)) continue;
+    const mine=M.checks.find(c=>c.got && !c.verified && Math.abs(daysBetween(c.gotOn||c.d,d))<=6 && (Math.abs(c.amt-amt)<1 || c.byHand));
+    if (mine){ if (Math.abs(mine.amt-amt)>=1){ mine.amt=amt; const done=mine.done||{}; const sp=splitFor(mine); for (const k of Object.keys(done)) if (done[k]) sp[k]=mine.split?.[k]??sp[k]; mine.split=sp; } mine.verified=true; mine.note=(mine.note||'')+' · ✓ bank'; continue; }
     if (M.checks.some(c=>c.got && Math.abs(c.amt-amt)<1 && Math.abs(daysBetween(c.gotOn||c.d,d))<=5)) continue; // already logged
     const open=M.checks.filter(c=>!c.got), near=(a,b)=>Math.abs(daysBetween(a.d,d))-Math.abs(daysBetween(b.d,d));
     let hit=open.filter(c=>Math.abs(c.amt-amt)<=2 && Math.abs(daysBetween(c.d,d))<=60).sort(near)[0] || open.filter(c=>Math.abs(daysBetween(c.d,d))<=10).sort(near)[0];
