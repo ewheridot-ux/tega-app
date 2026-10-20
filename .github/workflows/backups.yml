@@ -1,0 +1,27 @@
+name: List database backups (dates only)
+on:
+  workflow_dispatch:
+  push: { branches: [main], paths: ['ci/run-backups'] }
+permissions: { contents: write }
+jobs:
+  b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - env:
+          TOK: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          REF=$(python3 -c "import json;print(json.load(open('config/public.json'))['supabaseProjectRef'])")
+          { echo "# backups $(date -u)"; curl -s -H "Authorization: Bearer $TOK" "https://api.supabase.com/v1/projects/$REF/database/backups" | python3 -c "
+          import json,sys
+          j=json.load(sys.stdin)
+          if isinstance(j,dict) and 'backups' in j:
+              print('pitr_enabled',j.get('pitr_enabled'),'walg',j.get('walg_enabled'),'region',j.get('region'))
+              for b in j['backups']: print(b.get('inserted_at'),b.get('status'),b.get('is_physical_backup'),b.get('id'))
+          else: print('response keys',list(j)[:5] if isinstance(j,dict) else type(j).__name__, str(j)[:200])
+          "; curl -s -H "Authorization: Bearer $TOK" "https://api.supabase.com/v1/organizations" | python3 -c "
+          import json,sys; j=json.load(sys.stdin); print('orgs',[o.get('plan') or o.get('billing',{}) for o in j] if isinstance(j,list) else str(j)[:120])"; } > ci/backups.md
+          cat ci/backups.md
+          git config user.name "tega-ci"; git config user.email "ci@users.noreply.github.com"
+          git add ci/backups.md; git commit -qm "ci: backups list [skip ci]" || true; git pull --rebase -q origin main || true; git push -q origin HEAD:main || true
