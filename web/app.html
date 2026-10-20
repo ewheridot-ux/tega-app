@@ -1592,7 +1592,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b221';
+const BUILD='b222';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -8292,7 +8292,7 @@ function lastLanded(){ return S.money.checks.filter(c=>c.got).sort((a,b)=>(b.got
 function nextCheckCard(P){ const nx=P.rows[0]; if (!nx) return `<div class="card sec"><div class="tag">Next check</div><div class="sub" style="margin-top:6px">Nothing expected. A new one appears here by itself when an agency deposit lands.</div></div>`;
   const dd=daysBetween(TODAY,nx.d), ll=lastLanded(), owe=(()=>{ try { return stmtNow().balance; } catch(e){ return 0; } })();
   const nn=P.rows[1], bills=Math.round(nx.bills||0), flex=Math.round(nx.flex||0), cd=cardDebt(), tb=taxBehind();
-  const rest=[cd>0.5?['💳','Credit cards',`${money0(cd)} left`]:null, tb>0.5?['📊','Tax catch-up',`${money0(tb)} behind`]:null, (+S.money.s.efNow||0)<efTarget()-.5?['🛡️','Emergency fund',`${money0(+S.money.s.efNow||0)} of ${money0(efTarget())}`]:null, ['🌱','Roth IRA','']].filter(Boolean);
+  const CL=cardList(), rest=[cd>0.5?['💳',CL[0]?CL[0].name:'Credit cards',CL.map(c=>`${c.name} ${money0(c.bal)}`).join(' → ')+' · smallest first']:null, tb>0.5?['📊','Tax catch-up',`${money0(tb)} behind`]:null, (+S.money.s.efNow||0)<efTarget()-.5?['🛡️','Emergency fund',`${money0(+S.money.s.efNow||0)} of ${money0(efTarget())}`]:null, ['🌱','Roth IRA','']].filter(Boolean);
   return `<div class="card sec nc-card">
     <div class="tag">Next check</div><b class="nc-when">${dd<0?'Any day now':dd===0?'Today':nice(nx.d)}</b><div class="sub">${dd<0?`was expected ${nice(nx.d)} · shows up here once the bank posts it`:dd===0?'expected today':`expected in ${dd} days`}</div>
     <div class="nc-amt">Amount: <b>unknown until it lands</b></div>
@@ -8338,6 +8338,12 @@ function m221(){ const M=S.money; if (M.m221) return; M.m221=1;
   try { const has=M.checks.some(c=>c.got && (c.gotOn||c.d)>='2026-10-15');
     if (!has) landCheck(3940, '2026-10-19');
     else { const c=M.checks.filter(c=>c.got).sort((a,b)=>(b.gotOn||b.d).localeCompare(a.gotOn||a.d))[0]; replanBiweekly(c, '2026-10-19', M.s.payAmt||c.amt); commit({skipXp:true}); } } catch(e){ console.warn('m221',e); } }
+
+/* b222: card money split per card — smallest balance first, each paid to $0 before the next */
+function cardAllocFor(total){ let left=+total||0; const out=[]; for (const c of cardList()){ if (left<0.5) break; const a=Math.min(left, c.bal); out.push([c.name, Math.round(a*100)/100, a>=c.bal-0.5, Math.round(c.bal*100)/100]); left-=a; } return out; }
+function cardAlloc(c){ const sp=c.split; if (!sp || !(sp.cards>0)) return []; if (!sp.cardAlloc) sp.cardAlloc=cardAllocFor(sp.cards); return sp.cardAlloc; }
+function tickCard(id,i){ const c=S.money.checks.find(c=>c.id===id); if(!c||!c.split) return; c.done ||= {}; const A=cardAlloc(c); c.done['card'+i]=!c.done['card'+i];
+  const all=A.every((_,j)=>c.done['card'+j]); if (all!==!!c.done.cards) tickMove(id,'cards'); else commit({skipXp:true}); }
 
 let moneyTab = 'now';
 function setMoneyTab(t){ moneyTab=MONEY_ALIAS[t]||t; render(); }
@@ -8447,7 +8453,7 @@ function wfTodo(){
   return list.map(c=>{ const sp=c.split, mv=MOVES.filter(([k])=>sp[k]>0), left=openMoves(c).length;
     return `<div class="card sec" style="background:linear-gradient(135deg,rgba(0,214,50,.14),transparent 70%),var(--card)"><div class="hdr" style="margin-bottom:6px"><h2>💵 ${money0(c.amt)} landed</h2><span class="sub">${nice(c.gotOn||c.d)}${c.verified?' · <span style="color:var(--good)">✓ bank</span>':''}</span></div>
       <div class="sub" style="margin-bottom:10px">${left} move${left===1?'':'s'} left · tick after each transfer</div>
-      <div class="stack">${mv.map(([k,l,f,ic])=>{ const on=!!(c.done||{})[k]; return `<div class="check ${on?'on':''}" onclick="tickMove('${c.id}','${k}')"><div class="box">${on?'✓':''}</div><div class="txt">${ic} ${k==='cards'?`Pay <b>${esc(cardList().map(c=>c.name).join(' → ')||'credit cards')}</b>`:`Move to <b>${k==='ret'?(sp.retLabel==='Roth'?'Roth IRA':'SEP IRA'):l}</b>`}</div><b class="num" style="white-space:nowrap">${money0(sp[k])}</b></div>`; }).join('')}
+      <div class="stack">${mv.map(([k,l,f,ic])=>{ const on=!!(c.done||{})[k]; if (k==='cards' && cardAlloc(c).length) return cardAlloc(c).map(([nm,amt,zero,bal],i)=>{ const o=!!(c.done||{})['card'+i]||on; return `<div class="check ${o?'on':''}" onclick="tickCard('${c.id}',${i})"><div class="box">${o?'✓':''}</div><div class="txt">💳 Pay <b>${esc(nm)}</b> <span class="sub">${zero?'· pays it off':`· ${money0(bal-amt)} left after`}</span></div><b class="num" style="white-space:nowrap">${money0(amt)}</b></div>`; }).join(''); return `<div class="check ${on?'on':''}" onclick="tickMove('${c.id}','${k}')"><div class="box">${on?'✓':''}</div><div class="txt">${ic} ${k==='cards'?`Pay <b>${esc(cardList().map(c=>c.name).join(' → ')||'credit cards')}</b>`:`Move to <b>${k==='ret'?(sp.retLabel==='Roth'?'Roth IRA':'SEP IRA'):l}</b>`}</div><b class="num" style="white-space:nowrap">${money0(sp[k])}</b></div>`; }).join('')}
         <div class="check" style="cursor:default;opacity:.8"><div class="box" style="border-style:dashed"></div><div class="txt" style="text-decoration:none">🏦 Stays in checking <span class="sub">· bills + spending</span></div><b class="num" style="white-space:nowrap">${money0(sp.stay)}</b></div></div>
       ${sp.draw>0?`<div class="help keep" style="margin-top:8px;color:var(--warn)">This check doesn't cover its share of bills — ${money0(sp.draw)} short.</div>`:''}
       <div class="row" style="margin-top:10px;justify-content:flex-end"><button class="btn ghost sm" onclick="dismissMoves('${c.id}')">Already handled</button></div></div>`; }).join('');
