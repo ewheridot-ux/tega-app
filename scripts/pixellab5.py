@@ -13,6 +13,7 @@ def post(path, body):
     for _ in range(20):
         r = requests.post(B + path, json=body, headers=H, timeout=300)
         if r.status_code == 429: time.sleep(10); continue
+        if r.status_code == 402: log('OUT OF CREDITS — add PixelLab credits and push ci/run-pixellab again'); raise SystemExit(0)
         if r.status_code >= 300: log('ERR', path, r.status_code, r.text[:600]); return None
         return r.json()
 def wait(jid):
@@ -39,6 +40,7 @@ for it in plan:
         r = post('/create-image-pixflux', body)
         if r: img(r['image']).save(out); log('image', it['id'], r.get('usage'))
     else:
+        if not os.path.exists(f"{D}/{it['from']}.png"): log('skip', it['id'], '(no base image yet)'); continue
         src = Image.open(f"{D}/{it['from']}.png").convert('RGBA')
         r = post('/animate-with-text-v3', {'first_frame': b64(src), 'action': it['action'], 'frame_count': it['frames'], 'no_background': it.get('nobg', True), 'enhance_prompt': it.get('enhance', True)})
         if not r: continue
