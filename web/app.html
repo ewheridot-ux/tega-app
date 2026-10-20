@@ -1719,7 +1719,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b234';
+const BUILD='b235';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -1870,7 +1870,7 @@ function seed(){
 const LS = 'okrquest-v2';
 let S;
 try { S = JSON.parse(localStorage.getItem(LS)) || null; } catch(e){ S = null; }
-if (!S || S.v !== 2) S = seed();
+if (!S || S.v !== 2) { S = seed(); window._seeded = true; } // this device started blank: the cloud copy outranks it no matter what the clocks say
 function cadArchive(st){ if (st.cadOff) return; st.cadOff=1; const A=((st.archive ||= {}).cad ||= {objectives:[], milestones:[], weekly:[], deadlines:[], quests:[]}), isC=x=>x&&x.track==='cad';
   for (const [q,Q] of Object.entries(st.quarters||{})){ if (!Q||!Q.objectives) continue; A.objectives.push(...Q.objectives.filter(isC).map(o=>({q,...o}))); Q.objectives=Q.objectives.filter(o=>!isC(o)); }
   if (st.vision&&st.vision.milestones){ A.milestones.push(...st.vision.milestones.filter(isC)); st.vision.milestones=st.vision.milestones.filter(m=>!isC(m)); }
@@ -1927,13 +1927,14 @@ async function initDb(){
     let pushLocal = false;
     if (snap.exists) {
       const r = thaw(snap.data()), rl = richness(S), rr = richness(r);
-      const cloudNewer = (r.updatedAt||0) > loadedAt;
-      const cloudHollow = rr === 0 && rl >= 3;      // cloud has NOTHING a person did, this device has real history → this device wins
-      const localHollow = rl === 0 && rr > 0;        // this device is blank (fresh storage) and the cloud has anything → cloud wins, whatever the timestamps say
+      const cloudNewer = (r.updatedAt||0) > loadedAt, dl=Object.keys(S.days||{}).length, dc=Object.keys(r.days||{}).length;
+      const cloudHollow = (rr === 0 && rl >= 3 && dc < 2) || (!window._seeded && dl >= 5 && dc < dl - 1);        // cloud has nothing a person did, or fewer lived days than this device → this device wins
+      const localHollow = window._seeded || (rl === 0 && rr > 0) || dc > dl + 1;   // this device started blank, or the cloud simply holds more lived days → cloud wins, whatever the timestamps say
+      if (localHollow && dc>=2 && (window._seeded || dc > dl + 1)) setTimeout(()=>toast(`☁️ Restored ${dc} days of history from the cloud`),800);
       if (localHollow || (cloudNewer && !cloudHollow)) { const edited = (S.updatedAt||0) > loadedAt; const keepSx = edited ? S.datum?.session : null; S = migrate(r); if (keepSx && !S.datum?.session && ensureDatum().prototypes.some(p=>p.id===keepSx.pid)) { ensureDatum().session = keepSx; S.updatedAt = Date.now(); dbPendingWrite = true; } lastProg = snapshotProgress(); saveLocal(); render(); if (edited && !keepSx) toast('Synced your data from the cloud — redo your last tap'); }
-      else if (cloudHollow || (r.updatedAt||0) < (S.updatedAt||0)) { pushLocal = true; if (cloudHollow) toast('Restored your history over a blank cloud copy'); }
-    } else if (S.updatedAt) pushLocal = true;
-    dbReady = true;
+      else if (cloudHollow || ((r.updatedAt||0) < (S.updatedAt||0) && dl >= dc - 1)) { pushLocal = true; if (cloudHollow) toast('Kept this phone\'s history over a thinner cloud copy'); }
+    } else if (S.updatedAt && !window._seeded) pushLocal = true;   // a brand-new blank device never writes first
+    dbReady = true; window._seeded = false;
     try { prefsRef = db.doc('okr/prefs'); const ps = await prefsRef.get(); if (ps.exists){ const pr = thaw(ps.data()); let changed=false; if (!S.dbLook && pr.dbLook){ S.dbLook = pr.dbLook; changed=true; } if (!Object.keys(S.evo||{}).length && pr.evo && Object.keys(pr.evo).length){ S.evo = pr.evo; changed=true; } if (changed){ saveLocal(); render(); toast('Restored your character from backup'); pushLocal = true; } } } catch(e){}
     if (pushLocal) { S.updatedAt = Math.max(S.updatedAt||0, Date.now()); saveLocal(); await dbRef.set(JSON.parse(JSON.stringify(S))); }
     else if (dbPendingWrite) { dbPendingWrite = false; scheduleDbWrite(); }
@@ -1943,7 +1944,7 @@ async function initDb(){
       if (!s.exists || s.metadata.hasPendingWrites) return;
       const r = thaw(s.data());
       if ((r.updatedAt||0) > (S.updatedAt||0)) {
-        if (richness(r) === 0 && richness(S) >= 3) { S.updatedAt = Date.now(); saveLocal(); scheduleDbWrite(); return; } // a blank copy from another device never wins
+        if ((richness(r) === 0 && richness(S) >= 3) || (Object.keys(S.days||{}).length >= 5 && Object.keys(r.days||{}).length < Object.keys(S.days||{}).length - 1)) { S.updatedAt = Date.now(); saveLocal(); scheduleDbWrite(); return; } // a blank or thinner copy from another device never wins
         S = migrate(r); _mVer++; try { deriveAll(); } catch(e){} lastProg = snapshotProgress(); saveLocal(); render(); toast('Synced from another device');
       }
     }, e => { dbStatus = 'error'; renderSync(); });
@@ -8930,6 +8931,16 @@ function moneyLinks(){ const B=cardBosses(), live=B.filter(b=>!b.dead), hp=live.
   const due=[...BILLS,...CARDS].filter(b=>{ const paid=billPaidThisCycle(b), d=billDueThisMonth(b.day); return !paid && d<=end; }).reduce((a,b)=>a+(+s[b.key]||0),0);
   return `<div class="ml-row sec"><button class="ml" onclick="go('bosses')"><span>⚔️</span><b>${live.length?money0(hp)+' HP':'cards slain'}</b><small>card bosses</small></button><button class="ml" onclick="setMoneyTab('accounts');setTimeout(()=>document.getElementById('billsAll')?.scrollIntoView({behavior:'smooth'}),60)"><span>🧾</span><b class="num">${money0(due)}</b><small>due in 14d</small></button><button class="ml" onclick="setMoneyTab('accounts');setTimeout(()=>document.getElementById('goalsAll')?.scrollIntoView({behavior:'smooth'}),60)"><span>🎯</span><b>Goals</b><small>EF · Fidelity</small></button></div>`; }
 
+/* b235: cloud history — the database keeps a copy of your state every ~2h for 30 days (and every overwrite it refused). Restore any of them. */
+let _hist=null, _histBusy=false;
+function cloudHist(){ if (!dbHandle || !dbHandle.history) return '';
+  if (_hist===null && !_histBusy){ _histBusy=true; dbHandle.history('okr/state').then(h=>{ _hist=Array.isArray(h)?h:[]; }).catch(()=>{ _hist=[]; }).finally(()=>{ _histBusy=false; render(); }); }
+  const H=(_hist||[]).filter(h=>h.days>0);
+  return `<details class="pc-edit" style="margin-bottom:10px"><summary>Cloud history · ${_hist===null?'…':H.length+' kept copies'}</summary><div class="sub" style="margin:6px 0 8px">A copy is kept every ~2 hours for 30 days. Pick one to put it back.</div>
+    ${H.length?`<div class="stack">${H.slice(0,30).map(h=>`<div class="row between" style="gap:8px;padding:6px 0;border-bottom:1px solid var(--line)"><span><b>${h.days} days</b>${h.lvl?` · Lv ${h.lvl}`:''} <span class="sub">· ${new Date(h.archived_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}${h.kind==='rejected'?' · blocked overwrite':h.kind==='restore-point'?' · before a restore':''}</span></span><button class="btn ghost sm" onclick="cloudRestore(${h.id},${h.days})">Restore</button></div>`).join('')}</div>`:_hist===null?'':'<div class="sub">Nothing kept yet — the first copy appears after your next change.</div>'}</details>`; }
+async function cloudRestore(id,days){ if (!dbHandle?.restore) return; if (window._restoreArm!==id){ window._restoreArm=id; toast(`Tap Restore again to put back the ${days}-day copy`); setTimeout(()=>{ if (window._restoreArm===id) window._restoreArm=null; },6000); return; } window._restoreArm=null;
+  try { await dbHandle.restore(id); const s=await dbHandle.doc('okr/state').get(); if (s.exists){ S=migrate(thaw(s.data())); avatarCache.clear(); lastProg=snapshotProgress(); saveLocal(); _hist=null; render(); toast(`☁️ Restored · ${Object.keys(S.days||{}).length} days back`); } } catch(e){ toast('Restore failed: '+String(e&&e.message||e).slice(0,80)); } }
+
 let moneyTab = 'now';
 function setMoneyTab(t){ moneyTab=MONEY_ALIAS[t]||t; render(); }
 const MONEY_ALIAS={waterfall:'now', income:'now', budget:'spending', tips:'spending', bills:'accounts', plan:'now', deduct:'taxes', overview:'now'};
@@ -9588,6 +9599,7 @@ function backupCard(){
   return `<div class="card sec"><div class="hdr"><h2>Backup</h2><span class="sub">${S.lastBackup?`file saved ${age===0?'today':nice(S.lastBackup)}`:'no file saved yet'}</span></div>
     <div class="help" style="margin-bottom:10px">Saves everything in the app to one file you keep. ${age===null||age>14?'<b style="color:var(--warn)">Worth doing now.</b> ':''}${S.lastSnap?`A cloud snapshot is also kept weekly — last one ${nice(S.lastSnap)}.`:'A cloud snapshot is also kept weekly.'}</div>
     ${restorePending?`<div style="padding:12px 14px;border-radius:var(--r2);background:var(--card2);margin-bottom:10px"><b>Replace everything with this backup?</b><div class="sub" style="margin:4px 0 10px">${Object.keys(restorePending.days||{}).length} days logged · last changed ${restorePending.updatedAt?new Date(restorePending.updatedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):'unknown'}. What's in the app now will be overwritten.</div><div class="row" style="gap:6px"><button class="btn danger sm" onclick="backupRestore(true)">Restore it</button><button class="btn ghost sm" onclick="backupRestore(false)">Cancel</button></div></div>`:''}
+    ${cloudHist()}
     <div class="row" style="gap:6px"><button class="btn sm" onclick="backupSave()">Save backup file</button><label class="btn ghost sm" style="cursor:pointer">Restore from file<input type="file" accept=".json,application/json" style="display:none" onchange="backupPick(this)"></label><button class="btn ghost sm" onclick="exportJson()">Copy</button></div></div>`;
 }
 

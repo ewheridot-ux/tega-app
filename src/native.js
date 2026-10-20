@@ -85,6 +85,7 @@ async function token() {
 
 async function api(method, path, body, headers = {}) {
   const t = await token();
+  if (!t && path.startsWith('/rest/')) { const e = new Error('not signed in'); e.status = 401; throw e; } // never read as nobody: an empty answer would look like 'no cloud data'
   const isRaw = body instanceof Blob || typeof body === 'string';
   const r = await fetch(URL0 + path, { method, headers: { apikey: CFG.anon, Authorization: 'Bearer ' + (t || CFG.anon), ...(isRaw ? {} : { 'Content-Type': 'application/json' }), ...headers }, body: body == null ? undefined : isRaw ? body : JSON.stringify(body) });
   if (!r.ok) { const e = new Error(await r.text()); e.status = r.status; throw e; }
@@ -156,10 +157,13 @@ function makeDb() {
     async delete() { const cur = await getDoc(path); if (cur) await putDoc('trash/' + path.replace(/\//g, '_') + '_' + Date.now(), cur.data); await api('DELETE', `/rest/v1/docs?path=eq.${enc(path)}`, null, { Prefer: 'return=minimal' }); },
     onSnapshot(cb, onErr) { return poller(async changed => { const row = await getDoc(path); if (changed(row && row.updated_at)) cb(snapOf(row)); }, 20000); },
   });
+  // kept copies of a document (the database archives one every ~2h and every rejected overwrite) — metadata only, bodies stay in the cloud
+  const history = async path => api('GET', `/rest/v1/docs_history_meta?path=eq.${enc(path)}&select=id,kind,archived_at,was_updated_at,days,lvl&order=archived_at.desc&limit=60`);
+  const restore = async id => api('POST', '/rest/v1/rpc/restore_doc', { hid: id });
   const collection = path => ({
     onSnapshot(cb, onErr) { return poller(async changed => { const rows = await api('GET', `/rest/v1/docs?path=like.${enc(path + '/*')}&select=path,data,updated_at`); if (changed(rows.map(r => r.path + r.updated_at))) cb({ docs: rows.map(snapOf) }); }, 30000); },
   });
-  return { doc, collection };
+  return { doc, collection, history, restore };
 }
 
 /* ---------------- assets ---------------- */
