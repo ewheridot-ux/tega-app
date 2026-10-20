@@ -1,2 +1,5 @@
 Exercise photos: free-exercise-db (github.com/yuhonas/free-exercise-db), public domain (Unlicense).
 Body map shapes: react-body-highlighter (github.com/giavinh79/react-body-highlighter), MIT License, Copyright (c) 2020 GV79.
+
+Stretch / warm-up / yoga frames (st_*, wu_*, y_*): free-exercise-db (yuhonas, Unlicense), resized to 480x320.
+Hand-drawn pose illustrations (no photo available): wu_jacks, st_abs, y_dog, y_sphinx, y_babyhappy, y_legsup, y_thread.

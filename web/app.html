@@ -1681,12 +1681,13 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 .g-blk-warm b{color:var(--warn)}.g-blk-cool b{color:#7cc8ff}.g-blk-main b{color:var(--good)}
 
 .yg-card.yg-now{border-color:#7c6cff;box-shadow:0 0 0 1px #7c6cff,0 0 24px rgba(124,108,255,.25)}
-.yg-poses{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;font-size:20px}
+
 .yg-ov{position:fixed;inset:0;z-index:9998;display:flex;flex-direction:column;background:radial-gradient(80% 60% at 50% 35%,#2a2152,#0b0916 75%);color:#efeaff;padding:calc(env(safe-area-inset-top,0px) + 12px) 20px calc(env(safe-area-inset-bottom,0px) + 18px)}
 .yg-top{display:flex;justify-content:space-between;align-items:center;font-size:13px;opacity:.8}.yg-top button{background:none;border:0;color:inherit;font-size:22px;padding:6px}
 .yg-pose{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px}
 .yg-ring{position:relative;width:200px;height:200px}.yg-ring svg{width:100%;height:100%;transform:rotate(-90deg)}.yg-bg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:6}.yg-fg{fill:none;stroke:#a99bff;stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
-.yg-ic{position:absolute;inset:0;display:grid;place-items:center;font-size:80px}
+.yg-ic{position:absolute;inset:0;display:grid;place-items:center;font-size:80px}.yg-ic img{width:150px;height:150px;border-radius:50%;object-fit:cover;object-position:center 70%;box-shadow:0 0 0 4px rgba(0,0,0,.35)}
+.yg-poses{display:flex;gap:6px;overflow-x:auto;padding:8px 0 2px;scrollbar-width:none}.yg-poses span{flex:0 0 auto;width:86px;text-align:center;font-size:26px}.yg-poses .y-ph{width:86px;height:58px;object-fit:cover;border-radius:8px;display:block}.yg-poses small{display:block;font-size:10px;opacity:.7;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .yg-pose h1{font-size:28px;margin:8px 0 0}.yg-pose h1 em{font-style:normal;font-size:16px;opacity:.7}.yg-t{font-size:40px;font-weight:800}.yg-pose p{max-width:320px;opacity:.85;line-height:1.45;margin:0}
 .yg-breath{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;opacity:.7}.yg-breath i{width:14px;height:14px;border-radius:50%;background:#a99bff;animation:ygBreath 10s ease-in-out infinite}
 @keyframes ygBreath{0%,100%{transform:scale(.6);opacity:.5}40%{transform:scale(1.6);opacity:1}}
@@ -1703,6 +1704,8 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 .cal12 i.y::after{content:'';position:absolute;right:2px;bottom:2px;width:4px;height:4px;border-radius:50%;background:#9b8cff}.cal12 i.t{outline:1.5px solid var(--fg)}
 .cal12-k{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:11.5px;color:var(--mut)}.cal12-k i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:2px;vertical-align:-1px;position:relative;background:var(--card2)}
 .cal12-k i.l1{background:color-mix(in srgb,var(--good) 30%,var(--card2))}.cal12-k i.l2{background:color-mix(in srgb,var(--good) 55%,var(--card2))}.cal12-k i.l3{background:color-mix(in srgb,var(--good) 80%,var(--card2))}.cal12-k i.l4{background:var(--good)}.cal12-k i.y::after{content:'';position:absolute;right:1px;bottom:1px;width:4px;height:4px;border-radius:50%;background:#9b8cff}
+.lo-rows{display:grid;gap:8px;margin-top:10px}.lo-r{display:grid;grid-template-columns:1fr auto auto;gap:2px 10px;align-items:baseline;font-size:14px}.lo-r .lo-n{font-size:12px;opacity:.75}.lo-r .lo-n small{opacity:.7}.lo-bar{grid-column:1/-1;height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}.lo-bar i{display:block;height:100%;border-radius:3px}
+.lo-sum{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}.lo-sum>div{flex:1 1 90px;min-width:0}.lo-sum small{display:block;font-size:11px;opacity:.7}.lo-sum b{font-size:20px;font-weight:800;letter-spacing:-.02em}.lo-sum em{display:block;font-style:normal;font-size:11px;opacity:.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lo-safe b{color:#b98cff}
 </style>
 
 <div class="app" id="app"></div>
@@ -1712,7 +1715,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b232';
+const BUILD='b233';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -6618,7 +6621,10 @@ function vGym(){ const g=G_();
   const tabs=[['workout','Workout'],['recovery','Recovery'],['log','Log'],['results','Results'],['plan','My Plan']];
   const seg=`<div class="fb-tabs sec" role="tablist">${tabs.map(([k,l])=>`<button role="tab" aria-selected="${gTab===k}" class="${gTab===k?'on':''}" onclick="gTab='${k}';render()">${l}</button>`).join('')}</div>`;
   return seg + (gTab==='recovery'?gRecoveryView():gTab==='log'?gLogView():gTab==='results'?gResultsView():gTab==='plan'?gSetupView():gWorkoutView()); }
-const GXIMG=new Set(["abductor", "arnold", "band_apart", "band_curl", "band_row", "bb_bench", "bb_curl", "bb_row", "bench_dip", "bicycle", "bike", "bridge", "bulgarian", "bw_squat", "c_lat_raise", "cable_crunch", "cable_curl", "cable_fly", "cable_row", "calf_bw", "calf_db", "calf_m", "cg_bench", "chinup", "cs_row", "db_bench", "db_curl", "db_fly", "db_rdl", "db_row", "db_sp", "db_thrust", "dead_bug", "deadlift", "diamond", "dips", "face_pull", "goblet", "hammer", "hip_thrust", "hlr", "incl_bb", "incl_curl", "incl_db", "inv_row", "kb_swing", "kickback", "lat_raise", "leg_curl", "leg_ext", "leg_press", "lunge", "m_chest", "m_sp", "oh_ext", "ohp", "pec_deck", "pike_pu", "plank", "pulldown", "pullup", "pushdown", "pushup", "rdl", "rear_fly", "rope", "russian", "sa_pulldown", "side_plank", "skull", "sl_rdl", "squat", "st_abs", "st_chest", "st_glute", "st_ham", "st_lat", "st_quad", "st_shoulder", "st_tri", "stairs", "step_up", "treadmill"]);
+const GXIMG=new Set(["abductor", "arnold", "band_apart", "band_curl", "band_row", "bb_bench", "bb_curl", "bb_row", "bench_dip", "bicycle", "bike", "bridge", "bulgarian", "bw_squat", "c_lat_raise", "cable_crunch", "cable_curl", "cable_fly", "cable_row", "calf_bw", "calf_db", "calf_m", "cg_bench", "chinup", "cs_row", "db_bench", "db_curl", "db_fly", "db_rdl", "db_row", "db_sp", "db_thrust", "dead_bug", "deadlift", "diamond", "dips", "face_pull", "goblet", "hammer", "hip_thrust", "hlr", "incl_bb", "incl_curl", "incl_db", "inv_row", "kb_swing", "kickback", "lat_raise", "leg_curl", "leg_ext", "leg_press", "lunge", "m_chest", "m_sp", "oh_ext", "ohp", "pec_deck", "pike_pu", "plank", "pulldown", "pullup", "pushdown", "pushup", "rdl", "rear_fly", "rope", "russian", "sa_pulldown", "side_plank", "skull", "sl_rdl", "squat", "st_abs", "st_chest", "st_glute", "st_ham", "st_lat", "st_quad", "st_shoulder", "st_tri", "stairs", "step_up", "treadmill", "st_bicep", "st_calf", "st_child", "st_hipflex", "st_neck", "st_pigeon", "wu_armcirc", "wu_bandpa", "wu_bwsquat", "wu_catcow", "wu_glutebr", "wu_inchworm", "wu_jacks", "wu_legswing", "wu_scappu", "wu_tspine", "wu_wgs", "wu_wristcirc"]);
+// yoga pose photos live at ex/y_<id>_0.webp (free-exercise-db + hand-drawn)
+const YIMG=new Set(["babyhappy","butterfly","catcow","chestopen","child","dog","figure4","fold","halfsplit","legsup","lowlunge","pigeon","savasana","sphinx","thread","twist"]);
+function yImg(id,f){ return YIMG.has(id)?`<img class="y-ph" src="ex/y_${id}_${f||0}.webp" alt="" loading="lazy" decoding="async" onerror="this.remove()">`:""; }
 function gImg(x,f){ return 'ex/'+x+'_'+(f||0)+'.webp'; }
 function gThumb(x){ const X=GX[x], m=X.p[0], ic=X.k==='cardio'?'🫀':isWarmX(x)?'🔥':X.k==='stretch'?'🧘':GEQI[X.eq.find(e=>e!=='bench'&&e!=='rack')||X.eq[0]]||'💪'; return `<span class="g-th${GXIMG.has(x)?' g-ph':''}" style="--c:${GMC[m]||'#8d8d8d'}">${ic}${GXIMG.has(x)?`<img src="${gImg(x)}" alt="" loading="lazy" decoding="async" onerror="this.remove()">`:''}</span>`; }
 function gSetsTxt(e){ const X=GX[e.x], w=e.sets.filter(z=>z.t!=='w'), z=w[0]||e.sets[0]; if (X.k==='cardio') return `${z.r} min`; if (X.k==='stretch'||X.k==='t') return `${w.length} × ${z.r}s${X.side?' each side':''}`;
@@ -8487,7 +8493,7 @@ function dueSoonCard(days=14){ const s=S.money.s, end=addDays(TODAY,days);
   return `<div class="card sec"><div class="hdr"><h2>Due next 2 weeks</h2><span class="sub num">${money0(tot)}</span></div>
     ${rows.length?`<div class="du-list">${rows.map(r=>{ const dd=daysBetween(TODAY,r.next); return `<div class="du-r"><span class="du-d ${r.late||dd<=3?'hot':''}"><b>${parseD(r.next).toLocaleDateString('en-US',{month:'short'})}</b>${parseD(r.next).getDate()}</span><span class="du-n"><b>${r.icon} ${esc(r.name.replace(/ minimum$/,' card'))}</b><small>${r.late?(r.auto?'not seen in the bank yet':'was due — pay it'):dd===0?'today':dd===1?'tomorrow':'in '+dd+' days'} · ${r.auto?'autopay':'pay by hand'}</small></span><b class="num">${money0(r.amt)}</b></div>`; }).join('')}</div>`:'<div class="sub">Nothing due in the next 2 weeks.</div>'}
     <button class="btn ghost sm" style="margin-top:10px;width:100%;justify-content:center" onclick="setMoneyTab('accounts');setTimeout(()=>document.getElementById('billsAll')?.scrollIntoView({behavior:'smooth'}),60)">All bills</button></div>`; }
-function vMoneyNow(){ if (!S.money.m221) setTimeout(()=>{ try { m221(); } catch(e){} }, 0); try { moneyQuest(); cardKills(); } catch(e){} const b=moneyBits(); return `${rankCard()}${freshLine()}${payNoticeCard()}${wfTodo()}${mqCard()}${nextCheckCard(b.P)}${coinChip()}${dueSoonCard()}${bossesCard()}${goalsCard(b)}`; }
+function vMoneyNow(){ if (!S.money.m221) setTimeout(()=>{ try { m221(); } catch(e){} }, 0); try { moneyQuest(); cardKills(); } catch(e){} const b=moneyBits(); return `${rankCard()}${freshLine()}${payNoticeCard()}${wfTodo()}${leftoverCard()}${mqCard()}${nextCheckCard(b.P)}${coinChip()}${dueSoonCard()}${bossesCard()}${goalsCard(b)}`; }
 function vMoneyAccounts(){ const b=moneyBits(); return `${netCard()}${incomeMini()}<div id="billsAll">${vBills()}</div>${checksCard(b.P)}${b.moreFold}`; }
 function checksCard(P){ const rows=P.rows; if(!rows.length) return '';
   return `<div class="card sec"><div class="hdr"><h2>Expected checks</h2><span class="sub">${rows.length} · dates only</span></div>
@@ -8809,7 +8815,7 @@ function yogaSecs(f){ return YFLOWS[f][2].reduce((a,id)=>a+YP[id].s*(YP[id].side
 function yogaCard(){ const f=yogaPick(), done=yogaDoneOn(TODAY), st=yogaStreak(), F=YFLOWS[f], night=new Date().getHours()>=19;
   return `<div class="card sec yg-card ${night&&!done?'yg-now':''}"><div class="row between"><span class="tag">🌙 Night stretch</span><span class="sub">${st?`🔥 ${st}-night streak`:'start a streak tonight'}</span></div>
     <h2 style="margin:6px 0 2px">${done?'Done tonight ✓':F[0]}</h2><div class="sub">${done?'Sleep well. Same time tomorrow.':`${Math.round(yogaSecs(f)/60)} min · ${F[2].length} poses${f==='hips'?' · picked because you trained legs today':''}`}</div>
-    <div class="yg-poses">${F[2].map(id=>`<span title="${esc(YP[id].n)}">${YP[id].ic}</span>`).join('')}</div>
+    <div class="yg-poses">${F[2].map(id=>`<span title="${esc(YP[id].n)}">${YIMG.has(id)?yImg(id):YP[id].ic}<small>${esc(YP[id].n)}</small></span>`).join('')}</div>
     <div class="row" style="gap:6px;margin-top:10px;flex-wrap:wrap"><button class="btn sm" onclick="yogaStart('${f}')">${done?'Again':'Start'} ›</button>${Object.keys(YFLOWS).filter(k=>k!==f).map(k=>`<button class="btn ghost sm" onclick="yogaStart('${k}')">${YFLOWS[k][0]}</button>`).join('')}</div></div>`; }
 // guided player: one pose at a time, countdown, auto-advance, both sides when needed
 let YG=null;
@@ -8823,7 +8829,7 @@ function yogaFinish(){ const st=yogaStreak()+(yogaDoneOn(TODAY)?0:1); yogaStop(t
 function yogaRender(){ if (!YG) return; let o=document.getElementById('yg-ov'); if (!o){ o=document.createElement('div'); o.id='yg-ov'; o.className='yg-ov'; document.body.appendChild(o); }
   const s=YG.steps[YG.i], p=YP[s.id], nx=YG.steps[YG.i+1], pct=1-YG.left/p.s, R=54, C=2*Math.PI*R;
   o.innerHTML=`<div class="yg-top"><button onclick="yogaStop(${YG.i>2})">✕</button><span>${YFLOWS[YG.f][0]} · ${YG.i+1}/${YG.steps.length}</span><span></span></div>
-    <div class="yg-pose"><div class="yg-ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="${R}" class="yg-bg"/><circle cx="60" cy="60" r="${R}" class="yg-fg" style="stroke-dasharray:${C};stroke-dashoffset:${C*(1-pct)}"/></svg><span class="yg-ic">${p.ic}</span></div>
+    <div class="yg-pose"><div class="yg-ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="${R}" class="yg-bg"/><circle cx="60" cy="60" r="${R}" class="yg-fg" style="stroke-dasharray:${C};stroke-dashoffset:${C*(1-pct)}"/></svg><span class="yg-ic">${YIMG.has(s.id)?`<img src="ex/y_${s.id}_0.webp" alt="" onerror="this.replaceWith(document.createTextNode('${p.ic}'))">`:p.ic}</span></div>
       <h1>${esc(p.n)}${s.side?` <em>${s.side}</em>`:''}</h1><b class="yg-t num">${Math.floor(YG.left/60)}:${String(YG.left%60).padStart(2,'0')}</b><p>${esc(p.cue)}</p>
       <div class="yg-breath"><i></i><span>breathe with the circle</span></div></div>
     <div class="yg-next">${nx?`Next: ${YP[nx.id].ic} ${esc(YP[nx.id].n)}${nx.side?' · '+nx.side:''}`:'Last one — stay as long as you want'}</div>
@@ -8871,6 +8877,31 @@ function gCalCard(){ const g=G_(), wk=[...Array(12)].map((_,i)=>weekShift(isoWee
   return `<div class="card sec"><div class="hdr"><h2>Consistency</h2><span class="sub">12 weeks · ${n} workouts · ${ny} yoga nights</span></div>
     <div class="cal12">${['M','T','W','T','F','S','S'].map(x=>`<small>${x}</small>`).join('')}${[0,1,2,3,4,5,6].map(dw=>wk.map(w=>{ const k=weekDays(w)[dw], fut=k>TODAY; return `<i class="l${fut?'x':lvl(k)}${Y.has(k)?' y':''}${k===TODAY?' t':''}" title="${nice(k)}"></i>`; }).join('')).join('')}</div>
     <div class="cal12-k"><span><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i> workout volume</span><span><i class="l0 y"></i> night yoga</span></div></div>`; }
+
+/* b233: leftover from the current check (bills + groceries + spending that didn't get spent) → extra onto the cards */
+function curCheck(){ return S.money.checks.filter(c=>c.got&&c.split&&(c.gotOn||c.d)<=TODAY).sort((a,b)=>(b.gotOn||b.d).localeCompare(a.gotOn||a.d))[0]||null; }
+function billsStillDue(nd){ const s=S.money.s; let t=0; const names=[]; for (const b of [...BILLS,...CARDS]){ const amt=+s[b.key]||0; if (!amt||!b.day) continue; const paid=billPaidThisCycle(b), due=billDueThisMonth(b.day); const next=paid?billNext(b.day,addDays(due,1)):due; if (next<=nd){ t+=amt; names.push(b.name); } } return {amt:t,names}; }
+function sweepsFor(id){ return (S.money.sweeps||[]).filter(x=>x.chk===id); }
+function leftover(){ const c=curCheck(); if (!c) return null; const s=S.money.s, g=c.gotOn||c.d, nd=S.money.checks.filter(x=>!x.got&&x.d>g).map(x=>x.d).sort()[0]||addDays(g,14);
+  const days=Math.max(1,daysBetween(g,nd)), dLeft=Math.max(0,daysBetween(TODAY,nd)), BF=billsFor(g,nd), grocPlan=(+s.grocW||0)*days/7, billsPlan=Math.max(0,BF.amt-grocPlan), flexPlan=Math.max(0,(c.split.stay||0)-BF.amt);
+  const T=(S.money.budget?.txns||[]).filter(t=>t.d>=g&&t.d<nd&&t.amt<0), sum=f=>T.filter(f).reduce((a,t)=>a-t.amt,0);
+  const bills=sum(t=>t.cat==='fixed'), groc=sum(isGrocTx), spend=sum(isSpendTx), swept=sweepsFor(c.id).reduce((a,x)=>a+x.amt,0);
+  const due=billsStillDue(nd), grocLeftNeed=Math.max(0,Math.min(grocPlan-groc,(+s.grocW||0)*dLeft/7)), spendLeftNeed=Math.max(0,Math.min(flexPlan-spend,flexPlan*dLeft/days)), plan=billsPlan+grocPlan+flexPlan, spent=bills+groc+spend;
+  const left=plan-spent-swept, safe=Math.max(0,left-due.amt-grocLeftNeed-spendLeftNeed);
+  return {c,g,nd,dLeft,rows:[['🏠','Bills',billsPlan,bills],['🛒','Groceries',grocPlan,groc],['🛍️','Spending',flexPlan,spend]],plan,spent,swept,left,safe,due,grocLeftNeed,spendLeftNeed,through:bankThrough()}; }
+function sweepToCards(){ const L=leftover(); if (!L||L.safe<1) return; const amt=Math.floor(L.safe), alloc=cardAllocFor(amt); if (!alloc.length) return toast('No card balance to pay down');
+  (S.money.sweeps ||= []).push({id:'sw'+Date.now(), d:TODAY, chk:L.c.id, amt, alloc, done:{}}); commit({skipXp:true}); toast(`💳 ${money0(amt)} queued for ${alloc.map(a=>a[0]).join(' + ')} · tick each transfer`); }
+function tickSweep(id,i){ const w=(S.money.sweeps||[]).find(x=>x.id===id); if (!w) return; w.done ||= {}; w.done[i]=!w.done[i]; const a=w.alloc[i][1], s=S.money.s; s.cardsPaid=Math.max(0,r2((+s.cardsPaid||0)+(w.done[i]?1:-1)*a));
+  if (w.done[i]){ _bossHit.card=a; toast(`💥 Extra ${money0(a)} hit on ${w.alloc[i][0]}`); if (w.alloc.every((_,j)=>w.done[j])) setTimeout(confetti,150); } commit({skipXp:true}); }
+function undoSweep(id){ S.money.sweeps=(S.money.sweeps||[]).filter(x=>x.id!==id); commit({skipXp:true}); }
+function leftoverCard(){ const L=leftover(); if (!L) return ''; const pend=sweepsFor(L.c.id);
+  const bar=(plan,sp)=>{ const p=plan>0?Math.min(1,sp/plan):(sp>0?1:0), over=sp>plan+0.5; return `<div class="lo-bar"><i style="width:${Math.round(p*100)}%;background:${over?'var(--bad)':'var(--good)'}"></i></div>`; };
+  return `<div class="card sec lo-card"><div class="row between"><span class="tag">🧮 Left from this check</span><span class="sub">${L.dLeft?`${L.dLeft}d until next check`:'period over'}${L.through?` · bank through ${nice(L.through)}`:''}</span></div>
+    <div class="lo-rows">${L.rows.map(([ic,l,plan,sp])=>{ const r=plan-sp; return `<div class="lo-r"><span class="lo-l">${ic} ${l}</span><span class="lo-n num">${money0(sp)} <small>of ${money0(plan)}</small></span><b class="num" style="color:${r<-0.5?'var(--bad)':'var(--good)'}">${r<-0.5?'−':''}${money0(Math.abs(r))}</b>${bar(plan,sp)}</div>`; }).join('')}</div>
+    <div class="lo-sum"><div><small>Unspent so far</small><b class="num">${L.left<-0.5?'−':''}${money0(Math.abs(L.left))}</b></div>${L.due.amt+L.grocLeftNeed+L.spendLeftNeed>0.5?`<div><small>Still needed</small><b class="num">${money0(L.due.amt+L.grocLeftNeed+L.spendLeftNeed)}</b><em>${[L.due.names.length?L.due.names.join(', '):'',L.grocLeftNeed+L.spendLeftNeed>0.5?`${L.dLeft}d groceries + spending`:''].filter(Boolean).join(' + ')}</em></div>`:''}<div class="lo-safe"><small>Safe to send to cards</small><b class="num">${money0(L.safe)}</b></div></div>
+    ${L.safe>=1?`<button class="btn" style="width:100%;margin-top:10px" onclick="sweepToCards()">💳 Send ${money0(Math.floor(L.safe))} to ${cardAllocFor(Math.floor(L.safe)).map(a=>a[0]).join(' + ')||'cards'} ›</button>`:L.swept>0&&L.safe<1?'':`<div class="help keep" style="margin-top:8px">Nothing extra yet — come back after the bills clear, or when spending comes in under plan.</div>`}
+    ${pend.length?`<div class="stack" style="margin-top:10px">${pend.map(w=>w.alloc.map(([nm,amt,zero],i)=>{ const on=!!(w.done||{})[i]; return `<div class="check ${on?'on':''}" onclick="tickSweep('${w.id}',${i})"><div class="box">${on?'✓':''}</div><div class="txt">💳 Extra to <b>${esc(nm)}</b> <span class="sub">· ${nice(w.d)}${zero?' · pays it off':''}</span></div><b class="num" style="white-space:nowrap">${money0(amt)}</b></div>`; }).join('')).join('')}<div class="row" style="justify-content:flex-end"><button class="btn ghost sm" onclick="undoSweep('${pend[pend.length-1].id}')">Undo last</button></div></div>`:''}
+    <div class="help keep" style="margin-top:8px">Bills, groceries and spending money for this check, minus what the bank shows spent. The leftover goes to the smallest card first.</div></div>`; }
 
 let moneyTab = 'now';
 function setMoneyTab(t){ moneyTab=MONEY_ALIAS[t]||t; render(); }
