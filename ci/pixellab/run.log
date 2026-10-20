@@ -1,6 +1,17 @@
-balance {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":7.75,"total":40.0}}
-image warden {'type': 'generations', 'generations': 1.0}
-no frames warden_idle
-anim warden_hit 7 frames 96 96
-no frames warden_dead
-balance after {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":3.3999999999999986,"total":40.0}}
+balance {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"trial","plan":null,"generations":1.3999999999999986,"total":40.0}}
+image golem {'type': 'generations', 'generations': 1.0}
+ERR /create-image-pixflux 402 {"detail":"Insufficient generations and credits. Generations: 39.6/40.0, Credits: 0.0"}
+ERR /create-image-pixflux 402 {"detail":"Insufficient generations and credits. Generations: 39.6/40.0, Credits: 0.0"}
+ERR /create-image-pixflux 402 {"detail":"Insufficient generations and credits. Generations: 39.6/40.0, Credits: 0.0"}
+ERR /create-image-pixflux 402 {"detail":"Insufficient generations and credits. Generations: 39.6/40.0, Credits: 0.0"}
+ERR /create-image-pixflux 402 {"detail":"Insufficient generations and credits. Generations: 39.6/40.0, Credits: 0.0"}
+FAILED {"usage": {"type": "usd", "usd": 0.0}, "id": "b9a89007-6bba-4fa1-a17a-e0903aac2945", "status": "failed", "created_at": "2026-10-20T02:54:22.981509+00:00", "last_response": {"type": "error", "error": "Insufficient generations and credits. Generations: 39.65/40.0, Credits: 0.0", "detail": "Insufficient generations and credits. Generations: 39.65/40.0, Credits: 0.0", "status": "failed", "flow_kind": "animation", "status_code": 402}}
+no frames golem_idle
+Traceback (most recent call last):
+  File "/home/runner/work/tega-app/tega-app/scripts/pixellab5.py", line 42, in <module>
+    src = Image.open(f"{D}/{it['from']}.png").convert('RGBA')
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/.local/lib/python3.12/site-packages/PIL/Image.py", line 3654, in open
+    fp = builtins.open(filename, "rb")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'sprites/algo.png'
