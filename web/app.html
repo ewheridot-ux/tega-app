@@ -1679,6 +1679,21 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 
 .g-blk{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;margin:14px 2px 6px;padding-top:4px;min-width:0;max-width:100%}.g-blk small{min-width:0}.g-blk b{font-size:13px;letter-spacing:.06em;text-transform:uppercase}.g-blk small{color:var(--mut);font-size:11.5px}
 .g-blk-warm b{color:var(--warn)}.g-blk-cool b{color:#7cc8ff}.g-blk-main b{color:var(--good)}
+
+.yg-card.yg-now{border-color:#7c6cff;box-shadow:0 0 0 1px #7c6cff,0 0 24px rgba(124,108,255,.25)}
+.yg-poses{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;font-size:20px}
+.yg-ov{position:fixed;inset:0;z-index:9998;display:flex;flex-direction:column;background:radial-gradient(80% 60% at 50% 35%,#2a2152,#0b0916 75%);color:#efeaff;padding:calc(env(safe-area-inset-top,0px) + 12px) 20px calc(env(safe-area-inset-bottom,0px) + 18px)}
+.yg-top{display:flex;justify-content:space-between;align-items:center;font-size:13px;opacity:.8}.yg-top button{background:none;border:0;color:inherit;font-size:22px;padding:6px}
+.yg-pose{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px}
+.yg-ring{position:relative;width:200px;height:200px}.yg-ring svg{width:100%;height:100%;transform:rotate(-90deg)}.yg-bg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:6}.yg-fg{fill:none;stroke:#a99bff;stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.yg-ic{position:absolute;inset:0;display:grid;place-items:center;font-size:80px}
+.yg-pose h1{font-size:28px;margin:8px 0 0}.yg-pose h1 em{font-style:normal;font-size:16px;opacity:.7}.yg-t{font-size:40px;font-weight:800}.yg-pose p{max-width:320px;opacity:.85;line-height:1.45;margin:0}
+.yg-breath{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;opacity:.7}.yg-breath i{width:14px;height:14px;border-radius:50%;background:#a99bff;animation:ygBreath 10s ease-in-out infinite}
+@keyframes ygBreath{0%,100%{transform:scale(.6);opacity:.5}40%{transform:scale(1.6);opacity:1}}
+.yg-next{text-align:center;font-size:13px;opacity:.75;margin-bottom:12px}
+.yg-ctl{display:flex;justify-content:center;gap:22px}.yg-ctl button{width:56px;height:56px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#fff;font-size:20px}.yg-ctl .yg-pp{width:72px;height:72px;background:#a99bff;color:#160f33;font-size:26px}
+.vs-bar{position:relative}.vs-zone{position:absolute;top:0;bottom:0;background:rgba(80,200,120,.15)}
+.dg-card{border-color:color-mix(in srgb,#9b5cff 50%,var(--line))}.dg-card.clear{border-color:var(--good)}
 </style>
 
 <div class="app" id="app"></div>
@@ -1688,7 +1703,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b229';
+const BUILD='b230';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2020,6 +2035,7 @@ function computeXP0(){
   xp += gymXP();
   xp += moneyXP();
   xp += bossXP();
+  try { xp += yogaXP() + dungeonXP(); } catch(e){}
   return xp;
 }
 function questXP(){
@@ -6524,6 +6540,7 @@ function gRand(seed){ let a=0; for (const c of seed) a=(a*31+c.charCodeAt(0))|0;
 function gDayType(){ const g=G_(); const sp=GSPLIT[g.setup.split]||GSPLIT.full; return sp.days[g.splitIdx % sp.days.length]; }
 function gGenerate(seed, mode, muscles, mins){ const g=G_(), su=g.setup, R=gFatigue(), pri={...(GPRI[su.goal]||GPRI.lean)}, rnd=gRand(seed), vary=GVAR[su.vary]||.9;
   for (const f of su.focus||[]) for (const m of GFOCUS[f]||[]) pri[m]=(pri[m]||1)*1.3;
+  try { const D=aDungeon(); if (!D.clear) D.ms.forEach((m,i)=>{ if (D.prog[i]<D.need) pri[m]=(pri[m]||1)*1.35; }); } catch(e){}
   const allow = new Set(muscles && muscles.length ? muscles : (GDAY[mode]||GDAY.recovered)[1]);
   const N={15:2,30:4,45:5,60:6,75:7,90:8}[mins||su.mins]||5, score={};
   for (const m in GMUS) score[m]= !allow.has(m) ? 0 : (R[m].pct<60 && mode==='recovered' && !(muscles&&muscles.length)) ? 0 : pri[m]*(Math.max(R[m].pct,25)/100)**1.5*(1+(rnd()-.5)*.2*vary);
@@ -6616,6 +6633,7 @@ function gWorkoutView(){ const g=G_(), P=gPlan(), R=gFatigue(), su=g.setup, wc=g
     <div class="fb-meta">${P.ex.length} exercises · ${sets} sets · ~${est} min</div>
     <div class="fb-pills"><button onclick="gModsSheet()">⏱ ${mins} min</button><button onclick="gModsSheet()">${GEQI.db} Equipment</button><button onclick="gMuscleSheet()">🎯 Target muscles</button><button onclick="gSwapMenu()">⇄ Swap</button></div>
     ${aSysCard()}
+    ${dungeonCard()}${yogaCard()}
     <div class="fb-sec"><span>Muscle recovery</span><button onclick="gTab='recovery';render()">See all ›</button></div>
     <button class="fb-body" onclick="gTab='recovery';render()" aria-label="Muscle recovery map">${gBodyMap(R,mus)}</button><div class="fb-mus">${allM.slice(0,10).map(m=>`<button class="${mus.includes(m)?'on':''}" style="--c:${gRecCol(R[m].pct)};--p:${R[m].pct}" onclick="gMuscleSheet()"><i></i><b class="num">${R[m].pct}%</b><small>${GMUS[m]}</small></button>`).join('')}</div>
     <div class="fb-sec"><span>Exercises</span><button onclick="gAddSheet('plan')" aria-label="Add exercise">＋</button></div>
@@ -6723,6 +6741,7 @@ function gResultsView(){ const g=G_(), P={week:7,month:30,'6mo':182,year:365}[gP
     <div class="g-rep"><div><span>Workouts</span><b class="num">${A.n}</b>${d(A.n,B.n)}</div><div><span>Weight lifted</span><b class="num">${Math.round(gShowW(A.vol)).toLocaleString()}</b><small>${gU()}</small>${d(A.vol,B.vol)}</div><div><span>Calories</span><b class="num">${A.cal.toLocaleString()}</b>${d(A.cal,B.cal)}</div><div><span>Time</span><b class="num">${Math.round(A.min)}</b><small>min</small>${d(A.min,B.min)}</div></div></div>
   <div class="card sec"><div class="hdr"><h2>Benchmark lifts</h2><span class="sub">estimated 1-rep max</span></div><div class="g-opts" style="margin-bottom:8px">${BENCH.map(([k,l])=>`<button class="${gResX===k?'on':''}" onclick="gResX='${k}';render()">${l}</button>`).join('')}</div>
     ${bh.length>1?gChart(bh, v=>gShowW(v)+' '+gU()):`<div class="help keep">${bh.length?`${esc(GX[bx].n)}: ${gShowW(bh[0])} ${gU()} est. max. One more session and the trend shows here.`:'Do one of these lifts to start tracking it.'}</div>`}</div>
+  ${gVolumeCard()}${gBodyCard()}
   <div class="card sec"><div class="hdr"><h2>Muscle strength</h2><span class="sub">last 6 weeks</span></div><div class="stack" style="gap:8px">${Object.keys(GMUS).sort((a,b)=>ms[b]-ms[a]).map(m=>`<div class="g-rr"><span>${GMUS[m]}</span><div class="g-bar"><i style="width:${ms[m]/mx*100}%;background:${GMC[m]}"></i></div><b class="num">${ms[m]?`<em class="a-ml" style="color:${ARCOL[aMRank(ms[m])]}">${aMRank(ms[m])}</em> `:''}${ms[m]||'—'}</b><small>${ms[m]&&ms30[m]?(ms[m]>ms30[m]?'▲':ms[m]<ms30[m]?'▼':'＝'):''}</small></div>`).join('')}</div></div>
   <div class="card sec"><div class="hdr"><h2>Weekly volume</h2><span class="sub">${gU()} lifted</span></div><div class="g-vbars">${wv.map((v,i)=>`<div><i style="height:${Math.max(2,v/wmx*100)}%"></i><small>${i===7?'now':'-'+(7-i)}</small></div>`).join('')}</div></div>
   ${prs.length?`<div class="card sec"><div class="hdr"><h2>Recent records</h2></div><div class="stack" style="gap:6px">${prs.map(p=>{ const b=gBest(p.x); return `<button class="g-rec" onclick="gExInfo('${p.x}')"><span>🏆 ${esc(GX[p.x]?.n)}</span><b class="num">${b.w?gShowW(b.w)+'×'+b.r:b.r+' reps'}</b><small>${nice(p.d)}</small></button>`; }).join('')}</div></div>`:''}`; }
@@ -6803,11 +6822,11 @@ function gExInfo(x){ const X=GX[x]; if(!X) return; const H=gHist(x), b=gBest(x),
     ${G_().notes[x]?`<div class="g-sh-sec">Your notes</div><div class="help keep">${esc(G_().notes[x])}</div>`:''}
     <div class="g-menu" style="margin-top:6px"><button onclick="gPref('${x}',1)">👍 Recommend more</button><button onclick="gPref('${x}',-1)">👎 Recommend less</button><button onclick="G_().excl['${x}']=true;G_().plan=null;gSheetClose();commit({skipXp:true});toast('Excluded · undo in My Plan')">🚫 Exclude</button></div>`); }
 function gAlts(x, inUse, sort){ const m=GX[x].p[0]||null, k=GX[x].k; let L=Object.keys(GX).filter(y=>y!==x&&!inUse.includes(y)&&gHas(y)&&!G_().excl[y]&&!gInjured(y)&&(m?GX[y].p.includes(m):GX[y].k===k));
-  const cnt=y=>gHist(y).length; if (sort==='logged') L.sort((a,b)=>cnt(b)-cnt(a)); else if (sort==='new') L=L.filter(y=>!cnt(y)); else L.sort((a,b)=>((GX[b].p[0]===m)-(GX[a].p[0]===m))||((GX[b].k===k)-(GX[a].k===k))); return L; }
+  const cnt=y=>gHist(y).length; if (sort==='logged') L.sort((a,b)=>cnt(b)-cnt(a)); else if (sort==='new') L=L.filter(y=>!cnt(y)); else { const g=G_(), sc=y=>(GX[y].p[0]===m?4:0)+(GX[y].k===k?2:0)+(g.pref[y]||0)*3+Math.min(3,cnt(y))*.5; L.sort((a,b)=>sc(b)-sc(a)); } return L; }
 let gAltSort='best';
 function gSwapSheet(where,i){ const L=where==='plan'?gPlan().ex:G_().live.ex, cur=L[i].x, alts=gAlts(cur, L.map(e=>e.x), gAltSort);
   gSheet(`<span class="tag">Replace</span><h2 class="g-sh-t">${esc(GX[cur].n)}</h2><div class="g-opts">${[['best','Best match'],['logged','Most logged'],['new','Never logged']].map(([k,l])=>`<button class="${gAltSort===k?'on':''}" onclick="gAltSort='${k}';gSwapSheet('${where}',${i})">${l}</button>`).join('')}</div>
-    <div class="stack" style="gap:6px">${alts.length?alts.map(y=>`<button class="pp-row g-alt" onclick="gSwap('${where}',${i},'${y}')">${gThumb(y)}<span><b>${esc(GX[y].n)}</b><small>${GX[y].eq.map(e=>GEQ[e]).join(' + ')}${gHist(y).length?` · logged ${gHist(y).length}×`:''}</small></span></button>`).join(''):'<div class="empty">Nothing else fits your equipment.</div>'}</div>`); }
+    <div class="stack" style="gap:6px">${alts.length?alts.map(y=>`<button class="pp-row g-alt" onclick="gSwap('${where}',${i},'${y}')">${gThumb(y)}<span><b>${(G_().pref[y]||0)>0?'♥ ':''}${esc(GX[y].n)}</b><small>${GX[y].eq.map(e=>GEQ[e]).join(' + ')}${gHist(y).length?` · logged ${gHist(y).length}×`:''}</small></span></button>`).join(''):'<div class="empty">Nothing else fits your equipment.</div>'}</div>`); }
 function gSwap(where,i,y){ const L=where==='plan'?gPlan().ex:G_().live.ex; L[i]={x:y, sets:gSuggest(y), grp:L[i].grp}; if (where==='live') L[i].sets.forEach(z=>z.ok=false); gSheetClose(); if (where==='live'){ gSaveLive(); gLiveRender(); } else commit({skipXp:true}); }
 let gAddQ='', gAddCat='muscle';
 function gAddSheet(where){ const L=where==='plan'?gPlan().ex:G_().live.ex, inUse=L.map(e=>e.x), q=gAddQ.toLowerCase();
@@ -7066,6 +7085,7 @@ window.tegaReminders = function(){ const out=[]; prepUpcoming(14).forEach((e,i)=
   try { (S.money.checks||[]).filter(c=>c.got && (c.gotOn||c.d)>=addDays(TODAY,-3)).forEach((c,i)=>{ let mv=[]; try { mv=openMoves(c); } catch(e){} if (!mv.length) return; const tax=Math.round(c.amt*.322); add(5200+i,`💵 ${money0(c.amt)} landed — split it`,`Move ${money0(tax)} to the Tax Buffer, then tick it off`,new Date(Math.max(now.getTime()+60e3, mk(TODAY,12).getTime()))); }); } catch(e){}
   try { for (let i=0;i<7;i++){ const k=addDays(TODAY,i), dw=parseD(k).getDay(); if ((dw===2||dw===5) && !(S.logs||[]).some(l=>l.kind==='post'&&l.d===k)) add(5300+i,'📱 Post day','Tuesday and Friday are post days — one clip is enough',mk(k,12)); } } catch(e){}
   try { const su=(S.gym||{}).setup||{}, n=su.days||3, wc=gWeekCount(), dow=(parseD(TODAY).getDay()+6)%7, need=n-wc, left=7-dow; if (need>0 && !(S.gym.sessions||[]).some(x=>x.d===TODAY)) add(5400,'💪 Gym today?',`${wc}/${n} this week · ${left} day${left===1?'':'s'} left`,mk(TODAY,17,30)); } catch(e){}
+  try { for (let i=0;i<3;i++){ const k=addDays(TODAY,i); if (!yogaDoneOn(k)) add(5500+i,'🌙 Night stretch',`${Math.round(yogaSecs('wind')/60)} min of yoga before bed${yogaStreak()?` · keep the ${yogaStreak()}-night streak`:''}`,mk(k,21,30)); } } catch(e){}
   try { const d=S.days[TODAY]||{}, done=Object.values(d.habits||{}).filter(Boolean).length; if (done<3) add(5500,'🌙 Habits check',`${done}/${S.habits.length} done today — a quick one still counts`,mk(TODAY,20,30)); } catch(e){}
   try { const L=(S.gym||{}).live; if (L) add(5600,'💪 Workout still open',`Started ${new Date(L.t0).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})} — finish or discard it`,new Date(Math.max(L.t0+2*3600e3, now.getTime()+60e3))); } catch(e){}
   for (const r of out){ const id=r.id; r.go = id<5100?'model':id<5200?'money/bills':id<5300?'money/waterfall':id<5400?'content':id<5500?'gym':id<5600?'today':'gym'; r.act = id>=5300&&id<5400?'post':id>=5500&&id<5600?'today':''; }
@@ -7270,10 +7290,11 @@ function aStats(){ const g=G_(), su=g.setup, since=addDays(TODAY,-27), L=g.sessi
   const sc=gScore(), days=new Set(L.map(s=>s.d)).size, cons=Math.min(1,days/Math.max(1,(su.days||3)*4));
   const hard=L.reduce((a,s)=>a+s.ex.reduce((b,e)=>b+(gLift(e.x)?e.sets.filter(z=>z.t!=='w').length:0),0),0)/4;
   const mob=L.reduce((a,s)=>a+s.ex.reduce((b,e)=>{ const k=GX[e.x]?.k; return b+(k==='cardio'?e.sets.reduce((c,z)=>c+(+z.r||0),0):k==='stretch'?e.sets.reduce((c,z)=>c+(+z.r||0),0)/60:0); },0),0);
+  const ym=(S.yoga?.log||[]).filter(x=>x.d>=since).reduce((a,x)=>a+(+x.mins||0),0);
   const R=Object.values(gFatigue()).map(x=>x.pct), rec=R.length?R.reduce((a,b)=>a+b,0)/R.length:100;
   const sl=[...Array(7)].map((_,i)=>S.days[addDays(TODAY,-i)]?.checkin?.sleep).filter(v=>v!=null), slp=sl.length?sl.reduce((a,b)=>a+b,0)/sl.length/4:.6;
-  return { STR:Math.min(99,Math.round(sc/12)), VIT:Math.min(99,Math.round(60*cons+40*Math.min(1,hard/Math.max(1,(su.days||3)*15)))), AGI:Math.min(99,Math.round(mob/1.6)), REC:Math.min(99,Math.round(rec*.7+slp*100*.3)), sc, rank:aRank(sc) }; }
-const ASTAT=[['STR','Strength','strength score'],['VIT','Vitality','showing up + weekly sets'],['AGI','Agility','cardio + stretch minutes, last 4 weeks'],['REC','Recovery','muscle recovery + your sleep']];
+  return { STR:Math.min(99,Math.round(sc/12)), VIT:Math.min(99,Math.round(60*cons+40*Math.min(1,hard/Math.max(1,(su.days||3)*15)))), AGI:Math.min(99,Math.round((mob+ym)/1.6)), REC:Math.min(99,Math.round(rec*.7+slp*100*.3)), sc, rank:aRank(sc) }; }
+const ASTAT=[['STR','Strength','strength score'],['VIT','Vitality','showing up + weekly sets'],['AGI','Agility','cardio, stretch + night yoga minutes, last 4 weeks'],['REC','Recovery','muscle recovery + your sleep']];
 
 /* ---------- daily quest + penalty ---------- */
 function aQday(k){ const g=G_(); g.q ||= {}; return g.q[k] ||= {done:{}}; }
@@ -8743,6 +8764,90 @@ function spotsAll(){ return rpgC('spots',()=>{ const first={}; const add=(k,d,na
   return first; }); }
 const SPOTS_FROM='2026-10-20'; // everything the bank already showed before this counts as places you knew
 function newSpots(a,b){ return Object.values(spotsAll()).filter(x=>x.d>=SPOTS_FROM && x.d>=a && x.d<=b); }
+
+/* ===================== b230: night yoga · body weight trend · weekly sets per muscle · ARISE weekly dungeon ===================== */
+// --- poses: [id, name, seconds, both sides?, cue, emoji, areas]
+const YOGA=[
+ ['child','Child’s Pose',60,0,'Knees wide, arms long, forehead down. Let your breath push your back wide.','🧎','back shoulders hips'],
+ ['catcow','Cat-Cow',45,0,'Inhale drop the belly and look up, exhale round and tuck. Slow.','🐈','back abs'],
+ ['thread','Thread the Needle',40,1,'From all fours, slide one arm under, shoulder and cheek to the floor.','🧵','shoulders back'],
+ ['dog','Downward Dog',45,0,'Hips high, pedal your heels, let your head hang.','🐕','hamstrings calves shoulders'],
+ ['lowlunge','Low Lunge',40,1,'Back knee down, sink the hips forward, arms up if it feels good.','🧎‍♂️','quads hips'],
+ ['halfsplit','Half Split',40,1,'From the lunge, shift back and straighten the front leg, fold over it.','🦵','hamstrings'],
+ ['pigeon','Pigeon',60,1,'Front shin across, back leg long, fold down and breathe into the hip.','🕊️','glutes hips'],
+ ['fold','Seated Forward Fold',60,0,'Legs long, hinge from the hips, let your back round at the end.','🙇','hamstrings back'],
+ ['butterfly','Butterfly',45,0,'Soles together, knees heavy, fold forward gently.','🦋','hips'],
+ ['sphinx','Sphinx',45,0,'On your belly, forearms down, chest open, shoulders away from ears.','🦁','abs back chest'],
+ ['chestopen','Prone Chest Opener',40,1,'On your belly, one arm out to the side, roll onto that shoulder.','🫁','chest shoulders'],
+ ['twist','Supine Twist',45,1,'On your back, knee across, opposite arm out, look away.','🌀','back glutes'],
+ ['babyhappy','Happy Baby',45,0,'On your back, grab your feet, knees toward armpits, rock side to side.','👶','hips back'],
+ ['figure4','Figure-4',45,1,'On your back, ankle over knee, pull the leg in.','4️⃣','glutes'],
+ ['legsup','Legs Up the Wall',90,0,'Legs up a wall or the headboard, arms out, eyes closed.','🧱','calves hamstrings'],
+ ['savasana','Savasana',90,0,'Flat on your back, palms up. Breathe in 4, out 6. Nothing to do.','🌙','all']];
+const YP=Object.fromEntries(YOGA.map(([id,n,s,side,cue,ic,a])=>[id,{id,n,s,side,cue,ic,a:a.split(' ')}]));
+const YFLOWS={wind:['🌙 Wind-down','10 min · every night',['child','catcow','thread','dog','pigeon','fold','twist','babyhappy','savasana']],
+  hips:['🍑 Hips & back','12 min · after legs or a long day sitting',['catcow','lowlunge','halfsplit','pigeon','butterfly','figure4','twist','legsup','savasana']],
+  quick:['⚡ Quick 5','5 min · when you’re wiped',['child','thread','twist','legsup']]};
+function Y_(){ return (S.yoga ||= {log:[]}); }
+function yogaDoneOn(k){ return Y_().log.some(x=>x.d===k); }
+function yogaStreak(){ let n=0, k=yogaDoneOn(TODAY)?TODAY:addDays(TODAY,-1); while (yogaDoneOn(k) && n<999){ n++; k=addDays(k,-1); } return n; }
+// tonight's flow leans on what you trained today
+function yogaPick(){ const sess=(G_().sessions||[]).filter(s=>s.d===TODAY), worked=new Set(sess.flatMap(s=>s.ex.flatMap(e=>GX[e.x]?.p||[])));
+  if (['quads','hamstrings','glutes','calves'].some(m=>worked.has(m))) return 'hips'; return 'wind'; }
+function yogaSecs(f){ return YFLOWS[f][2].reduce((a,id)=>a+YP[id].s*(YP[id].side?2:1),0); }
+function yogaCard(){ const f=yogaPick(), done=yogaDoneOn(TODAY), st=yogaStreak(), F=YFLOWS[f], night=new Date().getHours()>=19;
+  return `<div class="card sec yg-card ${night&&!done?'yg-now':''}"><div class="row between"><span class="tag">🌙 Night stretch</span><span class="sub">${st?`🔥 ${st}-night streak`:'start a streak tonight'}</span></div>
+    <h2 style="margin:6px 0 2px">${done?'Done tonight ✓':F[0]}</h2><div class="sub">${done?'Sleep well. Same time tomorrow.':`${Math.round(yogaSecs(f)/60)} min · ${F[2].length} poses${f==='hips'?' · picked because you trained legs today':''}`}</div>
+    <div class="yg-poses">${F[2].map(id=>`<span title="${esc(YP[id].n)}">${YP[id].ic}</span>`).join('')}</div>
+    <div class="row" style="gap:6px;margin-top:10px;flex-wrap:wrap"><button class="btn sm" onclick="yogaStart('${f}')">${done?'Again':'Start'} ›</button>${Object.keys(YFLOWS).filter(k=>k!==f).map(k=>`<button class="btn ghost sm" onclick="yogaStart('${k}')">${YFLOWS[k][0]}</button>`).join('')}</div></div>`; }
+// guided player: one pose at a time, countdown, auto-advance, both sides when needed
+let YG=null;
+function yogaStart(f){ const steps=[]; for (const id of YFLOWS[f][2]){ const p=YP[id]; if (p.side){ steps.push({id,side:'Right'}); steps.push({id,side:'Left'}); } else steps.push({id}); }
+  YG={f, steps, i:0, left:YP[steps[0].id].s, paused:false, t0:Date.now(), tick:null}; yogaRender(); clearInterval(YG.tick); YG.tick=setInterval(yogaTick,1000); try { navigator.wakeLock?.request('screen').then(l=>YG&&(YG.lock=l)).catch(()=>{}); } catch(e){} }
+function yogaTick(){ if (!YG||YG.paused) return; YG.left--; if (YG.left<=0){ try { navigator.vibrate?.(60); } catch(e){} if (YG.i>=YG.steps.length-1) return yogaFinish(); YG.i++; YG.left=YP[YG.steps[YG.i].id].s; } yogaRender(); }
+function yogaGo(d){ if (!YG) return; YG.i=Math.max(0,Math.min(YG.steps.length-1,YG.i+d)); YG.left=YP[YG.steps[YG.i].id].s; yogaRender(); }
+function yogaStop(save){ if (!YG) return; clearInterval(YG.tick); try { YG.lock?.release(); } catch(e){} const mins=Math.round((Date.now()-YG.t0)/6e4), f=YG.f; YG=null; document.getElementById('yg-ov')?.remove();
+  if (save && mins>=2){ Y_().log.push({d:TODAY, f, mins}); commit(); toast(`🌙 ${mins} min stretched · +10 XP`); } }
+function yogaFinish(){ const st=yogaStreak()+(yogaDoneOn(TODAY)?0:1); yogaStop(true); setTimeout(()=>{ confetti(); toast(`🌙 Night stretch done · ${st}-night streak`); },200); }
+function yogaRender(){ if (!YG) return; let o=document.getElementById('yg-ov'); if (!o){ o=document.createElement('div'); o.id='yg-ov'; o.className='yg-ov'; document.body.appendChild(o); }
+  const s=YG.steps[YG.i], p=YP[s.id], nx=YG.steps[YG.i+1], pct=1-YG.left/p.s, R=54, C=2*Math.PI*R;
+  o.innerHTML=`<div class="yg-top"><button onclick="yogaStop(${YG.i>2})">✕</button><span>${YFLOWS[YG.f][0]} · ${YG.i+1}/${YG.steps.length}</span><span></span></div>
+    <div class="yg-pose"><div class="yg-ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="${R}" class="yg-bg"/><circle cx="60" cy="60" r="${R}" class="yg-fg" style="stroke-dasharray:${C};stroke-dashoffset:${C*(1-pct)}"/></svg><span class="yg-ic">${p.ic}</span></div>
+      <h1>${esc(p.n)}${s.side?` <em>${s.side}</em>`:''}</h1><b class="yg-t num">${Math.floor(YG.left/60)}:${String(YG.left%60).padStart(2,'0')}</b><p>${esc(p.cue)}</p>
+      <div class="yg-breath"><i></i><span>breathe with the circle</span></div></div>
+    <div class="yg-next">${nx?`Next: ${YP[nx.id].ic} ${esc(YP[nx.id].n)}${nx.side?' · '+nx.side:''}`:'Last one — stay as long as you want'}</div>
+    <div class="yg-ctl"><button onclick="yogaGo(-1)">⏮</button><button class="yg-pp" onclick="YG.paused=!YG.paused;yogaRender()">${YG.paused?'▶':'⏸'}</button><button onclick="${nx?'yogaGo(1)':'yogaFinish()'}">${nx?'⏭':'✓'}</button></div>`; }
+function yogaXP(){ return Y_().log.filter(x=>x.d>=GAME_START).length*10; }
+
+// --- Fitbod: weekly sets per muscle vs the 10–20 hard-set range
+function gWeekSets(w){ const out={}; for (const m of Object.keys(GMUS)) out[m]=0; const ds=weekDays(w||isoWeek(TODAY));
+  for (const s of G_().sessions) if (ds.includes(s.d)) for (const e of s.ex){ const X=GX[e.x]; if (!X||!gLift(e.x)) continue; const n=e.sets.filter(z=>z.t!=='w'&&z.ok!==false).length; for (const m of X.p) out[m]+=n; for (const m of X.s) if (out[m]!=null) out[m]+=n/2; }
+  return out; }
+function gVolumeCard(){ const W=gWeekSets(), mx=Math.max(20,...Object.values(W));
+  return `<div class="card sec"><div class="hdr"><h2>Sets per muscle</h2><span class="sub">this week · aim 10–20</span></div><div class="stack" style="gap:7px">${Object.keys(GMUS).sort((a,b)=>W[b]-W[a]).map(m=>{ const v=Math.round(W[m]*10)/10, col=v<10?'var(--warn)':v>20?'var(--bad)':'var(--good)';
+    return `<div class="g-rr"><span>${GMUS[m]}</span><div class="g-bar vs-bar"><i style="left:${10/mx*100}%;width:${10/mx*100}%" class="vs-zone"></i><b style="width:${Math.min(100,v/mx*100)}%;background:${col}"></b></div><em class="num">${v}</em></div>`; }).join('')}</div>
+    <div class="help keep" style="margin-top:8px">Warm-up sets don’t count. A secondary muscle gets half a set.</div></div>`; }
+// --- body weight trend
+function gBodyCard(){ const g=G_(), L=(g.bwLog||[]).slice().sort((a,b)=>a.d.localeCompare(b.d)), W=(g.wLog||[]).slice().sort((a,b)=>a.d.localeCompare(b.d)), last=L[L.length-1];
+  const ago=L.filter(x=>x.d<=addDays(TODAY,-30)).pop(), avg7=(()=>{ const r=L.filter(x=>x.d>addDays(TODAY,-7)); return r.length?r.reduce((a,x)=>a+x.lb,0)/r.length:null; })();
+  return `<div class="card sec"><div class="hdr"><h2>Body weight</h2><span class="sub">${last?`${gShowW(last.lb)} ${gU()} · ${nice(last.d)}`:'not logged yet'}</span></div>
+    ${L.length>1?gChart(L.slice(-30).map(x=>x.lb), v=>gShowW(v)+' '+gU()):''}
+    <div class="g-rep" style="margin-top:8px"><div><span>7-day average</span><b class="num">${avg7?gShowW(avg7):'—'}</b><small>${gU()}</small></div><div><span>vs 30 days ago</span><b class="num">${last&&ago?(last.lb>=ago.lb?'+':'−')+gShowW(Math.abs(last.lb-ago.lb)):'—'}</b><small>${gU()}</small></div><div><span>Waist</span><b class="num">${W.length?W[W.length-1].in+'"':'—'}</b></div></div>
+    <form class="a-wf" style="margin-top:10px" onsubmit="return gLogBody(event)"><input class="inp num" name="w" type="number" step="0.1" inputmode="decimal" placeholder="weight ${gU()}"><input class="inp num" name="wa" type="number" step="0.1" inputmode="decimal" placeholder="waist in"><button class="btn sm">Log</button></form>
+    <div class="help keep">Weigh in the morning before eating — the 7-day average is the number that matters, not one day.</div></div>`; }
+function gLogBody(e){ e.preventDefault(); const g=G_(), w=+e.target.w.value, wa=+e.target.wa.value; if (!w && !wa) return false;
+  if (w){ const lb=gFromU(w); g.bwLog=(g.bwLog||[]).filter(x=>x.d!==TODAY); g.bwLog.push({d:TODAY, lb}); g.setup.bw=w; }
+  if (wa){ g.wLog=(g.wLog||[]).filter(x=>x.d!==TODAY); g.wLog.push({d:TODAY, in:wa}); } commit({skipXp:true}); toast('Logged'); return false; }
+
+// --- ARISE: weekly dungeon on your two least-trained muscles; clear it with 8 hard sets each before Sunday
+function aDungeon(w){ w=w||isoWeek(TODAY); const g=G_(); g.dun ||= {}; let D=g.dun[w];
+  if (!D){ const prev=gWeekSets(weekShift(w,-1)), ms=Object.keys(GMUS).filter(m=>m!=='abs').sort((a,b)=>prev[a]-prev[b]).slice(0,2); D=g.dun[w]={ms, need:8}; }
+  const W=gWeekSets(w), prog=D.ms.map(m=>Math.min(D.need,Math.floor(W[m]))), clear=prog.every(v=>v>=D.need); return {...D, w, prog, clear}; }
+function dungeonCard(){ const D=aDungeon(), left=7-((parseD(TODAY).getDay()+6)%7);
+  return `<div class="card sec dg-card ${D.clear?'clear':''}"><div class="row between"><span class="tag">🌀 Weekly dungeon</span><span class="sub">${D.clear?'CLEARED · +150 XP':`${left} day${left===1?'':'s'} left`}</span></div>
+    <h2 style="margin:6px 0 4px">${D.ms.map(m=>GMUS[m]).join(' & ')} Gate</h2><div class="sub" style="margin-bottom:8px">Your least-trained muscles last week. ${D.need} hard sets each to clear it — they’re weighted into your workouts this week.</div>
+    ${D.ms.map((m,i)=>`<div class="g-rr"><span>${GMUS[m]}</span><div class="g-bar"><b style="width:${D.prog[i]/D.need*100}%;background:${D.prog[i]>=D.need?'var(--good)':'#9b5cff'}"></b></div><em class="num">${D.prog[i]}/${D.need}</em></div>`).join('')}</div>`; }
+function dungeonXP(){ const g=S.gym; if (!g||!g.dun) return 0; let x=0; for (const w of Object.keys(g.dun)) if (addDays(weekMonday(w),6)>=GAME_START && aDungeon(w).clear) x+=150; return x; }
 
 let moneyTab = 'now';
 function setMoneyTab(t){ moneyTab=MONEY_ALIAS[t]||t; render(); }
