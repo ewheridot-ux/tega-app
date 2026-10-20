@@ -1622,6 +1622,60 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 .ab-ph{display:flex;gap:4px;margin-bottom:12px}.ab-ph span{flex:1;text-align:center;font-size:11px;padding:5px 2px;border-radius:8px;background:var(--card2);color:var(--mut)}.ab-ph span.on{background:var(--c);color:#111;font-weight:800}
 .ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:420px){.ab-grid{grid-template-columns:1fr}}
 .ab-li{font-size:13px;padding:5px 0;border-bottom:1px solid var(--line)}
+
+.bp-head{display:flex;gap:12px;align-items:center}.bp-head h1{margin:0;font-size:26px}
+.bp-jump{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.bp-jump::-webkit-scrollbar{display:none}
+.bp-jump button{flex:0 0 auto;border:1px solid color-mix(in srgb,var(--c) 60%,transparent);background:color-mix(in srgb,var(--c) 14%,var(--card));color:var(--fg);border-radius:99px;padding:6px 12px;font-size:12.5px;font-weight:700}
+.bp-jump button.dead{opacity:.5}
+.bp-card{border-color:color-mix(in srgb,var(--c) 45%,var(--line));scroll-margin-top:calc(env(safe-area-inset-top,0px) + 12px)}.bp-card.focus{box-shadow:0 0 0 2px var(--c)}
+.bp-area{font-size:11px;letter-spacing:.12em;font-weight:900;color:var(--c)}
+.bp-name{margin:6px 0 0;font-size:24px}.bp-title{font-style:italic;color:var(--mut);font-size:13px}
+.bp-arena{position:relative;margin:12px 0;border-radius:18px;overflow:hidden;background:radial-gradient(70% 80% at 50% 70%,color-mix(in srgb,var(--c) 30%,transparent),transparent 70%),linear-gradient(180deg,#0b0d12,#151a22);aspect-ratio:4/3;max-width:100%;display:grid;place-items:center}
+.bp-arena>svg,.bp-arena>canvas,.bp-arena>img{width:100%;height:100%;object-fit:contain}
+.bp-arena.ph2{animation:bpRumble 3s ease-in-out infinite}
+.bp-card.dead .bp-arena{filter:grayscale(.6)}
+@keyframes bpRumble{0%,92%,100%{transform:none}94%{transform:translateX(-3px)}96%{transform:translateX(3px)}98%{transform:translateX(-2px)}}
+.ba{overflow:visible}
+.ba-bob{animation:baBob 3.2s ease-in-out infinite}
+.ba-pulse{animation:baPulse 2.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.ba-glow{animation:baGlow 1.8s ease-in-out infinite}
+.ba-eye{animation:baEye 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.ba-drip{animation:baDrip 2.1s ease-in infinite}
+.ba-armL{animation:baArmL 3.2s ease-in-out infinite;transform-origin:62px 76px}.ba-armR{animation:baArmR 3.2s ease-in-out infinite;transform-origin:138px 76px}
+.ba-sway{animation:baSway 4s ease-in-out infinite}
+.ba-blink{animation:baBlink 5s ease-in-out infinite}
+.ba-look{animation:baLook 6s ease-in-out infinite}
+.ba-scan{animation:baScan 3s ease-in-out infinite;transform-origin:100px 110px}
+.ba-flicker{animation:baFlicker 2.6s steps(1) infinite}
+.ba-crown{animation:baCrown 3.2s ease-in-out infinite;transform-origin:100px 60px}
+.ba-zz{animation:baZz 3s ease-out infinite}
+.ba-drift{animation:baDrift 10s ease-in-out infinite alternate}
+.ba-tail{animation:baTail 1.6s ease-in-out infinite}
+.ba-snapL{animation:baSnap 1.2s ease-in-out infinite}.ba-snapR{animation:baSnap 1.2s ease-in-out infinite reverse}
+.ba-leg{animation:baLeg .6s ease-in-out infinite alternate}
+.ba-flap{animation:baFlap 1.4s ease-in-out infinite}
+.ba-smoke{animation:baSmoke 2s ease-out infinite}
+.ba-dead *{animation:none!important}
+@keyframes baBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes baPulse{0%,100%{opacity:.75;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes baGlow{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes baEye{0%,44%,48%,100%{transform:scaleY(1)}46%{transform:scaleY(.1)}}
+@keyframes baDrip{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(22px);opacity:0}}
+@keyframes baArmL{0%,100%{transform:rotate(0)}50%{transform:rotate(5deg)}}@keyframes baArmR{0%,100%{transform:rotate(0)}50%{transform:rotate(-5deg)}}
+@keyframes baSway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+@keyframes baBlink{0%,90%,100%{transform:scaleY(1)}93%{transform:scaleY(.1)}}
+@keyframes baLook{0%,100%{transform:translate(0,0)}20%{transform:translate(-6px,1px)}45%{transform:translate(5px,-2px)}70%{transform:translate(2px,3px)}}
+@keyframes baScan{0%,100%{transform:rotate(-18deg);opacity:.5}50%{transform:rotate(18deg);opacity:.9}}
+@keyframes baFlicker{0%,100%{opacity:1}33%{opacity:.7}66%{opacity:.9}}
+@keyframes baCrown{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@keyframes baZz{0%{transform:translate(0,0);opacity:0}30%{opacity:.8}100%{transform:translate(10px,-18px);opacity:0}}
+@keyframes baDrift{0%{transform:translateX(-14px)}100%{transform:translateX(14px)}}
+@keyframes baTail{0%,100%{transform:rotate(0)}50%{transform:rotate(-12deg)}}
+@keyframes baSnap{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}
+@keyframes baLeg{0%{transform:translateX(0)}100%{transform:translateX(3px)}}
+@keyframes baFlap{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.6)}}
+@keyframes baSmoke{0%{transform:translate(0,0) scale(.6);opacity:.7}100%{transform:translate(-6px,-26px) scale(1.6);opacity:0}}
+@media (prefers-reduced-motion: reduce){.ba *, .bp-arena{animation:none!important}}
 </style>
 
 <div class="app" id="app"></div>
@@ -1631,7 +1685,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b225';
+const BUILD='b226';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2562,7 +2616,7 @@ function dBench(){
 let dSelProto = null;
 function dAddProto(e){ e.preventDefault(); const [inp]=e.target.querySelectorAll('input'); const sel=e.target.querySelector('select'); const D=ensureDatum(); const id=pcNextId(D); const des=D.designs.find(d=>d.id===sel.value); D.prototypes.push({id,name:inp.value.trim(),design:sel.value,collection:des?.collection||'',status:'wax',started:TODAY,hours:0,qc:{},log:[]}); if(des&&des.status==='concept') des.status='in-prototype'; dSelProto=id; commit({skipXp:true}); return false; }
 function dSetProto(id,f,v){ const p=ensureDatum().prototypes.find(p=>p.id===id); const was=p.status; p[f]=v; if(f==='status'&&v==='complete'&&was!=='complete'){ p.completed=TODAY; S.wins.push({id:uid(),d:TODAY,text:`◆ ${p.id} ${p.name} complete — a piece with your name on it`}); syncDatumKRs(); commit(); confetti(); toast('Piece complete. Photograph it.'); return; } commit({skipXp:true}); }
-function dBump(id,n){ const p=ensureDatum().prototypes.find(p=>p.id===id); p.hours=Math.max(0,Math.round((p.hours+n)*2)/2); commit({skipXp:true}); }
+function dBump(id,n){ const p=ensureDatum().prototypes.find(p=>p.id===id); const was=p.hours; p.hours=Math.max(0,Math.round((p.hours+n)*2)/2); const dm=Math.round((p.hours-was)*60); if (dm){ (p.log ||= []).push({d:TODAY, kind:'session', mins:dm, t:dm>0?`Added ${fmtMins(dm)} by hand`:`Removed ${fmtMins(-dm)} by hand`, adj:1}); } commit({skipXp:true}); }
 function dLog(e,id){ e.preventDefault(); const inp=e.target.querySelector('input'); if(!inp.value.trim()) return false; const p=ensureDatum().prototypes.find(p=>p.id===id); (p.log ||= []).push({d:TODAY,t:inp.value.trim()}); const d=ensureDay(TODAY); d.habits.datum=true; commit(); return false; }
 function dQc(id,i){ const p=ensureDatum().prototypes.find(p=>p.id===id); p.qc ||= {}; p.qc[i]=!p.qc[i]; commit({skipXp:true}); }
 function dSetDesign(id,v){ const d=ensureDatum().designs.find(d=>d.id===id); d.status=v; commit({skipXp:true}); }
@@ -2646,7 +2700,7 @@ function dSetLearn(id,v){ const l=ensureDatum().learning.find(l=>l.id===id); l.o
 function dDelLearn(id){ const D=ensureDatum(); D.learning=D.learning.filter(l=>l.id!==id); commit({skipXp:true}); }
 
 /* ===================== rendering ===================== */
-const VIEWS = ['today','goals','week','quarter','year','vision','model','datum','money','deadlines','content','gym','trophies','evolve','social'];
+const VIEWS = ['today','goals','week','quarter','year','vision','model','datum','money','deadlines','content','gym','trophies','evolve','social','bosses'];
 let view = (location.hash||'#today').slice(1); if(!VIEWS.includes(view)) view='today';
 let curDay = TODAY, curWeek = THIS_WEEK, curQ = S.quarters[THIS_Q] ? THIS_Q : Object.keys(S.quarters).sort().pop(), curY = S.years[THIS_Y] ? THIS_Y : Object.keys(S.years).sort().pop();
 window.addEventListener('hashchange', () => { const v=location.hash.slice(1); if(VIEWS.includes(v)){ view=v; render(); window.scrollTo(0,0);} });
@@ -2690,7 +2744,7 @@ function render(){
       ${(()=>{ const se=season(); return `<span class="pill" style="cursor:pointer;box-shadow:inset 0 0 0 1.5px ${se.c}" onclick="stMode='progress';dFold.hq_season=true;go('evolve');render()" title="Season ${se.no} · ${se.name}">${se.ic} ${se.left}d</span>`; })()}
     </div>
     <div class="nav" data-hl="${({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab'})[view]||'crt'}">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='goals'&&GOALS.some(([k])=>k===view))?'on':''}" data-tab="${v}" onclick="if(!navHeld())go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
-    <div id="view">${GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):''}${AREA_VIEW[view]?areaChip(AREA_VIEW[view]):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve,social:vSocial})[view]()}</div>`;
+    <div id="view">${GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):''}${AREA_VIEW[view]?areaChip(AREA_VIEW[view]):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve,social:vSocial,bosses:vBosses})[view]()}</div>`;
   dlSheetRefresh();
   checkEvo();
   if (_dbSettled && richness(S)>0 && !document.getElementById('lvs')?.classList.contains('show')) { if (S.lvlSeen===undefined) S.lvlSeen=Math.max(1,lvl-1); if (lvl>S.lvlSeen) { S.lvlSeen=lvl; setTimeout(()=>{ levelScene(lvl); saveLocal(); scheduleDbWrite(); },400); } }
@@ -3051,7 +3105,7 @@ function idleStart(){ if (idleIv || (window.matchMedia&&matchMedia('(prefers-red
 /* ---------- the room: fills with what you've actually earned ---------- */
 function roomItems(){
   const D=ensureDatum(), ps=D.prototypes, st=dailyStreak(), art=(S.art||[]).slice().sort((a,b)=>a.d<b.d?1:-1), g=gtrStats(), bm=benchMinsByWeek()[THIS_WEEK]||0;
-  const posts=(S.logs||[]).filter(l=>l.kind==='post'&&isoWeek(l.d)===THIS_WEEK).length, badges=BADGES.filter(b=>S.badges[b.key]).length;
+  const posts=fact('posts',...wRange(THIS_WEEK)), badges=BADGES.filter(b=>S.badges[b.key]).length;
   return {ps, st, art, g, bm, posts, badges, artWk:art.filter(a=>isoWeek(a.d)===THIS_WEEK).length, landed:S.money.checks.filter(c=>c.got).length};
 }
 function roomSVG(mode){
@@ -3194,34 +3248,33 @@ function ideaDel(id){ S.ideas=(S.ideas||[]).filter(x=>x.id!==id); commit({skipXp
 let skTree='datum', skSel=null;
 function skMetrics(){
   const D=ensureDatum(), ps=D.prototypes, A=S.art||[], G=S.gtr||{}, L=S.logs||[], order=['wax','cast','finishing','qc','complete'], atLeast=st=>ps.filter(p=>order.indexOf(p.status)>=order.indexOf(st)).length;
-  const dlogs=ps.flatMap(p=>p.log||[]), sess=dlogs.filter(l=>l.kind==='session'), gl=G.log||[], days=Object.keys(S.days), wkOf=a=>new Set(a.map(isoWeek)).size;
+  const dlogs=ps.flatMap(p=>p.log||[]), sess=dlogs.filter(l=>l.kind==='session'&&!l.adj), gl=G.log||[], days=Object.keys(S.days), wkOf=a=>new Set(a.map(isoWeek)).size;
   const byWk={}; for (const a of A) byWk[isoWeek(a.d)]=(byWk[isoWeek(a.d)]||0)+1;
   const pw={}; for (const l of L) if (l.kind==='post') pw[isoWeek(l.d)]=(pw[isoWeek(l.d)]||0)+1;
   const ig=igData(), tk=tkData();
   return {
-    benchH:Math.round(ps.reduce((a,p)=>a+(+p.hours||0),0)*10)/10, benchLong:Math.max(0,...sess.map(l=>+l.mins||0)), sketches:A.filter(a=>a.proto).length, pins:(D.mood||[]).length,
+    benchH:fact('benchhrs'), benchLong:Math.max(0,...sess.map(l=>+l.mins||0)), sketches:A.filter(a=>a.proto).length, pins:(D.mood||[]).length,
     learned:(D.learning||[]).filter(l=>l.output).length, pieces:ps.length, photos:dlogs.filter(l=>l.photo).length, cast:atLeast('cast'), done:atLeast('complete'), shot:ps.filter(p=>(p.log||[]).some(l=>l.photo)).length,
-    sold:(D.orders||[]).filter(o=>o.status==='delivered'||o.status==='closed').length, revenue:Math.round(incomeBy('2000-01-01',TODAY).datum),
+    sold:(D.orders||[]).filter(o=>o.status==='delivered'||o.status==='closed').length, revenue:fact('revenue'),
     art:A.length, paper:A.filter(a=>a.kind==='paper').length, digi:A.filter(a=>a.kind==='procreate').length, process:A.filter(a=>a.imgs.length>1).length, artWeeks:wkOf(A.map(a=>a.d)), artBest:Math.max(0,...Object.values(byWk)),
     gSess:gl.length, gH:Math.round(gl.reduce((a,l)=>a+l.mins,0)/6)/10, gLong:Math.max(0,...gl.map(l=>l.mins)), songs:(G.songs||[]).length, canPlay:(G.songs||[]).filter(x=>x.status>=1).length, clean:(G.songs||[]).filter(x=>x.status===2).length, riffs:(G.riffs||[]).length, gWeeks:wkOf(gl.map(l=>l.d)),
-    posts:L.filter(l=>l.kind==='post').length, weeks2:Object.values(pw).filter(n=>n>=2).length, ideas:(S.ideas||[]).length, ideasShot:(S.ideas||[]).filter(x=>x.done).length, outreach:L.filter(l=>l.kind==='outreach').length, pitches:L.filter(l=>l.kind==='proposal').length,
+    posts:fact('posts'), weeks2:Object.values(pw).filter(n=>n>=2).length, ideas:(S.ideas||[]).length, ideasShot:(S.ideas||[]).filter(x=>x.done).length, outreach:L.filter(l=>l.kind==='outreach').length, pitches:L.filter(l=>l.kind==='proposal').length,
     igF:ig.followers||0, igPeak:Math.max(0,...(ig.daily||[]).map(r=>r[2])), tkF:tk.followers||0,
     active:days.filter(dayActive).length, streak:bestDailyStreak(), early:days.filter(k=>S.days[k].checkin&&S.days[k].checkin.at<'09:00').length, perfect:days.filter(k=>{ const t=S.days[k].top3; return t.every(x=>x.text.trim()&&x.done); }).length,
     resets:Object.values(S.weeks||{}).filter(w=>w.review&&w.review.done).length, pWeeks:perfectWeeks(), quests:(S.quests||[]).filter(q=>q.done).length, dls:(S.dl||[]).filter(x=>x.done).length,
     split:S.money.checks.filter(c=>c.got&&c.split&&!openMoves(c).length).length, tax:+S.money.s.taxBufNow||0, ef:+S.money.s.efNow||0,
-    benchSess:sess.length, wins:S.wins.length, landed:S.money.checks.filter(c=>c.got).length, income:Math.round(S.money.checks.filter(c=>c.got).reduce((a,c)=>a+c.amt,0)),
+    benchSess:sess.length, wins:S.wins.length, landed:fact('checks'), income:Math.round(fact('income')),
     roth:+S.money.s.rothYtd||0, house:+S.money.s.houseNow||0, net:Math.round(netWorth()),
     ...(()=>{ let E=[]; try{ E=liveBookings(); }catch(e){} const jobs=E.filter(e=>e.t==='job'), past=k=>k<=TODAY;
       const gw={}; for (const k of gymDays()) gw[isoWeek(k)]=(gw[isoWeek(k)]||0)+1;
       let soc=[]; try { soc=socAll(); } catch(e){}
-      return { setDays:jobs.reduce((a,e)=>a+(e.d||[]).filter(past).length,0), castings:E.filter(e=>['casting','selftape','test','fitting'].includes(e.t)&&(e.d||[]).some(past)).length,
-        mIncome:Math.round(jobs.reduce((a,e)=>a+(+e.rn||0)*(e.d||[]).filter(past).length,0)), gymWeeks:Object.values(gw).filter(n=>n>=3).length,
-        prs:((S.gym||{}).sessions||[]).reduce((a,x)=>a+((x.prs||[]).length),0), hang:(()=>{ try { return hangDays().size; } catch(e){ return 0; } })(), people:((S.circle||{}).people||[]).length, nights:soc.length }; })(),
-    gym:gymDays().size, read:days.filter(k=>S.days[k].habits&&S.days[k].habits.read).length, journal:days.filter(k=>S.days[k].habits&&S.days[k].habits.journal).length, morning:days.filter(k=>S.days[k].habits&&S.days[k].habits.morning).length,
+      return { setDays:fact('setdays'), castings:fact('castings'), mIncome:Math.round(fact('booked')), gymWeeks:Object.values(gw).filter(n=>n>=3).length,
+        prs:((S.gym||{}).sessions||[]).reduce((a,x)=>a+((x.prs||[]).length),0), hang:fact('events'), people:fact('people',''), nights:fact('regulars') }; })(),
+    gym:fact('gym'), read:fact('habit:read'), journal:fact('habit:journal'), morning:fact('habit:morning'),
   };
 }
 // Each tree has three lanes of twelve steps and a capstone. A step: [icon, name, metric, target]. Rows are paced as five years.
-const SK_UNIT={setDays:'days on set',castings:'castings & fittings',mIncome:'dollars booked',gymWeeks:'weeks with 3+ workouts',prs:'personal records',hang:'hangout days',people:'people in your circle',nights:'nights out',benchH:'hours at the bench',benchLong:'minutes in one bench session',benchSess:'bench sessions',sketches:'Datum sketches linked',pins:'moodboard pins',learned:'lessons with an output',pieces:'pieces started',photos:'bench photos',cast:'pieces sent to cast',done:'pieces completed',shot:'pieces photographed',sold:'orders delivered',revenue:'dollars of Datum revenue',
+const SK_UNIT={setDays:'days on set',castings:'castings & fittings',mIncome:'dollars booked',gymWeeks:'weeks with 3+ workouts',prs:'personal records',hang:'hangout days',people:'people in your circle',nights:'people you see 3+ times',benchH:'hours at the bench',benchLong:'minutes in one bench session',benchSess:'bench sessions',sketches:'Datum sketches linked',pins:'moodboard pins',learned:'lessons with an output',pieces:'pieces started',photos:'bench photos',cast:'pieces sent to cast',done:'pieces completed',shot:'pieces photographed',sold:'orders delivered',revenue:'dollars of Datum revenue',
   art:'pieces on the art wall',paper:'paper pieces',digi:'Procreate pieces',process:'pieces with sketch → final',artWeeks:'weeks with art in them',artBest:'pieces in one week',
   gSess:'guitar sessions',gH:'hours of guitar',gLong:'minutes in one guitar session',songs:'songs on the list',canPlay:'songs you can play',clean:'songs clean',riffs:'clips in the riff vault',gWeeks:'weeks with guitar in them',
   posts:'posts logged',weeks2:'weeks with 2+ posts',ideas:'ideas banked',ideasShot:'ideas shot',outreach:'outreach logged',pitches:'proposals sent',igF:'Instagram followers',igPeak:'Instagram views in one day',tkF:'TikTok followers',
@@ -3269,7 +3322,7 @@ const SK_TREES={
   social:{name:'Social',ic:'🤝',c:'#b98cff',ranks:['Loner','Out','Social','Known','Plugged In','Connector'],cap:['👑','Connector','hang',365],lanes:[
     [['🍻','First Hang','hang',1],['🎉','','hang',3],['🕺','','hang',5],['🌃','Ten Hangs','hang',10],['🍕','','hang',15],['🎶','','hang',25],['🥂','','hang',40],['🗓️','','hang',60],['🌆','','hang',80],['💯','Hundred Hangs','hang',100],['🎡','','hang',150],['🏛️','','hang',200]],
     [['👋','First Friend','people',1],['🤝','','people',2],['👥','Three Deep','people',3],['🫂','','people',5],['🧑‍🤝‍🧑','','people',8],['🔗','','people',12],['🏘️','','people',16],['🌐','Twenty Deep','people',20],['🎯','','people',25],['🧲','','people',30],['🏟️','','people',40],['👑','','people',50]],
-    [['🎟️','First Night Out','nights',1],['🌙','','nights',2],['🪩','','nights',4],['🎤','','nights',6],['🍸','Ten Nights','nights',10],['🌌','','nights',15],['🎆','','nights',20],['🎪','','nights',30],['🏙️','','nights',40],['🌠','','nights',60],['🎇','','nights',80],['💯','Hundred Nights','nights',100]]]},
+    [['🎟️','First Regular','nights',1],['🌙','','nights',2],['🪩','Three Regulars','nights',3],['🎤','','nights',4],['🍸','Five Regulars','nights',5],['🌌','','nights',15],['🎆','','nights',20],['🎪','','nights',30],['🏙️','','nights',40],['🌠','','nights',60],['🎇','','nights',80],['💯','Hundred Nights','nights',100]]]},
 
 };
 const skFmt = (m,t) => (['revenue','income','tax','ef','roth','house','net'].includes(m)?'$':'')+(t>=1000?(t%1000===0?t/1000+'K':(t/1000).toFixed(1)+'K'):t);
@@ -4504,7 +4557,7 @@ function vModel(){
   const mSeg=t=>`<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${t.map(([k,l])=>`<button class="${mTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px" onclick="mTab='${k}';render()">${l}</button>`).join('')}</div>`;
   const MT5=[['now','Bookings'],['clients','Clients'],['book','Book'],['card','Card']];
   if (mTab==='card') return mSeg(MT5) + mCardView();
-  const E=mAll(), P=mPipe(), jobs=E.filter(e=>e.t==='job'&&e.s!=='cancelled'), days=jobs.reduce((a,j)=>a+j.days,0), ck=jobs.filter(j=>/calvin/i.test(j.c)).reduce((a,j)=>a+j.days,0);
+  const E=mAll(), P=mPipe(), jobs=E.filter(e=>e.t==='job'&&!DEAD_S.includes(e.s)), days=fact('setdays'), ck=fact('setdays:ck');
   const first=jobs.map(j=>j.start).filter(Boolean).sort()[0]||'';
   const tabs=MT5;
   return `<div class="mm-hero sec">
@@ -4580,10 +4633,10 @@ let srStep=0, srStory=0;
 function wkData(w){
   const r=weekRecap(w), days=weekDays(w), inW=k=>days.includes(k);
   const E=(()=>{ try { return mAll(); } catch(e){ return []; } })(), live=e=>!['cancelled','released','declined','nobook'].includes(e.s);
-  const mJobs=E.filter(e=>e.t==='job'&&live(e)&&e.d.some(inW)), mDays=mJobs.reduce((a,e)=>a+e.d.filter(inW).length,0);
+  const mJobs=E.filter(e=>e.t==='job'&&live(e)&&e.d.some(inW)), mDays=fact('setdays',days[0],days[6]);
   const mCast=E.filter(e=>['casting','selftape','test','fitting','digitals'].includes(e.t)&&e.d.some(inW)).length, mOpt=E.filter(e=>e.t==='option'&&e.d.some(inW)).length;
-  const mBooked=mJobs.reduce((a,e)=>a+(e.rn||0)*e.d.filter(inW).length,0);
-  const T=S.money.budget?.txns||[], spent=T.filter(t=>inW(t.d)&&isSpendTx(t)).reduce((a,t)=>a-t.amt,0), budget=S.money.s.flexPerCheck/2;
+  const mBooked=fact('booked',days[0],days[6]);
+  const T=S.money.budget?.txns||[], spent=fact('spent',days[0],days[6]), budget=S.money.s.flexPerCheck/2;
   const billsPaid=T.filter(t=>inW(t.d)&&t.cat==='fixed'&&t.amt<0).reduce((a,t)=>a-t.amt,0);
   const hd=id=>days.filter(k=>S.days[k]?.habits?.[id]).length;
   const fol=src=>{ const h=(src&&src.hist)||{}, ks=Object.keys(h).filter(inW).sort(); return ks.length>1 ? h[ks[ks.length-1]]-h[ks[0]] : null; };
@@ -4727,23 +4780,13 @@ const KR_STOP=new Set('with that this from your have done make made first each i
 const krWords=t=>((t||'').toLowerCase().replace(/\([^)]*\)/g,' ').match(/[a-z0-9&]{4,}/g)||[]).filter(w=>!KR_STOP.has(w)).map(w=>w.length>5?w.replace(/(ing|ed|es)$/,''):w).map(w=>w.length>4?w.replace(/s$/,''):w);
 function krDataKey(k){ const t=k.text||''; return /hangouts|nights out/i.test(t)?'events':/new people met/i.test(t)?'people':/days on set/i.test(t)?'setdays':/^booked \(\$\)|^booked/i.test(t)?'booked':/castings attended/i.test(t)?'castings':/weeks under spending budget/i.test(t)?'budgetweeks':/datum posts/i.test(t)?'datumposts':/^check-ins/i.test(t)?'checkins':/datum session days/i.test(t)?'datumdays':/gym sessions/i.test(t)?'gym':/journal days/i.test(t)?'journal':/weekly reviews/i.test(t)?'reviews':/combined followers/i.test(t)?'followers':/paid orders/i.test(t)?'orders':/^revenue/i.test(t)?'revenue':/sets made end-to-end/i.test(t)?'sets':null; }
 function krDataCount(key,q){ const [a,b]=qRange(q), cur=q===THIS_Q, inQ=k=>k>=a&&k<=b;
-  if (key==='gym') return gymDays(a,b).size;
-  if (key==='journal') return Object.entries(S.days||{}).filter(([k,d])=>inQ(k)&&d.habits?.[key]).length;
-  if (key==='events'){ try { return socAll().filter(e=>inQ(e.d)).length; } catch(e){ return null; } }
-  if (key==='people') return ((S.circle||{}).people||[]).filter(p=>inQ(p.first)).length;
-  if (key==='checkins') return Object.entries(S.days||{}).filter(([k,d])=>inQ(k)&&d.checkin).length;
-  if (key==='datumdays') return Object.entries(S.days||{}).filter(([k,d])=>inQ(k)&&d.habits?.datum).length;
-  if (key==='datumposts') return (S.logs||[]).filter(l=>l.kind==='post'&&inQ(l.d)&&(l.pillar||pillarOf(l.a||''))==='datum').length;
-  if (key==='setdays'||key==='booked'||key==='castings'){ let E=[]; try{ E=mAll(); }catch(e){} const live=E.filter(e=>!['cancelled','released','declined','nobook'].includes(e.s));
-    if (key==='setdays') return live.filter(e=>e.t==='job').reduce((a,e)=>a+e.d.filter(k=>inQ(k)&&k<=TODAY).length,0);
-    if (key==='booked') return live.filter(e=>e.t==='job').reduce((a,e)=>a+(e.rn||0)*e.d.filter(inQ).length,0);
-    return live.filter(e=>['casting','selftape','test','fitting'].includes(e.t)&&e.d.some(k=>inQ(k)&&k<=TODAY)).length; }
-  if (key==='budgetweeks'){ const wb=S.money.s.flexPerCheck/2, ws=[...new Set(Object.keys(S.days||{}).concat((S.money.budget?.txns||[]).map(t=>t.d)).filter(k=>inQ(k)&&k<TODAY).map(isoWeek))].filter(w=>addDays(weekMonday(w),6)<TODAY); return ws.filter(w=>{ const days=weekDays(w); return (S.money.budget?.txns||[]).filter(t=>days.includes(t.d)&&isSpendTx(t)).reduce((a,t)=>a-t.amt,0)<=wb; }).length; }
+  const FK={events:'events', people:'people', setdays:'setdays', booked:'booked', castings:'castings', checkins:'checkins', datumdays:'habit:datum', datumposts:'posts:datum', gym:'gym', journal:'habit:journal', budgetweeks:'budgetweeks', reviews:'reviews', revenue:'revenue', orders:'orders', sets:'sets'};
+  if (FK[key] && !['revenue','orders','sets'].includes(key)) return fact(FK[key], a, b);
   if (key==='reviews') return Object.entries(S.weeks||{}).filter(([w,x])=>x.review?.done&&inQ(addDays(weekMonday(w),6))).length;
   if (!cur) return null;
   const D=ensureDatum();
   if (key==='orders') return D.orders.filter(o=>['deposit','in-production','delivered','closed'].includes(o.status)).length;
-  if (key==='revenue') return dRevenue();
+  if (key==='revenue') return fact('revenue');
   if (key==='sets') return D.prototypes.filter(p=>p.status==='complete').length;
   if (key==='followers'){ const tot=src=>{ const h=(src&&src.hist)||{}, ks=Object.keys(h).filter(inQ).sort(); return ks.length?[h[ks[0]],h[ks[ks.length-1]]]:null; }; const i=tot(S.ig), t=tot(S.tk); if(!i&&!t) return null; return Math.max(0,((i?i[1]-i[0]:0)+(t?t[1]-t[0]:0))); }
   return null; }
@@ -5228,10 +5271,9 @@ function vCircle(){
 let qcStep=0, qcQ=null;
 function qcData(q){ const [a,b]=qRange(q), inQ=k=>k>=a&&k<=b, Q=S.quarters[q]||{objectives:[]};
   let E=[]; try{ E=mAll(); }catch(e){}
-  const jobs=E.filter(e=>e.t==='job'&&e.s!=='cancelled'&&e.d.some(inQ)), setDays=jobs.reduce((x,e)=>x+e.d.filter(inQ).length,0), booked=jobs.reduce((x,e)=>x+(e.rn||0)*e.d.filter(inQ).length,0);
-  const paid=(()=>{ try { return stmtReceived(a.slice(0,4)).filter(r=>inQ(r.d)).reduce((x,r)=>x+r.amt,0); } catch(e){ return 0; } })();
-  const days=Object.keys(S.days).filter(inQ), active=days.filter(dayActive).length, posts=(S.logs||[]).filter(l=>l.kind==='post'&&inQ(l.d)).length;
-  const datum=days.filter(k=>S.days[k]?.habits?.datum).length, wins=S.wins.filter(w=>inQ(w.d)), events=(()=>{ try{ return socAll().filter(e=>inQ(e.d)); }catch(e){ return []; } })();
+  const jobs=E.filter(e=>e.t==='job'&&!DEAD_S.includes(e.s)&&e.d.some(inQ)), setDays=fact('setdays',a,b), booked=fact('booked',a,b), paid=fact('income',a,b);
+  const days=Object.keys(S.days).filter(inQ), active=days.filter(dayActive).length, posts=fact('posts',a,b);
+  const datum=fact('habit:datum',a,b), wins=S.wins.filter(w=>inQ(w.d)), events=(()=>{ try{ return socAll().filter(e=>inQ(e.d)); }catch(e){ return []; } })();
   const weeks=Object.entries(S.weeks||{}).filter(([w])=>inQ(weekMonday(w))), grades=weeks.map(([,x])=>x.review?.grade).filter(Boolean);
   const best=grades.slice().sort()[0]||'—', objs=Q.objectives.map(o=>({o,p:objPct(o)})).sort((x,y)=>y.p-x.p);
   const firsts=(()=>{ try { return landmarks().done.filter(x=>x.date&&x.date!=='done'&&inQ(x.date)).map(x=>({ic:x.ic,text:x.name,d:x.date})).slice(0,6); } catch(e){ return []; } })();
@@ -5302,7 +5344,7 @@ function jobDay(k){ return liveE().some(e=>e.t==='job'&&e.d.includes(k)); }
 function travelDay(k){ return liveE().some(e=>e.t==='travel'&&e.d.includes(k)); }
 function castDay(k){ return liveE().some(e=>['casting','fitting','test'].includes(e.t)&&e.d.includes(k)); }
 function hangDays(){ return rpgC('hang',()=>{ const s=new Set(); try { socAll().forEach(e=>s.add(e.d)); } catch(e){} return s; }); }
-function spendOn(d){ return (S.money.budget?.txns||[]).filter(t=>t.d===d&&isSpendTx(t)).reduce((a,t)=>a-t.amt,0); }
+function spendOn(d){ return fact('spent',d,d); }
 function overspentOn(k){ return rpgC('os:'+k,()=>{ const wb=(+S.money.s.flexPerCheck||250)/2; let run=0, over=false; for (const d of weekDays(isoWeek(k))){ if (d>k) break; const sp=spendOn(d); run+=sp; if (sp>0 && run>wb) over=true; else if (sp===0 && over && d<TODAY && d<k) over=false; } return over; }); }
 
 /* ---------- stats & perks ---------- */
@@ -5315,9 +5357,9 @@ const PERKS={
   WIS:[[10,'sight','Second Sight','Your review shows a hidden pattern'],[20,'calm','Calm Mind','Overspent only costs 5%'],[30,'sage','Sage','+5% XP on check-in days']],
   LUCK:[[10,'lucky','Lucky Break','Chests drop 2 items'],[20,'fortune','Fortune','Payday lasts 3 days'],[30,'jackpot','Jackpot','Loot rolls one rarity higher']]};
 function rpgBase(){ return rpgC('base',()=>{ const D=ensureDatum(), days=Object.values(S.days||{}), cnt=h=>days.filter(d=>d.habits?.[h]).length;
-  const E=liveE(), jobs=E.filter(e=>e.t==='job').length, casts=E.filter(e=>['casting','selftape'].includes(e.t)).length;
-  const bench=D.prototypes.reduce((a,p)=>a+(+p.hours||0),0), hang=hangDays().size, learn=Object.keys(D.learnDone||{}).length;
-  const reviews=Object.values(S.weeks||{}).filter(w=>w.review?.done).length, closes=days.filter(d=>d.close).length, ci=days.filter(d=>d.checkin).length;
+  const E=liveE(), jobs=fact('jobs'), casts=fact('castings');
+  const bench=fact('benchhrs'), hang=fact('events'), learn=Object.keys(D.learnDone||{}).length;
+  const reviews=fact('reviews'), closes=days.filter(d=>d.close).length, ci=fact('checkins');
   let rb=0; try { if (S.gym&&S.gym.sessions&&S.gym.sessions.length) rb=ARANK.indexOf(aRank(gScore()))*2; } catch(e){}
   return { STR:Math.floor(cnt('gym')/3)+rb, CHA:Math.min(40,Math.floor(jobs/2)+hang+Math.floor((+S.ig?.followers||0)/500)), DEX:Math.floor(bench/2)+Math.floor(cnt('datum')/4),
     INT:learn*2+Math.floor(cnt('guitar')/4)+(S.art||[]).length, WIS:Math.floor((cnt('journal')+reviews*3+closes)/3)+Math.floor(ci/10), LUCK:Math.round(jobs/Math.max(1,jobs+casts)*20) }; }); }
@@ -6847,7 +6889,7 @@ async function coachSend(t){ t=String(t||'').trim(); if(!t||coachBusy) return; c
 /* ---------- 2. Comp card (Modeling → Card) ---------- */
 const MEAS_KEYS=[['height','Height'],['chest','Chest'],['waist','Waist'],['hips','Hips'],['inseam','Inseam'],['suit','Suit'],['shoe','Shoe'],['hair','Hair'],['eyes','Eyes']];
 function mCard(){ const M=mState(); M.meas ||= {}; return (M.card ||= {imgs:[], name:'', agency:''}); }
-function mCardStats(){ const E=mAll(), jobs=E.filter(e=>e.t==='job'&&!['cancelled','released','declined','nobook'].includes(e.s)); const cnt={}; for (const j of jobs) cnt[j.c]=(cnt[j.c]||0)+j.days; return {days:jobs.reduce((a,j)=>a+j.days,0), clients:Object.entries(cnt).sort((a,b)=>b[1]-a[1]).map(([c])=>c)}; }
+function mCardStats(){ const E=mAll(), jobs=E.filter(e=>e.t==='job'&&!['cancelled','released','declined','nobook'].includes(e.s)); const cnt={}; for (const j of jobs) cnt[j.c]=(cnt[j.c]||0)+j.days; return {days:fact('setdays'), clients:Object.entries(cnt).sort((a,b)=>b[1]-a[1]).map(([c])=>c)}; }
 function mCardView(){ const K=mCard(), M=mState(), st=mCardStats();
   return `<div class="cc sec"><div class="cc-imgs">${[0,1,2,3].map(i=>K.imgs[i]?`<div class="cc-i" style="background-image:url('${BLOBURL}${K.imgs[i]}')"><button class="x" onclick="mCardDel(${i})" aria-label="Remove photo">✕</button></div>`:`<label class="cc-i cc-add">＋<span>Photo</span><input type="file" accept="image/*" hidden onchange="mCardUp(${i},this)"></label>`).join('')}</div>
     <div class="cc-name">${esc(K.name||'TEGA')}</div><div class="cc-agency">${esc(K.agency||'ONE Management')}</div>
@@ -7074,14 +7116,16 @@ const KSRC = [
   ['Content','igfollowers','Instagram followers','👥','',()=>igData().followers||0,1],
   ['Modeling','outreach','Outreach logged','🤝','',(a,b)=>(S.logs||[]).filter(l=>l.kind==='outreach'&&l.d>=a&&l.d<=b).length],
   ['Modeling','proposals','Proposals sent','📨','',(a,b)=>(S.logs||[]).filter(l=>l.kind==='proposal'&&l.d>=a&&l.d<=b).length],
-  ['Modeling','setdays','Days on set','🎬','',(a,b)=>liveBookings().filter(e=>e.t==='job').reduce((s,e)=>s+e.d.filter(k=>k>=a&&k<=b&&k<=TODAY).length,0)],
+  ['Modeling','setdays','Days on set','🎬','',(a,b)=>liveBookings().filter(e=>e.t==='job').reduce((s,e)=>s+(e.d||[]).filter(k=>k>=a&&k<=b&&k<=TODAY).length,0)],
+  ['Modeling','setdays:ck','Days on set for Calvin Klein','🎬','',(a,b)=>liveBookings().filter(e=>e.t==='job'&&/calvin/i.test(e.c||'')).reduce((s,e)=>s+(e.d||[]).filter(k=>k>=a&&k<=b&&k<=TODAY).length,0)],
+  ['Modeling','jobs','Jobs','📸','',(a,b)=>liveBookings().filter(e=>e.t==='job'&&(e.d||[]).some(k=>k>=a&&k<=b&&k<=TODAY)).length],
   ['Modeling','booked','Booked ($)','💼','$',(a,b)=>liveBookings().filter(e=>e.t==='job').reduce((s,e)=>s+(e.rn||0)*e.d.filter(k=>k>=a&&k<=b).length,0)],
   ['Modeling','castings','Castings / fittings / tests','🎭','',(a,b)=>liveBookings().filter(e=>['casting','selftape','test','fitting'].includes(e.t)&&e.d.some(k=>k>=a&&k<=b&&k<=TODAY)).length],
   ['Modeling','checks','Checks received','💵','',(a,b)=>((S.money||{}).checks||[]).filter(c=>c.got&&(c.gotOn||c.d)>=a&&(c.gotOn||c.d)<=b).length],
-  ['Modeling','income','Modeling income ($)','💰','$',(a,b)=>{ let t=0; for (let y=+a.slice(0,4); y<=+b.slice(0,4); y++) try { t+=stmtReceived(String(y)).filter(r=>r.d>=a&&r.d<=b).reduce((s,r)=>s+r.amt,0); } catch(e){} return Math.round(t); }],
+  ['Modeling','income','Modeling income ($)','💰','$',(a,b)=>{ let t=0; const y0=Math.max(2020,+a.slice(0,4)||2020), y1=Math.min(+TODAY.slice(0,4)+1,+b.slice(0,4)||2100); for (let y=y0; y<=y1; y++) try { t+=stmtReceived(String(y)).filter(r=>r.d>=a&&r.d<=b).reduce((s,r)=>s+r.amt,0); } catch(e){} return Math.round(t*100)/100; }],
   ['Datum','benchhrs','Bench hours','⏱','h',(a,b)=>{ let m=0; for (const p of ensureDatum().prototypes) for (const l of (p.log||[])) if (l.kind==='session'&&l.d>=a&&l.d<=b) m+=+l.mins||0; return Math.round(m/6)/10; }],
   ['Datum','orders','Paid orders','🧾','',(a,b)=>ensureDatum().orders.filter(o=>['deposit','in-production','delivered','closed'].includes(o.status)&&(!o.opened||(o.opened>=a&&o.opened<=b))).length],
-  ['Datum','revenue','Datum revenue ($)','💎','$',()=>Math.round(dRevenue()),1],
+  ['Datum','revenue','Datum revenue ($)','💎','$',(a,b)=>Math.round(incomeBy(a,b).datum)],
   ['Datum','sets','Sets finished','🦷','',()=>ensureDatum().prototypes.filter(p=>p.status==='complete').length,1],
   ['Days','gym','Gym workouts','💪','',(a,b)=>gymDays(a,b).size],
   ['Days','checkins','Check-ins','☀️','',(a,b)=>dCount(a,b,d=>d.checkin)],
@@ -7091,6 +7135,7 @@ const KSRC = [
   ['Days','reviews','Sunday Reviews done','🔁','',(a,b)=>Object.entries(S.weeks||{}).filter(([w,x])=>x.review?.done&&addDays(weekMonday(w),6)>=a&&addDays(weekMonday(w),6)<=b).length],
   ['Days','guitar','Guitar minutes','🎸','',(a,b)=>Math.round(gtr().log.filter(l=>l.d>=a&&l.d<=b).reduce((s,l)=>s+(+l.mins||0),0))],
   ['Money','budgetweeks','Weeks under spending budget','🧮','',(a,b)=>{ const wb=S.money.s.flexPerCheck/2, tx=S.money.budget?.txns||[], ws=[...new Set(Object.keys(S.days||{}).concat(tx.map(t=>t.d)).filter(k=>k>=a&&k<=b&&k<TODAY).map(isoWeek))].filter(w=>addDays(weekMonday(w),6)<TODAY); return ws.filter(w=>{ const days=weekDays(w); return tx.filter(t=>days.includes(t.d)&&isSpendTx(t)).reduce((s,t)=>s-t.amt,0)<=wb; }).length; }],
+  ['Money','spent','Spent from spending money ($)','🛍','$',(a,b)=>Math.round((S.money.budget?.txns||[]).filter(t=>t.d>=a&&t.d<=b&&isSpendTx(t)).reduce((s,t)=>s-t.amt,0)*100)/100],
   ['Money','ef','Emergency fund ($)','🛟','$',()=>Math.round(+S.money.s.efNow||0),1],
   ['Money','tax','Tax Buffer ($)','🏛','$',()=>Math.round(+S.money.s.taxBufNow||0),1],
   ['Money','roth','Roth this year ($)','🌱','$',()=>Math.round(+S.money.s.rothYtd||0),1],
@@ -7098,16 +7143,20 @@ const KSRC = [
   ['Money','house','House fund ($)','🏠','$',()=>Math.round(+S.money.s.houseNow||0),1],
   ['Money','writeoffs','Write-offs logged ($)','🧾','$',(a,b)=>Math.round(((S.money.budget||{}).deductibles||[]).filter(x=>(x.d||x.date||'')>=a&&(x.d||x.date||'')<=b).reduce((s,x)=>s+(+x.amt||0),0))],
   ['People','events','Hangouts / events','🎉','',(a,b)=>{ try { return socAll().filter(e=>e.d>=a&&e.d<=b).length; } catch(e){ return null; } }],
-  ['People','people','New people met','🙋','',(a,b)=>((S.circle||{}).people||[]).filter(p=>p.first>=a&&p.first<=b).length],
+  ['People','people','New people met','🙋','',(a,b)=>((S.circle||{}).people||[]).filter(p=>(p.first||'')>=a&&(p.first||'')<=b).length],
+  ['People','regulars','People you see 3+ times','🫂','',()=>((S.circle||{}).people||[]).filter(p=>(+p.n||1)>=3).length,1],
 ];
 // b179: bench sessions as a count, overall and per weekday ("Bench day Monday")
 const DAYN=['sun','mon','tue','wed','thu','fri','sat'], DAYL={sun:'Sundays',mon:'Mondays',tue:'Tuesdays',wed:'Wednesdays',thu:'Thursdays',fri:'Fridays',sat:'Saturdays'};
-const benchSessions=(a,b,dw)=>{ const ds=new Set(); for (const p of ensureDatum().prototypes) for (const l of (p.log||[])) if (l.kind==='session'&&l.d>=a&&l.d<=b&&(dw==null||parseD(l.d).getDay()===dw)) ds.add(dw==null?ds.size+':'+l.d:l.d); return ds.size; };
+const benchSessions=(a,b,dw)=>{ const ds=new Set(); for (const p of ensureDatum().prototypes) for (const l of (p.log||[])) if (l.kind==='session'&&!l.adj&&l.d>=a&&l.d<=b&&(dw==null||parseD(l.d).getDay()===dw)) ds.add(dw==null?ds.size+':'+l.d:l.d); return ds.size; };
 if (!KSRC.some(x=>x[1]==='benchn')){ KSRC.push(['Datum','benchn','Bench sessions','🔨','',(a,b)=>benchSessions(a,b)]); DAYN.forEach((d,i)=>KSRC.push(['Datum','bench:'+d,'Bench sessions on '+DAYL[d],'🔨','',(a,b)=>benchSessions(a,b,i)])); }
 // b179: link weekly goals to tracked data as they're added (once per goal, so unlinking sticks)
 function wkAutoLink2(){ const R=[[/bench day (mon|tue|wed|thu|fri|sat|sun)/i,m=>'bench:'+m[1].toLowerCase(),()=>1],[/(\d+)?\s*bench sessions?|bench session/i,()=>'benchn',m=>+m[1]||1],[/paid orders?\D{0,3}(\d+)/i,()=>'orders',m=>+m[1]||1],[/(\d+) (?:client )?outreach|reach out to (\d+)/i,()=>'outreach',m=>+(m[1]||m[2])||1],[/(\d+) (?:upwork )?proposals?/i,()=>'proposals',m=>+m[1]||1],[/gym (?:×|x)?\s*(\d+)|(\d+) gym/i,()=>'gym',m=>+(m[1]||m[2])||1],[/(\d+) posts?\b/i,()=>'posts',m=>+m[1]||1]];
   const L=[...(S.weeklyTemplate||[]), ...(ensureWeek(THIS_WEEK).extra||[])];
   for (const i of L){ if (i.src || i.srcTried) continue; i.srcTried=1; for (const [re,src,n] of R){ const m=re.exec(i.text||''); if (!m) continue; i.src=src(m); i.target=n(m); break; } } }
+// ONE SOURCE OF TRUTH: every count in the app (skill trees, goals, recaps, week view, bosses, stats) asks fact() — never re-derives it
+function fact(key, a='0000-01-01', b=TODAY){ return rpgC('f:'+key+a+b,()=>{ const F=ksrcAll().find(x=>x[1]===key); if(!F) return 0; try { return +F[5](a,b)||0; } catch(e){ return 0; } }); }
+const isPastDay = k => k<=TODAY;
 function ksrcAll(){ const hab=(S.habits||[]).filter(h=>h.id!=='gym').map(h=>['Habits','habit:'+h.id,`${h.name} (days)`,h.icon,'',(a,b)=>dCount(a,b,d=>d.habits?.[h.id])]); return KSRC.concat(hab); }
 const ksrc = key => ksrcAll().find(s=>s[1]===key);
 function srcVal(key,a,b){ const s=ksrc(key); if(!s) return null; if (s[6] && b<TODAY) return null; try { const v=s[5](a,b); return v===null||v===undefined||isNaN(v)?null:+v; } catch(e){ return null; } }
@@ -8013,7 +8062,7 @@ function wardenCard(){ try { const B=aBoss(); if (!B.max) return ''; const pct=B
     <div class="hp big"><b style="width:${Math.max(B.hp>0?1:0,Math.round(pct*100))}%"></b><span class="num">${w(B.hp)} / ${w(B.max)} ${u}</span></div>
     ${hits.length?`<div class="hits">${hits.map(h=>`<div><span class="sub num">${nice(h.d)}</span><b class="num" style="color:var(--good)">−${w(h.dmg)}</b>${h.crit?`<small class="sub">${h.crit} crit${h.crit>1?'s':''}</small>`:''}</div>`).join('')}</div>`:`<div class="help keep" style="margin-top:8px">No hits this month yet.</div>`}
     <button class="btn ghost sm" style="margin-top:10px" onclick="go('gym')">⚔️ Train to hit it ›</button></div>`; } catch(e){ return ''; } }
-function bossOpen(){ stMode='progress'; go('evolve'); setTimeout(()=>document.querySelector('.br-card')?.scrollIntoView({behavior:'smooth',block:'start'}),350); }
+function bossOpen(){ bossGo(''); }
 
 /* ===================== b192: one live loop + XP multiplier ===================== */
 // Every source refreshes when the app opens or comes back, so bosses, levels, rings, the city and Circle all move with new data
@@ -8419,7 +8468,7 @@ function coins(){ const F=flexNow(); if (!F) return null; const per=F.earned/Mat
   const spent=F.spentTx.filter(t=>t.d<=last).reduce((a,t)=>a-t.amt,0); return {banked:Math.round(per*el-spent), per, el, spent, thru:last, days:F.days}; }
 function coinXP(){ let xp=0; try { const L=S.money.checks.filter(c=>c.got&&(c.gotOn||c.d)>='2026-10-19').sort((a,b)=>(a.gotOn||a.d).localeCompare(b.gotOn||b.d)), thru=bankThrough()||TODAY;
   L.forEach((c,i)=>{ const st=c.gotOn||c.d, nx=L[i+1], en=nx?(nx.gotOn||nx.d):addDays(st,14), per=flexForCheck(c)/Math.max(1,daysBetween(st,en));
-    for (let d=st; d<en && d<=thru && d<TODAY; d=addDays(d,1)){ const sp=S.money.budget.txns.filter(t=>t.d===d && isSpendTx(t)).reduce((a,t)=>a-t.amt,0); if (sp<=per) xp+=5; } }); } catch(e){} return xp; }
+    for (let d=st; d<en && d<=thru && d<TODAY; d=addDays(d,1)){ const sp=spendOn(d); if (sp<=per) xp+=5; } }); } catch(e){} return xp; }
 function coinChip(){ const C=coins(); if (!C) return ''; const up=C.banked>=0;
   return `<div class="coin-chip ${up?'up':'down'}"><span>🪙</span><div><b class="num">${up?'+':'−'}${money0(Math.abs(C.banked))}</b> ${up?'banked':'over pace'}<small>spending pace ${money0(C.per)}/day · through ${nice(C.thru)} · 5 XP per day under</small></div></div>`; }
 // ranks: real milestones, in order
@@ -8467,13 +8516,13 @@ const ABOSS={
 };
 const monthDays = m => new Date(+m.slice(0,4), +m.slice(5,7), 0).getDate();
 function aBossEvents(k, m){ const E=[], inM=d=>d&&String(d).slice(0,7)===m, past=d=>d<=TODAY;
-  if (k==='datum'){ const D=ensureDatum(); for (const p of D.prototypes||[]){ for (const l of p.log||[]) if (l.kind==='session' && inM(l.d)) E.push({d:l.d, dmg:Math.round((+l.mins||0)/60*12), l:`Bench ${fmtMins(+l.mins||0)}`}); for (const [st,d] of Object.entries(p.stageAt||{})) if (inM(d)) E.push({d, dmg:20, l:`${p.name||'Piece'} → ${st}`}); }
+  if (k==='datum'){ const D=ensureDatum(); for (const p of D.prototypes||[]){ for (const l of p.log||[]) if (l.kind==='session' && inM(l.d) && (+l.mins||0)>0) E.push({d:l.d, dmg:Math.round((+l.mins||0)/60*12), l:`Bench ${fmtMins(+l.mins||0)}`}); for (const [st,d] of Object.entries(p.stageAt||{})) if (inM(d)) E.push({d, dmg:20, l:`${p.name||'Piece'} → ${st}`}); }
     for (const o of D.orders||[]) if (inM(o.delivered)) E.push({d:o.delivered, dmg:40, l:`Delivered: ${o.who||'order'}`, crit:1});
     const sd=[...new Set(E.filter(e=>/^Bench/.test(e.l)).map(e=>e.d))].sort(); heals(E, m, sd, 7, 15, 'Cold Bench'); }
   if (k==='content'){ for (const l of S.logs||[]) if (l.kind==='post' && inM(l.d)) E.push({d:l.d, dmg:15, l:'Post'}); for (const x of S.ideas||[]) if (inM(x.done)) E.push({d:x.done, dmg:6, l:'Idea shot'});
     for (const a of S.art||[]) if (inM(a.d)) E.push({d:a.d, dmg:5, l:'Art piece'}); for (const g of (S.gtr||{}).log||[]) if (inM(g.d)) E.push({d:g.d, dmg:3, l:'Guitar session'});
     heals(E, m, (S.logs||[]).filter(l=>l.kind==='post').map(l=>l.d).sort(), 7, 10, 'Ghosted'); }
-  if (k==='social'){ const hd=[...hangDays()].filter(inM).sort(); for (const d of hd) E.push({d, dmg:20, l:'Hangout / event'}); for (const p0 of ((S.circle||{}).people||[])) if (inM(p0.first)) E.push({d:p0.first, dmg:25, l:`Met ${p0.name}`});
+  if (k==='social'){ for (const e of socAll().filter(e=>inM(e.d))) E.push({d:e.d, dmg:20, l:e.name||'Hangout / event'}); for (const p0 of ((S.circle||{}).people||[])) if (inM(p0.first)) E.push({d:p0.first, dmg:25, l:`Met ${p0.name}`});
     for (const [d,day] of Object.entries(S.days||{})) if (inM(d)) for (const t of day.top3||[]) if (t.done && /parent|mom|dad/i.test(t.text||'')) E.push({d, dmg:8, l:'Called your parents'});
     heals(E, m, [...hangDays()].sort(), 10, 15, 'Isolation'); }
   if (k==='mind'){ for (const [d,day] of Object.entries(S.days||{})){ if (!inM(d)) continue; const h=day.habits||{}; let n=0; if (day.checkin) n+=2; for (const x of ['read','journal','morning']) if (h[x]) n+=2;
@@ -8497,8 +8546,8 @@ function rosterRows(){ const R=[];
   for (const k of ['social','mind']) { const B=aBossState(k); R.push({k, area:B.area, c:B.c, ic:B.ic, name:B.name, title:B.title, pct:B.pct, hp:Math.round(B.hp), max:B.max, dead:B.dead, phase:B.phase}); }
   return R; }
 function bossRoster(){ const R=rosterRows(), up=R.filter(r=>!r.dead).length;
-  return `<div class="card sec br-card"><div class="hdr"><h2>⚔️ Bosses</h2><span class="sub">${up} awake · ${R.length-up} down · ${MON3[+TODAY.slice(5,7)-1]} gates</span></div>
-    ${R.map(r=>`<button class="br-r ${r.dead?'dead':''}" style="--c:${r.c}" onclick="bossSheet('${r.k}')"><span class="br-ic">${r.dead?'💀':r.ic}</span><span class="br-m"><span class="br-t"><b>${esc(r.name)}</b><em>${r.area}</em></span><i class="br-hp"><u style="width:${Math.max(r.dead?0:2,Math.round(r.pct*100))}%"></u></i><small>${r.dead?'Defeated':esc(r.phase)} · ${r.hp} / ${r.max}</small></span><span class="br-go">›</span></button>`).join('')}
+  return `<div class="card sec br-card"><div class="hdr"><h2>⚔️ Bosses</h2><button class="btn ghost sm" onclick="bossGo('')">All ${R.length} ›</button></div><div class="sub" style="margin:-6px 0 6px">${up} awake · ${R.length-up} down · ${MON3[+TODAY.slice(5,7)-1]} gates</div>
+    ${R.map(r=>`<button class="br-r ${r.dead?'dead':''}" style="--c:${r.c}" onclick="bossGo('${r.k==='cards'?'card-'+r.name:r.k}')"><span class="br-ic">${r.dead?'💀':r.ic}</span><span class="br-m"><span class="br-t"><b>${esc(r.name)}</b><em>${r.area}</em></span><i class="br-hp"><u style="width:${Math.max(r.dead?0:2,Math.round(r.pct*100))}%"></u></i><small>${r.dead?'Defeated':esc(r.phase)} · ${r.hp} / ${r.max}</small></span><span class="br-go">›</span></button>`).join('')}
     <div class="sub" style="margin-top:8px">Every boss runs on what you actually do. Monthly gates reset on the 1st — beat one before then for 300 XP.</div></div>`; }
 function bossSheet(k){ let html='';
   if (k==='vault') html=raidCard('vault')+`<div class="help keep" style="padding:0 6px">The money ONE still owes you. Every agency check — typed in or found by the bank — is a hit.</div>`;
@@ -8518,6 +8567,118 @@ function bossSheet(k){ let html='';
       ${hl.length?`<div class="hits" style="margin-top:6px">${hl.map(h=>`<div><span class="sub num">${nice(h.d)}</span><b class="num" style="color:var(--bad)">+${-h.dmg}</b><small class="sub">${esc(h.l)}</small></div>`).join('')}</div>`:''}
       <button class="btn sm" style="margin-top:12px;width:100%;justify-content:center" onclick="gSheetClose();${B.go}">⚔️ Go hit it ›</button></div>`; }
   gSheet(html); }
+
+/* ===================== b226: animated boss art (SVG + CSS) ===================== */
+function golemArt(pct, dead){ const heat=dead?0:Math.max(.25,pct), cr=`rgba(255,${Math.round(90+80*heat)},20,${(.35+.65*heat).toFixed(2)})`;
+  if (dead) return `<svg viewBox="0 0 200 150" class="ba ba-dead"><ellipse cx="100" cy="132" rx="70" ry="10" fill="#000" opacity=".35"/>${[[60,120,22],[92,124,26],[128,121,20],[110,108,16],[78,110,14]].map(([x,y,r])=>`<polygon points="${x-r},${y+10} ${x-r*.6},${y-r*.7} ${x+r*.5},${y-r} ${x+r},${y+10}" fill="#4a4440" stroke="#2a2422" stroke-width="2"/>`).join('')}<circle cx="100" cy="118" r="5" fill="#ff7a1a" class="ba-pulse" opacity=".6"/></svg>`;
+  return `<svg viewBox="0 0 200 150" class="ba"><defs><radialGradient id="gcore" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff3b0"/><stop offset=".45" stop-color="#ffb11a"/><stop offset="1" stop-color="#ff3d00" stop-opacity="0"/></radialGradient></defs>
+    <ellipse cx="100" cy="138" rx="58" ry="8" fill="#ff5a00" opacity=".25" class="ba-pulse"/>
+    <g class="ba-bob">
+      <path d="M62 132 L70 96 L58 70 L72 40 L100 30 L128 40 L142 70 L130 96 L138 132 L114 132 L108 108 L92 108 L86 132 Z" fill="#3b2b24" stroke="#1d1411" stroke-width="3"/>
+      <path d="M58 70 L34 84 L28 112 L42 116 L50 92 L66 84" fill="#33251f" stroke="#1d1411" stroke-width="3" class="ba-armL"/>
+      <path d="M142 70 L166 84 L172 112 L158 116 L150 92 L134 84" fill="#33251f" stroke="#1d1411" stroke-width="3" class="ba-armR"/>
+      <g stroke="${cr}" stroke-width="2.4" fill="none" stroke-linecap="round" class="ba-glow"><path d="M78 48 L88 62 L82 76"/><path d="M122 50 L114 64 L120 80"/><path d="M90 88 L100 98 L112 90"/><path d="M40 92 L48 100"/><path d="M160 92 L152 102"/><path d="M96 112 L98 126"/></g>
+      <circle cx="100" cy="72" r="15" fill="url(#gcore)" class="ba-pulse"/>
+      <path d="M84 50 L94 48 L92 54 Z M116 50 L106 48 L108 54 Z" fill="#ffd166" class="ba-eye"/>
+    </g>
+    ${[0,1,2].map(i=>`<circle cx="${70+i*30}" cy="118" r="2.6" fill="#ff7a1a" class="ba-drip" style="animation-delay:${i*.7}s"/>`).join('')}
+  </svg>`; }
+function algoArt(pct, dead){ const n=6, open=dead?0:1;
+  const stalks=[...Array(n)].map((_,i)=>{ const a=-160+i*28, x=100+Math.cos(a*Math.PI/180)*70, y=96+Math.sin(a*Math.PI/180)*62; return `<g class="ba-sway" style="transform-origin:100px 120px;animation-delay:${i*.35}s"><path d="M100 120 Q${(100+x)/2+((i%2)?14:-14)} ${(120+y)/2} ${x} ${y}" stroke="#123a4a" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M100 120 Q${(100+x)/2+((i%2)?14:-14)} ${(120+y)/2} ${x} ${y}" stroke="#2bd4ff" stroke-width="2" fill="none" opacity=".5"/>${open?`<g class="ba-blink" style="animation-delay:${i*.9}s;transform-origin:${x}px ${y}px"><ellipse cx="${x}" cy="${y}" rx="9" ry="7" fill="#e8fbff"/><circle cx="${x+1}" cy="${y}" r="3.6" fill="#0b2b3a"/><circle cx="${x+2}" cy="${y-1.5}" r="1.2" fill="#fff"/></g>`:`<path d="M${x-8} ${y} Q${x} ${y+5} ${x+8} ${y}" stroke="#7aa" stroke-width="2" fill="none"/>`}</g>`; }).join('');
+  return `<svg viewBox="0 0 200 150" class="ba ${dead?'ba-dead':''}"><defs><radialGradient id="aeye" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#bff3ff"/></radialGradient><linearGradient id="abeam" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#4dd8ff" stop-opacity=".55"/><stop offset="1" stop-color="#4dd8ff" stop-opacity="0"/></linearGradient></defs>
+    ${open?`<polygon points="100,110 40,150 160,150" fill="url(#abeam)" class="ba-scan"/>`:''}
+    ${stalks}
+    <g class="ba-bob"><circle cx="100" cy="112" r="28" fill="#0d2430" stroke="#2bd4ff" stroke-width="2"/>
+    ${open?`<ellipse cx="100" cy="112" rx="22" ry="17" fill="url(#aeye)"/><g class="ba-look"><circle cx="100" cy="112" r="10" fill="#0aa6d8"/><circle cx="100" cy="112" r="5" fill="#04161e"/><circle cx="103" cy="108" r="2.2" fill="#fff"/></g>`:`<path d="M80 112 Q100 124 120 112" stroke="#7aa" stroke-width="3" fill="none"/>`}</g>
+  </svg>`; }
+function hermitArt(pct, dead){ return `<svg viewBox="0 0 200 150" class="ba ${dead?'ba-dead':''}"><defs><radialGradient id="hglow" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#bda2ff" stop-opacity=".9"/><stop offset="1" stop-color="#bda2ff" stop-opacity="0"/></radialGradient></defs>
+    <path d="M20 20 L60 20 M20 20 L20 60 M20 20 L48 48 M28 20 Q30 34 20 36 M40 20 Q40 40 20 46" stroke="#5a4f7a" stroke-width="1" fill="none" opacity=".7"/>
+    <path d="M30 140 L30 70 Q30 52 48 52 L152 52 Q170 52 170 70 L170 140" fill="#2a2140" stroke="#140f22" stroke-width="3"/>
+    <rect x="22" y="96" width="156" height="34" rx="12" fill="#3a2d58" stroke="#140f22" stroke-width="3"/>
+    ${dead?`<g transform="translate(118 132) rotate(24)"><path d="M-14 0 L-14 -12 L-7 -5 L0 -15 L7 -5 L14 -12 L14 0 Z" fill="#f5c542" stroke="#8a6a12" stroke-width="1.5"/></g><text x="100" y="86" text-anchor="middle" font-size="11" fill="#bda2ff" opacity=".7">the couch is empty</text>`:`
+    <g class="ba-bob"><path d="M70 100 Q70 62 100 58 Q130 62 130 100 Z" fill="#1d1630" stroke="#0c0916" stroke-width="3"/>
+      <ellipse cx="100" cy="80" rx="20" ry="18" fill="#0c0916"/>
+      <ellipse cx="100" cy="86" rx="30" ry="24" fill="url(#hglow)" class="ba-flicker"/>
+      <circle cx="93" cy="80" r="2.4" fill="#e9dcff" class="ba-eye"/><circle cx="107" cy="80" r="2.4" fill="#e9dcff" class="ba-eye"/>
+      <g class="ba-crown"><path d="M82 60 L82 46 L91 54 L100 42 L109 54 L118 46 L118 60 Z" fill="#f5c542" stroke="#8a6a12" stroke-width="1.5"/><circle cx="100" cy="50" r="2.2" fill="#ff5a7a"/></g>
+      <rect x="92" y="96" width="16" height="24" rx="3" fill="#0c0916" stroke="#bda2ff" stroke-width="1.2"/><rect x="94" y="99" width="12" height="17" rx="1.5" fill="#cbb6ff" class="ba-flicker"/></g>`}
+    ${[0,1,2].map(i=>`<text x="${150+i*8}" y="${48-i*10}" font-size="${9+i*2}" fill="#bda2ff" opacity=".7" class="ba-zz" style="animation-delay:${i*.8}s">z</text>`).join('')}
+  </svg>`; }
+function fogArt(pct, dead){ const sun=dead?1:Math.max(0,1-pct);
+  const puff=(x,y,r,o,d,c)=>`<g class="ba-drift" style="animation-delay:${d}s;animation-duration:${9+r/6}s"><circle cx="${x}" cy="${y}" r="${r}" fill="${c}" opacity="${o}"/><circle cx="${x+r*.8}" cy="${y+4}" r="${r*.75}" fill="${c}" opacity="${o}"/><circle cx="${x-r*.8}" cy="${y+6}" r="${r*.7}" fill="${c}" opacity="${o}"/></g>`;
+  return `<svg viewBox="0 0 200 150" class="ba"><defs><radialGradient id="fsun" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff6c2"/><stop offset="1" stop-color="#ffcf4d" stop-opacity="0"/></radialGradient></defs>
+    <rect width="200" height="150" fill="${dead?'#7fc8ff':'transparent'}" opacity=".35"/>
+    <circle cx="150" cy="38" r="${18+sun*16}" fill="url(#fsun)" opacity="${(.15+sun*.85).toFixed(2)}" class="ba-pulse"/><circle cx="150" cy="38" r="${6+sun*8}" fill="#ffe27a" opacity="${(.2+sun*.8).toFixed(2)}"/>
+    ${dead?'':[[50,70,30,.75,0,'#d9d2e6'],[120,90,36,.8,1.5,'#cfc6de'],[80,112,32,.85,.8,'#e6e0ef'],[150,118,26,.7,2.2,'#d2cadf'],[30,118,24,.65,3,'#cbc2da']].map(a=>puff(...a)).join('')}
+    ${dead?'':`<g class="ba-blink" style="transform-origin:100px 92px"><ellipse cx="88" cy="92" rx="7" ry="4" fill="#ff9ad5"/><ellipse cx="112" cy="92" rx="7" ry="4" fill="#ff9ad5"/><circle cx="88" cy="92" r="2" fill="#2a1030"/><circle cx="112" cy="92" r="2" fill="#2a1030"/></g>`}
+    ${dead?`<path d="M30 120 Q100 96 170 120" stroke="#fff" stroke-width="2" fill="none" opacity=".6"/><text x="100" y="138" text-anchor="middle" font-size="11" fill="#fff" opacity=".85">clear skies</text>`:''}
+  </svg>`; }
+function stingerArt(pct, dead){ return `<svg viewBox="0 0 200 150" class="ba ${dead?'ba-dead':''}"><defs><linearGradient id="scard" x1="0" x2="1"><stop offset="0" stop-color="#2b2f3a"/><stop offset="1" stop-color="#4a5163"/></linearGradient></defs>
+    <ellipse cx="100" cy="134" rx="62" ry="7" fill="#000" opacity=".3"/>
+    <g class="${dead?'':'ba-bob'}">
+      <g class="${dead?'':'ba-tail'}" style="transform-origin:138px 96px"><path d="M138 96 Q170 92 168 62 Q166 36 140 34" stroke="#c0392b" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M138 96 Q170 92 168 62 Q166 36 140 34" stroke="#ff7a59" stroke-width="3" fill="none" stroke-dasharray="6 6"/><path d="M142 26 L128 36 L144 42 Z" fill="#ffd166" stroke="#7a2b12" stroke-width="1.5"/></g>
+      <rect x="58" y="76" width="84" height="52" rx="8" fill="url(#scard)" stroke="#111" stroke-width="2.5"/>
+      <rect x="68" y="90" width="16" height="12" rx="2" fill="#d4b35a"/><path d="M68 96 H84 M76 90 V102" stroke="#8a6a12" stroke-width="1"/>
+      <text x="100" y="121" text-anchor="middle" font-size="7" fill="#ffb199" font-family="monospace">•••• 1176</text>
+      <circle cx="122" cy="90" r="4" fill="${dead?'#555':'#ff453a'}" class="ba-eye"/><circle cx="132" cy="90" r="4" fill="${dead?'#555':'#ff453a'}" class="ba-eye"/>
+      <g class="${dead?'':'ba-snapL'}" style="transform-origin:62px 90px"><path d="M62 90 L36 80 L22 66" stroke="#c0392b" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M22 66 L10 58 M22 66 L12 74" stroke="#c0392b" stroke-width="5" stroke-linecap="round"/></g>
+      <g class="${dead?'':'ba-snapR'}" style="transform-origin:62px 112px"><path d="M62 112 L34 122 L20 136" stroke="#c0392b" stroke-width="6" fill="none" stroke-linecap="round"/></g>
+      ${[0,1,2].map(i=>`<path d="M${74+i*22} 128 L${70+i*22} 140" stroke="#c0392b" stroke-width="4" stroke-linecap="round" class="ba-leg" style="animation-delay:${i*.15}s"/>`).join('')}
+    </g></svg>`; }
+function drakeArt(pct, dead){ return `<svg viewBox="0 0 200 150" class="ba ${dead?'ba-dead':''}"><defs><linearGradient id="dscale" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a3c"/><stop offset="1" stop-color="#d4581a"/></linearGradient></defs>
+    <g class="${dead?'':'ba-flap'}" style="transform-origin:100px 70px"><path d="M100 70 L30 30 L46 62 L20 64 L44 82 Z" fill="#b8481a" stroke="#4a1a08" stroke-width="2.5"/><path d="M100 70 L170 30 L154 62 L180 64 L156 82 Z" fill="#b8481a" stroke="#4a1a08" stroke-width="2.5"/></g>
+    <g class="${dead?'':'ba-bob'}">
+      <path d="M70 130 Q60 96 84 80 L116 80 Q140 96 130 130 Z" fill="url(#dscale)" stroke="#4a1a08" stroke-width="3"/>
+      ${[0,1,2,3].map(i=>`<path d="M${82+i*12} ${96+(i%2)*8} l6 -6 l6 6" stroke="#ffd2a8" stroke-width="2" fill="none" opacity=".7"/>`).join('')}
+      <path d="M76 82 Q74 44 100 40 Q126 44 124 82 Z" fill="url(#dscale)" stroke="#4a1a08" stroke-width="3"/>
+      <path d="M82 46 L74 26 L90 42 M118 46 L126 26 L110 42" fill="#ffd166" stroke="#4a1a08" stroke-width="2"/>
+      <ellipse cx="90" cy="58" rx="5" ry="${dead?1:4}" fill="${dead?'#333':'#fff3b0'}" class="ba-eye"/><ellipse cx="110" cy="58" rx="5" ry="${dead?1:4}" fill="${dead?'#333':'#fff3b0'}" class="ba-eye"/>
+      <path d="M92 74 Q100 80 108 74" stroke="#4a1a08" stroke-width="2.5" fill="none"/><circle cx="95" cy="70" r="1.6" fill="#4a1a08"/><circle cx="105" cy="70" r="1.6" fill="#4a1a08"/>
+      ${dead?'':[0,1,2].map(i=>`<circle cx="${96+i*4}" cy="66" r="4" fill="#bbb" opacity=".6" class="ba-smoke" style="animation-delay:${i*.6}s"/>`).join('')}
+      <circle cx="100" cy="104" r="11" fill="#ff7a1a" stroke="#4a1a08" stroke-width="2"/><text x="100" y="108" text-anchor="middle" font-size="9" font-weight="900" fill="#4a1a08">D</text>
+    </g></svg>`; }
+
+/* ===================== b226: the Bosses page — every boss, animated, in one place ===================== */
+function bossList(){ const L=[];
+  try { const V=vault(); if (V.max) L.push({id:'vault', area:'MODEL', c:'#ff3df2', name:'The Vault', title:'Hoard of the Agency', pct:V.pct, dead:V.hp<=0, hpT:money0(V.hp), maxT:money0(V.max), phase:phaseOf(V.pct)[1], phases:VAULT_PH.map(p=>p[1]),
+    lore:'Your agency’s ledger, swollen with money you already earned on set. It doesn’t fight — it just sits on your pay and waits for you to forget.',
+    how:[['An agency check lands','its full amount'],['You type in a check the bank hasn’t posted','counts right away']], attack:['Slow Pay','every month a job stays unpaid, it gets harder to pry loose — chase the oldest invoice'], loot:'Broke the Bank trophy · big XP chest',
+    hits:V.hits.map(h=>({d:h.d, v:'−'+money0(h.amt), l:'check landed'})), art:()=> (pxOn()&&PXW.vault_idle)?bossSprite('vault',V,0):vaultArt(V,0), go:"go('model')"}); } catch(e){}
+  for (const k of ['datum','content']) L.push(abItem(k));
+  try { const W=aBoss(); if (W.max){ const u=gU(), w=v=>Math.round(gShowW(v)).toLocaleString(); L.push({id:'warden', area:'BODY', c:'#ff5a5a', name:'The Iron Warden', title:'Keeper of the Monthly Gate', pct:W.hp/W.max, dead:!!W.dead, hpT:w(W.hp), maxT:w(W.max)+' '+u, phase:wardenPhase(W.hp/W.max)[1], phases:['Dormant','Stirring','Cracked','Broken'],
+    lore:'A stone sentinel that measures you in weight moved. A new gate rises on the 1st of every month, sized to what you lifted before.',
+    how:[[`Every ${u} you lift`,'1 HP'],['A personal record','crit']], attack:['New gate','it rebuilds every month — miss a month and it’s waiting'], loot:'Iron trophy · rank points',
+    hits:W.hits.slice().sort((a,b)=>b.d.localeCompare(a.d)).map(h=>({d:h.d, v:'−'+w(h.dmg), l:h.crit?h.crit+' crit':'session'})), art:()=>PXW.warden_idle?(pxOn()?bossSprite('warden',{hp:W.hp,max:W.max,pct:W.hp/W.max},false):`<img class="bossimg ${W.dead?'dead':''}" src="${PXW.warden_still.src}" alt="">`):wardenArt(W), go:"go('gym')"}); } } catch(e){}
+  try { const Wy=wyrm(); if (Wy.need>1) L.push({id:'wyrm', area:'MONEY', c:'#39ff9f', name:'The Tax Wyrm', title:'Coiled on the Buffer', pct:Wy.pct, dead:Wy.hp<=0, hpT:money0(Wy.hp), maxT:money0(Wy.max), phase:(WYRM_PH.find(p=>Wy.pct>=p[0])||WYRM_PH[3])[1], phases:WYRM_PH.map(p=>p[1]),
+    lore:'A coin-scaled serpent that eats 32% of every check you get. Its HP is your tax gap — what you owe since January minus what you’ve set aside or paid.',
+    how:[['Tax Buffer move ticked on a check','its amount'],['Estimated payment logged','its amount'],['A write-off confirmed','32% of it']], attack:['Hoard','every check that lands grows it by 32% of the check'], loot:'Wyrmslayer trophy · big XP chest',
+    hits:Wy.hits.map(h=>({d:h.d, v:'−'+money0(h.amt), l:h.l||'set aside'})), art:()=> (pxOn()&&PXW.wyrm_idle)?bossSprite('wyrm',Wy,0):wyrmArt(Wy,0), go:"go('money');setMoneyTab('taxes')"}); } catch(e){}
+  try { for (const b of cardBosses()) L.push({id:'card-'+b.name, area:'MONEY', c:b.name==='Savor'?'#ff6b5a':'#ff9a3c', name:b.name, title:b.title, pct:b.pct, dead:b.dead, hpT:money0(b.hp), maxT:money0(b.max), phase:b.dead?'Slain':b.pct>.66?'Full power':b.pct>.33?'Wounded':'Cornered', phases:['Full power','Wounded','Cornered','Slain'],
+    lore:b.name==='Savor'?'A scorpion made of plastic and late fees. It’s the smaller one — and it’s over its $1,000 limit, so it strikes first.':'An orange drake that hoards your old purchases. Bigger and slower — it gets its turn after the Stinger falls.',
+    how:[['A card payment you tick on a check','its amount'],['Paid to $0','+500 XP kill']], attack:['Interest','~27% a year gets added back every month you carry a balance'], loot:'+500 XP · card freed for good',
+    hits:b.hits.map(h=>({d:h.d, v:'−'+money0(h.amt), l:'payment'})), art:()=>b.name==='Savor'?stingerArt(b.pct,b.dead):drakeArt(b.pct,b.dead), go:"go('money')"}); } catch(e){}
+  for (const k of ['social','mind']) L.push(abItem(k));
+  return L; }
+function abItem(k){ const B=aBossState(k), A={datum:golemArt, content:algoArt, social:hermitArt, mind:fogArt}[k];
+  return {id:k, area:B.area, c:B.c, name:B.name, title:B.title, pct:B.pct, dead:B.dead, hpT:Math.round(B.hp), maxT:B.max+' HP', phase:B.phase, phases:B.phases, lore:B.lore, how:B.hits, attack:B.attack, loot:B.loot,
+    hits:B.E.map(e=>({d:e.d, v:(e.heal?'+':'−')+Math.abs(e.dmg), l:e.l+(e.crit?' · crit':''), heal:e.heal})), art:()=>A(B.pct,B.dead), go:B.go}; }
+let bossFocus=null;
+function bossGo(id){ bossFocus=id; go('bosses'); setTimeout(()=>document.getElementById('boss-'+id)?.scrollIntoView({behavior:'smooth',block:'start'}),120); }
+function vBosses(){ const L=bossList(), up=L.filter(b=>!b.dead).length, mo=MON3[+TODAY.slice(5,7)-1], left=monthDays(TODAY.slice(0,7))-(+TODAY.slice(8,10));
+  return `<div class="bp-head sec"><button class="btn ghost sm" onclick="stMode='progress';go('evolve')">‹ Profile</button><div><h1>⚔️ Bosses</h1><div class="sub">${up} awake · ${L.length-up} down · ${mo} gates close in ${left} day${left===1?'':'s'}</div></div></div>
+    <div class="bp-jump sec">${L.map(b=>`<button style="--c:${b.c}" class="${b.dead?'dead':''}" onclick="document.getElementById('boss-${b.id}')?.scrollIntoView({behavior:'smooth',block:'start'})"><i>${b.dead?'💀':''}</i>${esc(b.name.replace(/^The /,''))}</button>`).join('')}</div>
+    ${L.map(b=>{ const pi=b.dead?b.phases.length-1:Math.max(0,b.phases.indexOf(b.phase));
+      return `<div class="card sec bp-card ${b.dead?'dead':''} ${bossFocus===b.id?'focus':''}" id="boss-${b.id}" style="--c:${b.c}">
+      <div class="row between"><span class="bp-area">${b.area}</span><span class="chip">${b.dead?'💀 Defeated':esc(b.phase)}</span></div>
+      <h2 class="bp-name">${esc(b.name)}</h2><div class="bp-title">${esc(b.title)}</div>
+      <div class="bp-arena ph${pi}">${(()=>{ try { return b.art(); } catch(e){ return ''; } })()}</div>
+      <div class="hp big"><b style="width:${Math.max(b.dead?0:1,Math.round(b.pct*100))}%"></b><span class="num">${b.hpT} / ${b.maxT}</span></div>
+      <div class="ab-ph" style="margin-top:10px">${b.phases.map((p,i)=>`<span class="${i===pi?'on':''}">${esc(p)}</span>`).join('')}</div>
+      <p class="ab-lore">${b.lore}</p>
+      <div class="ab-grid"><div><div class="tag">⚔️ How to hit it</div>${b.how.map(([x,y])=>`<div class="row between ab-li"><span>${x}</span><b>${y}</b></div>`).join('')}</div>
+        <div><div class="tag">🩸 Its attack</div><div class="ab-li"><b>${b.attack[0]}</b><div class="sub">${b.attack[1]}</div></div><div class="tag" style="margin-top:10px">🎁 Loot</div><div class="ab-li">${b.loot}</div></div></div>
+      <details class="pc-edit"><summary>Battle log · ${b.hits.length}</summary>${b.hits.length?`<div class="hits">${b.hits.slice(0,12).map(h=>`<div><span class="sub num">${h.d?nice(h.d):'—'}</span><b class="num" style="color:${h.heal?'var(--bad)':'var(--good)'}">${h.v}</b><small class="sub">${esc(h.l||'')}</small></div>`).join('')}</div>`:'<div class="help keep">No hits yet.</div>'}</details>
+      <button class="btn sm" style="margin-top:12px;width:100%;justify-content:center" onclick="${b.go}">⚔️ Go hit it ›</button></div>`; }).join('')}`; }
 
 let moneyTab = 'now';
 function setMoneyTab(t){ moneyTab=MONEY_ALIAS[t]||t; render(); }
@@ -8609,7 +8770,7 @@ function splitFor(c){ const s=S.money.s, r=waterfall(c.amt,{ef:+s.efNow||0,buf:0
 // credit cards only (the auto loan keeps its normal payment); smallest balance first
 function cardList(){ return (S.money.budget?.accounts||[]).filter(a=>a.bal!=null && a.bal<0 && !/auto|loan|mortgage/i.test(a.name+' '+a.type)).map(a=>({name:a.name.replace(/ Card$/,'').replace(/^Discover it$/,'Discover'), bal:-a.bal, minDue:a.minDue, dueDate:a.dueDate, limit:a.limit})).sort((a,b)=>a.bal-b.bal); }
 const TAX_CATCHUP_BY='2027-04-15';
-function taxReceived(){ let r=0; try { r=stmtReceived('2026').reduce((a,x)=>a+x.amt,0); } catch(e){} r+=S.money.checks.filter(c=>c.got&&(c.gotOn||c.d)>='2027-01-01').reduce((a,c)=>a+c.amt,0); return r; }
+function taxReceived(){ return fact('income','2026-01-01','2099-12-31'); }
 function dedTotal(from){ return ((S.money.budget||{}).deductibles||[]).filter(x=>x.ok&&(x.d||'')>=from).reduce((a,x)=>a+(+x.amt||0),0); }
 function datumInc(from){ try { return incomeBy(from, TODAY).datum||0; } catch(e){ return 0; } }
 function datumOrdersIn(from,to){ try { return ensureDatum().orders.filter(o=>(o.status==='delivered'||o.status==='closed') && (o.delivered||o.opened||'')>=from && (o.delivered||o.opened||'')<=to); } catch(e){ return []; } }
@@ -9035,7 +9196,7 @@ function vStats(){
   const [qs,qe]=qRange(THIS_Q), pace=clamp(daysBetween(qs,TODAY)/Math.max(1,daysBetween(qs,qe)),0,1), objs=S.quarters[THIS_Q]?.objectives||[];
   const tr=TRACKS.map(t=>{ const os=objs.filter(o=>o.track===t.key); return os.length?{t,p:os.reduce((s,o)=>s+objPct(o),0)/os.length}:null; }).filter(Boolean);
   const overall=tr.length?tr.reduce((s,x)=>s+x.p,0)/tr.length:0, worst=tr.slice().sort((a,b)=>(a.p-pace)-(b.p-pace)).filter(x=>x.p<1).slice(0,3), nBehind=tr.filter(x=>x.p<1&&x.p-pace<-.05).length;
-  const M=S.money, recv=M.checks.filter(c=>c.got&&(c.gotOn||c.d).startsWith(THIS_Y)).reduce((a,c)=>a+c.amt,0), owed=M.checks.filter(c=>!c.got).reduce((a,c)=>a+c.amt,0), tot=Math.max(1,recv+owed);
+  const M=S.money, recv=fact('income',THIS_Y+'-01-01',TODAY), owed=agencyOwed(), tot=Math.max(1,recv+owed);
   const bw=[...Array(8)].map((_,i)=>weekShift(THIS_WEEK,i-7)), bm=benchMinsByWeek(), bmax=Math.max(60,...bw.map(w=>bm[w]||0)), bTot=bw.reduce((a,w)=>a+(bm[w]||0),0);
   const xws=bw.map(w=>weekXp(w)), xmax=Math.max(50,...xws);
   const allW=[...new Set([...Object.keys(S.weeks||{}),...Object.keys(S.days||{}).map(isoWeek)])], bestW=allW.map(w=>[w,weekXp(w)]).sort((a,b)=>b[1]-a[1])[0], bestB=Object.entries(bm).sort((a,b)=>b[1]-a[1])[0];
@@ -9237,9 +9398,9 @@ function weekRecap(w){
   const t3w=D.reduce((a,d)=>a+d.top3.filter(t=>t.text.trim()).length,0), t3d=D.reduce((a,d)=>a+d.top3.filter(t=>t.done).length,0);
   const hab=S.habits.map(h=>[h, days.filter(k=>S.days[k]?.habits?.[h.id]).length]);
   const quests=(S.quests||[]).filter(q=>q.done&&isoWeek(q.done)===w).length;
-  let bench=0; for (const p of ensureDatum().prototypes) for (const l of (p.log||[])) if (isoWeek(l.d)===w) bench += +l.mins||0;
-  const landed=S.money.checks.filter(c=>c.got&&isoWeek(c.gotOn||c.d)===w).reduce((a,c)=>a+c.amt,0);
-  const flex=S.money.budget.txns.filter(t=>t.cat==='flex'&&isoWeek(t.d)===w).reduce((a,t)=>a+Math.abs(t.amt),0);
+  let bench=(benchMinsByWeek()[w]||0);
+  const landed=fact('income',...wRange(w));
+  const flex=fact('spent',...wRange(w));
   const L=(S.logs||[]).filter(l=>isoWeek(l.d)===w), posts=L.filter(l=>l.kind==='post').length;
   const slipped=[]; const zero=hab.filter(([,n])=>n===0).map(([h])=>h);
   if (t3w>t3d) slipped.push(`${t3w-t3d} Top 3 item${t3w-t3d===1?'':'s'} written but not done`);
