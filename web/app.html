@@ -1726,7 +1726,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b239';
+const BUILD='b240';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -3130,7 +3130,7 @@ function rivalCard(slim){ const r=rival(), my=levelFor(r.mine), ahead=r.diff>=0,
 /* ---------- level-up scene ---------- */
 function lvsClose(){ const m=document.getElementById('lvs'); if(!m || Date.now()-(+m.dataset.at||0)<900) return; m.remove(); }
 // the level-up shows YOUR character: its level-up clip, else its idle clip, else its last still, else the drawn avatar
-function lvsAvatar(stage){ try { const lu=clipFor('levelup'); if (lu) return animEl(lu,'',{once:1,next:clipFor('char_idle')||undefined});
+function lvsAvatar(stage){ if (!AV_CLIPS) return avatarSVG(stage,'hype',150,S.evo||{}); try { const lu=clipFor('levelup'); if (lu) return animEl(lu,'',{once:1,next:clipFor('char_idle')||undefined});
   const ci=clipFor('char_idle'), rr=ci&&A_()[ci], pst=(rr&&rr.poster)||avCache().poster; if (ci){ const h=animEl(ci,''); if (h) return pst?`<div class="lvs-stack"><img class="anim" src="${pst}" alt="">${h}</div>`:h; }
   const r=ci&&A_()[ci], still=(r&&r.poster)||avCache().poster; if (still) return `<img class="anim" src="${still}" alt="">`; } catch(e){}
   return avatarSVG(stage,'hype',150,S.evo||{}); }
@@ -5785,7 +5785,8 @@ function animEl(slot, cls, opts={}){ const a=A_()[slot]; if (!a) return '';
 function animNext(el, slot){ const a=A_()[slot]; if (!a || a.t!=='video') return; el.src=BLOBURL+a.id; el.loop=true; el.play().catch(()=>{}); }
 function charSlot(){ try { const F=rpgFx(TODAY), d=S.days[TODAY]||{}; const good=F.some(f=>['hot','pay','strat','party'].includes(f.id)) || (d.top3||[]).filter(t=>t.done).length===3, bad=F.filter(f=>!f.b).length>=2 || d.checkin?.feel===0;
   if (good && clipFor('char_hype')) return clipFor('char_hype'); if (bad && clipFor('char_tired')) return clipFor('char_tired'); } catch(e){} return clipFor('char_idle'); }
-function charAnim(size){ const s=charSlot(); if (!s) return ''; const a=A_()[s], st=`width:${size}px;height:${Math.round(size*1.2)}px`, still=a.poster||(avCache().src===BLOBURL+a.id?avCache().poster:'');
+const AV_CLIPS=false; // b240: no animated profile picture
+function charAnim(size){ if (!AV_CLIPS) return ''; const s=charSlot(); if (!s) return ''; const a=A_()[s], st=`width:${size}px;height:${Math.round(size*1.2)}px`, still=a.poster||(avCache().src===BLOBURL+a.id?avCache().poster:'');
   return still ? `<span class="av-stack" style="${st}"><img class="av-still" src="${still}" alt="">${animEl(s,'av-v',{style:st})}</span>` : animEl(s,'av-v',{style:st}); }
 function roomAnim(){ const hr=new Date().getHours(), night=hr>=20||hr<6, s=night&&A_().room_night?'room_night':A_().room_day?'room_day':A_().room_night?'room_night':null; return s ? `<div class="room-wrap ${roomPlace?'placing':''}" onclick="roomTap(event)">${animEl(s,'room-v')}${roomArt()}${roomMe()}${roomPlace?`<div class="room-hint">${roomHint()}</div>`:''}</div>` : ''; }
 function bossAnim(which, B, hit){ const dead=which==='vault'?(B.hp<=0&&B.max>0):(B.hp<=0&&B.need>1);
@@ -6263,9 +6264,9 @@ function hidFold(k){ const H=hidStore(k), rows=[];
 
 /* ===================== Avatar steady · b145 ===================== */
 // before the cloud copy loads, show a blank card instead of the default skin
-function avWait(size){ if (_dbSettled || charSlot()) return ''; const c=avCache(); const st=`width:${size}px;height:${Math.round(size*1.2)}px`;
+function avWait(size){ if (!AV_CLIPS) return _dbSettled ? '' : `<div class="av-ph" style="width:${size}px;height:${Math.round(size*1.2)}px"></div>`; if (_dbSettled || charSlot()) return ''; const c=avCache(); const st=`width:${size}px;height:${Math.round(size*1.2)}px`;
   return c.src && c.poster ? `<span class="av-stack" style="${st}"><img class="av-still" src="${c.poster}" alt=""><video class="anim av-v" src="${c.src}" ${avPoster(c.src)} preload="auto" autoplay muted loop playsinline style="${st}"></video></span>` : `<div class="av-ph" style="${st}"></div>`; }
-function pfpMini(stg){ const k=clipFor('char_idle'), r=k&&A_()[k], still=(r&&r.poster) || (avCache().poster);
+function pfpMini(stg){ const k=AV_CLIPS&&clipFor('char_idle'), r=k&&A_()[k], still=AV_CLIPS&&((r&&r.poster) || (avCache().poster));
   if (still && (r || !_dbSettled)) return `<img class="pfp-v" src="${still}" alt="">`;
   if (!_dbSettled) return `<div class="av-ph pfp-ph"></div>`;
   return `<svg viewBox="34 58 132 132" preserveAspectRatio="xMidYMid slice">${avatarSVG(stg,'smile',36,S.evo||{}).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')}</svg>`; }
