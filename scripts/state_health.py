@@ -10,3 +10,18 @@ def rich(d):
 for r in sorted(rows,key=lambda r:r['path']):
     if r['path'].startswith('feed/') or r['path'].startswith('inbox/'): print(r['path'],'· updated',r['updated_at']); continue
     print(r['path'],'· updated',r['updated_at'],'·',json.dumps(rich(r['data'])))
+
+# pictures: every 32-hex file id the phone state points at, checked against public storage (counts only)
+import re
+st=next((r['data'] for r in rows if r['path']=='okr/state'),{})
+ids=sorted(set(re.findall(r'"([0-9a-f]{32})"',json.dumps(st))))
+codes={}
+for i in ids:
+    try: c=requests.head(f'{U}/storage/v1/object/public/blobs/{i}',timeout=20).status_code
+    except Exception: c='err'
+    codes[c]=codes.get(c,0)+1
+b=requests.get(f'{U}/storage/v1/bucket/blobs',headers=H,timeout=30)
+bj=b.json() if b.ok else {}
+objs=requests.post(f'{U}/storage/v1/object/list/blobs',headers={**H,'Content-Type':'application/json'},json={'prefix':'','limit':1000,'sortBy':{'column':'created_at','order':'desc'}},timeout=60)
+ol=objs.json() if objs.ok else []
+print('pictures · ids in state',len(ids),'· public fetch',json.dumps(codes),'· bucket public',bj.get('public'),'· bucket http',b.status_code,'· files in bucket',len(ol) if isinstance(ol,list) else ol,'· newest file',(ol[0].get('created_at') if isinstance(ol,list) and ol else None))
