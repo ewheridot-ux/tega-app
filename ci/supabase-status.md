@@ -1,21 +1,16 @@
-# Cloud database setup #4 — success
+# Cloud database setup #5 — success
 
-Tue Oct 20 22:28:05 UTC 2026
+Fri Oct 23 02:48:00 UTC 2026
 
 ```
 Finished supabase link.
 Connecting to remote database...
 Do you want to push these migrations to the remote database?
- • 20261020000000_history_guard.sql
+ • 20261022000000_blobs_read.sql
  [Y/n] 
-Applying migration 20261020000000_history_guard.sql...
+Applying migration 20261022000000_blobs_read.sql...
 Finished supabase db push.
 Bundling Function: claude
-Error response from daemon: toomanyrequests: Data limit exceeded
-Retrying after 4s: public.ecr.aws/supabase/edge-runtime:v1.77.4
-Error response from daemon: toomanyrequests: Data limit exceeded
-Retrying after 8s: public.ecr.aws/supabase/edge-runtime:v1.77.4
-Error response from daemon: toomanyrequests: Data limit exceeded
 v1.77.4: Pulling from supabase/edge-runtime
 774043ccc8cc: Pulling fs layer
 8a4221b43423: Pulling fs layer
@@ -23,9 +18,9 @@ v1.77.4: Pulling from supabase/edge-runtime
 298a48d0e2b6: Pulling fs layer
 11f138902885: Pulling fs layer
 a9ac7aa23d56: Pulling fs layer
-298a48d0e2b6: Waiting
 11f138902885: Waiting
 a9ac7aa23d56: Waiting
+298a48d0e2b6: Waiting
 6b96467f84f7: Verifying Checksum
 6b96467f84f7: Download complete
 774043ccc8cc: Verifying Checksum
@@ -45,9 +40,9 @@ a9ac7aa23d56: Download complete
 11f138902885: Pull complete
 a9ac7aa23d56: Pull complete
 Digest: sha256:ad45164b7548bf5820ed7be714789c17ac2865edce79a09cfb4c3756c3d365a8
-Status: Downloaded newer image for ghcr.io/supabase/edge-runtime:v1.77.4
-ghcr.io/supabase/edge-runtime:v1.77.4
-Deploying Function: claude (script size: 2.1 kB)
+Status: Downloaded newer image for public.ecr.aws/supabase/edge-runtime:v1.77.4
+public.ecr.aws/supabase/edge-runtime:v1.77.4
+No change found in Function: claude
 Deployed Functions on project rlgoetbrlrsdijtlwnsb: claude
 You can inspect your deployment in the Dashboard: https://supabase.com/dashboard/project/rlgoetbrlrsdijtlwnsb/functions
 │
