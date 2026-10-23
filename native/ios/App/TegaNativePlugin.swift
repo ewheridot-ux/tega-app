@@ -261,7 +261,10 @@ public class TegaNativePlugin: CAPPlugin, CAPBridgedPlugin {
     @objc func liveEnd(_ call: CAPPluginCall) {
         #if canImport(ActivityKit)
         if #available(iOS 16.2, *) {
-            for a in Activity<TegaWorkoutAttributes>.activities { Task { await a.end(nil, dismissalPolicy: .default) } }
+            // .immediate: a "default" end keeps the card on the lock screen for hours with its timer still counting up
+            let n = Activity<TegaWorkoutAttributes>.activities.count
+            for a in Activity<TegaWorkoutAttributes>.activities { Task { await a.end(nil, dismissalPolicy: .immediate) } }
+            call.resolve(["ok": true, "ended": n]); return
         }
         #endif
         call.resolve(["ok": true])

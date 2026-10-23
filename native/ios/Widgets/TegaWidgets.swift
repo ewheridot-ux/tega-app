@@ -103,6 +103,7 @@ struct WorkoutLive: Widget {
                     else { Text("\(ctx.state.sets) sets").font(mono).foregroundColor(dim); Text(ctx.attributes.started, style: .timer).font(.system(size: 26, weight: .bold, design: .monospaced)).foregroundColor(.white).multilineTextAlignment(.trailing) }
                 }.frame(width: 110)
             }.padding().activityBackgroundTint(Color.black).activitySystemActionForegroundColor(neon)
+            .widgetURL(URL(string: "tegaexe://workout?resume=1"))  // lock-screen tap → the live workout (was missing, so taps opened the last page)
         } dynamicIsland: { ctx in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) { Text(ctx.state.label).font(.headline).lineLimit(1) }
@@ -115,7 +116,7 @@ struct WorkoutLive: Widget {
                 if let r = ctx.state.restEnds, r > Date() { Text(timerInterval: Date()...r, countsDown: true).monospacedDigit().foregroundColor(neon).frame(width: 44) }
                 else { Text(ctx.attributes.started, style: .timer).monospacedDigit().frame(width: 44) }
             } minimal: { Image(systemName: "dumbbell.fill").foregroundColor(neon) }
-            .widgetURL(URL(string: "tegaexe://workout"))
+            .widgetURL(URL(string: "tegaexe://workout?resume=1"))
         }
     }
 }

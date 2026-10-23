@@ -1,0 +1,22 @@
+name: Restore pictures to cloud storage (counts only)
+on:
+  workflow_dispatch:
+  push: { branches: [main], paths: ['ci/run-blobs'] }
+permissions: { contents: write }
+jobs:
+  b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -q requests
+      - env:
+          SUPA_SERVICE: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPA_URL: https://rlgoetbrlrsdijtlwnsb.supabase.co
+        run: |
+          python scripts/blobs_restore.py | tee ci/blobs.md
+          python scripts/state_health.py | grep '^pictures' | tee -a ci/blobs.md
+      - if: always()
+        run: |
+          git config user.name "tega-ci"; git config user.email "ci@users.noreply.github.com"
+          git add ci/blobs.md; git commit -qm "ci: pictures restore [skip ci]" || true; git pull --rebase -q origin main || true; git push -q origin HEAD:main || true

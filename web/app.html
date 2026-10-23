@@ -1726,7 +1726,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b240';
+const BUILD='b241';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -7064,7 +7064,7 @@ window.tegaDeepLink = function(url){ try { const u=new URL(url), what=(u.host||u
   if (what==='coach') return coachOpen(); if (what==='receipt') return receiptOpen(); if (what==='gym'){ go('gym'); return; }
   if (what==='start'){ go('today'); setTimeout(()=>{ try { const d=S.days[TODAY]; if (!d||!d.checkin) openCheckin(); } catch(e){} },300); return; }
   if (what==='post'){ go('content'); setTimeout(()=>openLog('post'),300); return; }
-  if (what==='workout'){ gTab='workout'; go('gym'); setTimeout(()=>{ try { if (!(S.gym||{}).live && typeof gStart==='function') gStart(); } catch(e){} },400); return; }
+  if (what==='workout'){ gTab='workout'; go('gym'); const resume=u.searchParams.get('resume'); setTimeout(()=>{ try { const live=!!G_().live; if (live||!resume) gStart(); else gLA('end'); } catch(e){} },400); return; }
   if (what==='search'){ return searchOpen(); }
   if (what==='open'){ const p=(u.searchParams.get('page')||'today'); if (p.includes('/')){ const [v,t]=p.split('/'); if (v==='money') moneyTab=t; if (v==='gym') gTab=t; if (v==='model') mTab=t; go(v); } else go(p); return; }
   if (what==='bench'){ const act=ensureDatum().prototypes.filter(p=>!['complete','failed'].includes(p.status)); if (act.length===1) benchStart(act[0].id); dView='bench'; go('datum'); return; }
@@ -8299,6 +8299,9 @@ function gLA(kind){ if (!IS_APP()) return; try { if (kind==='end') return nat('l
     // Apple Health: save the workout (setting under Settings → This phone)
     try { if (IS_APP() && t0 && localStorage.getItem('tega-hw')!=='off'){ const s=G_().sessions.slice(-1)[0]; if (s&&s.t1){ const mins=(s.t1-s.t0)/6e4; nat('saveWorkout',{start:new Date(s.t0).toISOString(), end:new Date(s.t1).toISOString(), cal:Math.round(mins*6), kind:'strength'}); } } } catch(e){} };
   const _c=gLiveClose; gLiveClose=function(){ _c(); if (!G_().live) gLA('end'); }; }
+// no workout running (finished here, on another device, or the app was closed mid-way) → clear any leftover lock-screen timer
+function gLAsweep(){ try { if (IS_APP() && !G_().live) gLA('end'); } catch(e){} }
+setTimeout(gLAsweep, 2500); document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) setTimeout(gLAsweep, 1500); });
 function hwSet(on){ try { localStorage.setItem('tega-hw', on?'on':'off'); } catch(e){} render(); }
 const hwOn=()=>{ try { return localStorage.getItem('tega-hw')!=='off'; } catch(e){ return true; } };
 // Share → Tega.exe from any app: links and text wait in an inbox until you file them

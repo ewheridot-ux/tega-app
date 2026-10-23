@@ -132,7 +132,7 @@ async function importIfFirstRun() {
   for (const [id, file] of Object.entries(man.assets || {})) {
     say(`Photos & clips ${++n} of ${Object.keys(man.assets).length}…`);
     const b = await fetch('migration/assets/' + file).then(r => r.blob());
-    await fetch(`${URL0}/storage/v1/object/blobs/${id}`, { method: 'POST', headers: { apikey: CFG.anon, Authorization: 'Bearer ' + await token(), 'Content-Type': b.type || 'application/octet-stream', 'x-upsert': 'true' }, body: b });
+    await fetch(`${URL0}/storage/v1/object/blobs/${id}`, { method: 'POST', headers: { apikey: CFG.anon, Authorization: 'Bearer ' + await token(), 'Content-Type': b.type || 'application/octet-stream' }, body: b });
   }
   say('Your history…');
   for (const path of man.docs || []) {
@@ -171,7 +171,7 @@ const hex32 = () => Array.from(crypto.getRandomValues(new Uint8Array(16)), b => 
 const assets = {
   async upload(blob, opts) {
     const id = hex32(), type = (opts && opts.type) || blob.type || 'application/octet-stream';
-    const r = await fetch(`${URL0}/storage/v1/object/blobs/${id}`, { method: 'POST', headers: { apikey: CFG.anon, Authorization: 'Bearer ' + await token(), 'Content-Type': type, 'x-upsert': 'true' }, body: blob });
+    const r = await fetch(`${URL0}/storage/v1/object/blobs/${id}`, { method: 'POST', headers: { apikey: CFG.anon, Authorization: 'Bearer ' + await token(), 'Content-Type': type }, body: blob });
     if (!r.ok) { const e = new Error('upload failed'); e.code = r.status === 413 ? 'quota_or_state' : 'upload_failed'; throw e; }
     return { id, url: window.BLOBURL + id };
   },
