@@ -57,6 +57,8 @@ if not rows: done('no app state yet')
 uid = rows[0]['user_id']
 old = requests.get(f'{URL}/rest/v1/docs?select=data&path=eq.feed/latest&user_id=eq.{uid}', headers=H, timeout=60).json()
 oc = ((old[0].get('data') or {}).get('calls') or {}) if old else {}
+os_ = ((old[0].get('data') or {}).get('stamps') or {}) if old else {}
+feed['stamps'] = {**os_, **{k: feed['at'] for k in feed['calls']}}
 feed['calls'] = {**oc, **feed['calls']}
 r = requests.post(f'{URL}/rest/v1/docs?on_conflict=user_id,path', headers={**H, 'Prefer': 'resolution=merge-duplicates,return=minimal'}, json=[{'user_id': uid, 'path': 'feed/latest', 'data': feed}], timeout=60)
 done(f"saved to app: HTTP {r.status_code} at {feed['at']}")

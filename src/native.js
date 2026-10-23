@@ -172,6 +172,7 @@ const assets = {
   async upload(blob, opts) {
     const id = hex32(), type = (opts && opts.type) || blob.type || 'application/octet-stream';
     const r = await fetch(`${URL0}/storage/v1/object/blobs/${id}`, { method: 'POST', headers: { apikey: CFG.anon, Authorization: 'Bearer ' + await token(), 'Content-Type': type }, body: blob });
+    try { localStorage.setItem('tega-up', JSON.stringify(r.ok ? { ok: Date.now() } : { fail: Date.now(), code: r.status })); } catch (e) {}
     if (!r.ok) { const e = new Error('upload failed'); e.code = r.status === 413 ? 'quota_or_state' : 'upload_failed'; throw e; }
     return { id, url: window.BLOBURL + id };
   },
@@ -200,13 +201,15 @@ const sample = {
 // The Claude version calls Gmail / bank / Instagram directly. The phone app gets the same answers from a feed
 // that a daily scheduled sync writes, so all the existing sync code just works.
 let feedCache = null, feedAt = 0;
-async function feedCalls() { if (!feedCache || Date.now() - feedAt > 60000) { const row = await getDoc('feed/latest'); feedCache = row && row.data && row.data.calls; feedAt = Date.now(); } return feedCache; }
+let feedStamps = {}, feedRowAt = null;
+async function feedCalls() { if (!feedCache || Date.now() - feedAt > 60000) { const row = await getDoc('feed/latest'); feedCache = row && row.data && row.data.calls; feedStamps = (row && row.data && row.data.stamps) || {}; feedRowAt = (row && row.data && row.data.at) || null; feedAt = Date.now(); } return feedCache; }
 const mcpFeed = {
   native: true,
   async callTool(server, tool, input = {}) {
     const C = await feedCalls(); if (!C) throw { code: 'no_feed' };
     let v;
     if (server === 'Gmail' && tool === 'search_threads') v = /posh|partiful/i.test(input.query || '') ? C.gmail_social : C.gmail_agency;
+    else if (server === 'Gmail' && tool === 'get_thread') { const b = (C.gmail_bodies || {})[input.threadId]; if (b) v = { id: input.threadId, messages: [{ plaintextBody: b }] }; }
     else if (server === 'Era Context' && tool === 'accounts__list_financial_accounts') v = C.era_accounts;
     else if (server === 'Era Context' && tool === 'transactions__search_transactions') {
       let t = ((C.era_tx || {}).transactions || []).slice();
@@ -259,6 +262,9 @@ window.native = {
   async unlock() { const r = await tn('unlock', { reason: 'Unlock Tega.exe' }); return !!(r && r.ok); },
   widgetData(o) { clearTimeout(widT); widT = setTimeout(() => { const v = JSON.stringify(o); if (v !== lastWid) { lastWid = v; tn('setShared', { key: 'widget', value: v }); } }, 800); },
   pull() { feedCache = null; for (const p of pollers) p.run(); window.native.syncReminders(); },
+  // when each cloud source last reached the phone (Settings → Sync status)
+  async syncStatus() { try { await feedCalls(); } catch (e) {} let up = null; try { up = JSON.parse(localStorage.getItem('tega-up') || 'null'); } catch (e) {}
+    return { stamps: feedStamps, at: feedRowAt, upload: up, signedIn: !!(auth && auth.refresh_token) }; },
   async calendarSync(items) { const sig = JSON.stringify(items); if (sig === lastCal) return; clearTimeout(calT); calT = setTimeout(async () => { if (calBusy) return; calBusy = true; try { await calSync(items); lastCal = sig; } catch (e) { console.warn('cal', e); } calBusy = false; }, 2500); },
   async saveWorkout(o) { return tn('healthSaveWorkout', o); },
   async live(kind, o) { return tn(kind === 'start' ? 'liveStart' : kind === 'end' ? 'liveEnd' : 'liveUpdate', o); },
@@ -310,7 +316,8 @@ async function syncReminders() {
     const S = lastState; if (!S || !S.days) return; await perm();
     const now = new Date(), today = keyOf(now), tomorrow = keyOf(new Date(now.getTime() + 864e5)), list = [];
     const startKey = !(S.days[today] && S.days[today].checkin) && now.getHours() < 9 ? today : tomorrow;
-    list.push({ id: 2001, title: 'Start the day', body: 'Check in and set your top 3 · Tega.exe', schedule: { at: at(startKey, 9, 0) } });
+    let brief = ''; try { brief = typeof window.tegaBrief === 'function' ? window.tegaBrief(startKey) : ''; } catch (e) {}
+    list.push({ id: 2001, title: 'Start the day', body: brief ? brief + '\nCheck in · set your top 3' : 'Check in and set your top 3 · Tega.exe', schedule: { at: at(startKey, 9, 0) } });
     const dow = now.getDay(), sun = keyOf(new Date(now.getTime() + ((7 - dow) % 7) * 864e5));
     if (at(sun, 18) > now) list.push({ id: 2002, title: 'Sunday Review', body: 'Recap, grade, plan next week · +50 XP', schedule: { at: at(sun, 18, 0) } });
     try {

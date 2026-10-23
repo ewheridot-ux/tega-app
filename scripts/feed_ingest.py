@@ -33,6 +33,9 @@ if os.path.exists('ci/feed/feed.bin'):
             nc = feed.get('calls') or {}
             if isinstance(oc.get('ig'), dict) and isinstance(nc.get('ig'), dict): nc['ig'] = {**oc['ig'], **nc['ig']}
             feed['calls'] = {**oc, **nc}
+            # when each source last arrived (the app's sync status line reads this)
+            os_ = ((old[0].get('data') or {}).get('stamps') or {}) if old else {}
+            feed['stamps'] = {**os_, **{k: feed.get('at') for k in nc}}
         except Exception: pass
         r = requests.post(f'{URL}/rest/v1/docs?on_conflict=user_id,path', headers={**H, 'Prefer': 'resolution=merge-duplicates,return=minimal'}, json=[{'user_id': uid, 'path': 'feed/latest', 'data': feed}], timeout=60)
         status.append(f"feed {feed.get('at','?')}: {r.status_code} · {', '.join(sorted((feed.get('calls') or {}).keys()))}")

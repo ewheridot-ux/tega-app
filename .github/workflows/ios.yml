@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['web/**', 'native/**', 'src/**', 'assets/**', 'scripts/**', 'config/**', 'migration/**', 'fonts/**', 'capacitor.config.json', 'package.json', '.github/workflows/ios.yml']
+    paths: ['web/**', 'native/**', 'src/**', 'assets/**', 'scripts/**', 'config/**', 'fonts/**', 'capacitor.config.json', 'package.json', '.github/workflows/ios.yml']
 concurrency: { group: ios, cancel-in-progress: true }
 permissions: { contents: write }
 jobs:
@@ -30,6 +30,17 @@ jobs:
           missing=""; for v in A:APPLE_TEAM_ID B:ASC_KEY_ID C:ASC_ISSUER_ID D:ASC_KEY_P8; do k=${v%%:*}; n=${v#*:}; [ -z "${!k}" ] && missing="$missing $n"; done
           if [ -n "$missing" ]; then echo "Missing GitHub secrets:$missing" | tee -a "$RUNNER_TEMP/log.txt"; exit 1; fi
       - run: npm install --no-audit --no-fund 2>&1 | tee -a "$RUNNER_TEMP/log.txt"
+      - name: Put your private data into the build (sealed in ci/seed.bin, never in the public code)
+        env: { SUPA_SERVICE: '${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}' }
+        run: |
+          python3 -m pip install -q cryptography --break-system-packages 2>/dev/null || python3 -m pip install -q cryptography
+          python3 scripts/seed.py inject web/app.html web/app.html 2>&1 | tee -a "$RUNNER_TEMP/log.txt"
+          grep -q "SEED_STUB=0" web/app.html || { echo "Seed missing — refusing to build without your data" | tee -a "$RUNNER_TEMP/log.txt"; exit 1; }
+      - name: Automatic checks (XP never drops, bookings parse, yoga timer)
+        run: |
+          set -o pipefail
+          npm i --no-save --no-audit --no-fund playwright@1.48.2 >/dev/null 2>&1 && npx playwright install chromium >/dev/null 2>&1
+          CI=1 node tests/run.mjs 2>&1 | tee -a "$RUNNER_TEMP/log.txt"
       - name: Build the app page
         run: npm run build 2>&1 | tee -a "$RUNNER_TEMP/log.txt"
       - name: Create the iPhone project
