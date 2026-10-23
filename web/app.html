@@ -1726,7 +1726,7 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 <script>
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b241';
+const BUILD='b242';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -4640,10 +4640,14 @@ function mParse(th){
   const typ={job:'job',option:'option',casting:'casting',test:'test',fitting:'fitting',digital:'digitals',digitals:'digitals','self-tape request':'selftape'}[tm[2].toLowerCase()]||'casting';
   const text=(th.messages||[]).map(x=>String(x.snippet||'')).join(' ').replace(/&#39;/g,"'").replace(/&amp;/g,'&');
   const d=[]; for (const x of text.matchAll(/(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday),\s+([a-z]+)\s+(\d{1,2})(?:st|nd|rd|th)?\s+(\d{4})/gi)){ const mo=MMON[x[1].toLowerCase()]; if(mo){ const k=`${x[3]}-${String(mo).padStart(2,'0')}-${String(+x[2]).padStart(2,'0')}`; if(!d.includes(k)) d.push(k); } }
-  const time=(text.match(/\/\s*(\d{1,2}:\d{2}\s*[ap]m\s*to\s*\d{1,2}:\d{2}\s*[ap]m)/i)||[])[1]||'';
+  // short form too ("Tuesday 10/27") — multi-day bookings list the extra days that way
+  for (const x of text.matchAll(/(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\s+(\d{1,2})\/(\d{1,2})\b/gi)){ const y0=d[0]?d[0].slice(0,4):TODAY.slice(0,4), k=`${y0}-${String(+x[1]).padStart(2,'0')}-${String(+x[2]).padStart(2,'0')}`; if(!d.includes(k)) d.push(k); }
+  d.sort();
+  const time=(text.match(/\/\s*(\d{1,2}:\d{2}\s*[ap]m(?:\s*to\s*\d{1,2}:\d{2}\s*[ap]m)?)/i)||[])[1]||'';
   const rate=(text.match(/\b(?:rate|budget)[:\s]+(?:is\s+)?(\$?[\d.,]+\s*k?(?:\s*\+\s*(?:20%|af|agency))?)/i)||[])[1]||'';
   let c=tm[3].replace(/\s*\(due.*$/i,'').replace(/\s+x\s+.*casting.*$/i,'').trim(); c=c.replace(/\b([A-Z])([A-Z]+)\b/g,(w,a,b)=>a+b.toLowerCase());
-  const rn=+(rate.replace(/[^\d.k]/gi,'').replace(/(\d)k$/i,'$1000'))||0;
+  const r0=(rate.match(/[\d,.]+\s*k?/i)||[''])[0]; let rn=+(r0.replace(/[^\d.k]/gi,'').replace(/(\d)k$/i,'$1000'))||0;  // first number only ('$3000.00 + 20%' was read as 3000.0020)
+  const dayR=[...text.matchAll(/day rate:\s*\$([\d,]+(?:\.\d+)?)/gi)].map(x=>+x[1].replace(/,/g,'')); if (dayR.length>1){ rn=dayR.reduce((a,b)=>a+b,0); }
   return {id:'A'+th.id, th:th.id, t:typ, s:/cancel/i.test(subj)?'cancelled':typ==='job'?'confirmed':'unknown', c, d, tm:time, r:rate, rn:rn>=100?rn:undefined, ag:'ONE', url:th.viewUrl||m.viewUrl||'', auto:1};
 }
 function mThreads(r){ let hit=null; const walk=(o,dep)=>{ if(hit||!o||dep>6) return; if (typeof o==='string'){ if(o.includes('"threads"')){ try{ walk(JSON.parse(o),dep+1);}catch(e){} } return; } if (typeof o!=='object') return; if (Array.isArray(o.threads)){ hit=o.threads; return; } for (const v of Object.values(o)) walk(v,dep+1); }; walk(r,0); return hit; }
