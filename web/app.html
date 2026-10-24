@@ -1701,7 +1701,6 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 .yg-poses button{flex:0 0 auto;width:86px;text-align:center;font-size:26px;background:none;border:0;color:inherit;padding:0}.yg-poses .yg-em{display:grid;place-items:center;width:86px;height:58px;border-radius:8px;background:rgba(127,127,127,.12)}.yg-poses em{display:block;font-style:normal;font-size:9.5px;color:#ff6f98;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .yg-ov .yg-ring{width:170px;height:170px}.yg-ov .yg-ic img{width:128px;height:128px}
 .mh-one{width:100%;background:none;border:0;color:inherit;text-align:left;padding:0;cursor:pointer}.mh-one span:last-child{white-space:normal}
-.rn-l{display:grid;gap:8px}.rn-l .nextup,.rn-l .yg-strip,.rn-l .sr-strip{margin:0!important}.rn-r{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card2,rgba(127,127,127,.08));border:0;color:inherit;border-radius:14px;padding:11px 14px;box-shadow:inset 3px 0 0 var(--rt,transparent)}.rn-ic{font-size:20px}.rn-t{flex:1;display:flex;flex-direction:column;gap:2px}.rn-t small{color:var(--muted);font-size:12px}.rn-r i{opacity:.4;font-style:normal}
 .sync-warn{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.35);color:inherit;border-radius:12px;padding:9px 12px;font-size:12.5px;font-weight:600}.sync-warn em{margin-left:auto;font-style:normal;opacity:.5}
 .yg-ov{user-select:none;-webkit-user-select:none}.yg-ov button,.yg-ov a{touch-action:manipulation}
 .yg-top{gap:10px}.yg-prog{flex:1;display:flex;gap:3px;max-width:240px}.yg-prog i{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.14)}.yg-prog i.d{background:#a99bff}.yg-prog i.c{background:linear-gradient(90deg,#ff86ab,#a99bff)}
@@ -1766,7 +1765,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b245';
+const BUILD='b246';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -3157,16 +3156,6 @@ const PLAN_DAYS=1826;
 function rival(){ const start=Object.keys(S.days).sort()[0]||TODAY, el=Math.max(0,daysBetween(start,TODAY)), top=xpForLevel(MAXLVL), rx=Math.min(top,Math.round(top*el/PLAN_DAYS)), xp=computeXP(), perDay=top/PLAN_DAYS; return {start, xp:rx, lvl:levelFor(rx), mine:xp, diff:xp-rx, days:Math.round(Math.abs(xp-rx)/perDay), perDay:Math.round(perDay)}; }
 function shadowPeek(){ const r=rival(), ahead=r.diff>=0, k=n=>n>=1000?(Math.round(n/100)/10)+'k':n, sz=ahead?58:66;
   return `<button class="shpeek ${ahead?'ahead':'behind'}" onclick="event.stopPropagation();stMode='progress';go('evolve')" aria-label="Your Shadow is level ${r.lvl}, ${ahead?`${r.diff} XP behind you`:`${-r.diff} XP ahead of you`}">${avatarSVG(stageOf(r.lvl),'neutral',sz,S.evo||{},null,{locked:true})}<b style="background:${ahead?'var(--good)':'var(--bad)'}">${ahead?'+':'−'}${k(Math.abs(r.diff))}</b></button>`; }
-// Today's lead card: the few things to do right now, nothing else
-function rightNow(){ try { const d=S.days[TODAY]||{}, hr=new Date().getHours(), rows=[], seen=s=>rows.some(r=>r.includes(s));
-  const row=(ic,t,sub,act,tone)=>`<button class="rn-r" onclick="${act}" style="${tone?`--rt:${tone}`:''}"><span class="rn-ic">${ic}</span><span class="rn-t"><b>${t}</b>${sub?`<small>${sub}</small>`:''}</span><i>›</i></button>`;
-  const top=[rareBanner(),annBanner()].filter(x=>x&&x.trim()).join(''); const nu=nextUp(); if (nu&&nu.trim()) rows.push(nu);
-  const tmw=addDays(TODAY,1); for (const e of mAll()) if (e.t==='job'&&e.s!=='cancelled'&&(e.d||[]).some(k=>k===TODAY||k===tmw)&&!seen(esc(e.c))){ const today=(e.d||[]).includes(TODAY); rows.push(row('📸',`${esc(e.c)} ${today?'today':'tomorrow'}${e.tm?' · '+esc(e.tm):''}`,today?'You’re on set':'Pack tonight · sleep early',`mOpen='${e.id}';go('model')`,'#22c55e')); break; }
-  const due=(typeof dlAll==='function'?dlAll():[]).filter(x=>!x.done&&x.src!=='check'&&x.d===TODAY); if (due.length&&!seen(esc(due[0].text))) rows.push(row('📌',due.length>1?`${due.length} things due today`:esc(due[0].text),'Due today',"dlSheetOpen()",'#f97316'));
-  const g=G_(); if (g.setup?.done && !g.live && !(g.sessions||[]).some(x=>x.d===TODAY) && !(d.habits||{}).gym && hr<21 && !seen('Workout')){ let n='Workout'; try { n=gPlan().name||n; } catch(e){} rows.push(row('💪',esc(n),'Today’s workout is ready',"go('gym')",'#a99bff')); }
-  const y=yogaToday(); if (y) rows.push(y);
-  if (!rows.length && !top) return '';
-  return `${top}<div class="card sec rn"><div class="tag" style="margin-bottom:8px">Right now</div><div class="rn-l">${rows.slice(0,4).join('')}</div></div>`; } catch(e){ return homeStrips(); } }
 function homeStrips(){ const parts=[rareBanner(),annBanner(),nextUp()].filter(x=>x&&x.trim()); if(!parts.length) return ''; return `<div class="strips ${parts.length>1?'multi':''}">${parts.join('')}</div>`; }
 function rivalCard(slim){ const r=rival(), my=levelFor(r.mine), ahead=r.diff>=0, mx=Math.max(r.mine,r.xp,1);
   if (slim) return `<button class="nextup sec" onclick="stMode='progress';go('evolve')" style="box-shadow:inset 3px 0 0 ${ahead?'var(--good)':'var(--bad)'}"><span class="nu-ic">👤</span><span class="nu-t"><b>Shadow · Lv ${r.lvl}</b><small>${ahead?`You’re ${r.diff.toLocaleString('en-US')} XP ahead of your 5-year pace`:`He’s ${(-r.diff).toLocaleString('en-US')} XP ahead · ${r.days} day${r.days===1?'':'s'} to catch up`}</small></span><span class="nu-go">›</span></button>`;
@@ -3959,7 +3948,7 @@ function vToday(){
     ${isToday && !d.checkin ? `<button class="btn pulse" style="width:100%;padding:15px;font-size:16px;justify-content:center;text-align:center" onclick="openCheckin()">☀️ Start the day</button>`
       : `<div class="home3"><div><b class="num">${t3done}<span>/3</span></b><small>Top 3</small></div><div><b class="num">${hdone}<span>/${S.habits.length}</span></b><small>habits</small></div><div><b class="num">+${dayXpFor(curDay)}</b><small>XP ${isToday?'today':'that day'}</small></div></div>`}
   </div>
-  ${isToday?syncWarn()+rpgStrip()+rightNow():''}
+  ${isToday?syncWarn():''}
   <div class="card sec">
     <div class="hdr"><h2>${isToday?'Today':niceLong(curDay)}</h2>
       <div class="daynav"><button class="btn ghost sm" onclick="shiftDay(-1)">‹</button>${isToday?'':`<button class="btn ghost sm" onclick="curDay=TODAY;render()">today</button>`}<button class="btn ghost sm" onclick="shiftDay(1)" ${curDay>=TODAY?'disabled':''}>›</button></div></div>
@@ -3973,8 +3962,8 @@ function vToday(){
     ${(()=>{ const sg=d.top3.some(t=>!t.text.trim())&&curDay>=addDays(TODAY,-1)?t3Sug(curDay):[]; return sg.length?`<div class="t3sug">${sg.map(x=>`<button onclick="t3Fill(${JSON.stringify(x.text).replace(/"/g,'&quot;')},'${x.track||''}')">+ ${esc(x.text)}</button>`).join('')}</div>`:''; })()}
     ${habitsBlock}${isToday && hr>=17 ? `<button class="btn ${d.close?.at?'ghost':''}" style="width:100%;justify-content:center;margin-top:14px" onclick="closeDayOpen()">${d.close?.at?'🌙 Day closed · edit':'🌙 Close the day'}</button>` : ''}
   </div>
-  <details class="card sec fold more-fold" ${homeOpen.more?'open':''} ontoggle="homeOpen.more=this.open"><summary><span>More</span><span class="sub">calendar · win · quests · log · week ›</span></summary><div class="more-in">
-    ${isToday?homeAgenda():''}
+  ${isToday?yogaToday()+rpgStrip()+homeStrips()+homeAgenda():''}
+  <details class="card sec fold more-fold" ${homeOpen.more?'open':''} ontoggle="homeOpen.more=this.open"><summary><span>More</span><span class="sub">win · quests · log · bench · week ›</span></summary><div class="more-in">
     ${winsBlock}
     ${questsCard(curDay)}
     ${logsCard()}
