@@ -1701,6 +1701,52 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 .yg-poses button{flex:0 0 auto;width:86px;text-align:center;font-size:26px;background:none;border:0;color:inherit;padding:0}.yg-poses .yg-em{display:grid;place-items:center;width:86px;height:58px;border-radius:8px;background:rgba(127,127,127,.12)}.yg-poses em{display:block;font-style:normal;font-size:9.5px;color:#ff6f98;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .yg-ov .yg-ring{width:170px;height:170px}.yg-ov .yg-ic img{width:128px;height:128px}
 .mh-one{width:100%;background:none;border:0;color:inherit;text-align:left;padding:0;cursor:pointer}.mh-one span:last-child{white-space:normal}
+#hitpop{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 96px);transform:translateX(-50%);z-index:9000;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none;width:max-content;max-width:92vw}
+.hp-i{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:99px;background:rgba(14,10,26,.92);color:#fff;font-size:14px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.35),inset 0 0 0 1.5px rgba(255,255,255,.12);opacity:0;animation:hpIn 2.7s cubic-bezier(.2,.9,.3,1.2) forwards;white-space:nowrap}
+.hp-i span{font-size:17px}.hp-xp{color:#9dffcf}.hp-hit{box-shadow:0 6px 20px rgba(0,0,0,.35),inset 0 0 0 1.5px rgba(255,120,120,.45)}.hp-crit{font-size:16px;background:linear-gradient(90deg,#3a1206,#5a1d08);color:#ffd36b;box-shadow:0 0 22px rgba(255,170,60,.55),inset 0 0 0 2px #ffb547}
+.hp-crit b::before{content:'CRIT ';color:#ff8a3d;letter-spacing:.06em}.hp-kill{font-size:16px;background:linear-gradient(90deg,#3a0820,#1a0630);color:#fff;box-shadow:0 0 26px rgba(255,79,135,.7),inset 0 0 0 2px #ff4f87}
+.hp-cure{color:#9dffcf;box-shadow:0 6px 20px rgba(0,0,0,.35),inset 0 0 0 1.5px rgba(47,191,113,.6)}.hp-buff{box-shadow:0 6px 20px rgba(0,0,0,.35),inset 0 0 0 1.5px rgba(47,191,113,.45)}.hp-loot,.hp-tier{color:#ffd36b;box-shadow:0 6px 20px rgba(0,0,0,.35),inset 0 0 0 1.5px rgba(255,200,80,.6)}.hp-more{font-size:12px;opacity:.8}
+@keyframes hpIn{0%{opacity:0;transform:translateY(14px) scale(.85)}10%{opacity:1;transform:translateY(0) scale(1.06)}16%{transform:scale(1)}82%{opacity:1;transform:translateY(-6px)}100%{opacity:0;transform:translateY(-22px)}}
+@media (prefers-reduced-motion:reduce){.hp-i{animation:hpFade 2.7s forwards}@keyframes hpFade{0%,85%{opacity:1}100%{opacity:0}}}
+.cd-hits{background:var(--card2,rgba(127,127,127,.08));border-radius:14px;padding:10px 12px;margin-top:12px}.cd-hl{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.cd-hl span{font-size:12px;font-weight:600;padding:4px 9px;border-radius:99px;background:rgba(127,127,127,.12)}.cd-hl .hp-kill,.cd-hl .hp-crit{background:rgba(255,120,60,.18);color:#ff9a5a}.cd-hl .hp-cure{color:var(--good)}
+.fx-row{display:flex;align-items:center;gap:8px}.fx-scroll{flex:1;min-width:0;display:flex;gap:7px;align-items:center;overflow-x:auto;scrollbar-width:none;padding:3px 2px}.fx-scroll::-webkit-scrollbar{display:none}
+.fxi{position:relative;flex:0 0 auto;width:38px;height:38px;border-radius:50%;border:0;display:grid;place-items:center;font-size:19px;background:var(--card2,rgba(127,127,127,.1));cursor:pointer;padding:0;touch-action:manipulation}
+.fxi.buff{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--good) 75%,transparent)}.fxi.debuff{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--bad) 80%,transparent);background:color-mix(in srgb,var(--bad) 10%,var(--card2,transparent))}
+.fxi.perk{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--accent2,#8b5cf6) 70%,transparent)}.fxi.chest{box-shadow:inset 0 0 0 2px #f5c542;animation:fxBounce 1.8s ease-in-out infinite}@keyframes fxBounce{0%,100%{transform:none}50%{transform:translateY(-2px) scale(1.06)}}
+.fxi i{position:absolute;right:-3px;top:-3px;min-width:16px;height:16px;border-radius:8px;background:var(--fg);color:var(--bg);font-size:10px;font-style:normal;font-weight:800;display:grid;place-items:center;padding:0 3px}
+.fx-sep{width:1px;height:22px;background:var(--line,rgba(127,127,127,.3));flex:0 0 1px}.fx-none{font-size:12px;color:var(--muted)}
+.fx-x{flex:0 0 auto;border:0;background:none;font:inherit;font-weight:800;font-size:15px;cursor:pointer;padding:6px 4px}.fx-x.up{color:var(--good)}.fx-x.down{color:var(--bad)}
+.fxpop{position:absolute;z-index:9500;background:var(--card,#16121f);color:var(--fg);border-radius:16px;padding:10px 12px;box-shadow:0 12px 34px rgba(0,0,0,.4),inset 0 0 0 1px var(--line,rgba(127,127,127,.25));display:grid;gap:8px;animation:fpIn .16s ease-out}
+.fp-l{display:flex;gap:10px;align-items:flex-start}.fp-l>span{font-size:22px;line-height:1.1}.fp-l div{display:flex;flex-direction:column;gap:1px;min-width:0}.fp-l b{font-size:14px}.fp-l em{font-style:normal;font-size:12px;font-weight:700}.fp-l em.up{color:var(--good)}.fp-l em.down{color:var(--bad)}.fp-l small{font-size:12px;color:var(--muted);line-height:1.35}
+.fp-b{justify-self:start;border:0;border-radius:99px;padding:7px 14px;font:inherit;font-size:13px;font-weight:700;background:var(--fg);color:var(--bg);cursor:pointer}
+@keyframes fpIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.ql-line b{white-space:nowrap}.ql-line{font-size:12.5px;flex-wrap:nowrap;overflow:hidden}.ql-side .chip.t{display:none!important}.ql-side .check .txt{min-width:0;flex:1}
+@media (max-width:430px){.pills .pl-w{display:none}.pills{gap:6px}.pills .pill{padding-left:10px;padding-right:10px}}
+.cd-hl span{background:rgba(127,127,127,.12)!important;box-shadow:none!important;color:inherit!important;font-size:12px!important}.cd-hl span.hp-kill,.cd-hl span.hp-crit,.cd-hl span.hp-hit{color:color-mix(in srgb,#ff6a3d 75%,var(--fg))!important}.cd-hl span.hp-cure,.cd-hl span.hp-buff{color:var(--good)!important}.cd-hl span.hp-loot,.cd-hl span.hp-tier{color:color-mix(in srgb,#e0a800 70%,var(--fg))!important}.cd-hl span.hp-crit b::before{content:none}
+.cs-gold,.shop-e b{color:color-mix(in srgb,#e0a800 75%,var(--fg))!important}
+.tr-l{display:grid;gap:5px}.tr-r{display:grid;grid-template-columns:90px 1fr auto;gap:8px;align-items:center;font-size:13px;padding:6px 10px;border-radius:10px;background:var(--card2,rgba(127,127,127,.08));box-shadow:inset 3px 0 0 var(--c)}.tr-r span{color:var(--muted);font-size:12px}.tr-r em{font-style:normal;font-size:11px;color:var(--c);font-weight:800}
+.tr-t{display:grid;grid-template-columns:1fr 1fr;gap:6px}.tr-t .ttl{border:0;border-radius:12px;padding:8px 10px;text-align:left;background:var(--card2,rgba(127,127,127,.08));color:inherit;font:inherit;display:flex;flex-direction:column;gap:2px;cursor:pointer}.tr-t .ttl b{font-size:13px}.tr-t .ttl small{font-size:11px;color:var(--muted);line-height:1.3}.tr-t .ttl.lock{opacity:.5;cursor:default}.tr-t .ttl.on{box-shadow:inset 0 0 0 2px #f5c542}
+.cs-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.cs-links button{border:0;border-radius:99px;padding:7px 12px;font:inherit;font-size:12px;font-weight:700;background:var(--card2,rgba(127,127,127,.12));color:inherit;cursor:pointer;display:flex;align-items:center;gap:6px}.cs-links i{font-style:normal;background:#f5c542;color:#1a1200;border-radius:99px;padding:1px 7px;font-size:10.5px}
+#g-sheet .g-sheet>.card{box-shadow:none;margin:10px 0 0;padding:12px 0 0;background:none;border-top:1px solid var(--line,rgba(127,127,127,.2));border-radius:0}
+.gold-pill{box-shadow:inset 0 0 0 1.5px #f5c542}.cs-gold{border:0;background:rgba(245,197,66,.16);color:#f5c542;font:inherit;font-size:12px;font-weight:800;border-radius:99px;padding:2px 9px;margin-left:6px;cursor:pointer;vertical-align:middle}
+.ql-line{display:flex;align-items:center;gap:7px;width:100%;margin:10px 0 2px;padding:9px 12px;border:0;border-radius:12px;background:var(--card2,rgba(127,127,127,.08));color:inherit;font:inherit;font-size:13px;cursor:pointer;text-align:left}
+.ql-line b{font-weight:700}.ql-line b.ok,.ql-line span.ok{color:var(--good)}.ql-line i{opacity:.4;font-style:normal}.ql-line em{margin-left:auto;opacity:.45;font-style:normal}
+.ql-s{background:var(--card2,rgba(127,127,127,.08));border-radius:14px;padding:10px 12px;margin-top:10px}.ql-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}.ql-h b{font-size:15px}.ql-h span{font-size:12px;color:var(--muted);text-align:right;white-space:nowrap}.ql-h span.ok{color:var(--good);font-weight:700}
+.ql-r{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;border:0;background:none;color:inherit;font:inherit;padding:7px 0;cursor:pointer;border-top:1px solid var(--line,rgba(127,127,127,.15))}.ql-r:first-of-type{border-top:0}
+.ql-b{flex:0 0 22px;height:22px;border-radius:7px;box-shadow:inset 0 0 0 2px var(--muted);display:grid;place-items:center;font-size:13px;font-weight:800}.ql-r.on .ql-b{background:var(--good);box-shadow:none;color:#06140c}.ql-r.on .ql-t{opacity:.6;text-decoration:line-through}
+.ql-t{display:flex;flex-direction:column;gap:1px;font-size:14px}.ql-t small{font-size:11.5px;color:var(--muted);text-decoration:none}.ql-hb,.ql-e{font-size:12px;color:var(--muted);margin-top:4px}.ql-side .hdr{display:none}.ql-side{margin-top:4px}
+.shop{display:grid;gap:8px;margin-top:8px}.shop-i{display:flex;gap:12px;align-items:center;background:var(--card2,rgba(127,127,127,.08));border-radius:14px;padding:10px 12px}.shop-i>span{font-size:26px}.shop-i div{flex:1;display:flex;flex-direction:column;gap:2px}.shop-i small{font-size:12px;color:var(--muted);line-height:1.35}
+.shop-sh{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.45}.shop-e{display:grid;gap:4px}.shop-e div{display:flex;justify-content:space-between;font-size:13px}.shop-e b{color:#f5c542}
+.st-show{background:linear-gradient(90deg,#3a0820,#1a0630);color:#fff;border-radius:12px;padding:9px 12px;font-weight:700;font-size:13px;margin:6px 0;box-shadow:inset 0 0 0 1.5px #ff4f87}
+.st-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:8px 0 6px}.st-h b{font-size:18px;white-space:nowrap}.st-h span{font-size:12px;color:var(--muted)}
+.st-track{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:4px 2px 8px;scroll-behavior:smooth}.st-track::-webkit-scrollbar{display:none}
+.st-t{flex:0 0 76px;border-radius:14px;padding:8px 6px;text-align:center;background:var(--card2,rgba(127,127,127,.08));display:flex;flex-direction:column;align-items:center;gap:2px;opacity:.55}.st-t b{font-size:11px;color:var(--muted)}.st-t span{font-size:24px}.st-t small{font-size:10px;line-height:1.25;color:var(--muted)}
+.st-t.on{opacity:1;box-shadow:inset 0 0 0 2px #f5c542;background:rgba(245,197,66,.1)}.st-t.on b{color:#f5c542}.st-t.next{opacity:1;box-shadow:inset 0 0 0 2px dashed var(--fg)}
+.sb-card{display:flex;gap:12px;align-items:center;background:linear-gradient(135deg,rgba(255,79,135,.14),rgba(139,92,246,.12));border-radius:16px;padding:12px;box-shadow:inset 0 0 0 1px rgba(255,79,135,.35)}.sb-card.dead{filter:saturate(.6);box-shadow:inset 0 0 0 1px rgba(47,191,113,.5)}
+.sb-ic{font-size:38px}.sb-in{flex:1;display:flex;flex-direction:column;gap:3px}.sb-in small{font-size:11.5px;color:var(--muted)}.sb-in b{font-size:16px}.sb-bar{height:8px;border-radius:4px;background:rgba(127,127,127,.2);overflow:hidden}.sb-bar i{display:block;height:100%;background:linear-gradient(90deg,#ff4f87,#ff8a3d);border-radius:4px}.sb-bar.cq i{background:linear-gradient(90deg,#39ff9f,#4dd8ff)}
+.st-cq{display:flex;gap:12px;align-items:center;margin-top:10px;background:var(--card2,rgba(127,127,127,.08));border-radius:14px;padding:10px 12px}.st-cq>span{font-size:26px}.st-cq div{flex:1;display:flex;flex-direction:column;gap:3px}.st-cq small{font-size:11.5px;color:var(--muted)}
+.se-card{display:block;width:100%;text-align:left;color:inherit;font:inherit;border:0;cursor:pointer}.se-row{display:flex;align-items:center;gap:14px}.se-row small{font-size:10px;color:var(--muted);letter-spacing:.08em}.se-row b{font-size:20px;display:block}.se-pips{flex:1;display:grid;grid-template-columns:repeat(13,1fr);gap:3px}.se-pips i{height:8px;border-radius:3px;background:rgba(127,127,127,.22)}.se-pips i.on{background:#f5c542}
+.se-boss{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:13px}.se-boss span{margin-left:auto;color:var(--muted);font-size:12px}
 .sync-warn{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.35);color:inherit;border-radius:12px;padding:9px 12px;font-size:12.5px;font-weight:600}.sync-warn em{margin-left:auto;font-style:normal;opacity:.5}
 .yg-ov{user-select:none;-webkit-user-select:none}.yg-ov button,.yg-ov a{touch-action:manipulation}
 .yg-top{gap:10px}.yg-prog{flex:1;display:flex;gap:3px;max-width:240px}.yg-prog i{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.14)}.yg-prog i.d{background:#a99bff}.yg-prog i.c{background:linear-gradient(90deg,#ff86ab,#a99bff)}
@@ -1765,7 +1811,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b246';
+const BUILD='b247';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -1976,7 +2022,7 @@ async function initDb(){
       const cloudHollow = (rr === 0 && rl >= 3 && dc < 2) || (!window._seeded && dl >= 5 && dc < dl - 1);        // cloud has nothing a person did, or fewer lived days than this device → this device wins
       const localHollow = window._seeded || (rl === 0 && rr > 0) || dc > dl + 1;   // this device started blank, or the cloud simply holds more lived days → cloud wins, whatever the timestamps say
       if (localHollow && dc>=2 && (window._seeded || dc > dl + 1)) setTimeout(()=>toast(`☁️ Restored ${dc} days of history from the cloud`),800);
-      if (localHollow || (cloudNewer && !cloudHollow)) { const edited = (S.updatedAt||0) > loadedAt; const keepSx = edited ? S.datum?.session : null; S = migrate(r); if (keepSx && !S.datum?.session && ensureDatum().prototypes.some(p=>p.id===keepSx.pid)) { ensureDatum().session = keepSx; S.updatedAt = Date.now(); dbPendingWrite = true; } lastProg = snapshotProgress(); saveLocal(); render(); if (edited && !keepSx) toast('Synced your data from the cloud — redo your last tap'); }
+      if (localHollow || (cloudNewer && !cloudHollow)) { const edited = (S.updatedAt||0) > loadedAt; const keepSx = edited ? S.datum?.session : null; S = migrate(r); if (keepSx && !S.datum?.session && ensureDatum().prototypes.some(p=>p.id===keepSx.pid)) { ensureDatum().session = keepSx; S.updatedAt = Date.now(); dbPendingWrite = true; } lastProg = snapshotProgress(); lastGame=gameBase(true); saveLocal(); render(); if (edited && !keepSx) toast('Synced your data from the cloud — redo your last tap'); }
       else if (cloudHollow || ((r.updatedAt||0) < (S.updatedAt||0) && dl >= dc - 1)) { pushLocal = true; if (cloudHollow) toast('Kept this phone\'s history over a thinner cloud copy'); }
     } else if (S.updatedAt && !window._seeded) pushLocal = true;   // a brand-new blank device never writes first
     dbReady = true; window._seeded = false;
@@ -1990,7 +2036,7 @@ async function initDb(){
       const r = thaw(s.data());
       if ((r.updatedAt||0) > (S.updatedAt||0)) {
         if ((richness(r) === 0 && richness(S) >= 3) || (Object.keys(S.days||{}).length >= 5 && Object.keys(r.days||{}).length < Object.keys(S.days||{}).length - 1)) { S.updatedAt = Date.now(); saveLocal(); scheduleDbWrite(); return; } // a blank or thinner copy from another device never wins
-        S = migrate(r); _mVer++; try { deriveAll(); } catch(e){} lastProg = snapshotProgress(); saveLocal(); render(); toast('Synced from another device');
+        S = migrate(r); _mVer++; try { deriveAll(); } catch(e){} lastProg = snapshotProgress(); lastGame=gameBase(true); saveLocal(); render(); toast('Synced from another device');
       }
     }, e => { dbStatus = 'error'; renderSync(); });
   } catch(e) { dbStatus = 'local'; renderSync(); }
@@ -2038,18 +2084,23 @@ function deriveAll(){
   try { wkAutoLink(); wkAutoLink2(); syncSrcKRs(); syncWeekGoals(); } catch(e){ console.warn('goals sync',e); }
   try { recordBuckets(); } catch(e){}
   try { recordMem(); recordSeason(); } catch(e){}
+  try { sbossSync(); } catch(e){}
 }
+// the season boss falls once 70% of the quarter's key results are hit — checked after every goal sync, recorded for good
+function sbossSync(){ if (!richness(S)) return; const R=R_(); for (const q of seasonsSeen()){ const SB=seasonBoss(q); if (SB.hp>0 && SB.hits>=SB.need){ R.sboss ||= {}; if (!R.sboss[q]){ R.sboss[q]=TODAY; setTimeout(()=>{ confetti(); toast(`💀 ${SB.n} defeated — season trophy + 300 XP`); },500); } chestGive('sb:'+q, `${SB.n} defeated`, 3); } } }
 function commit(opts={}){
   _mVer++; try { undoCapture(opts); } catch(e){}
   deriveAll();
   try { window.native?.syncReminders?.(S); } catch(e){}
   const before = opts.skipXp ? null : (lastProg || snapshotProgress());
   if (!before) evalBadges();
+  if (before) celebrateDiff(before);
+  try { const g1=gameSnap(); if (lastGame) hitDiff(lastGame, g1); lastGame=g1; R_().snap=g1; } catch(e){ console.warn('hits',e); }
   S.updatedAt = Date.now();
   saveLocal(); scheduleDbWrite(); try { phoneSync(); } catch(e){}
-  if (before) celebrateDiff(before);
   lastProg = snapshotProgress();
   render();
+  try { gSheetRefresh(); } catch(e){}
 }
 
 /* ===================== derived data ===================== */
@@ -2097,6 +2148,7 @@ function computeXP0(){
   xp += gymXP();
   xp += moneyXP();
   xp += bossXP();
+  try { xp += sbossXP(); } catch(e){}
   try { xp += yogaXP() + dungeonXP(); } catch(e){}
   return xp;
 }
@@ -2206,6 +2258,47 @@ const BADGE_MYST = {first:'Show up once.',streak7:'Seven sunrises, none skipped.
 function evalBadges(){ const newly=[]; for(const b of BADGES){ if(!b.auto) continue; const ok=b.auto(); if(!S.badges[b.key] && ok){ S.badges[b.key]=TODAY; newly.push(b);} } return newly; }
 
 /* ===================== celebration ===================== */
+/* ===================== b247: hit pops — every action shows what it hit ===================== */
+let lastGame=null;
+// what the game looks like right now: XP, stats, every boss's HP, buffs, chests, gold, season tier
+function gameSnap(){ const g={v:1, d:TODAY, xp:computeXP(), st:{}, b:{}, fx:[], ch:0, gold:0, tier:0};
+  try { for (const [k] of STATS) g.st[k]=statNow(k); } catch(e){}
+  try { const V=vault(); if (V.max) g.b.vault=[Math.round(V.hp),'🏦','Vault','$']; } catch(e){}
+  try { const W=wyrm(); if (W.need>1) g.b.wyrm=[Math.round(W.hp),'🐉','Wyrm','$']; } catch(e){}
+  try { for (const k of Object.keys(ABOSS)){ const B=aBossState(k); g.b['ab_'+k]=[Math.round(B.hp),B.ic,B.name.replace(/^The /,''),'']; } } catch(e){}
+  try { const W=aBoss(); if (W.max) g.b.warden=[Math.round(W.hp),'🗿','Iron Warden','w']; } catch(e){}
+  try { for (const c of cardBosses()) g.b['card_'+c.name]=[Math.round(c.bal),c.ic,c.name,'$']; } catch(e){}
+  try { g.fx=rpgFx(TODAY).map(f=>[f.id,f.ic,f.n,f.b?1:0]); } catch(e){}
+  try { g.ch=chestsWaiting().length; } catch(e){}
+  try { if (typeof goldNow==='function') g.gold=goldNow(); if (typeof seasonTrack==='function') g.tier=seasonTrack().tier; } catch(e){}
+  return g; }
+// the baseline after a load: the snapshot saved with your data (so changes since last time still pop), else now
+function gameBase(fresh){ try { const o=S.rpg&&S.rpg.snap; if (!fresh && o && o.v===1 && o.b) return o; } catch(e){} return fresh ? gameSnap() : null; }  // null → the first change only sets the baseline (no pops on a first install)
+const fmtHit=(n,u)=>u==='$'?money0(n):u==='w'?Math.round(gShowW(n)).toLocaleString()+' '+gU():Math.round(n).toLocaleString();
+function hitDiff(a, b){ const L=[]; let boss=false, crit=false; const sameDay=a.d===b.d;
+  if (b.xp<a.xp && sameDay){ hitUndo(); return; }   // an undo: take back the last hits instead of popping
+  const dx=b.xp-a.xp, dg=(b.gold||0)-(a.gold||0); if (dx>0||dg>0) L.push({ic:'✦', t:[dx>0?`+${dx} XP`:'', dg>0?`+${dg} 💰`:''].filter(Boolean).join(' · '), k:'xp'});
+  if (sameDay) for (const [k,ic] of STATS) if ((b.st[k]||0)>(a.st[k]||0)) L.push({ic, t:`${k} +${b.st[k]-a.st[k]}`, k:'st'});
+  if (a.d.slice(0,7)===b.d.slice(0,7)) for (const [id,v] of Object.entries(b.b)){ const o=a.b[id]; if (!o) continue; const dmg=o[0]-v[0]; if (dmg<=0.5) continue;
+    boss=true; const kill=v[0]<=0.5&&o[0]>0.5, big=kill||(v[3]===''&&dmg>=40);
+    if (big) crit=true; L.push({ic:kill?'💀':v[1], t:kill?`${v[2]} defeated`:`${v[2]} −${fmtHit(dmg,v[3])}`, k:kill?'kill':big?'crit':'hit'}); }
+  const had=new Set(a.fx.map(f=>f[0])), has=new Set(b.fx.map(f=>f[0]));
+  if (sameDay) for (const f of a.fx) if (!f[3] && !has.has(f[0])) L.push({ic:'✓', t:`${f[2]} cured`, k:'cure'});
+  for (const f of b.fx) if (f[3] && !had.has(f[0]) && a.d===b.d) L.push({ic:f[1], t:f[2], k:'buff'});
+  if ((b.ch||0)>(a.ch||0)) L.push({ic:'🎁', t:b.ch-a.ch>1?`${b.ch-a.ch} chests`:'Chest earned', k:'loot'});
+  if ((b.tier||0)>(a.tier||0)) L.push({ic:'🏆', t:`Season tier ${b.tier}`, k:'tier'});
+  if (!L.length) return;
+  hitLog(L); if (window.__quietPop){ window.__quietPop=0; return; } hitShow(L); if (boss){ try { sprPlay('hype'); } catch(e){} } if (L.some(x=>x.k==='kill')) setTimeout(confetti,200); else if (crit) try { nat('haptic','heavy'); } catch(e){} }
+function hitLog(L){ const R=R_(), H=(R.hits ||= {}), g=Date.now(); (H[TODAY] ||= []).push(...L.filter(x=>x.k!=='xp').map(x=>({ic:x.ic,t:x.t,k:x.k,g}))); H[TODAY]=H[TODAY].slice(-40); R.hitLast=g;
+  for (const k of Object.keys(H)) if (k<addDays(TODAY,-14)) delete H[k]; }
+function hitShow(L, tries){ if (hitBusy() && (tries||0)<60){ setTimeout(()=>hitShow(L,(tries||0)+1),500); return; } let box=document.getElementById('hitpop'); if (!box){ box=document.createElement('div'); box.id='hitpop'; box.setAttribute('aria-live','polite'); document.body.appendChild(box); }
+  const show=L.slice(0,3), more=L.length-show.length;
+  for (const [i,x] of show.entries()){ const e=document.createElement('div'); e.className='hp-i hp-'+x.k; e.style.animationDelay=(i*.12)+'s'; e.innerHTML=`<span>${x.ic}</span><b>${esc(x.t)}</b>`; box.appendChild(e); setTimeout(()=>e.remove(),2800+i*120); }
+  if (more>0){ const e=document.createElement('div'); e.className='hp-i hp-more'; e.style.animationDelay=(show.length*.12)+'s'; e.textContent=`+${more} more · see Close the day`; box.appendChild(e); setTimeout(()=>e.remove(),3200); } }
+function hitUndo(){ try { const R=R_(), A=(R.hits||{})[TODAY]; if (A && R.hitLast) R.hits[TODAY]=A.filter(x=>x.g!==R.hitLast); R.hitLast=0; } catch(e){} }
+// pops wait while a full-screen moment (level-up, chest, sheet) is open
+function hitBusy(){ return [...document.querySelectorAll('#lvs, #chestm, #g-sheet, .modal')].some(e=>{ if (!e.getClientRects().length) return false; const c=getComputedStyle(e); return c.display!=='none' && c.visibility!=='hidden' && +c.opacity>.05; }); }
+function hitsToday(){ try { return (R_().hits||{})[TODAY]||[]; } catch(e){ return []; } }
 function snapshotProgress(){ return { xp:computeXP(), lvl:levelFor(computeXP()), badges:Object.keys(S.badges).length }; }
 function celebrateDiff(before){
   const newly = evalBadges();
@@ -2214,7 +2307,6 @@ function celebrateDiff(before){
   if (lvl > before.lvl) { S.lvlAt ||= {}; for (let m=5;m<=MAXLVL;m+=5) if (m>before.lvl && m<=lvl && !S.lvlAt[m]) S.lvlAt[m]=TODAY; }
   if (lvl > before.lvl) { S.lvlSeen=lvl; levelScene(lvl); }
   else if (false) { const ri=ringIdxAt(lvl); toast(lvl>=MAXLVL ? '👑 Level 50 — Apex. Max level.' : lvl%5===0 ? `⬆️ Level ${lvl} — EVOLUTION` : `⬆️ Level ${lvl} · ${titleOf(lvl)}${ri>=0?` — ${RINGS[ri].name} ring${bgIdxAt(lvl)>=0?' + '+BGS[bgIdxAt(lvl)].name+' background':''} unlocked`:''}`); confetti(); }
-  else if (xp > before.xp) toastXp(xp - before.xp);
 }
 let toastT, toastQ=[];
 function toast(m){ const el=document.getElementById('toast'); el.textContent=m; el.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2200); }
@@ -2824,10 +2916,10 @@ function render(){
     </div>
     <div class="pills">
       ${S.travel&&S.travel.on?`<span class="pill" style="cursor:pointer" onclick="travelSheet()">✈️ ${esc(S.travel.city||'Away')}</span>`:''}
-      <span class="pill fire">🔥 <span class="num">${st.daily}</span>&nbsp;day streak${shieldsLeft()?` · 🛡️${shieldsLeft()}`:''}</span>
-      <span class="pill" style="cursor:pointer" onclick="levelScene(${lvl})" title="Replay level-up">Lv ${lvl} · ${titleOf(lvl)}</span>
-      ${(()=>{ try { const X=xpMult(TODAY); return Math.abs(X.total-1)<.005?'':`<span class="pill xp-pill ${X.total>=1?'up':'down'}" style="cursor:pointer" onclick="xpSheet()" title="XP multiplier today">⚡ ×${X.total.toFixed(2).replace(/\.?0+$/,'')}</span>`; } catch(e){ return ''; } })()}
-      ${(()=>{ const se=season(); return `<span class="pill" style="cursor:pointer;box-shadow:inset 0 0 0 1.5px ${se.c}" onclick="stMode='progress';dFold.hq_season=true;go('evolve');render()" title="Season ${se.no} · ${se.name}">${se.ic} ${se.left}d</span>`; })()}
+      <span class="pill fire" style="cursor:pointer" onclick="shopOpen()" title="Streak and shields">🔥 <span class="num">${st.daily}</span><span class="pl-w">&nbsp;day streak</span>&nbsp;·&nbsp;🛡️${shieldsLeft()}/3</span>
+      <span class="pill" style="cursor:pointer" onclick="levelScene(${lvl})" title="Replay level-up">Lv ${lvl}<span class="pl-w"> · ${titleOf(lvl)}</span></span>
+      <span class="pill gold-pill" style="cursor:pointer" onclick="shopOpen()" title="Gold — tap for the shop">💰 <span class="num">${(()=>{ try { return goldNow().toLocaleString(); } catch(e){ return 0; } })()}</span></span>
+      ${(()=>{ const se=season(); let t=0, sd=false; try { t=seasonTrack().tier; sd=seasonBoss().showdown&&!seasonBoss().dead; } catch(e){} return `<span class="pill" style="cursor:pointer;box-shadow:inset 0 0 0 1.5px ${se.c}" onclick="seasonOpen()" title="Season ${se.no} · ${se.name}">${sd?'⚔️':se.ic} ${t}/13</span>`; })()}
     </div>
     <div class="nav" data-hl="${({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab'})[view]||'crt'}">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='goals'&&GOALS.some(([k])=>k===view))?'on':''}" data-tab="${v}" onclick="if(!navHeld())go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
     <div id="view">${GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):''}${AREA_VIEW[view]?areaChip(AREA_VIEW[view]):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve,social:vSocial,bosses:vBosses})[view]()}</div>`;
@@ -3145,12 +3237,11 @@ function qBounds(q){ const [y,n]=q.split('-Q').map(Number), a=`${y}-${pad((n-1)*
 function seasonNo(q){ const first=Object.keys(S.days).sort()[0]||TODAY, f=quarterOf(first), [fy,fn]=f.split('-Q').map(Number), [y,n]=q.split('-Q').map(Number); return Math.max(1,(y-fy)*4+(n-fn)+1); }
 function seasonXp(q){ const [a,b]=qBounds(q); let x=0; for (const k of Object.keys(S.days)) if (k>=a&&k<=b) x+=dayXpFor(k); return x; }
 function season(){ const q=THIS_Q, n=+q.split('-Q')[1], T=SEASON_T[n], [a,b]=qBounds(q), xp=seasonXp(q); return {q, n, no:seasonNo(q), ...T, xp, left:daysBetween(TODAY,b), earned:!!(S.seasonBg||{})[q]}; }
-function recordSeason(){ try { const se=season(); if (!se.earned && se.xp>=SEASON_GOAL){ (S.seasonBg ||= {})[se.q]=se.n; setTimeout(()=>{ toast(`${se.ic} Season ${se.no} background earned: ${se.name}`); confetti(); },400); } } catch(e){} }
-function seasonCard(){ const se=season(), pct=Math.min(1,se.xp/SEASON_GOAL), past=Object.keys(S.seasonBg||{}).filter(q=>q!==se.q).sort();
-  return `<div class="card sec" style="box-shadow:inset 0 3px 0 ${se.c}"><div class="hdr"><h2>${se.ic} Season ${se.no} · ${se.name}</h2><span class="sub">${se.q.replace('-',' ')} · ${se.left} day${se.left===1?'':'s'} left</span></div>
-    <div class="row" style="gap:14px;flex-wrap:nowrap;align-items:center"><svg viewBox="0 0 200 240" width="60" height="72" style="border-radius:12px;flex:none;${se.earned?'':'filter:grayscale(1) brightness(.5)'}" aria-hidden="true">${SEASON_BG[se.n]('sc')}</svg>
-      <div style="flex:1;min-width:0"><b>${se.earned?`${se.name} background earned`:`Limited background: ${se.name}`}</b><div class="sub" style="margin:2px 0 8px">${se.earned?'Yours for good. Pick it in Character → Customize.':`${SEASON_GOAL.toLocaleString('en-US')} XP to earn it`}</div>${bar(pct,se.c)}<div class="sub num" style="margin-top:4px">${Math.min(se.xp,SEASON_GOAL).toLocaleString('en-US')} / ${SEASON_GOAL.toLocaleString('en-US')} XP this season</div></div></div>
-    ${past.length?`<div class="sub" style="margin-top:10px">Past seasons earned: ${past.map(q=>`${SEASON_T[S.seasonBg[q]].ic} ${q.replace('-',' ')}`).join(' · ')}</div>`:''}</div>`; }
+function recordSeason(){ try { const se=season(); let t7=false; try { t7=seasonTrack().tier>=7; } catch(e){} if (!se.earned && (se.xp>=SEASON_GOAL || t7)){ (S.seasonBg ||= {})[se.q]=se.n; setTimeout(()=>{ toast(`${se.ic} Season ${se.no} background earned: ${se.name}`); confetti(); },400); } } catch(e){} }
+function seasonCard(){ const se=season(); let T={tier:0,played:0,kills:[]}, SB=null; try { T=seasonTrack(); SB=seasonBoss(); } catch(e){}
+  return `<button class="card sec se-card" style="box-shadow:inset 0 3px 0 ${se.c}" onclick="seasonOpen()"><div class="hdr"><h2>${se.ic} Season ${se.no} · ${se.name}</h2><span class="sub">${se.left} day${se.left===1?'':'s'} left ›</span></div>
+    <div class="se-row"><div><small>TIER</small><b class="num">${T.tier}/13</b></div><div class="se-pips">${Array.from({length:13},(_,i)=>`<i class="${i<T.tier?'on':''}"></i>`).join('')}</div></div>
+    ${SB?`<div class="se-boss">${SB.dead?'💀':SB.ic} <b>${esc(SB.n)}</b><span>${SB.dead?'defeated':SB.hp?`${SB.hits}/${SB.need} key results`:'set goals to summon'}</span></div>`:''}</button>`; }
 /* ---------- rival: a shadow levelling at the pace of the 5-year plan ---------- */
 const PLAN_DAYS=1826;
 function rival(){ const start=Object.keys(S.days).sort()[0]||TODAY, el=Math.max(0,daysBetween(start,TODAY)), top=xpForLevel(MAXLVL), rx=Math.min(top,Math.round(top*el/PLAN_DAYS)), xp=computeXP(), perDay=top/PLAN_DAYS; return {start, xp:rx, lvl:levelFor(rx), mine:xp, diff:xp-rx, days:Math.round(Math.abs(xp-rx)/perDay), perDay:Math.round(perDay)}; }
@@ -3877,7 +3968,7 @@ function rareBanner(){ const r=rareDay(TODAY); if(!r) return ''; const d=S.days[
   return `<div class="rare" style="cursor:pointer" onclick="toggleRare()" role="button" aria-pressed="${!!d?.rareDone}"><span>🎲</span><div><b style="${d?.rareDone?'text-decoration:line-through;opacity:.6':''}">${esc(r.text)}</b><small>Rare challenge · today only · +50 XP${d?.rareDone?' · done':''}</small></div><span class="krbox ${d?.rareDone?'on':''}">${d?.rareDone?'✓':''}</span></div>`; }
 const dayOn = k => dayActive(k) || !!(S.shieldUsed && S.shieldUsed[k]) || rpgSafe(k);
 function perfectWeeks(){ const ws=new Set(Object.keys(S.days).map(isoWeek)); let n=0; for (const w of ws) if (w<THIS_WEEK && weekDays(w).every(dayActive)) n++; return n; }
-const shieldsLeft = () => Math.max(0, Math.min(3, perfectWeeks() - Object.keys(S.shieldUsed||{}).length));
+const shieldsLeft = () => { let earned=perfectWeeks(); try { earned+=tierShields()+shieldsBought(); } catch(e){} return Math.max(0, Math.min(3, earned - Object.keys(S.shieldUsed||{}).length)); };
 function shieldOffer(){ const y=addDays(TODAY,-1); return shieldsLeft()>0 && !dayOn(y) && dayOn(addDays(y,-1)) ? y : null; }
 function useShield(k){ if (shieldsLeft()<=0) return; (S.shieldUsed ||= {})[k]=TODAY; commit({skipXp:true}); toast('🛡️ Shield used — the streak holds'); }
 function landmarks(){
@@ -3960,12 +4051,11 @@ function vToday(){
         ${trackSelect(t.track,`setTop3Track(${i},this.value)`)}
       </div>`).join('')}</div>
     ${(()=>{ const sg=d.top3.some(t=>!t.text.trim())&&curDay>=addDays(TODAY,-1)?t3Sug(curDay):[]; return sg.length?`<div class="t3sug">${sg.map(x=>`<button onclick="t3Fill(${JSON.stringify(x.text).replace(/"/g,'&quot;')},'${x.track||''}')">+ ${esc(x.text)}</button>`).join('')}</div>`:''; })()}
-    ${habitsBlock}${isToday && hr>=17 ? `<button class="btn ${d.close?.at?'ghost':''}" style="width:100%;justify-content:center;margin-top:14px" onclick="closeDayOpen()">${d.close?.at?'🌙 Day closed · edit':'🌙 Close the day'}</button>` : ''}
+    ${isToday?questLine():''}${habitsBlock}${isToday && hr>=17 ? `<button class="btn ${d.close?.at?'ghost':''}" style="width:100%;justify-content:center;margin-top:14px" onclick="closeDayOpen()">${d.close?.at?'🌙 Day closed · edit':'🌙 Close the day'}</button>` : ''}
   </div>
   ${isToday?yogaToday()+rpgStrip()+homeStrips()+homeAgenda():''}
-  <details class="card sec fold more-fold" ${homeOpen.more?'open':''} ontoggle="homeOpen.more=this.open"><summary><span>More</span><span class="sub">win · quests · log · bench · week ›</span></summary><div class="more-in">
+  <details class="card sec fold more-fold" ${homeOpen.more?'open':''} ontoggle="homeOpen.more=this.open"><summary><span>More</span><span class="sub">win · log · bench · week ›</span></summary><div class="more-in">
     ${winsBlock}
-    ${questsCard(curDay)}
     ${logsCard()}
     ${benchCard()}
   <details class="card sec fold" ${homeOpen.inits?'open':''} ontoggle="homeOpen.inits=this.open"><summary><span>This week's initiatives</span><span class="sub num">${initsDone}/${inits.length} ›</span></summary>
@@ -5260,6 +5350,7 @@ function dFromKR(k,on){ try { const D=ensureDatum(), w=new Set(krWords(k.text));
 function closeDayOpen(){ let m=document.getElementById('cday'); if(!m){ m=document.createElement('div'); m.id='cday'; m.addEventListener('click',e=>{ if(e.target===m) m.remove(); }); document.body.appendChild(m); }
   const d=ensureDay(TODAY), win=S.wins.find(w=>w.d===TODAY);
   m.className='modal'; m.innerHTML=`<div class="card"><div class="row between"><h2 style="font-size:20px">🌙 Close the day</h2><button class="x" onclick="document.getElementById('cday').remove()">✕</button></div>
+    ${(()=>{ const H=hitsToday(), xp=dayXpFor(TODAY); return `<div class="cd-hits"><div class="row between"><span class="tag">Today you hit</span><b class="num" style="color:var(--good)">+${xp} XP</b></div>${H.length?`<div class="cd-hl">${H.map(h=>`<span class="hp-${h.k}">${h.ic} ${esc(h.t)}</span>`).join('')}</div>`:'<div class="sub" style="font-size:12px">No hits yet — anything you finish today shows up here.</div>'}</div>`; })()}
     <div class="tag" style="margin:12px 0 6px">How did today feel?</div>
     <div class="mm-vibe">${['😩','😐','🙂','🔥'].map((v,i)=>`<button class="${d.close?.feel===i?'on':''}" onclick="closeDaySet(${i})">${v}</button>`).join('')}</div>
     <div class="tag" style="margin:14px 0 6px">One win</div>
@@ -5577,12 +5668,15 @@ function rpgSync(){ if (!richness(S)) return 0; const R=R_(); let n=0; if (R.lvl
   for (const p of ensureDatum().prototypes){ const q=craftQ(p); if (q.i===4) n+=chestGive('legend:'+p.id, `${p.id} is Legendary`, 2); if (q.mw) n+=chestGive('mw:'+p.id, `${p.id} Masterwork`, 2); }
   for (const w of Object.keys(R.hc)) if (hcState(w)?.clean) n+=chestGive('hc:'+w, `Hardcore ${w} cleared`, 1);
   for (const q of Object.keys(R.cls)){ const cq=classQuest(q); if (cq && cq.n>=cq.target) n+=chestGive('cq:'+q, `${classFor(q).name} quest · ${q}`, 1); }
+  try { if (dayClear(TODAY)) n+=chestGive('day:'+TODAY, 'Daily clear'); if (weekClear(THIS_WEEK) && weekMonday(THIS_WEEK)>=weekMonday(isoWeek(QL_START))) n+=chestGive('wk:'+THIS_WEEK, 'Weekly clear', 1);
+    for (const q of seasonsSeen()){ const t=seasonTrack(q).tier; for (let i=1;i<=t;i++) if (TIERS[i].c!=null) n+=chestGive(`st:${q}:${i}`, `Season tier ${i}`, TIERS[i].c);
+    } } catch(e){ console.warn('game chests',e); }
   return n; }
 function chestRoll(key, i){ const c=R_().chests[key], P=perks(); const r=hashN(key+':'+i)%100; let t=r<62?0:r<88?1:r<98?2:3; t=Math.max(t, c?.min||0); if (P.jackpot) t=Math.min(3,t+1); const pool=LOOT.filter(l=>l[2]===t); const it=pool[hashN(key+'#'+i)%pool.length]; return {ic:it[0], n:it[1], r:t}; }
 function chestsWaiting(){ return Object.entries(R_().chests).filter(([k,c])=>!c.open); }
-function chestOpen(key){ const R=R_(), c=R.chests[key]; if (!c || c.open) return; const N=perks().lucky?2:1, got=[]; for (let i=0;i<N;i++){ const it=chestRoll(key,i); got.push(it); R.loot.push({...it, d:TODAY, src:c.src, k:key}); } c.open=TODAY; commit({skipXp:true});
+function chestOpen(key){ const R=R_(), c=R.chests[key]; if (!c || c.open) return; const N=perks().lucky?2:1, got=[]; for (let i=0;i<N;i++){ const it=chestRoll(key,i); got.push(it); R.loot.push({...it, d:TODAY, src:c.src, k:key}); } c.open=TODAY; window.__quietPop=1; commit({skipXp:true});
   let m=document.getElementById('chestm'); if (!m){ m=document.createElement('div'); m.id='chestm'; document.body.appendChild(m); }
-  m.className='chestm'; m.innerHTML=`<div class="chest-in"><div class="tag" style="color:#fff;opacity:.7">${esc(c.src)}</div><div class="chest-box">🎁</div><div class="chest-items">${got.map((it,i)=>`<div class="chest-it" style="--rc:${LOOT_R[it.r][1]};animation-delay:${.9+i*.35}s"><span>${it.ic}</span><b>${esc(it.n)}</b><small>${LOOT_R[it.r][0]}</small></div>`).join('')}</div><button class="btn" style="margin-top:20px" onclick="document.getElementById('chestm').remove();render()">Nice</button></div>`;
+  m.className='chestm'; m.innerHTML=`<div class="chest-in"><div class="tag" style="color:#fff;opacity:.7">${esc(c.src)}</div><div class="chest-box">🎁</div><div class="chest-items">${got.map((it,i)=>`<div class="chest-it" style="--rc:${LOOT_R[it.r][1]};animation-delay:${.9+i*.35}s"><span>${it.ic}</span><b>${esc(it.n)}</b><small>${LOOT_R[it.r][0]} · +${LOOT_GOLD[it.r]} 💰</small></div>`).join('')}</div><button class="btn" style="margin-top:20px" onclick="document.getElementById('chestm').remove();render()">Nice</button></div>`;
   setTimeout(()=>{ if (got.some(g=>g.r>=2)) confetti(); }, 1000); }
 function chestNext(){ const w=chestsWaiting(); if (w.length) chestOpen(w[0][0]); }
 function titlesAll(){ const R=R_(), W=world(), F=factions().list, T=[['Rookie','Where everyone starts',1]];
@@ -5592,15 +5686,137 @@ function titlesAll(){ const R=R_(), W=world(), F=factions().list, T=[['Rookie','
   for (const z of Object.values(W)) if (z.open) T.push([`Made It in ${z.n}`,`Clear every ${z.n} quest`,z.done]);
   T.push(['Hardcore','3 clean Hardcore weeks',hcClean()>=3], ['Masterwork Smith','Craft a Masterwork',ensureDatum().prototypes.some(p=>craftQ(p).mw)], ['Ride or Die','A friend at bond level 4',(S.circle?.people||[]).some(p=>bondOf(p).i===3)], ['Ghostbuster','Beat your ghost 4 weeks',ghostWins()>=4]);
   for (const [k,c] of Object.entries(CLASSES)) T.push([`${c.name} ★`,`Finish a quarter as ${c.name}`,classMastery(k)>0]);
+  try { for (const q of seasonsSeen()){ const n=+q.split('-Q')[1], nm=SEASON_T[n].name, y=q.slice(0,4); T.push([`${nm} ${y} Legend`,`Reach tier 13 in ${nm} ${y}`,seasonTrack(q).tier>=13]); T.push([`${SEASON_BOSS[n].n.replace(/^The /,'')} Slayer`,`Defeat ${SEASON_BOSS[n].n} (${q.replace('-',' ')})`,!!R.sboss?.[q]]); } } catch(e){}
   return T; }
 function titleSet(t){ R_().title=t; commit({skipXp:true}); toast(`Title: ${t}`); }
 function titleNow(){ const t=R_().title; return t && titlesAll().some(x=>x[0]===t&&x[2]) ? t : ''; }
 
 /* ---------- UI: Today strip ---------- */
 function fxTip(i){ const f=rpgFx(TODAY)[i]; if (f) toast(`${f.ic} ${f.n}${f.m?` · ${f.m>0?'+':''}${Math.round(f.m*100)}% XP`:''} — ${f.t}`); }
-function rpgStrip(){ try { const F=rpgFx(TODAY), V=vault(), ch=chestsWaiting().length, m=rpgMult(TODAY), rd=rareDay(TODAY);
-  return `<div class="rpg-strip sec">${rd&&rd.type==='double'?`<button class="fx buff" onclick="xpSheet()">⚡<span>2× XP day</span></button>`:''}${ch?`<button class="fx chest" onclick="chestNext()">🎁 <b>${ch}</b></button>`:''}${F.map((f,i)=>`<button class="fx ${f.b?'buff':'debuff'}" onclick="fxTip(${i})">${f.ic}<span>${esc(f.n)}</span></button>`).join('')}${(()=>{ const X=xpMult(TODAY); return `<button class="fx-m num ${X.total>=1?'up':'down'}" onclick="xpSheet()" aria-label="XP multiplier today">XP ×${X.total.toFixed(2).replace(/\.?0+$/,'')}</button>`; })()}</div>
-`; } catch(e){ return ''; } }
+// b247: the buff row is icons only — green = buff, red = debuff, ⚙️ = your perks, 🎁 = chests. Tap one for its line.
+const FX_PERK=new Set(['titan','steady','strat','poly','sage']);
+const FX_FIX={rusty:["go('gym')",'Go train'],cob:["go('datum')",'Open the bench'],hermit:["go('social')",'Log a hangout'],over:["moneyTab='spending';go('money')",'See spending'],curse:["moneyTab='now';go('money')",'Feed the Wyrm']};
+function fxAll(){ const F=rpgFx(TODAY).slice(), rd=rareDay(TODAY); if (rd&&rd.type==='double') F.unshift({id:'double',ic:'⚡',n:'2× XP day',b:1,m:1,t:'Random double-XP day — everything counts twice'}); return F; }
+const fxEff=f=>[f.m?`${f.m>0?'+':'−'}${Math.round(Math.abs(f.m)*100)}% XP`:'', ...Object.entries(f.st||{}).map(([k,v])=>`${k} ${v>0?'+':'−'}${Math.abs(v)}`)].filter(Boolean).join(' · ');
+function rpgStrip(){ try { const F=fxAll(), perk=F.filter(f=>FX_PERK.has(f.id)), rest=F.filter(f=>!FX_PERK.has(f.id)), up=rest.filter(f=>f.b), down=rest.filter(f=>!f.b), ch=chestsWaiting().length, X=xpMult(TODAY);
+  const chip=(f,cls)=>`<button class="fxi ${cls}" onclick="fxPop(event,'${f.id}')" aria-label="${esc(f.n)}">${f.ic}</button>`;
+  return `<div class="fx-row sec" role="group" aria-label="Buffs and debuffs"><div class="fx-scroll">${up.map(f=>chip(f,'buff')).join('')}${perk.length?`<button class="fxi perk" onclick="fxPop(event,'perks')" aria-label="${perk.length} perks active">⚙️<i>${perk.length}</i></button>`:''}${up.length&&down.length?'<span class="fx-sep"></span>':''}${down.map(f=>chip(f,'debuff')).join('')}${ch?`<button class="fxi chest" onclick="fxPop(event,'chest')" aria-label="${ch} chests waiting">🎁<i>${ch}</i></button>`:''}${!F.length&&!ch?'<span class="fx-none">no buffs today</span>':''}</div>
+    <button class="fx-x num ${X.total>=1?'up':'down'}" onclick="xpSheet()" aria-label="XP multiplier today">×${X.total.toFixed(2).replace(/\.?0+$/,'')}</button></div>`; } catch(e){ return ''; } }
+function fxPopClose(){ document.getElementById('fxpop')?.remove(); }
+function fxPop(ev, id){ ev.stopPropagation(); const was=document.getElementById('fxpop'); if (was && was.dataset.id===id){ fxPopClose(); return; } fxPopClose();
+  const F=fxAll(); let html='';
+  const one=f=>`<div class="fp-l"><span>${f.ic}</span><div><b>${esc(f.n)}</b>${fxEff(f)?`<em class="${f.b?'up':'down'}">${fxEff(f)}</em>`:''}<small>${esc(String(f.t||'').replace(/\s*Cure:.*$/,''))}</small></div></div>`;
+  if (id==='perks') html=F.filter(f=>FX_PERK.has(f.id)).map(one).join('')+`<button class="fp-b" onclick="fxPopClose();stMode='progress';go('evolve')">Skill tree ›</button>`;
+  else if (id==='chest'){ const n=chestsWaiting().length; html=`<div class="fp-l"><span>🎁</span><div><b>${n} chest${n===1?'':'s'} waiting</b><small>Loot inside — open to collect</small></div></div><button class="fp-b" onclick="fxPopClose();chestNext()">Open</button>`; }
+  else { const f=F.find(x=>x.id===id); if (!f) return; const fx=FX_FIX[id]; html=one(f)+(fx?`<button class="fp-b" onclick="fxPopClose();${fx[0]}">${fx[1]} ›</button>`:''); }
+  const p=document.createElement('div'); p.id='fxpop'; p.dataset.id=id; p.className='fxpop'; p.innerHTML=html; document.body.appendChild(p);
+  const r=ev.currentTarget.getBoundingClientRect(), w=Math.min(290, innerWidth-24); p.style.width=w+'px';
+  p.style.left=Math.max(12, Math.min(innerWidth-w-12, r.left+r.width/2-w/2))+'px'; p.style.top=(r.bottom+window.scrollY+8)+'px';
+  setTimeout(()=>document.addEventListener('click', fxPopClose, {once:true}),0); }
+function rpgStatus(){ return rpgStrip(); }
+
+/* ===================== b247: quest log · gold · shop · seasons — one game ===================== */
+const GOLD_START='2026-10-20', QL_START='2026-10-26';   // GOLD_START = GAME_START (declared later in the file)
+const LOOT_GOLD=[10,25,60,150];
+// ---- clears ----
+function dayClear(k){ const d=S.days[k]; return !!d && d.top3.length>=3 && d.top3.every(t=>t.done && (t.text||'').trim()); }
+function weekQ(w){ return (S.quests||[]).find(q=>q.mq===w)||null; }
+function weekClear(w){ const L=weekInits(w), wk=week(w), q=weekQ(w); return L.length>0 && L.every(i=>wk.inits[i.id]) && (!q || !!q.done); }
+function weekPlayed(w){ return weekDays(w).filter(k=>k<=TODAY && dayOn(k)).length>=5 || weekClear(w); }
+// ---- seasons: a quarter is a season; 13 tiers ----
+const SEASON_BOSS=[null,{n:'The Frost Giant',ic:'🧊'},{n:'The Thorn Queen',ic:'🌹'},{n:'The Sun Tyrant',ic:'🌞'},{n:'The Harvest Reaper',ic:'🎃'}];
+const TIERS=[null,{ic:'💰',l:'50 gold',g:50},{ic:'🎁',l:'Chest',c:0},{ic:'💰',l:'75 gold',g:75},{ic:'🛡️',l:'Streak shield',sh:1},{ic:'🎁',l:'Rare chest',c:1},{ic:'💰',l:'100 gold',g:100},{ic:'🖼️',l:'Season background',bg:1},{ic:'🎁',l:'Rare chest',c:1},{ic:'🛡️',l:'Streak shield',sh:1},{ic:'💰',l:'150 gold',g:150},{ic:'🎁',l:'Epic chest',c:2},{ic:'💰',l:'200 gold',g:200},{ic:'👑',l:'Season title + legendary chest',c:3,title:1}];
+function qWeeks(q){ const [a,b]=qBounds(q), out=[]; let w=isoWeek(a); while (weekMonday(w)<=b){ out.push(w); w=weekShift(w,1); } return out; }
+function qBossKills(q){ const [a,b]=qBounds(q), K=[]; const inQ=d=>d&&d>=a&&d<=b&&d>=GOLD_START;
+  try { for (const k of Object.keys(ABOSS)) for (const m of [a.slice(0,7), addDays(a,32).slice(0,7), addDays(a,62).slice(0,7)]){ if (m>TODAY.slice(0,7)) continue; const B=aBossState(k,m); if (B.dead && inQ(B.killedOn)) K.push({n:B.name, d:B.killedOn}); } } catch(e){}
+  const R=R_(); for (const [key,n] of [['vaultkill','The Vault'],['wyrmkill','The Tax Wyrm']]) if (R.chests[key] && inQ(R.chests[key].d)) K.push({n, d:R.chests[key].d});
+  for (const [n,d] of Object.entries(S.money.cardDead||{})) if (inQ(d)) K.push({n, d});
+  return K; }
+function seasonBoss(q){ q=q||THIS_Q; const n=+q.split('-Q')[1], B=SEASON_BOSS[n], krs=(S.quarters?.[q]?.objectives||[]).flatMap(o=>(o.krs||[]).filter(k=>+k.target>0)), hp=krs.length, hits=krs.filter(krHit).length, need=Math.ceil(hp*.7);
+  const [,end]=qBounds(q), left=daysBetween(TODAY,end); return {...B, q, hp, hits, need, krs, dead:!!R_().sboss?.[q] || (hp>0 && hits>=need), killed:R_().sboss?.[q]||'', showdown:q===THIS_Q && left>=0 && left<7, pct:hp?Math.max(0,1-hits/need):1}; }
+function seasonTrack(q){ q=q||THIS_Q; return rpgC('st:'+q,()=>{ const W=qWeeks(q).filter(w=>weekMonday(w)<=TODAY), played=W.filter(weekPlayed), kills=qBossKills(q), tier=Math.min(13, played.length+kills.length);
+  return {q, tier, played:played.length, weeks:qWeeks(q).length, kills}; }); }
+function seasonsSeen(){ const out=[]; let q=quarterOf(GOLD_START); while (q<=THIS_Q){ out.push(q); const [y,n]=q.split('-Q').map(Number); q=n===4?`${y+1}-Q1`:`${y}-Q${n+1}`; } return out; }
+const tierShields=()=>seasonsSeen().reduce((a,q)=>{ const t=seasonTrack(q).tier; return a+TIERS.slice(1,t+1).filter(x=>x.sh).length; },0);
+const sbossXP=()=>Object.keys(R_().sboss||{}).length*300;
+// ---- gold: earned from what you did (since Oct 20), minus what you spent ----
+function goldEarned(){ return rpgC('goldE',()=>{ const B={}, add=(k,n)=>{ if (n>0) B[k]=(B[k]||0)+n; };
+  for (const [k,d] of Object.entries(S.days||{})){ if (k<GOLD_START) continue; add('Top 3', d.top3.filter(t=>t.done&&(t.text||'').trim()).length*5); if (k>=QL_START && dayClear(k)) add('Daily clears', 20); }
+  for (const q of S.quests||[]) if (q.done && q.done>=GOLD_START) add('Quests', ({S:5,M:15,B:40})[q.size]||0);
+  for (const w of Object.keys(S.weeks||{})) if (weekMonday(w)>=weekMonday(isoWeek(QL_START)) && weekMonday(w)<=TODAY && weekClear(w)) add('Weekly clears', 60);
+  for (const q of seasonsSeen()){ add('Boss kills', qBossKills(q).length*100); if (R_().sboss?.[q]) add('Boss kills', 100); const t=seasonTrack(q).tier; add('Season tiers', TIERS.slice(1,t+1).reduce((a,x)=>a+(x.g||0),0)); }
+  for (const it of R_().loot||[]) if ((it.d||'')>=GOLD_START) add('Chest loot', LOOT_GOLD[it.r]||0);
+  return B; }); }
+const goldSpent=()=>(R_().spent||[]).reduce((a,x)=>a+(+x.cost||0),0);
+function goldNow(){ return Math.max(0, Object.values(goldEarned()).reduce((a,b)=>a+b,0) - goldSpent()); }
+// ---- shop ----
+const SHOP=[{id:'shield',ic:'🛡️',n:'Streak shield',d:'Covers one missed day so your streak holds. Hold up to 3.',cost:150},{id:'respec',ic:'🔄',n:'Skill-point reset',d:'Refund every stat point and spend them again.',cost:200}];
+const shieldsBought=()=>(R_().spent||[]).filter(x=>x.item==='shield').length;
+function shopBuy(id){ const it=SHOP.find(x=>x.id===id); if (!it) return; if (goldNow()<it.cost) return toast(`Need ${it.cost-goldNow()} more 💰`);
+  if (id==='shield' && shieldsLeft()>=3) return toast('You already hold 3 shields');
+  if (id==='respec' && !Object.values(R_().pts||{}).some(v=>+v>0)) return toast('No points spent yet — nothing to reset');
+  const R=R_(); (R.spent ||= []).push({d:TODAY, item:id, cost:it.cost}); if (id==='respec') R.pts={};
+  commit({skipXp:true}); toast(id==='shield'?'🛡️ Shield bought':'🔄 Points refunded — spend them again'); }
+function shopOpen(){ gSheetLive(shopBody); }
+function shopBody(){ const g=goldNow(), E=goldEarned(), sl=shieldsLeft();
+  return (`<span class="tag">Gold</span><h2 class="g-sh-t">💰 ${g.toLocaleString()}</h2>
+    <div class="shop">${SHOP.map(it=>`<div class="shop-i"><span>${it.ic}</span><div><b>${it.n}</b><small>${it.d}</small></div><button class="btn sm ${g<it.cost||(it.id==='shield'&&sl>=3)?'ghost':''}" onclick="shopBuy('${it.id}')">${it.cost} 💰</button></div>`).join('')}</div>
+    ${(()=>{ let e=perfectWeeks(); try { e+=tierShields()+shieldsBought(); } catch(x){} const extra=Math.max(0,e-Object.keys(S.shieldUsed||{}).length-3); return extra?`<div class="shop-sh">➕ ${extra} more shield${extra===1?'':'s'} waiting — one refills you each time you use one.</div>`:''; })()}
+    ${(()=>{ const owe=goldSpent()-Object.values(E).reduce((a,b)=>a+b,0); return owe>0?`<div class="shop-sh" style="color:var(--bad)">Gold is ${owe} under — something you were paid for got unticked. New gold fills that first.</div>`:''; })()}
+    <div class="shop-sh">🛡️ <b>${sl}/3</b> shields · earned from perfect weeks (all 7 days active) and season tiers 4 & 9, or bought here. When you miss a day, Today offers to use one.</div>
+    <div class="tag" style="margin:14px 0 6px">Where your gold came from</div>
+    <div class="shop-e">${Object.entries(E).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div><span>${k}</span><b class="num">+${v}</b></div>`).join('')||'<div class="sub">Finish a Top 3, a quest or a clear to start earning.</div>'}${goldSpent()?`<div><span>Spent</span><b class="num" style="color:var(--bad)">−${goldSpent()}</b></div>`:''}</div>`); }
+// ---- quest log ----
+function questLogData(){ const d=S.days[TODAY]||day(TODAY), t3=d.top3.filter(t=>(t.text||'').trim()), t3d=t3.filter(t=>t.done).length, h=Object.values(d.habits||{}).filter(Boolean).length;
+  const WL=weekInits(THIS_WEEK), wk=week(THIS_WEEK), mq=weekQ(THIS_WEEK), wTot=WL.length+(mq?1:0), wDone=WL.filter(i=>wk.inits[i.id]).length+(mq&&mq.done?1:0);
+  return {t3d, h, hTot:S.habits.length, daily:dayClear(TODAY), wDone, wTot, weekly:weekClear(THIS_WEEK), mq, tier:seasonTrack().tier}; }
+function questLine(){ if (curDay!==TODAY) return ''; const Q=questLogData();
+  return `<button class="ql-line" onclick="questLogOpen()"><span>📜</span><b>Quest log</b><i>·</i><span class="${Q.weekly?'ok':''}">week ${Q.wDone}/${Q.wTot||0}</span>${Q.daily?'<i>·</i><span class="ok">day cleared ✓</span>':''}<em>›</em></button>`; }
+// trophies: titles, ranks and badges in one place (they used to be separate counters)
+function trophiesBody(){ const T=titlesAll(), U=T.filter(t=>t[2]), MR=(()=>{ try { return moneyRank(); } catch(e){ return null; } })(), cur=titleNow();
+  const ranks=AREAS.map(a=>{ const I=areaInfo(a.k); return I?`<div class="tr-r" style="--c:${a.c}"><span>${esc(a.n)}</span><b>${esc(I.rank)}</b><em>LV ${I.lvl}</em></div>`:''; }).join('');
+  return `<span class="tag">Trophies</span><h2 class="g-sh-t">🏆 ${U.length} title${U.length===1?'':'s'} · ${Object.keys(S.badges||{}).length} badges</h2>
+    <div class="tag" style="margin:12px 0 6px">Ranks</div><div class="tr-l">${MR?`<div class="tr-r" style="--c:#39ff9f"><span>Money rank</span><b>${MR.r[0]} ${esc(MR.r[1])}</b><em>${MR.i+1}/${MRANKS.length}</em></div>`:''}${ranks}</div>
+    <div class="tag" style="margin:14px 0 6px">Titles · tap one to wear it</div>
+    <div class="tr-t">${T.map(([t,how,ok])=>`<button class="ttl ${ok?'':'lock'} ${cur===t?'on':''}" ${ok?`onclick="titleSet(${JSON.stringify(t).replace(/"/g,'&quot;')})"`:'disabled'}><b>${ok?esc(t):'???'}</b><small>${esc(how)}</small></button>`).join('')}</div>
+    <button class="btn ghost sm" style="margin-top:12px" onclick="gSheetClose();stMode='settings';setTab='trophies';render()">🃏 Cards & badges ›</button>`; }
+function questLogOpen(){ gSheetLive(questLogBody); }
+function questLogBody(){ const Q=questLogData(), d=ensureDay(TODAY), WL=weekInits(THIS_WEEK), wk=week(THIS_WEEK), T=seasonTrack(), SB=seasonBoss(), cq=classQuest(THIS_Q), cl=classFor(THIS_Q), se=season();
+  const row=(on,txt,act,sub)=>`<button class="ql-r ${on?'on':''}" onclick="${act}"><span class="ql-b">${on?'✓':''}</span><span class="ql-t">${txt}${sub?`<small>${sub}</small>`:''}</span></button>`;
+  const side=questsCard(TODAY).replace('<div class="card sec" style="margin-top:14px">','<div class="ql-side">');
+  return `<span class="tag">Quest log</span><h2 class="g-sh-t">📜 Quests</h2>
+    <div class="ql-s"><div class="ql-h"><b>Daily</b><span class="${Q.daily?'ok':''}">${Q.daily?'✓ cleared':`${Q.t3d}/3 → 🎁 +20💰`}</span></div>
+      ${d.top3.map((t,i)=>(t.text||'').trim()?row(t.done,esc(t.text),`curDay=TODAY;toggleTop3(${i})`,'Top 3 · +5 💰'):'').join('')||'<div class="sub ql-e">Write today’s Top 3 to get daily quests.</div>'}
+      <div class="ql-hb">Habits ${Q.h}/${Q.hTot}</div></div>
+    <div class="ql-s"><div class="ql-h"><b>Weekly</b><span class="${Q.weekly?'ok':''}">${Q.weekly?'✓ cleared':`${Q.wDone}/${Q.wTot} → 🎁 +60💰`}</span></div>
+      ${WL.map(i=>row(!!wk.inits[i.id],esc(i.text),`toggleInit('${THIS_WEEK}','${i.id}')`)).join('')}${Q.mq?row(!!Q.mq.done,esc(Q.mq.text.replace(/^💰 /,'')),Q.mq.done?`questUndo('${Q.mq.id}')`:`questDone('${Q.mq.id}')`,'Money quest'):''}
+      ${!WL.length&&!Q.mq?'<div class="sub ql-e">No weekly goals set — add them on the Week page.</div>':''}<button class="btn ghost sm" style="margin-top:6px" onclick="gSheetClose();go('week')">Open the week ›</button></div>
+    <div class="ql-s"><div class="ql-h"><b>Season</b><span>Tier ${T.tier}/13</span></div>
+      ${row(SB.dead, `${SB.ic} Defeat ${SB.n}`, 'seasonOpen()', SB.hp?`${SB.hits}/${SB.need} key results to win`:'Set this quarter’s goals to summon it')}
+      ${cq?row(cq.n>=cq.target, `${cl.ic} ${esc(cq.label)}`, 'seasonOpen()', `${Math.min(cq.n,cq.target)}/${cq.target} · ${cl.name} class quest`):''}
+      <button class="btn ghost sm" style="margin-top:6px" onclick="seasonOpen()">${se.ic} Season track ›</button></div>
+    <div class="ql-s"><div class="ql-h"><b>Side quests</b><button class="btn sm" onclick="gSheetClose();openQuick()">＋ New</button></div>${side}</div>`; }
+// ---- season sheet ----
+function seasonOpen(){ const se=season(), T=seasonTrack(), SB=seasonBoss(), cq=classQuest(THIS_Q), cl=classFor(THIS_Q);
+  const tiers=TIERS.slice(1).map((x,i)=>`<div class="st-t ${i<T.tier?'on':''} ${i===T.tier?'next':''}"><b class="num">${i+1}</b><span>${x.ic}</span><small>${x.l}</small></div>`).join('');
+  gSheet(`<span class="tag">${se.q.replace('-',' ')} · ${se.left} day${se.left===1?'':'s'} left</span><h2 class="g-sh-t">${se.ic} Season ${se.no} · ${se.name}</h2>
+    ${SB.showdown&&!SB.dead?`<div class="st-show">⚔️ Showdown week — finish key results to bring down ${SB.n}</div>`:''}
+    <div class="st-h"><b>Tier ${T.tier}/13</b><span>${T.played} week${T.played===1?'':'s'} played · ${T.kills.length} boss kill${T.kills.length===1?'':'s'}</span></div>
+    <div class="st-track" id="st-track">${tiers}</div>
+    <div class="sub" style="font-size:12px;margin:6px 0 12px">Climb a tier for every week with 5+ active days (or a weekly clear), and for every boss you kill this season.</div>
+    <div class="sb-card ${SB.dead?'dead':''}"><div class="sb-ic">${SB.dead?'💀':SB.ic}</div><div class="sb-in"><small>SEASON BOSS</small><b>${SB.n}</b><div class="sb-bar"><i style="width:${Math.round(SB.pct*100)}%"></i></div>
+      <small>${SB.dead?`Defeated${SB.killed?' '+nice(SB.killed):''} · trophy, title, +300 XP`:SB.hp?`${SB.hits} of ${SB.need} key results needed · each one you finish hits it`:'Set this quarter’s goals and it appears'}</small></div></div>
+    ${cq?`<div class="st-cq"><span>${cl.ic}</span><div><b>${esc(cq.label)}</b><small>${cl.name} class quest · ${Math.min(cq.n,cq.target)}/${cq.target}</small><div class="sb-bar cq"><i style="width:${Math.round(Math.min(1,cq.n/cq.target)*100)}%"></i></div></div></div>`:''}
+    <button class="btn ghost sm" style="margin-top:12px" onclick="gSheetClose();go('quarter')">This quarter’s goals ›</button>`);
+  setTimeout(()=>{ const t=document.getElementById('st-track'), on=t?.children[Math.max(0,T.tier-1)]; if (t&&on) t.scrollLeft=on.offsetLeft-t.clientWidth/2+on.clientWidth/2; },50); }
+// ---- season recap: first open of a new quarter ----
+function seasonRecapCheck(force){ try { const R=R_(), [y,n]=THIS_Q.split('-Q').map(Number), prev=force||(n===1?`${y-1}-Q4`:`${y}-Q${n-1}`); if (!force && (R.recapSeen===prev || prev<quarterOf(GOLD_START))) return;
+  const T=seasonTrack(prev), SB=seasonBoss(prev), pn=+prev.split('-Q')[1], wks=qWeeks(prev), best=wks.map(w=>[w,weekXp(w)]).sort((a,b)=>b[1]-a[1])[0];
+  R.recapSeen=prev; commit({skipXp:true});
+  gSheet(`<span class="tag">Season recap · ${prev.replace('-',' ')}</span><h2 class="g-sh-t">${SEASON_T[pn].ic} ${SEASON_T[pn].name} is over</h2>
+    <div class="cs-tiles" style="margin:10px 0"><div style="--c:#ffd36b"><b class="num">${T.tier}/13</b><small>tiers</small></div><div style="--c:#ff4f87"><b class="num">${T.kills.length}</b><small>bosses</small></div><div style="--c:#39ff9f"><b class="num">${best?best[1]:0}</b><small>best week XP</small></div></div>
+    <div class="sb-card ${SB.dead?'dead':''}"><div class="sb-ic">${SB.dead?'💀':SB.ic}</div><div class="sb-in"><b>${SB.n}</b><small>${SB.dead?'Defeated — trophy and title are yours':`Survived · ${SB.hits}/${SB.need} key results`}</small></div></div>
+    <button class="btn" style="margin-top:14px;width:100%;justify-content:center" onclick="seasonOpen()">Start ${season().ic} ${season().name} ›</button>`); } catch(e){ console.warn('recap',e); } }
 
 /* ---------- UI: Stats tab ---------- */
 function vRpgStats(){ const R=R_(), free=ptsFree(), P=perks(), F=rpgFx(TODAY), cls=classFor(THIS_Q), cq=classQuest(THIS_Q), T=titlesAll(), open=R.respec===THIS_Q+':open';
@@ -5613,8 +5829,6 @@ function vRpgStats(){ const R=R_(), free=ptsFree(), P=perks(), F=rpgFx(TODAY), c
   <div class="card sec"><div class="hdr"><h2>Stats</h2><span class="chip" style="${free?'background:var(--gold);color:#1a1200':''}">${free} point${free===1?'':'s'} to spend</span></div>
     <div class="help" style="margin:-4px 0 10px">Real life sets the base. Each level gives 1 point — points are locked in until a Quarter Close respec.</div>
     <div class="stack" style="gap:12px">${rows}</div></div>
-  <div class="card sec"><div class="hdr"><h2>Status</h2><span class="sub num">${(()=>{ const m=rpgMult(TODAY); return Math.abs(m-1)<.005?'normal XP':`${m>=1?'+':'−'}${Math.round(Math.abs(m-1)*100)}% XP today`; })()}</span></div>
-    <div class="stack" style="gap:6px">${F.map(f=>`<div class="fxrow ${f.b?'buff':'debuff'}"><span>${f.ic}</span><div><b>${esc(f.n)}${f.m?` <span class="num">${f.m>0?'+':''}${Math.round(f.m*100)}%</span>`:''}</b><small>${esc(f.t)}</small></div></div>`).join('')||'<div class="empty">No effects right now.</div>'}</div></div>
   <div class="card sec"><div class="hdr"><h2>Class · ${THIS_Q}</h2>${cls?`<span class="chip">${cls.ic} ${cls.name}</span>`:''}</div>
     ${cls?`<div class="sub" style="margin-bottom:8px">${esc(cls.sig)}</div>${cq?`<div class="row between" style="font-size:13px"><span>🗡️ Class quest · ${esc(cq.label)}</span><b class="num">${cq.n}/${cq.target}</b></div><span class="st-bar" style="margin-top:6px"><b style="width:${Math.min(100,cq.n/cq.target*100)}%"></b></span>`:''}`
       :`<div class="help keep" style="margin-bottom:10px">Pick one for the rest of this quarter. It locks until Quarter Close.</div>${classPickHtml(THIS_Q)}`}
@@ -6842,8 +7056,12 @@ function gWz(k,v){ const g=G_(); g.setup[k]=v; if (k==='equip'){ g.profiles[0].h
 function gWzDone(){ const g=G_(); g.setup.done=true; g.plan=null; gTab='workout'; commit({skipXp:true}); toast('Your first workout is ready'); }
 
 /* ---------- sheets ---------- */
-function gSheet(html){ gSheetClose(); const m=document.createElement('div'); m.className='modal g-modal'; m.id='g-sheet'; m.addEventListener('click',e=>{ if(e.target===m) gSheetClose(); }); m.innerHTML=`<div class="card ci-card g-sheet"><button class="x g-sh-x" onclick="gSheetClose()" aria-label="Close">✕</button>${html}</div>`; document.body.appendChild(m); }
-function gSheetClose(){ document.getElementById('g-sheet')?.remove(); }
+function gSheet(html){ gSheetClose(); _sheetFn=null; const m=document.createElement('div'); m.className='modal g-modal'; m.id='g-sheet'; m.addEventListener('click',e=>{ if(e.target===m) gSheetClose(); }); m.innerHTML=`<div class="card ci-card g-sheet"><button class="x g-sh-x" onclick="gSheetClose()" aria-label="Close">✕</button>${html}</div>`; document.body.appendChild(m); }
+function gSheetClose(){ document.getElementById('g-sheet')?.remove(); _sheetFn=null; }
+// a sheet that redraws itself after any change made inside it (shop, season, stats, quest log)
+let _sheetFn=null;
+function gSheetLive(fn){ gSheet(fn()); _sheetFn=fn; }
+function gSheetRefresh(){ if (!_sheetFn) return; const c=document.querySelector('#g-sheet .g-sheet'); if (!c){ _sheetFn=null; return; } const y=c.scrollTop; try { c.innerHTML=`<button class="x g-sh-x" onclick="gSheetClose()" aria-label="Close">✕</button>${_sheetFn()}`; c.scrollTop=y; } catch(e){} }
 function gExInfo(x){ const X=GX[x]; if(!X) return; const H=gHist(x), b=gBest(x), pts=H.map(h=>Math.max(...h.sets.map(z=>X.base?g1rm(z.w,z.r):z.r))), sug=gSuggest(x).filter(z=>z.t!=='w');
   gSheet(`<div class="row" style="gap:10px;flex-wrap:nowrap;align-items:center">${gThumb(x)}<div><span class="tag">${X.p.map(m=>GMUS[m]).join(' · ')||(X.k==='cardio'?'Cardio':'')}${X.s.length?` <span class="sub">+ ${X.s.map(m=>GMUS[m]).join(', ')}</span>`:''}</span><h2 class="g-sh-t" style="margin:0">${esc(X.n)}</h2></div></div>
     <div class="sub" style="font-size:12.5px">${X.eq.map(e=>GEQ[e]).join(' + ')} · ${({c:'compound',i:'isolation',t:'timed hold',cardio:'cardio',stretch:'stretch'})[X.k]}${X.side?' · per side':''} · rest ${gRestFor(x)}s</div>
@@ -7666,7 +7884,8 @@ function statSheet(){ try {
   const top=A.slice().sort((x,y)=>y.v-x.v)[0], low=A.slice().sort((x,y)=>x.v-y.v)[0];
   return `<div class="card sec cs"><div class="cs-t"><span>&gt; CHARACTER</span><small>last 30 days</small></div>${csHead('')}${csRadar(A)}${csAttrs(A)}
     <div class="cs-note">Strongest: <b style="color:${top.c}">${top.n}</b> · Weakest: <b style="color:${low.c}">${low.n}</b> — ${esc(low.sub)}</div>
-    ${csTiles([[String(dailyStreak()),'day streak',CS_COL.grillz],[String(xw),'XP this week',CS_COL.financial],[String(q),'quests · 7d',CS_COL.content]])}</div>`;
+    ${csTiles([[String(dailyStreak()),'day streak',CS_COL.grillz],[String(xw),'XP this week',CS_COL.financial],[String(q),'quests · 7d',CS_COL.content]])}
+    <div class="cs-links"><button onclick="gSheetLive(vRpgStats)">🧬 Stats · perks · class · titles${ptsFree()?`<i>${ptsFree()} pt${ptsFree()===1?'':'s'}</i>`:''}</button><button onclick="gSheetLive(trophiesBody)">🏆 Trophies</button><button onclick="questLogOpen()">📜 Quest log</button><button onclick="shopOpen()">💰 Shop</button><button onclick="stMode='settings';setTab='trophies';render()">🃏 Cards & loot</button></div></div>`;
   } catch(e){ console.warn('stat sheet',e); return ''; } }
 
 /* ===================== goal rings (b182): week · quarter · year at a glance ===================== */
@@ -7775,7 +7994,7 @@ function vHQ(){
     <div class="hq-era"><i><u style="width:${pctE}%"></u></i><span class="num">${CY.sum}/35</span></div>${hqLive()}</div>
   <div class="card sec hq-more" style="padding-top:6px;padding-bottom:6px">
         ${W?lazyFold('hq_world','✈️ World',`${ws.cities} cities · ${ws.countries} countries`,()=>wmCard(W)+wmPassport(W)):''}
-    ${lazyFold('hq_season',`${se.ic} Season ${se.no}`,`${se.left}d left`,()=>seasonCard())}
+
     ${lazyFold('hq_dates','📅 Dates he’s keeping',an?`${an} today`:'next up',()=>annCard())}
     ${lazyFold('hq_map','🗺️ Landmarks',`${lm.done.length} of ${lm.done.length+lm.todo.length}`,()=>{ const h=vJourney(); const t=document.createElement('template'); t.innerHTML=h; const c=[...t.content.children].find(e=>/The map/.test(e.querySelector('h2')?.textContent||'')); return c?c.outerHTML:''; })}
   </div>`; }
@@ -8028,7 +8247,6 @@ const AREA_STEPS=[1,4,10,18,28];   // skill nodes unlocked across the area's tre
 function areaInfo(k){ return rpgC('area:'+k,()=>{ const a=AREAS.find(x=>x.k===k); if(!a) return null; const T=a.trees.map(skBuild), on=T.reduce((s,t)=>s+t.on,0), tot=T.reduce((s,t)=>s+t.nodes.length,0), lvl=AREA_STEPS.filter(x=>on>=x).length;
   const next=T.flatMap(t=>t.nodes.filter(n=>n.avail&&!n.on).map(n=>({...n,tree:t.name}))).sort((x,y)=>y.pct-x.pct)[0];
   return {...a, T, on, tot, lvl, rank:T[0].ranks[lvl], next, toNext:AREA_STEPS[lvl]!=null?AREA_STEPS[lvl]-on:0}; }); }
-function rpgStatus(){ try { const F=rpgFx(TODAY); if (!F.length) return ''; return `<div class="rpg-strip sec">${F.map((f,i)=>`<button class="fx ${f.b?'buff':'debuff'}" onclick="fxTip(${i})">${f.ic}<span>${esc(f.n)}</span></button>`).join('')}</div>`; } catch(e){ return ''; } }
 let skArea=null;
 function areaOpen(k){ const A=areaInfo(k); if(!A) return; skArea=k; if (!A.trees.includes(skTree)) skTree=A.trees[0]; areaSheet(); }
 function areaSheet(){ const A=areaInfo(skArea); if(!A) return; const st=(()=>{ try { return statAttrs().find(x=>x.n===A.k); } catch(e){ return null; } })();
@@ -9068,7 +9286,7 @@ function cloudHist(){ if (!dbHandle || !dbHandle.history) return '';
   return `<details class="pc-edit" style="margin-bottom:10px"><summary>Cloud history · ${_hist===null?'…':H.length+' kept copies'}</summary><div class="sub" style="margin:6px 0 8px">A copy is kept every ~2 hours for 30 days. Pick one to put it back.</div>
     ${H.length?`<div class="stack">${H.slice(0,30).map(h=>`<div class="row between" style="gap:8px;padding:6px 0;border-bottom:1px solid var(--line)"><span><b>${h.days} days</b>${h.lvl?` · Lv ${h.lvl}`:''} <span class="sub">· ${new Date(h.archived_at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}${h.kind==='rejected'?' · blocked overwrite':h.kind==='restore-point'?' · before a restore':''}</span></span><button class="btn ghost sm" onclick="cloudRestore(${h.id},${h.days})">Restore</button></div>`).join('')}</div>`:_hist===null?'':'<div class="sub">Nothing kept yet — the first copy appears after your next change.</div>'}</details>`; }
 async function cloudRestore(id,days){ if (!dbHandle?.restore) return; if (window._restoreArm!==id){ window._restoreArm=id; toast(`Tap Restore again to put back the ${days}-day copy`); setTimeout(()=>{ if (window._restoreArm===id) window._restoreArm=null; },6000); return; } window._restoreArm=null;
-  try { await dbHandle.restore(id); const s=await dbHandle.doc('okr/state').get(); if (s.exists){ S=migrate(thaw(s.data())); avatarCache.clear(); lastProg=snapshotProgress(); saveLocal(); _hist=null; render(); toast(`☁️ Restored · ${Object.keys(S.days||{}).length} days back`); } } catch(e){ toast('Restore failed: '+String(e&&e.message||e).slice(0,80)); } }
+  try { await dbHandle.restore(id); const s=await dbHandle.doc('okr/state').get(); if (s.exists){ S=migrate(thaw(s.data())); avatarCache.clear(); lastProg=snapshotProgress(); lastGame=gameBase(true); saveLocal(); _hist=null; render(); toast(`☁️ Restored · ${Object.keys(S.days||{}).length} days back`); } } catch(e){ toast('Restore failed: '+String(e&&e.message||e).slice(0,80)); } }
 
 /* b236: rescue copy — an encrypted copy of your history ships with the app; only the code from the chat opens it */
 const RESCUE={file:'rescue/2026-10-20.json', d:'2026-10-20', days:19, lvl:6};
@@ -9079,7 +9297,7 @@ async function rescueGo(){ const code=(document.getElementById('rsc-code')?.valu
     const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(code),'PBKDF2',false,['deriveKey']); const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b(j.salt),iterations:300000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
     let pt; try { pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b(j.iv)},key,b(j.ct)); } catch(e){ throw 2; }
     if (j.gz) pt=await new Response(new Blob([pt]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
-    const o=JSON.parse(new TextDecoder().decode(pt)); if(!o||o.v!==2||!o.days) throw 1; o.rescueDone=1; S=migrate(o); avatarCache.clear(); lastProg=snapshotProgress(); commit({skipXp:true}); confetti(); render(); toast(`🛟 ${Object.keys(S.days).length} days restored`); }
+    const o=JSON.parse(new TextDecoder().decode(pt)); if(!o||o.v!==2||!o.days) throw 1; o.rescueDone=1; S=migrate(o); avatarCache.clear(); lastProg=snapshotProgress(); lastGame=gameBase(true); commit({skipXp:true}); confetti(); render(); toast(`🛟 ${Object.keys(S.days).length} days restored`); }
   catch(e){ if (btn) btn.textContent='Restore'; toast(e===2?'Wrong code — check the dashes and the number':e===1?'The rescue copy isn’t in this build yet':'Restore failed: '+String(e&&e.message||e).slice(0,60)); } }
 
 /* b238: what's eating the budget — one check period at a time, by category, then by place, then each charge */
@@ -9799,7 +10017,7 @@ async function backupSave(){
   catch(e){ const c=e&&e.code; toast(c==='declined'?'Backup cancelled':c==='rate_limited'?'A save prompt is already open':'Couldn\'t save a file here — use Copy instead'); }
 }
 function backupPick(inp){ const f=inp.files&&inp.files[0]; inp.value=''; if(!f) return; const r=new FileReader(); r.onload=()=>{ try{ const o=JSON.parse(r.result); if(!o||o.v!==2||!o.days||!o.money) throw 0; restorePending=o; render(); }catch(e){ toast('That file isn\'t an Tega.exe backup'); } }; r.onerror=()=>toast('Couldn\'t read that file'); r.readAsText(f); }
-function backupRestore(ok){ const o=restorePending; restorePending=null; if(!ok||!o){ render(); return; } S=migrate(o); avatarCache.clear(); lastProg=snapshotProgress(); commit({skipXp:true}); toast('Backup restored'); }
+function backupRestore(ok){ const o=restorePending; restorePending=null; if(!ok||!o){ render(); return; } S=migrate(o); avatarCache.clear(); lastProg=snapshotProgress(); lastGame=gameBase(true); commit({skipXp:true}); toast('Backup restored'); }
 function autoSnap(db){ try { if (S.lastSnap && daysBetween(S.lastSnap,TODAY)<7) return; if (richness(S)<3) return; db.doc('okr/auto-backup').set(JSON.parse(JSON.stringify(S))).then(()=>{ S.lastSnap=TODAY; saveLocal(); scheduleDbWrite(); }).catch(()=>{}); } catch(e){} }
 function backupCard(){
   const age=S.lastBackup?daysBetween(S.lastBackup,TODAY):null;
@@ -9904,7 +10122,8 @@ try{ document.documentElement.setAttribute('data-skin', (localStorage.getItem('o
 
 /* ---------- boot ---------- */
 evalBadges();
-lastProg = snapshotProgress();
+lastProg = snapshotProgress(); lastGame=gameBase();
+(function recapWhenReady(n){ setTimeout(()=>{ if (!dbReady && dbStatus!=='local' && n<20) return recapWhenReady(n+1); try { seasonRecapCheck(); } catch(e){} }, n?1500:3500); })(0);
 render();
 loadDiceBear();
 try { screen.orientation?.lock?.('portrait').catch(()=>{}); } catch(e){} // honored on Android in fullscreen/PWA; silently ignored elsewhere
