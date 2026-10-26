@@ -1,6 +1,6 @@
-# iPhone build #120 — success
+# iPhone build #121 — failure
 
-Sat Oct 24 00:30:56 UTC 2026
+Mon Oct 26 18:21:11 UTC 2026
 
 ```
 /Applications/Xcode_16.0.0.app
@@ -26,7 +26,7 @@ Sat Oct 24 00:30:56 UTC 2026
 Xcode 26.3
 Build version 17C529
 
-added 113 packages in 7s
+added 113 packages in 8s
 seed injected
 ✓ app boots
 ✓ private data is in this build
@@ -50,69 +50,26 @@ seed injected
 ✓ yoga: buttons are not rebuilt every tick
 ✓ yoga: moves to the next pose by itself
 ✓ yoga: breathing guide shows — breathe in · 4
+✓ pop shows after finishing Top 3 — ✦+29 XP · +35 💰 | 🌫️Fog −4 | 🎁2 chests
+✓ daily clear gives a chest
+✓ weekly clear gives a chest
+✓ buff row is icons only
+✓ tapping a buff shows its line
+✓ quest log has Daily, Weekly, Season, Side
+✓ no duplicate quest card on Today
+✓ gold earned and whole
+✓ shop: shield costs 150 and adds a shield
+✓ shields cap at 3, gold never negative
+✓ spend log kept
+✓ season tier within 1–13
+✓ season boss falls at 70% and gives 300 XP
+✓ season sheet shows 13 tiers
+✓ top bar shows streak+shields, level, gold, season — 🔥 7 day streak · 🛡️2/3 | Lv 4 · Rookie IV | 💰 110 | 🍂 2/13
+✓ XP only went up
+✓ undo takes the hits back
+✗ pops wait while a sheet is open
+✓ changes since last open pop on the next open — ✦+5 XP | 🌫️Fog −2
 ✓ no errors anywhere
 
-all checks passed
-
-> tega-app@1.0.0 build
-> node scripts/build-www.mjs
-
-www built with Supabase config
-✔ Adding native Xcode project in ios in 20.17ms
-✔ add in 20.44ms
-✔ Copying web assets from www to ios/App/App/public in 44.24ms
-✔ Creating capacitor.config.json in ios/App/App in 440.58μs
-✔ copy ios in 88.20ms
-✔ Updating iOS plugins in 855.75μs
-✔ Updating iOS native dependencies with pod install in 13.17s
-[info] Found 10 Capacitor plugins for ios:
-       @capacitor/app@7.1.2
-       @capacitor/filesystem@7.1.9
-       @capacitor/geolocation@7.1.8
-       @capacitor/haptics@7.0.5
-       @capacitor/local-notifications@7.0.7
-       @capacitor/share@7.0.4
-       @capacitor/splash-screen@7.0.5
-       @capacitor/status-bar@7.0.6
-       @capgo/capacitor-health@7.2.15
-       @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 13.22s
-[success] ios platform added!
-Follow the Developer Workflow guide to get building:
-https://capacitorjs.com/docs/basics/workflow
-✔ Copying web assets from www to ios/App/App/public in 78.78ms
-✔ Creating capacitor.config.json in ios/App/App in 715.33μs
-✔ copy ios in 102.08ms
-✔ Updating iOS plugins in 2.33ms
-✔ Updating iOS native dependencies with pod install in 6.62s
-[info] Found 10 Capacitor plugins for ios:
-       @capacitor/app@7.1.2
-       @capacitor/filesystem@7.1.9
-       @capacitor/geolocation@7.1.8
-       @capacitor/haptics@7.0.5
-       @capacitor/local-notifications@7.0.7
-       @capacitor/share@7.0.4
-       @capacitor/splash-screen@7.0.5
-       @capacitor/status-bar@7.0.6
-       @capgo/capacitor-health@7.2.15
-       @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 6.76s
-[info] Sync finished in 6.906s
-app capabilities: ['IN_APP_PURCHASE', 'HEALTHKIT', 'IN_APP_PURCHASE', 'IN_APP_PURCHASE']
-com.ewheridot.tegaexe.widgets ok
-com.ewheridot.tegaexe.share ok
-== try: full (health=yes widgets+share=yes)
-native code added (healthkit=true, extensions=true)
-** ARCHIVE SUCCEEDED **
-entitlements: healthkit keychain-access-groups 
-TIER=full
-Running altool at path '/Applications/Xcode_26.3.app/Contents/SharedFrameworks/ContentDelivery.framework/Resources/altool'...
-
-2026-10-24 00:30:56.524  INFO: [ContentDelivery.Uploader.6000023C44C0] 
-==========================================
-UPLOAD SUCCEEDED with no errors
-Delivery UUID: 7ad06a0d-4e12-4fcb-b414-01ffa07294d9
-Transferred 6511511 bytes in 0.740 seconds (8.8MB/s, 70.350Mbps)
-==========================================
-No errors uploading archive at '/Users/runner/work/_temp/out/App.ipa'.
+1 check(s) failed
 ```
