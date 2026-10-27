@@ -140,6 +140,13 @@ if (seed !== 1) ok('changes since last open pop on the next open', /XP/.test(sin
 const art = await page.evaluate(() => Object.values(BOSS_SPR).map(k => [k, ['_idle','_hit','_dead'].every(s => PXW[k+s] && PXW[k+s].n > 1)]));
 ok('all six bosses have idle, hit and defeat animations', art.every(a => a[1]), JSON.stringify(art.filter(a => !a[1])));
 
+// a finished shoot day goes straight onto what ONE owes you (and off "booked"), with no double count
+const sh = await page.evaluate(() => { const M=mState(); M.auto ||= {}; const y=addDays(TODAY,-1), t=TODAY, b0=mOwedParts(mPipe()).newer, c0=oneComing();
+  M.auto.T_Y={id:'T_Y',t:'job',s:'confirmed',c:'Test Client',d:[y],r:'$2000',rn:2000,auto:1}; M.auto.T_T={id:'T_T',t:'job',s:'confirmed',c:'Test Client B',d:[t],tm:'12:00am to 12:01am',rn:1000,auto:1}; M.auto.T_N={id:'T_N',t:'job',s:'confirmed',c:'Test Client C',d:[addDays(t,3)],rn:3000,auto:1};
+  _mVer++; const P=mPipe(), b1=mOwedParts(P).newer, c1=oneComing(); const r={yesterday:P.T_Y.stage, today:P.T_T.stage, future:P.T_N.stage, add:Math.round(b1-b0), total:Math.round(b1-b0+c1.booked-c0.booked)};
+  delete M.auto.T_Y; delete M.auto.T_T; delete M.auto.T_N; _mVer++; return r; });
+ok('a finished shoot day is added to what ONE owes', sh.yesterday === 'shot' && sh.today === 'shot' && sh.future === 'confirmed' && sh.add === 2400, JSON.stringify(sh));
+ok('…and isn’t counted twice in money coming from ONE', sh.total === 2400 + 2400, JSON.stringify(sh));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

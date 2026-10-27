@@ -1,5 +1,8 @@
 # Tega.exe — notes for Claude sessions
 
+## Ask before shipping
+- Every push to main builds a new iPhone app the user has to reinstall. Commit locally, show the change, and **ask before pushing or publishing the web copy**. Batch changes into one update.
+
 ## Private data is NOT in web/app.html
 The repo is public. Everything personal (modeling history, agents, ONE statement, bank seeds, bills, events) sits between
 `/*SEED:BEGIN*/` and `/*SEED:END*/`. In the repo that block is a **stub** (`SEED_STUB=1`); the real block is sealed in `ci/seed.bin`.
