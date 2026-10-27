@@ -1,0 +1,1 @@
+Boss sprites drawn in code (96×96 frames). `python3 build3.py pxw.json` writes `/tmp/new_pxw3.json` — sheets `<boss>_still/_idle/_hit/_dead` to merge into `window.PXW` in the app. `pxw.json` must hold the PixelLab `golem_still` (taken from the app's PXW).

@@ -47,6 +47,9 @@ Rule zero: XP and level never drop. Gold, tiers and shields only ever come from 
 ## 1 · The city (picture first — not built until approved)
 - [x] Town square (no road), buildings ring a fountain with the quest board on it (tap → quest log) · bosses float on their building with a health ring · house card glows when chests or stat points wait · your house: character, stats/perks, evolve, loot, shop, settings, titles · bosses-awake strip · world, dates, landmarks · opened from your picture, nav stays 7 · Character page no longer repeats the town or bosses
 
+## Boss art (b249)
+- [x] Algorithm, Hermit King, Fog, Stinger, Drake redrawn in code to match the golem (dark bodies, glowing cracks, burning eyes) · idle, hit and defeat animations for all six · golem keeps its PixelLab art and is animated · city markers show the boss art and never overlap
+
 ## Checks
 - [x] tests/run.mjs covers: pops fire on a change, buff row icons + tap line, quest log counts, gold ≥ 0 and spend log, shields formula, season tiers ≤ 13, XP unchanged by all of it
 - [x] Screenshots at phone size of every changed screen, light + dark

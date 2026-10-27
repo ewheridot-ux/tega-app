@@ -136,6 +136,9 @@ await page.reload(); await page.waitForTimeout(2500);
 for (let i = 0; i < 3; i++) { try { await page.getByText('CONTINUE').first().click({ timeout: 800 }); await page.waitForTimeout(300); } catch { break; } }
 const since = await page.evaluate(() => { document.querySelectorAll('#lvs, .modal').forEach(e => e.remove()); commit({ skipXp: true }); return [...document.querySelectorAll('.hp-i')].map(e => e.textContent).join(' | '); });
 if (seed !== 1) ok('changes since last open pop on the next open', /XP/.test(since), since);
+// every boss has its own animated art: idle, hit and defeat sheets, and draws without errors
+const art = await page.evaluate(() => Object.values(BOSS_SPR).map(k => [k, ['_idle','_hit','_dead'].every(s => PXW[k+s] && PXW[k+s].n > 1)]));
+ok('all six bosses have idle, hit and defeat animations', art.every(a => a[1]), JSON.stringify(art.filter(a => !a[1])));
 
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
