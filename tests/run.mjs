@@ -147,6 +147,14 @@ const sh = await page.evaluate(() => { const M=mState(); M.auto ||= {}; const y=
   delete M.auto.T_Y; delete M.auto.T_T; delete M.auto.T_N; _mVer++; return r; });
 ok('a finished shoot day is added to what ONE owes', sh.yesterday === 'shot' && sh.today === 'shot' && sh.future === 'confirmed' && sh.add === 2400, JSON.stringify(sh));
 ok('…and isn’t counted twice in money coming from ONE', sh.total === 2400 + 2400, JSON.stringify(sh));
+// Tega's OKR suggestions: only what you pick changes; a category you didn't pick keeps your goal
+const ok2 = await page.evaluate(() => { const Q=S.quarters[curQ]; openOkrSug(curQ); const st=okrSug.objectives[0].track; closeOkrSug(); if (!Q.objectives.some(o=>o.track===st)) Q.objectives.push({id:'tmpO',track:st,title:'Old goal',krs:[]}); if (!Q.objectives.some(o=>o.track!==st)) Q.objectives.push({id:'tmpP',track:st==='personal'?'fitness':'personal',title:'Other goal',krs:[]}); const before=JSON.parse(JSON.stringify(Q.objectives)); const tracks=[...new Set(before.map(o=>o.track))];
+  openOkrSug(curQ); const none=Object.values(okrPick).every(v=>!v); okrApply(); const same=JSON.stringify(S.quarters[curQ].objectives)===JSON.stringify(before);
+  openOkrSug(curQ); const i=okrSug.objectives.findIndex(o=>tracks.includes(o.track)); okrPick[i]='rep'; const t=okrSug.objectives[i].track, title=okrSug.objectives[i].title; okrApply();
+  const after=S.quarters[curQ].objectives, kept=before.filter(o=>o.track!==t).every(o=>after.some(a=>a.id===o.id)), replaced=after.filter(o=>o.track===t).map(o=>o.title).join('|')===title, archived=(S.quarters[curQ].archive||[]).slice(-1)[0]?.objectives.every(o=>o.track===t);
+  S.quarters[curQ].objectives=before.filter(o=>!/^tmp/.test(o.id)); S.quarters[curQ].archive.pop(); commit({skipXp:true}); return {none, same, kept, replaced, archived}; });
+ok('OKR suggestions change nothing until you pick', ok2.none && ok2.same, JSON.stringify(ok2));
+ok('replacing one category keeps every other goal', ok2.kept && ok2.replaced && ok2.archived, JSON.stringify(ok2));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
