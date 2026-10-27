@@ -116,6 +116,20 @@ const rv = await page.evaluate(async () => {
   return r;
 });
 ok('undo takes the hits back', rv.undo); ok('pops wait while a sheet is open', seed === 1 ? rv.waits : rv.waits && rv.after);  // the public copy keeps an evolution picker open, so pops rightly keep waiting ok('overnight changes don’t pop as cures', rv.overnight);
+// the city: opens from your picture, bosses on buildings, quest board on the fountain
+const cy = await page.evaluate(async () => {
+  const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+  document.querySelectorAll('#lvs, .modal, #g-sheet').forEach(e => e.remove());
+  document.querySelector('.pfp-sm')?.click(); await w(700);
+  r.view = view; r.markers = document.querySelectorAll('#cy-mk .cy-m').length; r.quest = !!document.querySelector('#cy-mk .cy-qm');
+  r.house = !!document.querySelector('.cy-house'); r.board = !!document.querySelector('.cy-board');
+  document.querySelector('#cy-mk .cy-qm')?.click(); await w(200); r.qlog = !!document.querySelector('#g-sheet .ql-s'); gSheetClose();
+  go('evolve'); await w(300); r.noDup = !document.querySelector('#view .hq-iso') && !/BOSSES/i.test(document.querySelector('#view')?.innerText.slice(0, 4000) || '');
+  go('city'); await w(300); return r;
+});
+ok('your picture opens the city', cy.view === 'city', cy.view); ok('bosses float on their buildings', cy.markers >= 3, String(cy.markers));
+ok('quest board marker on the fountain opens the quest log', cy.quest && cy.qlog); ok('quest board + house cards', cy.board && cy.house);
+ok('town and bosses not repeated on the Character page', cy.noDup);
 // changes made while away pop on the next open
 await page.evaluate(() => { const d = ensureDay(TODAY); d.habits.journal = true; saveLocal(); });
 await page.reload(); await page.waitForTimeout(2500);

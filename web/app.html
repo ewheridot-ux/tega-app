@@ -1728,6 +1728,17 @@ img,svg,canvas,video{-webkit-user-drag:none;-webkit-touch-callout:none}
 .tr-t{display:grid;grid-template-columns:1fr 1fr;gap:6px}.tr-t .ttl{border:0;border-radius:12px;padding:8px 10px;text-align:left;background:var(--card2,rgba(127,127,127,.08));color:inherit;font:inherit;display:flex;flex-direction:column;gap:2px;cursor:pointer}.tr-t .ttl b{font-size:13px}.tr-t .ttl small{font-size:11px;color:var(--muted);line-height:1.3}.tr-t .ttl.lock{opacity:.5;cursor:default}.tr-t .ttl.on{box-shadow:inset 0 0 0 2px #f5c542}
 .cs-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.cs-links button{border:0;border-radius:99px;padding:7px 12px;font:inherit;font-size:12px;font-weight:700;background:var(--card2,rgba(127,127,127,.12));color:inherit;cursor:pointer;display:flex;align-items:center;gap:6px}.cs-links i{font-style:normal;background:#f5c542;color:#1a1200;border-radius:99px;padding:1px 7px;font-size:10.5px}
 #g-sheet .g-sheet>.card{box-shadow:none;margin:10px 0 0;padding:12px 0 0;background:none;border-top:1px solid var(--line,rgba(127,127,127,.2));border-radius:0}
+.cy-wrap{position:relative}.cy-wrap .hq-iso{width:100%;height:auto;display:block}.cy-mk{position:absolute;inset:0;pointer-events:none}
+.cy-qm{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;border:0;cursor:pointer;width:36px;height:36px;border-radius:12px;background:linear-gradient(160deg,#8a5a2e,#5a3a1c);box-shadow:inset 0 0 0 2px #ffd36b,0 4px 14px rgba(0,0,0,.5);font-size:18px;display:grid;place-items:center;animation:cyBob 2s ease-in-out infinite}
+.cy-qm b{position:absolute;right:-6px;top:-6px;width:17px;height:17px;border-radius:50%;background:#ff4f87;color:#fff;font-size:11px;display:grid;place-items:center;box-shadow:0 0 10px rgba(255,79,135,.8)}.cy-qm.done b{background:#2fbf71;box-shadow:none}
+.cy-m{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;width:27px;height:27px;border-radius:50%;border:0;padding:0;cursor:pointer;background:conic-gradient(#ff4f87 calc(var(--p)*1%),rgba(255,255,255,.18) 0);display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.5);animation:cyBob 2.4s ease-in-out infinite}
+.cy-m span{width:21px;height:21px;border-radius:50%;background:#140c22;display:grid;place-items:center;font-size:14px;box-shadow:inset 0 0 0 1.5px var(--c)}.cy-m.dead{animation:none;filter:grayscale(1);opacity:.7}
+@keyframes cyBob{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,-62%)}}
+.cy-house.glow{box-shadow:inset 0 0 0 2px #f5c542,0 0 18px rgba(245,197,66,.35)!important}.cy-av{border:0;padding:0;cursor:pointer;background:none}
+.cy-grid{display:grid;grid-template-columns:1fr 1.25fr;gap:10px}.cy-grid .card{margin:0;padding:12px;text-align:left;color:inherit;font:inherit;border:0}.cy-pin{font-size:10.5px;letter-spacing:.1em;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:6px}.cy-bang{background:#ff4f87;color:#fff;border-radius:99px;width:16px;height:16px;display:grid;place-items:center;font-size:11px;animation:pulse 1.6s infinite}
+.cy-board{background:linear-gradient(160deg,#6b4423,#4a2e17)!important;color:#ffe9c9!important;box-shadow:inset 0 0 0 2px #8a5a2e!important;cursor:pointer}.cy-q{display:flex;justify-content:space-between;font-size:13px;padding:3px 0;border-top:1px dashed rgba(255,233,201,.25)}.cy-q b.ok{color:#9dffcf}
+.cy-hh{display:flex;gap:10px;align-items:center}.cy-av{width:40px;height:40px;border-radius:10px;overflow:hidden}.cy-hh small{display:block;font-size:11.5px;color:var(--muted)}.cy-hb{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}.cy-hb button{border:0;border-radius:10px;padding:7px 6px;font:inherit;font-size:11px;font-weight:700;background:var(--card2,rgba(127,127,127,.12));color:inherit;cursor:pointer;text-align:left;display:flex;align-items:center;gap:4px;justify-content:space-between}.cy-hb i{font-style:normal;background:#f5c542;color:#1a1200;border-radius:99px;padding:0 6px;font-size:10px}
+.cy-bl{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-top:8px}.cy-b{flex:0 0 92px;border:0;border-radius:12px;padding:8px;background:var(--card2,rgba(127,127,127,.1));color:inherit;font:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}.cy-b span{font-size:24px}.cy-b b{font-size:10.5px;text-align:center;line-height:1.2}.cy-b i{width:100%;height:5px;border-radius:3px;background:rgba(127,127,127,.25);overflow:hidden}.cy-b u{display:block;height:100%;background:#ff4f87}.cy-b.dead{opacity:.5}
 .gold-pill{box-shadow:inset 0 0 0 1.5px #f5c542}.cs-gold{border:0;background:rgba(245,197,66,.16);color:#f5c542;font:inherit;font-size:12px;font-weight:800;border-radius:99px;padding:2px 9px;margin-left:6px;cursor:pointer;vertical-align:middle}
 .ql-line{display:flex;align-items:center;gap:7px;width:100%;margin:10px 0 2px;padding:9px 12px;border:0;border-radius:12px;background:var(--card2,rgba(127,127,127,.08));color:inherit;font:inherit;font-size:13px;cursor:pointer;text-align:left}
 .ql-line b{font-weight:700}.ql-line b.ok,.ql-line span.ok{color:var(--good)}.ql-line i{opacity:.4;font-style:normal}.ql-line em{margin-left:auto;opacity:.45;font-style:normal}
@@ -1811,7 +1822,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b247';
+const BUILD='b248';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2878,7 +2889,7 @@ function dSetLearn(id,v){ const l=ensureDatum().learning.find(l=>l.id===id); l.o
 function dDelLearn(id){ const D=ensureDatum(); D.learning=D.learning.filter(l=>l.id!==id); commit({skipXp:true}); }
 
 /* ===================== rendering ===================== */
-const VIEWS = ['today','goals','week','quarter','year','vision','model','datum','money','deadlines','content','gym','trophies','evolve','social','bosses'];
+const VIEWS = ['city','today','goals','week','quarter','year','vision','model','datum','money','deadlines','content','gym','trophies','evolve','social','bosses'];
 let view = (location.hash||'#today').slice(1); if(!VIEWS.includes(view)) view='today';
 let curDay = TODAY, curWeek = THIS_WEEK, curQ = S.quarters[THIS_Q] ? THIS_Q : Object.keys(S.quarters).sort().pop(), curY = S.years[THIS_Y] ? THIS_Y : Object.keys(S.years).sort().pop();
 window.addEventListener('hashchange', () => { const v=location.hash.slice(1); if(VIEWS.includes(v)){ view=v; render(); window.scrollTo(0,0);} });
@@ -2910,7 +2921,7 @@ function render(){
   const stg = stageOf(lvl);
   app.innerHTML = `
     <div class="topbar">
-      <div class="brand"><button class="pfp-sm ${view==='evolve'||view==='social'?'on':''}" style="--ringc:${ringCss(lvl)}" onclick="go('evolve')" aria-label="Me · character and settings">${pfpMini(stg)}</button></div>
+      <div class="brand"><button class="pfp-sm ${view==='city'||view==='evolve'||view==='social'?'on':''}" style="--ringc:${ringCss(lvl)}" onclick="go('city')" aria-label="Your city · character and settings">${pfpMini(stg)}</button></div>
       <div class="wordmark logo">${logoSVG(24)}</div>
       <div class="right"><span class="sync ${dbStatus==='cloud'?'on':''}" id="sync" onclick="syncInfo()" style="padding:10px 6px;cursor:pointer"><i></i></span><button class="iconbtn" onclick="searchOpen()" title="Search" aria-label="Search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button><button class="iconbtn" onclick="capOpen()" title="Quick capture" aria-label="Quick capture">＋</button><button class="iconbtn" onclick="toggleTheme()" title="Theme">◐</button></div>
     </div>
@@ -2922,7 +2933,7 @@ function render(){
       ${(()=>{ const se=season(); let t=0, sd=false; try { t=seasonTrack().tier; sd=seasonBoss().showdown&&!seasonBoss().dead; } catch(e){} return `<span class="pill" style="cursor:pointer;box-shadow:inset 0 0 0 1.5px ${se.c}" onclick="seasonOpen()" title="Season ${se.no} · ${se.name}">${sd?'⚔️':se.ic} ${t}/13</span>`; })()}
     </div>
     <div class="nav" data-hl="${({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab'})[view]||'crt'}">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='goals'&&GOALS.some(([k])=>k===view))?'on':''}" data-tab="${v}" onclick="if(!navHeld())go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
-    <div id="view">${GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):''}${AREA_VIEW[view]?areaChip(AREA_VIEW[view]):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve,social:vSocial,bosses:vBosses})[view]()}</div>`;
+    <div id="view">${GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):''}${AREA_VIEW[view]?areaChip(AREA_VIEW[view]):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve,social:vSocial,bosses:vBosses,city:vCity})[view]()}</div>`;
   dlSheetRefresh();
   checkEvo();
   if (_dbSettled && richness(S)>0 && !document.getElementById('lvs')?.classList.contains('show')) { if (S.lvlSeen===undefined) S.lvlSeen=Math.max(1,lvl-1); if (lvl<S.lvlSeen) S.lvlSeen=lvl; if (lvl>S.lvlSeen) { S.lvlSeen=lvl; setTimeout(()=>{ levelScene(lvl); saveLocal(); scheduleDbWrite(); },400); } }
@@ -5818,6 +5829,30 @@ function seasonRecapCheck(force){ try { const R=R_(), [y,n]=THIS_Q.split('-Q').m
     <div class="sb-card ${SB.dead?'dead':''}"><div class="sb-ic">${SB.dead?'💀':SB.ic}</div><div class="sb-in"><b>${SB.n}</b><small>${SB.dead?'Defeated — trophy and title are yours':`Survived · ${SB.hits}/${SB.need} key results`}</small></div></div>
     <button class="btn" style="margin-top:14px;width:100%;justify-content:center" onclick="seasonOpen()">Start ${season().ic} ${season().name} ›</button>`); } catch(e){ console.warn('recap',e); } }
 
+/* ===================== b248: the city — the game's home base (opened from your picture, top left) ===================== */
+const CITY_BOSS={MODEL:['vault'],DATUM:['ab_datum'],CONTENT:['ab_content'],BODY:['warden'],MONEY:['wyrm'],SOCIAL:['ab_social'],MIND:['ab_mind']};
+function cityBosses(){ const g=gameSnap(), out={}; for (const [a,ids] of Object.entries(CITY_BOSS)){ for (const id of ids){ const b=g.b[id]; if (!b) continue; let max=1;
+  try { if (id==='vault') max=vault().max; else if (id==='wyrm') max=wyrm().max; else if (id==='warden') max=aBoss().max; else max=aBossState(id.slice(3)).max; } catch(e){}
+  out[a]={id, ic:b[1], n:b[2], hp:b[0], pct:Math.max(0,Math.min(1,b[0]/Math.max(1,max))), dead:b[0]<=0.5}; } } return out; }
+function cityMore(){ const W=(()=>{ try { return world(); } catch(e){ return null; } })(), ws=W?wmStats(W):null, lm=(()=>{ try { return landmarks(); } catch(e){ return {done:[],todo:[]}; } })(), an=(()=>{ try { return annToday().length; } catch(e){ return 0; } })();
+  return `<div class="card sec hq-more" style="padding-top:6px;padding-bottom:6px">${W?lazyFold('hq_world','✈️ World',`${ws.cities} cities · ${ws.countries} countries`,()=>wmCard(W)+wmPassport(W)):''}
+    ${lazyFold('hq_dates','📅 Dates he’s keeping',an?`${an} today`:'next up',()=>annCard())}
+    ${lazyFold('hq_map','🗺️ Landmarks',`${lm.done.length} of ${lm.done.length+lm.todo.length}`,()=>{ const h=vJourney(); const t=document.createElement('template'); t.innerHTML=h; const c=[...t.content.children].find(e=>/The map/.test(e.querySelector('h2')?.textContent||'')); return c?c.outerHTML:''; })}</div>`; }
+function vCity(){ const D=hqData(), CY=hqCity(D), B=cityBosses(), Q=questLogData(), lvl=levelFor(computeXP()), ch=chestsWaiting().length, pf=ptsFree();
+  window.__cityMarks=1; setTimeout(()=>{ const box=document.getElementById('cy-mk'); if (!box||!HQI.boxes) return; const fq=ISO.P(HQ_FTN[0],HQ_FTN[1],38), qd=Q.daily&&Q.weekly;
+    box.innerHTML=`<button class="cy-qm ${qd?'done':''}" style="left:${fq[0]/ISO.W*100}%;top:${fq[1]/ISO.H*100}%" onclick="questLogOpen()" aria-label="Quest board">📜<b>${qd?'✓':'!'}</b></button>`+HQI.boxes.map(bx=>{ const b=D[bx.i], bo=B[b.a], L=HQ_LOT[b.k], rp=ISO.P(L[0]+L[2]/2, L[1]+L[3]/2, (b.lvl?hqH(b):4)+12), cx=rp[0]/ISO.W*100, ty=rp[1]/ISO.H*100;
+    return bo?`<button class="cy-m ${bo.dead?'dead':''}" style="left:${cx}%;top:${ty}%;--c:${b.c};--p:${Math.round(bo.pct*100)}" onclick="hqTap(${bx.i})" aria-label="${b.n} · ${esc(bo.n)}"><span>${bo.dead?'💀':bo.ic}</span></button>`:''; }).join(''); },60);
+  return `<div class="card sec cy-card"><div class="row between" style="padding:0 2px 6px"><span class="tag">🏙️ Your city · Year ${CY.year} of 5</span><span class="sub" style="font-size:11.5px">${CY.eraName}</span></div>
+    <div class="cy-wrap">${hqLive()}<div id="cy-mk" class="cy-mk"></div></div>
+    <div class="sub" style="font-size:11.5px;text-align:center;margin-top:4px">The quest board stands on the fountain · bosses sit on their building</div></div>
+  <div class="cy-grid sec">
+    <button class="card cy-board" onclick="questLogOpen()"><div class="cy-pin">📜 QUEST BOARD ${Q.daily&&Q.weekly?'':'<span class="cy-bang">!</span>'}</div>
+      <div class="cy-q"><span>Daily</span><b class="${Q.daily?'ok':''}">${Q.t3d}/3</b></div><div class="cy-q"><span>Weekly</span><b class="${Q.weekly?'ok':''}">${Q.wDone}/${Q.wTot}</b></div><div class="cy-q"><span>Season</span><b>${Q.tier}/13</b></div></button>
+    <div class="card cy-house ${ch||pf?'glow':''}"><div class="cy-pin">🏠 YOUR HOUSE</div><div class="cy-hh"><button class="cy-av" onclick="stMode='progress';go('evolve')" aria-label="Character">${pfpMini(stageOf(lvl))}</button><div><b>Lv ${lvl}</b><small>💰 ${goldNow()} · 🛡️ ${shieldsLeft()}/3</small></div></div>
+      <div class="cy-hb"><button onclick="gSheetLive(vRpgStats)">🧬 Stats${pf?`<i>${pf}</i>`:''}</button><button onclick="stMode='progress';go('evolve')">✨ Evolve</button><button onclick="stMode='settings';setTab='trophies';go('evolve')">🏆 Loot${ch?`<i>${ch}</i>`:''}</button><button onclick="shopOpen()">💰 Shop</button><button onclick="stMode='settings';go('evolve')">⚙️ Settings</button><button onclick="gSheetLive(trophiesBody)">🏆 Titles</button></div></div></div>
+  <div class="card sec cy-awake"><div class="row between"><span class="tag">⚔️ Bosses awake</span><span class="sub">${Object.values(B).filter(b=>!b.dead).length} of ${Object.keys(B).length}</span></div>
+    <div class="cy-bl">${Object.entries(B).map(([a,b])=>`<button class="cy-b ${b.dead?'dead':''}" onclick="go('bosses')"><span>${b.dead?'💀':b.ic}</span><b>${esc(b.n)}</b><i><u style="width:${Math.round(b.pct*100)}%"></u></i></button>`).join('')}</div></div>${cityMore()}`; }
+
 /* ---------- UI: Stats tab ---------- */
 function vRpgStats(){ const R=R_(), free=ptsFree(), P=perks(), F=rpgFx(TODAY), cls=classFor(THIS_Q), cq=classQuest(THIS_Q), T=titlesAll(), open=R.respec===THIS_Q+':open';
   const rows=STATS.map(([k,ic,name,src])=>{ const base=rpgBase()[k], pt=+R.pts[k]||0, now=statNow(k), mod=now-base-pt, nx=PERKS[k].find(p=>statVal(k)<p[0]);
@@ -8037,8 +8072,9 @@ const HQ_ST={
   relationships:{n:'Plaza',top:'#dccbff',left:'#8d6ad8',right:'#6a4bb0',trim:'#c3a8ff'},
   personal:{n:'Library', top:'#ffd0e6',left:'#c96f9b',right:'#9c4d76',trim:'#ffa3cf'} };
 // lots on the grid (x,y,w,d). Back row y=0, front row y=4, sidewalk y=7, road y=8..9
-const HQ_LOT={ personal:[0,0,3,2], content:[4,0,2,2], modeling:[7,0,3,2], financial:[11,0,3,2], grillz:[1,4,3,2], fitness:[5,4,3,2], relationships:[10,4,3,2] };
-const HQ_GX=14, HQ_GY=11;
+const HQ_LOT={ personal:[0,0,3,2], modeling:[4,0,3,2], content:[8,0,2,2], financial:[11,0,3,3], grillz:[0,2,2,2], fitness:[0,4,2,2], relationships:[12,4,2,2] };
+const HQ_GX=14, HQ_GY=9;   // town square: no road, the front two rows are the square's open side
+const HQ_PLAZA=[3,2,10,6], HQ_FTN=[6.5,4];   // paved square x0,y0,x1,y1 · fountain centre (the quest board stands on it)
 function hqDraw(D, opts){ const {Buf,P,mix}=ISO, B=new Buf(), t=opts.t||0, night=opts.night, C=hqPal(night), O=C.out, R=opts.rand||((s)=>{ let v=s; return ()=>((v=(v*16807)%2147483647)-1)/2147483646; });
   // sky: banded gradient (pixel-art style), stars, sun/moon, far skyline
   for(let y=0;y<ISO.H;y++){ const k=Math.min(3,Math.floor(y/22)); B.rect(0,y,ISO.W,1,C.sky[k]); if(y%22===21&&k<3) for(let x=(y>>1)%2;x<ISO.W;x+=2) B.px(x,y,C.sky[k+1]); }
@@ -8053,24 +8089,25 @@ function hqDraw(D, opts){ const {Buf,P,mix}=ISO, B=new Buf(), t=opts.t||0, night
   // grass checker + road + sidewalk + paths
   for(let gx=0;gx<HQ_GX;gx++) for(let gy=0;gy<HQ_GY;gy++){ const tile=[P(gx,gy),P(gx+1,gy),P(gx+1,gy+1),P(gx,gy+1)];
     let c=(gx+gy)%2?C.ground:C.ground2;
-    if(gy===7) c=(gx%2)?C.path:C.path2; else if(gy>=8&&gy<=9) c=C.road; else if(gy===3&&gx%4!==3) c=(gx%2)?C.path:C.path2;
+    const [px0,py0,px1,py1]=HQ_PLAZA, inPlaza=gx>=px0&&gx<=px1&&gy>=py0&&gy<=py1, ring=Math.max(Math.abs(gx+.5-HQ_FTN[0]),Math.abs(gy+.5-HQ_FTN[1]))<2.2;
+    if(gy>=7) c=ring?(night?'#5c5a70':'#d6cfbf'):((gx+gy)%2?C.path:C.path2); else if(inPlaza) c=ring?(night?'#5c5a70':'#d6cfbf'):((gx+gy)%2?C.path:C.path2); else if(gy===6&&gx>px1) c=(gx%2)?C.path:C.path2;
     B.poly(tile,c); }
   // road dashes
-  for(let gx=0;gx<HQ_GX;gx++){ const a=P(gx+.2,9), b=P(gx+.55,9); B.line(a,b,C.line); }
+
   // curb highlight
-  B.line(P(0,8),P(HQ_GX,8),night?'#5a5a70':'#d8d2c4');
+
   // grass tufts
-  const r3=R(11), tuft=CY.sn===1?'#eef6ff':CY.sn===4?(night?'#5a3a22':'#d9822b'):CY.sn===2?'#ff9fc8':C.grass; for(let i=0;i<(CY.sn===1?110:60);i++){ const gx=r3()*HQ_GX, gy=r3()*HQ_GY; const row=Math.floor(gy); if(row===7||row===8||row===9||row===3) continue; const p=P(gx,gy); B.px(p[0],p[1],i%3?C.grass:tuft); B.px(p[0],p[1]-1,tuft); }
+  const r3=R(11), tuft=CY.sn===1?'#eef6ff':CY.sn===4?(night?'#5a3a22':'#d9822b'):CY.sn===2?'#ff9fc8':C.grass; for(let i=0;i<(CY.sn===1?110:60);i++){ const gx=r3()*HQ_GX, gy=r3()*HQ_GY; const row=Math.floor(gy); if(row>=7) continue; if (gx>=HQ_PLAZA[0]&&gx<=HQ_PLAZA[2]+1&&gy>=HQ_PLAZA[1]&&gy<=HQ_PLAZA[3]+1) continue; const p=P(gx,gy); B.px(p[0],p[1],i%3?C.grass:tuft); B.px(p[0],p[1]-1,tuft); }
   // ---- objects, painter-sorted by depth (x+y of the far corner) ----
   const objs=[];
   for(const b of D){ const L=HQ_LOT[b.k]; if(!L) continue; objs.push({d:L[0]+L[2]+L[1]+L[3], f:()=>hqBuilding(B,b,L,C,t,night,CY)}); }
-  const trees=[[3.5,2.4],[6.6,2.6],[10.6,2.5],[0.4,5.2],[4.4,6.2],[9.2,5.6],[13.3,5.6],[13.3,2.2]].concat(era>=1?[[2.2,6.6],[8.6,6.5],[11.9,2.7]]:[]);
+  const trees=[[3.3,2.3],[10.6,2.4],[3.2,6.5],[10.7,6.5],[2.5,6.6],[13.4,3.4]].concat(era>=1?[[11.3,6.6],[7.4,2.2],[5.6,2.2]]:[]);
   for(const [tx,ty] of trees) objs.push({d:tx+ty+1, f:()=>hqTree(B,tx,ty,C,night,CY.sn)});
   for(const lx of (era>=2?[1,2.5,4.5,6.5,8.5,10.5,12.5]:[2.5,6.5,10.5])) objs.push({d:lx+7.6, f:()=>hqLamp(B,lx,7.6,C,night,t)});
-  if (era>=1) for(const [bx,by] of [[3.2,6.75],[9.6,6.75]]) objs.push({d:bx+by, f:()=>hqBench(B,bx,by,night)});
-  if (era>=2) objs.push({d:6.6+3.5, f:()=>hqFountain(B,6.6,3.5,night)});
+  for(const [bx,by] of [[4.2,4.1],[8.9,4.1],[6.5,6.4]].slice(0,era>=1?3:2)) objs.push({d:bx+by, f:()=>hqBench(B,bx,by,night)});
+  objs.push({d:HQ_FTN[0]+HQ_FTN[1]+1.2, f:()=>hqFountainBig(B,HQ_FTN[0],HQ_FTN[1],night)});
   if (era>=3) objs.push({d:12.9+6.6, f:()=>hqBillboard(B,12.6,6.7,night,CY)});
-  const MON=[[3.5,3.5],[7.6,3.5],[11.5,3.5],[13.6,3.6],[0.5,3.6]]; for(let i=0;i<Math.min(5,CY.years);i++){ const [mx,my]=MON[i]; objs.push({d:mx+my, f:()=>hqMonument(B,mx,my,night,i)}); }
+  const MON=[[3.6,3.2],[9.6,3.2],[3.6,5.6],[9.6,5.6],[6.5,7.6]]; for(let i=0;i<Math.min(5,CY.years);i++){ const [mx,my]=MON[i]; objs.push({d:mx+my, f:()=>hqMonument(B,mx,my,night,i)}); }
   objs.sort((a,b)=>a.d-b.d); for(const o of objs) o.f();
   return B; }
 function hqTree(B,tx,ty,C,night,sn){ const {P}=ISO, p=P(tx,ty); const tr=night?'#3b2a1f':'#6b4a2e'; let l1=night?'#1f5a3a':'#3f9a4f', l2=night?'#2a7048':'#5cc163', l3=night?'#174a2e':'#2f7a3c';
@@ -8125,6 +8162,15 @@ function hqBuilding(B,b,L,C,t,night,CY){ const {P,mix}=ISO, S0=HQ_ST[b.k], [x,y,
 }
 function hqH(b){ if(!b.lvl) return 0; const f=b.tot?Math.min(1,b.on/b.tot):0; return Math.min(84, Math.round(16+60*Math.pow(f,.7)) + (b.k==='content'?10:0)); }
 function hqBench(B,bx,by,night){ const {P}=ISO, p=P(bx,by); const wd=night?'#5a3e2c':'#9c6b43'; B.rect(p[0]-3,p[1]-3,7,1,wd); B.rect(p[0]-3,p[1]-5,7,1,wd); B.px(p[0]-3,p[1]-2,'#1c1a28'); B.px(p[0]+3,p[1]-2,'#1c1a28'); }
+function hqFountainBig(B,fx,fy,night){ const {P}=ISO, O='#1c1a28', st={top:night?'#7a7890':'#d9d4c6',left:night?'#57556b':'#a9a395',right:night?'#454358':'#8c8679'}, wt=night?'#2f5c96':'#5fb4e6', wt2=night?'#4f86c8':'#9fdcff';
+  B.box(fx-1.25,fy-1.25,2.5,2.5,0,4,st,O); B.poly([P(fx-1,fy-1,4),P(fx+1,fy-1,4),P(fx+1,fy+1,4),P(fx-1,fy+1,4)],wt);
+  for (let i=0;i<14;i++){ const a=P(fx-1+((i*7)%20)/10, fy-1+((i*13)%20)/10, 4); B.px(a[0],a[1],wt2); }
+  B.box(fx-.35,fy-.35,.7,.7,4,10,st,O); B.box(fx-.6,fy-.6,1.2,1.2,14,2,st,O);
+  const c=P(fx,fy,16); B.rect(c[0],c[1]-5,1,5,wt2); B.rect(c[0]-2,c[1]-6,5,1,wt2); B.px(c[0]-3,c[1]-5,wt2); B.px(c[0]+3,c[1]-5,wt2);
+  // quest board: a wooden notice board on the fountain's front face, papers pinned on it
+  const q=P(fx+.35,fy+.35,4); const wd=night?'#5a3e2c':'#8a5a2e', pp=night?'#d8cfb8':'#fff3d6';
+  B.rect(q[0]-6,q[1]-11,12,8,O); B.rect(q[0]-5,q[1]-10,10,6,wd); B.rect(q[0]-4,q[1]-9,3,4,pp); B.rect(q[0],q[1]-9,4,2,pp); B.rect(q[0],q[1]-6,3,1,pp); B.px(q[0]-3,q[1]-9,'#ff4f87'); B.px(q[0]+1,q[1]-9,'#ff4f87');
+  B.rect(q[0]-4,q[1]-3,1,3,O); B.rect(q[0]+3,q[1]-3,1,3,O); }
 function hqFountain(B,fx,fy,night){ const {P}=ISO; B.box(fx-.45,fy-.45,.9,.9,0,3,{top:night?'#2a4a7a':'#7fc6e8',left:'#9a9aa8',right:'#7a7a88'},'#1c1a28'); const c=P(fx,fy,3); B.rect(c[0],c[1]-6,1,6,'#9a9aa8'); B.rect(c[0]-1,c[1]-7,3,1,night?'#9fd7ff':'#d9f3ff'); }
 function hqBillboard(B,bx,by,night,CY){ const {P}=ISO, p=P(bx,by); B.rect(p[0]-5,p[1]-12,1,12,'#1c1a28'); B.rect(p[0]+5,p[1]-12,1,12,'#1c1a28'); B.rect(p[0]-7,p[1]-21,15,9,'#1c1a28'); B.rect(p[0]-6,p[1]-20,13,7,night?'#1b4a66':'#4dd8ff'); B.rect(p[0]-4,p[1]-18,9,1,'#ffffff'); B.rect(p[0]-4,p[1]-16,6,1,'#ffffff'); }
 function hqMonument(B,mx,my,night,i){ const {P}=ISO; B.box(mx-.25,my-.25,.5,.5,0,3,{top:'#d9d6cc',left:'#a8a598',right:'#8a8778'},'#1c1a28'); const c=P(mx,my,3), g=night?'#c9a23a':'#ffd25e'; B.rect(c[0],c[1]-7,2,5,g); B.rect(c[0],c[1]-9,2,2,g); B.px(c[0]-1,c[1]-6,g); B.px(c[0]+2,c[1]-8-(i%2),g); }
@@ -8146,11 +8192,12 @@ function hqTunnels(night){ const B=new ISO.Buf(), O=hqPal(night).out, rock={top:
   for (let u=0; u<13; u++) for (let v=0; v<10; v++){ const dx=Math.abs(u-6); if (v>7 && dx>4) continue; if (v>8 && dx>2) continue; B.facePx('R',0,7.9,.9,2.2,0,u+2,v,v>=9-Math.floor(dx/3)?'#3a3f4a':'#05040a'); }
   const c=document.createElement('canvas'); c.width=ISO.W; c.height=ISO.H; c.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(B.d.buffer), ISO.W, ISO.H),0,0); return c; }
 function hqStatic(D){ const night=hqNight(), CY=hqCity(D); HQI.city=CY; HQI.boss=hqBossMarks(); const key=JSON.stringify([night,CY,D.map(b=>[b.k,b.lvl,b.on,Math.round(b.act/10)])]);
-  if (HQI.key!==key){ const B=hqDraw(D,{night,city:CY}); const id=new ImageData(new Uint8ClampedArray(B.d.buffer.slice(0)), ISO.W, ISO.H); HQI.img=id; HQI.key=key; HQI.night=night; HQI.D=D; HQI.boxes=hqBoxes(D); HQI.fg=hqTunnels(night); }
+  if (HQI.key!==key){ const B=hqDraw(D,{night,city:CY}); const id=new ImageData(new Uint8ClampedArray(B.d.buffer.slice(0)), ISO.W, ISO.H); HQI.img=id; HQI.key=key; HQI.night=night; HQI.D=D; HQI.boxes=hqBoxes(D); HQI.fg=null; }
   return HQI.img; }
 function hqBoxes(D){ const {P}=ISO; return D.map(b=>{ const L=HQ_LOT[b.k]; if(!L) return null; const [x,y,w,d]=L, h=b.lvl?hqH(b)+(b.lvl>=4?7:0):6;
   const pts=[P(x,y,h+10),P(x+w,y,h),P(x+w,y+d,0),P(x,y+d,0),P(x,y+d,h)]; const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]); return {i:b.i, k:b.k, x0:Math.min(...xs)-1, x1:Math.max(...xs)+1, y0:Math.min(...ys)-6, y1:Math.max(...ys)+1, depth:x+w+y+d, door:x+w/2}; }).filter(Boolean); }
 function hqHit(ev, c){ const r=c.getBoundingClientRect(), ax=(ev.clientX-r.left)*ISO.W/r.width, ay=(ev.clientY-r.top)*ISO.H/r.height;
+  { const f=ISO.P(HQ_FTN[0],HQ_FTN[1],8); if (Math.abs(ax-f[0])<14 && Math.abs(ay-f[1])<14){ questLogOpen(); return; } }
   const hit=(HQI.boxes||[]).filter(b=>ax>=b.x0&&ax<=b.x1&&ay>=b.y0&&ay<=b.y1).sort((a,b)=>b.depth-a.depth)[0]; if (hit) hqTap(hit.i); }
 function hqCarSprite(){ if (HQI.carC) return HQI.carC; const B=new ISO.Buf(); const {P}=ISO; // tiny iso car, drawn once off-screen near grid origin
   B.box(0,0,1.1,.6,1,3,{top:'#ff5a7a',left:'#d63a5e',right:'#a82848'},'#1c1a28'); B.box(.25,.1,.6,.45,4,2,{top:'#bfeaff',left:'#7fc6e8',right:'#5aa0c4'},'#1c1a28');
@@ -8166,10 +8213,10 @@ function hqFrame(c, now){ const D=HQI.D; if (!D) return; const art=HQI.art ||= (
     if (b.k==='modeling' && night){ const a=P(x+w*.3,y+d*.5,h); ax.fillStyle='rgba(255,246,200,.16)'; for (let k=0;k<14;k++) ax.fillRect(a[0]-k/2+Math.sin(now/900)*k/2, a[1]-6-k, 2+k/3, 1); } }
   // car on the road
   const cs=hqCarSprite(), lane=8.55, span=HQ_GX-1.2, o=HQI.carO, nC=(HQI.city||{}).cars||1;
-  for (let ci=0; ci<nC; ci++){ const ph=(now/1100+ci*(span+5)/nC)%(span+5), cx=.3+ph, p=P(cx,lane,0);
+  for (let ci=0; ci<0; ci++){   // no road, no cars const ph=(now/1100+ci*(span+5)/nC)%(span+5), cx=.3+ph, p=P(cx,lane,0);
     if (ph<span+.6){ ax.drawImage(cs, Math.round(p[0]-o[0]), Math.round(p[1]-o[1])); if (night){ ax.fillStyle='rgba(255,240,180,.55)'; ax.fillRect(Math.round(p[0]+8),Math.round(p[1]+1),3,1); ax.fillRect(Math.round(p[0]+10),Math.round(p[1]+2),3,1); } } }
   hqPeople(ax, now, night);
-  for (const m of (HQI.boss||[])){ const b=D.find(x=>x.k===m.k), L=HQ_LOT[m.k]; if(!b||!L) continue; const [x,y,w,d]=L, a=P(x+w*.5,y+d*.5,(b.lvl?hqH(b):6)+12+m.row*7), bw=16, bx=Math.round(a[0]-bw/2), by=Math.round(a[1]-(Math.floor(now/500)%2));
+  for (const m of (window.__cityMarks?[]:(HQI.boss||[]))){ const b=D.find(x=>x.k===m.k), L=HQ_LOT[m.k]; if(!b||!L) continue; const [x,y,w,d]=L, a=P(x+w*.5,y+d*.5,(b.lvl?hqH(b):6)+12+m.row*7), bw=16, bx=Math.round(a[0]-bw/2), by=Math.round(a[1]-(Math.floor(now/500)%2));
     ax.fillStyle='#120b18'; ax.fillRect(bx-1,by-1,bw+2,4); ax.fillStyle='#3a2a3a'; ax.fillRect(bx,by,bw,2); ax.fillStyle=m.col; ax.fillRect(bx,by,Math.max(1,Math.round(bw*m.pct)),2); ax.fillStyle=m.col; ax.fillRect(bx-4,by-1,2,4); }
   if (HQI.fg) ax.drawImage(HQI.fg,0,0);
   // to screen, crisp
@@ -8193,7 +8240,7 @@ function hqWalker(x, c, now){ const k=c.width/ISO.W, W=HQI.hw, D=HQI.D; if (!PXW
 // tiny townsfolk: 2px wide, 6px tall, walking the sidewalk and turning around at the ends
 const HQ_FOLK=[['#ff5a7a','#2a2a3a',.5,7.25,.55],['#4dd8ff','#3a2a1a',5.2,7.7,.4],['#ffd25e','#1a2a4a',9.6,7.3,.7],['#9b7bff','#2a2a2a',12.4,7.65,.45],['#5fd38a','#3a2a3a',3.1,7.5,.6],['#ffffff','#4a3a2a',7.4,7.35,.5],['#ff9a3d','#22222f',11.0,7.6,.35]];
 function hqPeople(ax, now, night){ const {P}=ISO, skin=['#8a5a3c','#c68b5f','#5a3a28','#e0b08a'], n=(HQI.city||{}).folk||7, era=(HQI.city||{}).era||0;
-  const crowd=HQ_FOLK.concat(HQ_FOLK.map(([s,p,x0,l,sp])=>[p==='#2a2a3a'?'#ffd25e':s,p,(x0*1.7)%12.6,era>=2?3.5+(sp-.5)*.4:l+.05,sp*.8])).slice(0,n);
+  const crowd=HQ_FOLK.concat(HQ_FOLK.map(([s,p,x0,l,sp])=>[p==='#2a2a3a'?'#ffd25e':s,p,(x0*1.7)%12.6,era>=2?6.55+(sp-.5)*.3:l+.05,sp*.8])).slice(0,n);
   crowd.forEach(([shirt,pants,x0,lane,sp],i)=>{ const span=12.6, raw=(x0+now/1000*sp*.35)%(span*2), fw=raw<span, gx=.7+(fw?raw:span*2-raw), p=P(gx,lane,0), x=Math.round(p[0]), y=Math.round(p[1]);
     const step=Math.floor(now/180+i)%2; ax.fillStyle='rgba(0,0,0,.25)'; ax.fillRect(x-1,y,4,1);
     ax.fillStyle=pants; ax.fillRect(x+(step?0:1),y-2,1,2); ax.fillRect(x+(step?1:0),y-2,1,1);
@@ -10003,7 +10050,7 @@ function vEvolve(){
   if (stMode==='circle'){ stMode='progress'; setTimeout(()=>go('social'),0); }
   if (!['progress','settings'].includes(stMode)) stMode='progress';
   const body = stMode==='settings' ? vSettingsAll() :
-    statSheet()+bossRoster()+vHQ()+foldCards(statDrop(vStats(),['Furthest behind','Money','Bench time'])+tellsCard()+rivalCard(), ['Consistency','XP per week','Shadow','Your tells','Records'], '', {Consistency:`${[...Array(30)].filter((_,i)=>dayActive(addDays(TODAY,-i))).length} of the last 30 days`, Records:`best streak ${bestDailyStreak()}`});
+    statSheet()+foldCards(statDrop(vStats(),['Furthest behind','Money','Bench time'])+tellsCard()+rivalCard(), ['Consistency','XP per week','Shadow','Your tells','Records'], '', {Consistency:`${[...Array(30)].filter((_,i)=>dayActive(addDays(TODAY,-i))).length} of the last 30 days`, Records:`best streak ${bestDailyStreak()}`});
   return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['progress','Character'],['settings','Settings']].map(([k,l])=>`<button class="${stMode===k?'on':''}" style="flex:1 1 auto;min-width:0;padding:9px 6px;font-size:12px;letter-spacing:-.01em" onclick="stMode='${k}';render();window.scrollTo(0,0)">${l}</button>`).join('')}</div>` + body;
 }
 function vTrophies(){ stMode='settings'; setTab='trophies'; return vEvolve(); }
