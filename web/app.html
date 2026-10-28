@@ -2928,9 +2928,9 @@ function render(){
   const stg = stageOf(lvl);
   app.innerHTML = `
     <div class="topbar">
-      <div class="brand"><button class="pfp-sm ${view==='city'||view==='evolve'||view==='social'?'on':''}" style="--ringc:${ringCss(lvl)}" onclick="go('city')" aria-label="Your city · character and settings">${pfpMini(stg)}</button></div>
+      <div class="brand"><button class="pfp-sm ${view==='city'||view==='evolve'||view==='social'?'on':''}" style="--ringc:${ringCss(lvl)}" onclick="go('city')" aria-label="Your city · character and settings">${pfpMini(stg)}</button><button class="iconbtn tg-ask" onclick="coachOpen()" title="Ask Tega" aria-label="Ask Tega"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h.01M12 10h.01M16 10h.01" stroke-linecap="round" stroke-width="3"/></svg></button></div>
       <div class="wordmark logo">${logoSVG(24)}</div>
-      <div class="right"><span class="sync ${dbStatus==='cloud'?'on':''}" id="sync" onclick="syncInfo()" style="padding:10px 6px;cursor:pointer"><i></i></span><button class="iconbtn" onclick="searchOpen()" title="Search" aria-label="Search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button><button class="iconbtn" onclick="capOpen()" title="Quick capture" aria-label="Quick capture">＋</button><button class="iconbtn" onclick="toggleTheme()" title="Theme">◐</button></div>
+      <div class="right"><span class="sync ${dbStatus==='cloud'?'on':''}" id="sync" onclick="syncInfo()" style="padding:10px 6px;cursor:pointer"><i></i></span><button class="iconbtn" onclick="searchOpen()" title="Search" aria-label="Search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button><button class="iconbtn" onclick="capOpen()" title="Quick capture" aria-label="Quick capture">＋</button></div>
     </div>
     <div class="pills">
       ${S.travel&&S.travel.on?`<span class="pill" style="cursor:pointer" onclick="travelSheet()">✈️ ${esc(S.travel.city||'Away')}</span>`:''}
@@ -7260,7 +7260,7 @@ function coachData(){ const out=[], T=TODAY; const tryp=f=>{ try { const v=f(); 
 let coachBusy=false;
 function C_(){ return (S.coach ||= {msgs:[]}); }
 function coachOpen(){ gSheet(coachHTML()); const s=document.querySelector('#g-sheet .g-sheet'); if (s) s.classList.add('co-sheet'); setTimeout(()=>{ const l=document.getElementById('co-list'); if(l) l.scrollTop=l.scrollHeight; },30); }
-function coachHTML(){ const M=C_().msgs.slice(-30), sugg=['How much spending money do I have left?','When is my next shoot?','Add a learning goal for this quarter','Plan my Top 3 for tomorrow','Something in the app is broken'];
+function coachHTML(){ const M=C_().msgs.slice(-30), sugg=['How much spending money do I have left?','When is my next shoot?','Add a quest: edit Datum photos','Add a learning goal for this quarter','Something in the app is broken'];
   return `<div class="row" style="gap:10px;align-items:center;flex-wrap:nowrap">${pfpMini(stageOf(levelFor(computeXP())))}<div style="min-width:0"><h2 class="g-sh-t" style="margin:0">Talk to Tega</h2><small class="sub">Sees your whole app · can change it for you</small></div></div>
   <div class="co-list" id="co-list">${M.length?M.map((m,ix)=>{ const mi=C_().msgs.length-M.length+ix; return `<div class="co-m ${m.r}">${esc(m.t).replace(/\n/g,'<br>')}${m.acts&&m.acts.length?`<div class="co-acts ${m.undone?'undone':''}">${m.acts.map(x=>`<span>✓ ${esc(x)}</span>`).join('')}${m.undo&&!m.undone&&agUndo&&agUndo.i===mi?`<button onclick="agUndoRun()">↩︎ Undo</button>`:''}${m.undone?'<small>undone</small>':''}</div>`:''}${m.pend&&m.pend.length?`<div class="co-pend">${m.pend.map((p,pi)=>`<button class="${p.go?'':'danger'}" onclick="agConfirm(${mi},${pi})">${esc(p.label)}</button>`).join('')}</div>`:''}</div>`; }).join(''):`<div class="co-sugg">${sugg.map(s=>`<button onclick="coachSend(${JSON.stringify(s).replace(/"/g,'&quot;')})">${s}</button>`).join('')}</div>`}${coachBusy?'<div class="co-m a co-typing"><i></i><i></i><i></i></div>':''}</div>
   <form class="co-f" onsubmit="event.preventDefault();coachSend(document.getElementById('co-in').value)"><input id="co-in" class="inp" placeholder="Ask anything…" autocomplete="off" enterkeyhint="send"><button class="btn" aria-label="Send">↑</button></form>
@@ -7284,7 +7284,8 @@ function agMoney(){ const L=[]; const T=t=>{ try { const v=t(); if (v) L.push(v)
   T(()=>{ const O=oneComing(); return O?`ONE Management owes ${money0(O.owed)}; ${money0(O.booked)} more booked; hold ${money0(O.tax)} of that for tax.`:''; });
   return L.join('\n'); }
 function agSchedule(){ try { return agendaFor(TODAY, addDays(TODAY,30)).map(x=>`${x.d} ${x.tag}: ${x.text}`).slice(0,45).join('\n')||'nothing scheduled'; } catch(e){ return ''; } }
-function agCtx(){ return `TODAY ${TODAY} (${niceLong(TODAY)}). Week ${THIS_WEEK}. Quarter ${THIS_Q}.\n\n${coachData()}\n\nMONEY\n${agMoney()}\n\nSCHEDULE (next 30 days)\n${agSchedule()}\n\nGOALS (ids in brackets)\n${agGoals()}\n\nOPEN QUESTS: ${(S.quests||[]).filter(q=>!q.done).map(q=>q.text).slice(0,8).join('; ')||'none'}\nTRACKS (categories): ${TRACKS.map(t=>`${t.key}=${t.name}`).join(', ')}\nPAGES: ${VIEWS.join(', ')}`; }
+function agCtx(){ return `TODAY ${TODAY} (${niceLong(TODAY)}). Week ${THIS_WEEK}. Quarter ${THIS_Q}.\n\n${coachData()}\n\nMONEY\n${agMoney()}\n\nSCHEDULE (next 30 days)\n${agSchedule()}\n\nGOALS (ids in brackets)\n${agGoals()}\n\nOPEN QUESTS: ${(S.quests||[]).filter(q=>!q.done).map(q=>`[q ${q.id}] ${q.text} (${q.size})`).slice(0,15).join('; ')||'none'}
+TODAY'S TOP 3: ${ensureDay(TODAY).top3.map((t,i)=>`#${i} ${t.text||'(empty)'}${t.done?' (done)':''}`).join('; ')}\nTRACKS (categories): ${TRACKS.map(t=>`${t.key}=${t.name}`).join(', ')}\nPAGES: ${VIEWS.join(', ')}`; }
 const AG_DESTRUCT=new Set(['delete_objective','delete_kr','delete_weekly_goal']);
 let agUndo=null;
 function agSnap(){ return JSON.stringify({quarters:S.quarters, years:S.years, weeks:S.weeks, weeklyTemplate:S.weeklyTemplate, quests:S.quests, dl:S.dl||[], vision:S.vision, days:Object.fromEntries([TODAY,addDays(TODAY,1)].filter(k=>S.days[k]).map(k=>[k,S.days[k]]))}); }
@@ -7304,7 +7305,10 @@ function agDo(a){ const A=a.args||a, t=a.tool||a.type;
     case 'add_weekly_goal': { const w=A.week||THIS_WEEK, it={id:uid(), track:TRACKS.some(x=>x.key===A.track)?A.track:'personal', text:String(A.text||'').slice(0,90)}; ensureWeek(w).extra.push(it); return `Added weekly goal “${it.text}”`; }
     case 'delete_weekly_goal': { const W=ensureWeek(A.week||THIS_WEEK), n=W.extra.length; W.extra=W.extra.filter(i=>i.id!==A.id); return W.extra.length<n?'Removed that weekly goal':null; }
     case 'set_top3': { const d=ensureDay(/^\d{4}-\d{2}-\d{2}$/.test(A.date||'')?A.date:TODAY), items=(A.items||[]).map(x=>String(x).slice(0,80)).filter(Boolean); let put=0; for (const x of items){ const slot=A.replace?d.top3[put]:d.top3.find(t=>!t.text.trim()); if (!slot) break; slot.text=x; slot.done=false; put++; } return put?`Top 3: ${items.slice(0,put).join(' · ')}`:'Top 3 is already full — say “replace” to swap them'; }
-    case 'add_quest': { const sz=['S','M'].includes(A.size)?A.size:'S'; S.quests.push({id:uid(), text:String(A.text||'').slice(0,90), size:sz, track:A.track||'', defn:'', created:TODAY, done:''}); return `${QSIZE[sz].icon} Quest added: ${A.text}`; }
+    case 'add_quest': { let sz=['S','M','B'].includes(A.size)?A.size:'S'; if (sz==='B' && (activeBoss()||!A.defn)) sz='M'; S.quests.push({id:uid(), text:String(A.text||'').slice(0,90), size:sz, track:TRACKS.some(x=>x.key===A.track)?A.track:'', defn:sz==='B'?String(A.defn).slice(0,160):'', created:TODAY, done:''}); return `${QSIZE[sz].icon} Quest added: ${A.text}`; }
+    case 'complete_quest': { const q=(S.quests||[]).find(q=>q.id===A.id&&!q.done); if (!q) return null; questDone(q.id); return `${QSIZE[q.size]?.icon||'✓'} Quest done: ${q.text}`; }
+    case 'complete_top3': { const d=ensureDay(TODAY), i=Number.isInteger(+A.index)?+A.index:d.top3.findIndex(t=>t.text&&A.text&&t.text.toLowerCase().includes(String(A.text).toLowerCase())); const t=d.top3[i]; if (!t||!t.text||t.done) return null; t.done=true; return `✓ Top 3 done: ${t.text}`; }
+    case 'complete_weekly_goal': { const w=A.week||THIS_WEEK, W=ensureWeek(w), it=weekInits(w).find(i=>i.id===A.id); if (!it) return null; (W.inits ||= {})[it.id]=true; return `✓ Weekly goal done: ${it.text}`; }
     case 'add_deadline': { if (!/^\d{4}-\d{2}-\d{2}$/.test(A.date||'')) return null; (S.dl ||= []).push({id:uid(), d:A.date, text:String(A.text||'').slice(0,90), type:A.kind||'other', done:''}); return `Deadline ${nice(A.date)}: ${A.text}`; }
     case 'add_milestone': { (S.vision.milestones ||= []).push({id:uid(), year:String(A.year||+THIS_Y+1), track:A.track||'personal', text:String(A.text||'').slice(0,140), done:false}); return `5-year milestone added: ${A.year} ${A.text}`; }
     case 'report_problem': { (S.fixes ||= []).push({id:uid(), at:new Date().toISOString(), text:String(A.text||'').slice(0,600), build:BUILD, view}); return `Logged for Claude: “${String(A.text||'').slice(0,60)}”`; }
@@ -7324,7 +7328,10 @@ WHAT YOU CAN DO (actions):
 - add_weekly_goal {text, track, week?}
 - delete_weekly_goal {id, week?}   (destructive)
 - set_top3 {date?, items:[...], replace?:true}
-- add_quest {text, size:"S"|"M", track}
+- add_quest {text, size:"S"|"M"|"B", track, defn? (B = boss quest, needs a definition of done)}
+- complete_quest {id}
+- complete_top3 {index (0-2) or text}
+- complete_weekly_goal {id, week?}
 - add_deadline {text, date, kind?}
 - add_milestone {year, track, text}   (5-year plan)
 - report_problem {text}   — when he says something in the app is broken/wrong; write it clearly for the developer (what he did, what happened, what he expected). Then tell him it's on his Fix list (Settings → Fix list for Claude → Copy for Claude) so he can paste it to Claude.

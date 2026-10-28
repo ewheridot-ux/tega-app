@@ -172,9 +172,9 @@ const ag = await page.evaluate(async () => { S.quarters[THIS_Q].objectives.push(
     {tool:'add_objective', args:{level:'quarter', track:'personal', title:'Test personal goal', krs:[{text:'Journal days', target:40}]}},
     {tool:'add_objective', args:{level:'quarter', track:'learning', title:'Test learning goal', krs:[{text:'Courses finished', target:2}]}},
     {tool:'delete_objective', args:{level:'quarter', id:'agT'}},
-    {tool:'report_problem', args:{text:'Test problem'}} ] }; } };
+    {tool:'report_problem', args:{text:'Test problem'}}, {tool:'add_quest', args:{text:'Agent test quest', size:'S'}} ] }; } };
   await coachSend('add a personal and a learning goal'); const m=C.msgs[C.msgs.length-1], objs=S.quarters[THIS_Q].objectives;
-  const r={ctx:/SCHEDULE/.test(seen)&&/GOALS/.test(seen)&&/MONEY/.test(seen), added:objs.filter(o=>/^Test (personal|learning) goal$/.test(o.title)).length, notDeleted:objs.length>=2&&JSON.parse(q0).every(id=>objs.some(o=>o.id===id)), pend:(m.pend||[]).length, fix:(S.fixes||[]).some(f=>f.text==='Test problem'), acts:(m.acts||[]).length};
+  const r={ctx:/SCHEDULE/.test(seen)&&/GOALS/.test(seen)&&/MONEY/.test(seen), added:objs.filter(o=>/^Test (personal|learning) goal$/.test(o.title)).length, notDeleted:objs.length>=2&&JSON.parse(q0).every(id=>objs.some(o=>o.id===id)), pend:(m.pend||[]).length, fix:(S.fixes||[]).some(f=>f.text==='Test problem'), quest:S.quests.some(q=>q.text==='Agent test quest'), acts:(m.acts||[]).length};
   agUndoRun(); const after=S.quarters[THIS_Q].objectives; r.undone=JSON.stringify(after.map(o=>o.id))===q0;
   S.fixes=(S.fixes||[]).filter(f=>f.text!=='Test problem'); S.quarters[THIS_Q].objectives=S.quarters[THIS_Q].objectives.filter(o=>o.id!=='agT'); C.msgs.splice(n0); sampleLib=keep; gSheetClose(); commit({skipXp:true}); return r; }).catch(e=>({err:String(e)}));
 ok('Tega sees your money, schedule and goals', ag.ctx, JSON.stringify(ag));
@@ -182,6 +182,8 @@ ok('asking Tega for goals actually adds them', ag.added === 2 && ag.acts >= 2, J
 ok('removals wait for your Confirm tap', ag.notDeleted && ag.pend === 1, JSON.stringify(ag));
 ok('Undo puts everything back', ag.undone, JSON.stringify(ag));
 ok('problems you report go on the fix list', ag.fix, JSON.stringify(ag));
+ok('Tega can add quests', ag.quest, JSON.stringify(ag));
+ok('Ask Tega button sits next to your picture', await page.evaluate(() => !!document.querySelector('.brand .tg-ask')));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
