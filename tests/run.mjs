@@ -166,6 +166,22 @@ const st = await page.evaluate(() => { const d=addDays(TODAY,1), dt=parseD(d), d
 ok('a casting asking for materials becomes a self-tape due that day', st.a && st.a[0]==='selftape' && st.a[1] && st.a[2]==='due end of day', JSON.stringify(st));
 ok('self-tape and casting-video emails are read', st.b==='selftape' && st.c==='selftape', JSON.stringify(st));
 ok('self-tapes show on the calendar', st.cal===true, JSON.stringify(st));
+// Tega the agent: does what you ask (adds goals), Undo puts it back, removals wait for a Confirm tap, problems go on the fix list
+const ag = await page.evaluate(async () => { S.quarters[THIS_Q].objectives.push({id:'agT',track:'fitness',title:'Agent test goal',krs:[]}); const keep=sampleLib, q0=JSON.stringify(S.quarters[THIS_Q].objectives.map(o=>o.id)), C=C_(), n0=C.msgs.length;
+  let seen=''; sampleLib={ json: async p => { seen=p; return { reply:'Done — added both.', actions:[
+    {tool:'add_objective', args:{level:'quarter', track:'personal', title:'Test personal goal', krs:[{text:'Journal days', target:40}]}},
+    {tool:'add_objective', args:{level:'quarter', track:'learning', title:'Test learning goal', krs:[{text:'Courses finished', target:2}]}},
+    {tool:'delete_objective', args:{level:'quarter', id:'agT'}},
+    {tool:'report_problem', args:{text:'Test problem'}} ] }; } };
+  await coachSend('add a personal and a learning goal'); const m=C.msgs[C.msgs.length-1], objs=S.quarters[THIS_Q].objectives;
+  const r={ctx:/SCHEDULE/.test(seen)&&/GOALS/.test(seen)&&/MONEY/.test(seen), added:objs.filter(o=>/^Test (personal|learning) goal$/.test(o.title)).length, notDeleted:objs.length>=2&&JSON.parse(q0).every(id=>objs.some(o=>o.id===id)), pend:(m.pend||[]).length, fix:(S.fixes||[]).some(f=>f.text==='Test problem'), acts:(m.acts||[]).length};
+  agUndoRun(); const after=S.quarters[THIS_Q].objectives; r.undone=JSON.stringify(after.map(o=>o.id))===q0;
+  S.fixes=(S.fixes||[]).filter(f=>f.text!=='Test problem'); S.quarters[THIS_Q].objectives=S.quarters[THIS_Q].objectives.filter(o=>o.id!=='agT'); C.msgs.splice(n0); sampleLib=keep; gSheetClose(); commit({skipXp:true}); return r; }).catch(e=>({err:String(e)}));
+ok('Tega sees your money, schedule and goals', ag.ctx, JSON.stringify(ag));
+ok('asking Tega for goals actually adds them', ag.added === 2 && ag.acts >= 2, JSON.stringify(ag));
+ok('removals wait for your Confirm tap', ag.notDeleted && ag.pend === 1, JSON.stringify(ag));
+ok('Undo puts everything back', ag.undone, JSON.stringify(ag));
+ok('problems you report go on the fix list', ag.fix, JSON.stringify(ag));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

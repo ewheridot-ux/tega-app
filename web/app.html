@@ -946,6 +946,8 @@ button.g-chips{border:0;background:none;padding:0;text-align:left;font-family:in
 /* b159 extras */
 .co-open{margin-top:8px;border:0;background:var(--card2);color:var(--fg);border-radius:99px;padding:7px 12px;font-size:12.5px;font-weight:700;font-family:inherit}
 .co-sheet{display:flex!important;flex-direction:column;height:min(78vh,640px)}
+.co-sheet>.row:first-of-type>:first-child{width:48px!important;height:48px!important;min-width:48px;max-width:48px;flex:none;border-radius:12px;overflow:hidden;object-fit:cover}.co-sheet>.row:first-of-type>:first-child *{max-width:48px;max-height:48px}
+.co-acts{display:grid;gap:4px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line);font-size:12.5px}.co-acts span{color:var(--good)}.co-acts.undone span{text-decoration:line-through;opacity:.6}.co-acts button,.co-pend button{justify-self:start;background:none;border:1px solid var(--line);color:var(--fg);border-radius:999px;padding:5px 12px;font-size:12.5px;margin-top:2px}.co-pend{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.co-pend button.danger{border-color:var(--bad);color:var(--bad)}.co-acts small{color:var(--muted)}
 .co-list{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:6px 2px;-webkit-overflow-scrolling:touch}
 .co-m{max-width:86%;padding:10px 13px;border-radius:18px;font-size:14.5px;line-height:1.4;overflow-wrap:anywhere}
 .co-m.u{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:6px}
@@ -1827,7 +1829,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b253';
+const BUILD='b254';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -7258,18 +7260,96 @@ function coachData(){ const out=[], T=TODAY; const tryp=f=>{ try { const v=f(); 
 let coachBusy=false;
 function C_(){ return (S.coach ||= {msgs:[]}); }
 function coachOpen(){ gSheet(coachHTML()); const s=document.querySelector('#g-sheet .g-sheet'); if (s) s.classList.add('co-sheet'); setTimeout(()=>{ const l=document.getElementById('co-list'); if(l) l.scrollTop=l.scrollHeight; },30); }
-function coachHTML(){ const M=C_().msgs.slice(-30), sugg=['What should I focus on today?','Can I afford a NY trip this month?','Write 3 captions for my next post','Plan my week around my bookings'];
-  return `<div class="row" style="gap:10px;align-items:center;flex-wrap:nowrap">${pfpMini(stageOf(levelFor(computeXP())))}<div style="min-width:0"><h2 class="g-sh-t" style="margin:0">Talk to Tega</h2><small class="sub">Knows your money, bookings, gym & Datum</small></div></div>
-  <div class="co-list" id="co-list">${M.length?M.map(m=>`<div class="co-m ${m.r}">${esc(m.t).replace(/\n/g,'<br>')}</div>`).join(''):`<div class="co-sugg">${sugg.map(s=>`<button onclick="coachSend(${JSON.stringify(s).replace(/"/g,'&quot;')})">${s}</button>`).join('')}</div>`}${coachBusy?'<div class="co-m a co-typing"><i></i><i></i><i></i></div>':''}</div>
+function coachHTML(){ const M=C_().msgs.slice(-30), sugg=['How much spending money do I have left?','When is my next shoot?','Add a learning goal for this quarter','Plan my Top 3 for tomorrow','Something in the app is broken'];
+  return `<div class="row" style="gap:10px;align-items:center;flex-wrap:nowrap">${pfpMini(stageOf(levelFor(computeXP())))}<div style="min-width:0"><h2 class="g-sh-t" style="margin:0">Talk to Tega</h2><small class="sub">Sees your whole app · can change it for you</small></div></div>
+  <div class="co-list" id="co-list">${M.length?M.map((m,ix)=>{ const mi=C_().msgs.length-M.length+ix; return `<div class="co-m ${m.r}">${esc(m.t).replace(/\n/g,'<br>')}${m.acts&&m.acts.length?`<div class="co-acts ${m.undone?'undone':''}">${m.acts.map(x=>`<span>✓ ${esc(x)}</span>`).join('')}${m.undo&&!m.undone&&agUndo&&agUndo.i===mi?`<button onclick="agUndoRun()">↩︎ Undo</button>`:''}${m.undone?'<small>undone</small>':''}</div>`:''}${m.pend&&m.pend.length?`<div class="co-pend">${m.pend.map((p,pi)=>`<button class="${p.go?'':'danger'}" onclick="agConfirm(${mi},${pi})">${esc(p.label)}</button>`).join('')}</div>`:''}</div>`; }).join(''):`<div class="co-sugg">${sugg.map(s=>`<button onclick="coachSend(${JSON.stringify(s).replace(/"/g,'&quot;')})">${s}</button>`).join('')}</div>`}${coachBusy?'<div class="co-m a co-typing"><i></i><i></i><i></i></div>':''}</div>
   <form class="co-f" onsubmit="event.preventDefault();coachSend(document.getElementById('co-in').value)"><input id="co-in" class="inp" placeholder="Ask anything…" autocomplete="off" enterkeyhint="send"><button class="btn" aria-label="Send">↑</button></form>
   ${M.length?`<button class="co-clear" onclick="C_().msgs=[];commit({skipXp:true});coachOpen()">Clear chat</button>`:''}`; }
+/* ===================== Tega the agent (b254): reads your whole app and makes changes for you ===================== */
+const AG_LV={quarter:'q',year:'y'};
+function agPeriod(level,period){ return level==='year' ? (/^\d{4}$/.test(period||'')?period:THIS_Y) : (/^\d{4}-Q[1-4]$/.test(period||'')?period:THIS_Q); }
+function agStore(level,period,make){ const k=agPeriod(level,period); if (level==='year'){ if(!S.years[k]&&make) S.years[k]={objectives:[]}; return S.years[k]; } if(!S.quarters[k]&&make) S.quarters[k]={objectives:[],review:{}}; return S.quarters[k]; }
+function agGoals(){ const L=[], kr=k=>`      · [kr ${k.id}] ${k.text} ${k.target===1?(krHit(k)?'(done)':'(not done)'):`${k.current||0}/${k.target}${k.unit==='$'?' $':''}`}${k.due?' due '+k.due:''}`;
+  const per=(lab,st)=>{ if(!st||!st.objectives?.length){ L.push(`${lab}: none yet`); return; } L.push(`${lab}:`); for (const o of st.objectives){ L.push(`  - [obj ${o.id}] (${o.track}) ${o.title} — ${Math.round(objPct(o)*100)}%`); for (const k of o.krs||[]) L.push(kr(k)); } };
+  per(`Quarter ${THIS_Q}`, S.quarters[THIS_Q]); if (S.quarters[qShift(THIS_Q,1)]) per(`Quarter ${qShift(THIS_Q,1)}`, S.quarters[qShift(THIS_Q,1)]);
+  per(`Year ${THIS_Y}`, S.years[THIS_Y]); if (S.years[String(+THIS_Y+1)]) per(`Year ${+THIS_Y+1}`, S.years[String(+THIS_Y+1)]);
+  const W=week(THIS_WEEK); L.push(`This week's goals (${THIS_WEEK}): ${weekInits(THIS_WEEK).map(i=>`[wk ${i.id}] ${i.text}${W.inits?.[i.id]?' (done)':''}`).join('; ')||'none'}`);
+  L.push(`5-year milestones: ${(S.vision?.milestones||[]).map(m=>`[ms ${m.id}] ${m.year} ${m.text}${m.done?' (done)':''}`).join('; ')||'none'}`);
+  return L.join('\n'); }
+function agMoney(){ const L=[]; const T=t=>{ try { const v=t(); if (v) L.push(v); } catch(e){} };
+  T(()=>{ const F=flexNow(); return F?`Spending money this pay period: ${money0(Math.max(0,F.left))} left of ${money0(F.earned)} (spent ${money0(F.spent)}), ${F.daysLeft} days until ${F.end}. Groceries: ${money0(F.grocSpent)} of ${money0(F.grocBudget)}.`:''; });
+  T(()=>{ const Lf=leftover(); return Lf?`Safe to move to cards right now: ${money0(Lf.safe)}; bills still due before next check ${money0(Lf.due.amt)}.`:''; });
+  T(()=>{ const nx=S.money.checks.filter(c=>!c.got).sort((a,b)=>a.d.localeCompare(b.d))[0]; return nx?`Next paycheck expected ${nx.d}${nx.amt?` · about ${money0(nx.amt)} (estimate until it lands)`:''}.`:'No paycheck scheduled yet.'; });
+  T(()=>{ const last=S.money.checks.filter(c=>c.got).sort((a,b)=>(b.gotOn||b.d).localeCompare(a.gotOn||a.d))[0]; return last?`Last check: ${money0(last.amt)} on ${last.gotOn||last.d}.`:''; });
+  T(()=>{ const O=oneComing(); return O?`ONE Management owes ${money0(O.owed)}; ${money0(O.booked)} more booked; hold ${money0(O.tax)} of that for tax.`:''; });
+  return L.join('\n'); }
+function agSchedule(){ try { return agendaFor(TODAY, addDays(TODAY,30)).map(x=>`${x.d} ${x.tag}: ${x.text}`).slice(0,45).join('\n')||'nothing scheduled'; } catch(e){ return ''; } }
+function agCtx(){ return `TODAY ${TODAY} (${niceLong(TODAY)}). Week ${THIS_WEEK}. Quarter ${THIS_Q}.\n\n${coachData()}\n\nMONEY\n${agMoney()}\n\nSCHEDULE (next 30 days)\n${agSchedule()}\n\nGOALS (ids in brackets)\n${agGoals()}\n\nOPEN QUESTS: ${(S.quests||[]).filter(q=>!q.done).map(q=>q.text).slice(0,8).join('; ')||'none'}\nTRACKS (categories): ${TRACKS.map(t=>`${t.key}=${t.name}`).join(', ')}\nPAGES: ${VIEWS.join(', ')}`; }
+const AG_DESTRUCT=new Set(['delete_objective','delete_kr','delete_weekly_goal']);
+let agUndo=null;
+function agSnap(){ return JSON.stringify({quarters:S.quarters, years:S.years, weeks:S.weeks, weeklyTemplate:S.weeklyTemplate, quests:S.quests, dl:S.dl||[], vision:S.vision, days:Object.fromEntries([TODAY,addDays(TODAY,1)].filter(k=>S.days[k]).map(k=>[k,S.days[k]]))}); }
+function agUndoRun(){ if (!agUndo) return; const o=JSON.parse(agUndo.snap); Object.assign(S,{quarters:o.quarters, years:o.years, weeks:o.weeks, weeklyTemplate:o.weeklyTemplate, quests:o.quests, dl:o.dl, vision:o.vision}); for (const [k,v] of Object.entries(o.days)) S.days[k]=v; const m=C_().msgs[agUndo.i]; if (m){ m.undone=1; } agUndo=null; commit({skipXp:true}); toast('↩︎ Undone'); coachOpen(); }
+// one action from Tega → a real change in the app; returns a short line for the chat
+function agDo(a){ const A=a.args||a, t=a.tool||a.type;
+  const findObj=()=>{ const st=agStore(A.level||'quarter',A.period); const o=st?.objectives.find(o=>o.id===A.objective_id||o.id===A.id); return [st,o]; };
+  const findKr=()=>{ for (const st of [...Object.values(S.quarters),...Object.values(S.years)]) for (const o of st.objectives||[]) { const k=(o.krs||[]).find(k=>k.id===A.id||k.id===A.kr_id); if (k) return [o,k]; } return []; };
+  const mkKr=k=>({id:uid(), text:String(k.text||'').slice(0,90), target:Math.max(1,+k.target||1), current:Math.max(0,+k.current||0), unit:k.unit==='$'?'$':'', due:/^\d{4}-\d{2}-\d{2}$/.test(k.due||'')?k.due:''});
+  switch(t){
+    case 'add_objective': { const st=agStore(A.level||'quarter',A.period,true), tr=TRACKS.some(x=>x.key===A.track)?A.track:'personal'; const o={id:uid(), track:tr, title:String(A.title||'').slice(0,90), why:String(A.why||'').slice(0,200), done:String(A.done||'').slice(0,200), krs:(A.krs||[]).slice(0,7).map(mkKr).filter(k=>k.text)}; st.objectives.push(o); return `Added ${tIcon(tr)} “${o.title}” to ${agPeriod(A.level||'quarter',A.period)}${o.krs.length?` with ${o.krs.length} key result${o.krs.length>1?'s':''}`:''}`; }
+    case 'edit_objective': { const [st,o]=findObj(); if(!o) return null; for (const f of ['title','why','done','track']) if (A[f]!=null&&A[f]!=='') o[f]=String(A[f]).slice(0,200); return `Updated “${o.title}”`; }
+    case 'delete_objective': { const [st,o]=findObj(); if(!o) return null; (st.archive ||= []).push({at:TODAY, objectives:[o]}); st.objectives=st.objectives.filter(x=>x!==o); return `Removed “${o.title}” (kept in the archive)`; }
+    case 'add_kr': { const [st,o]=findObj(); if(!o) return null; const k=mkKr(A); o.krs.push(k); return `Added key result “${k.text}”`; }
+    case 'update_kr': { const [o,k]=findKr(); if(!k) return null; if (A.text) k.text=String(A.text).slice(0,90); if (A.target!=null) k.target=Math.max(1,+A.target||1); if (A.due!=null) k.due=A.due; if (A.current!=null){ k.current=Math.max(0,+A.current||0); if (k.src) k.base=k.current-(+k.srcN||0); } return `Updated “${k.text}”`; }
+    case 'delete_kr': { const [o,k]=findKr(); if(!k) return null; o.krs=o.krs.filter(x=>x!==k); return `Removed key result “${k.text}”`; }
+    case 'add_weekly_goal': { const w=A.week||THIS_WEEK, it={id:uid(), track:TRACKS.some(x=>x.key===A.track)?A.track:'personal', text:String(A.text||'').slice(0,90)}; ensureWeek(w).extra.push(it); return `Added weekly goal “${it.text}”`; }
+    case 'delete_weekly_goal': { const W=ensureWeek(A.week||THIS_WEEK), n=W.extra.length; W.extra=W.extra.filter(i=>i.id!==A.id); return W.extra.length<n?'Removed that weekly goal':null; }
+    case 'set_top3': { const d=ensureDay(/^\d{4}-\d{2}-\d{2}$/.test(A.date||'')?A.date:TODAY), items=(A.items||[]).map(x=>String(x).slice(0,80)).filter(Boolean); let put=0; for (const x of items){ const slot=A.replace?d.top3[put]:d.top3.find(t=>!t.text.trim()); if (!slot) break; slot.text=x; slot.done=false; put++; } return put?`Top 3: ${items.slice(0,put).join(' · ')}`:'Top 3 is already full — say “replace” to swap them'; }
+    case 'add_quest': { const sz=['S','M'].includes(A.size)?A.size:'S'; S.quests.push({id:uid(), text:String(A.text||'').slice(0,90), size:sz, track:A.track||'', defn:'', created:TODAY, done:''}); return `${QSIZE[sz].icon} Quest added: ${A.text}`; }
+    case 'add_deadline': { if (!/^\d{4}-\d{2}-\d{2}$/.test(A.date||'')) return null; (S.dl ||= []).push({id:uid(), d:A.date, text:String(A.text||'').slice(0,90), type:A.kind||'other', done:''}); return `Deadline ${nice(A.date)}: ${A.text}`; }
+    case 'add_milestone': { (S.vision.milestones ||= []).push({id:uid(), year:String(A.year||+THIS_Y+1), track:A.track||'personal', text:String(A.text||'').slice(0,140), done:false}); return `5-year milestone added: ${A.year} ${A.text}`; }
+    case 'report_problem': { (S.fixes ||= []).push({id:uid(), at:new Date().toISOString(), text:String(A.text||'').slice(0,600), build:BUILD, view}); return `Logged for Claude: “${String(A.text||'').slice(0,60)}”`; }
+  } return null; }
 async function coachSend(t){ t=String(t||'').trim(); if(!t||coachBusy) return; const C=C_(); C.msgs.push({r:'u',t,at:Date.now()}); coachBusy=true; coachOpen();
   if (!sampleLib){ C.msgs.push({r:'a',t:'I can’t think right now — no connection. Try again in a bit.'}); coachBusy=false; commit({skipXp:true}); coachOpen(); return; }
-  const hist=C.msgs.slice(-12).map(m=>(m.r==='u'?'Tega: ':'You: ')+m.t).join('\n');
-  const prompt=`You are the voice of Tega.exe, Tega's personal life-OS app. Tega is a young fashion model (Calvin Klein regular, agency ONE Management, based in Chicago, works in NY too), starting a handmade grillz business called Datum, posting content, lifting 3x a week to stay lean for modeling, and getting his money in order (32.2% of income goes to a tax buffer). Talk like a smart, funny friend who knows his life: direct, casual, confident, short — under 90 words unless he asks for something long like captions or a plan. Use his real numbers below. Don't lecture. If the app can do what he asks, tell him where to tap (tabs: Today, Goals, Modeling, Datum, Gym, Money, Me; ＋ button at the top for quick capture).\n\nHis data right now:\n${coachData()}\n\nConversation so far:\n${hist}\n\nReply as JSON: {"reply": "your message"}`;
-  try { const r=await sampleLib.json(prompt); const rep=(r&&(r.reply||(r.value&&r.value.reply)||r.text))||'…'; C.msgs.push({r:'a',t:String(rep),at:Date.now()}); }
-  catch(e){ C.msgs.push({r:'a',t:'Couldn’t reach the coach right now. Try again in a sec.'}); }
-  C.msgs=C.msgs.slice(-60); coachBusy=false; commit({skipXp:true}); if (document.getElementById('co-list')) coachOpen(); }
+  const hist=C.msgs.slice(-14).map(m=>(m.r==='u'?'Tega: ':'You: ')+m.t+(m.acts?.length?` [you did: ${m.acts.join('; ')}${m.undone?' — he undid it':''}]`:'')).join('\n');
+  const prompt=`You are Tega — the agent living inside Tega.exe, his life-OS app. He's a young fashion model (Calvin Klein regular, ONE Management, Chicago + NY), building a grillz business (Datum), posting content, lifting to stay lean, and getting his money in order (32.2% of income goes to the tax buffer). You can SEE everything below and you can CHANGE the app with actions. Talk like a smart, funny friend: direct, casual, short (under 80 words unless he asks for a plan or long text). Use only the real numbers below — never invent amounts or dates; if something isn't in the data, say you don't see it.
+
+WHAT YOU CAN DO (actions):
+- add_objective {level:"quarter"|"year", period?:"2026-Q4"|"2027", track, title, why, done, krs:[{text,target,unit:""|"$",due:"YYYY-MM-DD"|""}]}
+- edit_objective {level, period?, id, title?, why?, done?, track?}
+- delete_objective {level, period?, id}   (destructive)
+- add_kr {level, period?, objective_id, text, target, unit, due}
+- update_kr {id, text?, target?, current?, due?}
+- delete_kr {id}   (destructive)
+- add_weekly_goal {text, track, week?}
+- delete_weekly_goal {id, week?}   (destructive)
+- set_top3 {date?, items:[...], replace?:true}
+- add_quest {text, size:"S"|"M", track}
+- add_deadline {text, date, kind?}
+- add_milestone {year, track, text}   (5-year plan)
+- report_problem {text}   — when he says something in the app is broken/wrong; write it clearly for the developer (what he did, what happened, what he expected). Then tell him it's on his Fix list (Settings → Fix list for Claude → Copy for Claude) so he can paste it to Claude.
+- go {view}   — a button that opens a page (${VIEWS.join(', ')})
+Rules: When he asks for a change, DO it with actions in this same reply (don't just say "updated"). For new OKRs write specific, measurable key results; prefer auto-counted names when they fit (Days on set, Booked ($), Castings attended, Weeks under spending budget, Datum posts, Check-ins, Datum session days, Gym sessions, Journal days, Weekly reviews done, Paid orders, Revenue, Combined followers, Posts published, Weeks with 2 posts). Use the exact ids from the data. Destructive actions are shown to him as a Confirm button, so include them when he asks to replace or remove something. Your reply must describe what you actually did.
+
+HIS APP RIGHT NOW:
+${agCtx()}
+
+CONVERSATION:
+${hist}
+
+Return JSON only: {"reply": string, "actions": [{"tool": string, "args": {...}}]}`;
+  let rep='…', acts=[], pend=[];
+  try { const r=await sampleLib.json(prompt); const o=r&&(r.reply!==undefined?r:r.value||r.data||r.result)||{};
+    rep=String(o.reply||r?.text||'…');
+    const list=(Array.isArray(o.actions)?o.actions:[]).slice(0,25), snap=agSnap();
+    for (const a of list){ const tool=a.tool||a.type; if (tool==='go'){ const v=(a.args||a).view; if (VIEWS.includes(v)) pend.push({go:v, label:`Open ${v}`}); continue; }
+      if (AG_DESTRUCT.has(tool)){ const A=a.args||a, all=[...Object.values(S.quarters),...Object.values(S.years)].flatMap(st=>st.objectives||[]), nm=tool==='delete_objective'?(all.find(o=>o.id===A.id)||{}).title:tool==='delete_kr'?(all.flatMap(o=>o.krs||[]).find(k=>k.id===A.id)||{}).text:(weekInits(A.week||THIS_WEEK).find(i=>i.id===A.id)||{}).text; if (!nm) continue; pend.push({a, label:`Confirm: remove “${String(nm).slice(0,40)}”`}); continue; }
+      try { const line=agDo(a); if (line) acts.push(line); } catch(e){} }
+    if (acts.length){ agUndo={snap, i:C.msgs.length}; }
+  } catch(e){ rep='Couldn’t reach my brain just now — try again in a sec.'; }
+  C.msgs.push({r:'a', t:rep, at:Date.now(), acts, pend, undo:acts.length>0});
+  { const n0=C.msgs.length; C.msgs=C.msgs.slice(-60); if (agUndo) agUndo.i-=n0-C.msgs.length; } coachBusy=false; commit({skipXp:true}); if (acts.length) toast(`✓ Tega did ${acts.length} thing${acts.length>1?'s':''}`); if (document.getElementById('co-list')) coachOpen(); }
+function agConfirm(mi, pi){ const m=C_().msgs[mi], p=m&&m.pend&&m.pend[pi]; if (!p) return; if (p.go){ gSheetClose(); go(p.go); return; } const snap=agSnap(); const line=agDo(p.a); m.pend.splice(pi,1); if (line){ (m.acts ||= []).push(line); agUndo={snap, i:mi}; m.undo=true; m.undone=0; } commit({skipXp:true}); coachOpen(); }
 
 /* ---------- 2. Comp card (Modeling → Card) ---------- */
 const MEAS_KEYS=[['height','Height'],['chest','Chest'],['waist','Waist'],['hips','Hips'],['inseam','Inseam'],['suit','Suit'],['shoe','Shoe'],['hair','Hair'],['eyes','Eyes']];
@@ -10047,12 +10127,18 @@ function syncCard(){ if (!IS_APP()) return ''; syncStLoad(); const R=syncRows();
 // on Today: one slim warning line only when something is broken
 function syncWarn(){ if (!IS_APP()) return ''; syncStLoad(); const R=syncRows(); if (!R) return ''; const b=R.filter(r=>r.bad&&r.txt!=='none yet'); if (!b.length) return '';
   return `<button class="sync-warn sec" onclick="go('settings')">⚠️ ${b.map(r=>`${r.n} · ${r.txt}`).join(' · ')}<em>›</em></button>`; }
+// problems you told Tega about — one tap copies them for Claude (kept private: the code repo is public, so they never go there)
+function fixCard(){ const F=(S.fixes||[]).filter(f=>!f.done); if (!F.length) return '';
+  return `<div class="card sec"><div class="hdr"><h2>🛠️ Fix list for Claude</h2><span class="sub">${F.length} open</span></div>${F.slice(-6).reverse().map(f=>`<div class="sub" style="font-size:13px;padding:6px 0;border-top:1px solid var(--line)">${esc(f.text)}<br><small>${new Date(f.at).toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${esc(f.build||'')}</small></div>`).join('')}
+    <div class="row" style="gap:6px;margin-top:8px"><button class="btn sm" onclick="fixCopy()">📋 Copy for Claude</button><button class="btn ghost sm" onclick="fixClear()">Mark all fixed</button></div></div>`; }
+function fixCopy(){ const F=(S.fixes||[]).filter(f=>!f.done), t='Tega.exe fix list ('+BUILD+'):\n'+F.map((f,i)=>`${i+1}. ${f.text} [${f.at.slice(0,10)} · ${f.build} · on ${f.view}]`).join('\n'); try { navigator.clipboard.writeText(t); toast('Copied — paste it to Claude'); } catch(e){ toast('Couldn’t copy'); } }
+function fixClear(){ for (const f of (S.fixes||[])) f.done=TODAY; commit({skipXp:true}); toast('Fix list cleared'); }
 function vSettings(){ const sk=document.documentElement.getAttribute('data-skin')||'classic'; let ap='crt', zm=1; try { ap=localStorage.getItem('tega-appr')||(sk==='crt'?'crt':'classic'); zm=+localStorage.getItem('tega-zoom')||1; } catch(e){}
   const phone=IS_APP() ? `<div class="card sec"><div class="hdr"><h2>This phone</h2></div>
     <button class="check ${lockOn()?'on':''}" style="width:100%" onclick="lockSet(${!lockOn()})"><div class="box">${lockOn()?'✓':''}</div><div class="txt">Face ID to open the app</div></button>
     <button class="check ${hwOn()?'on':''}" style="width:100%;margin-top:8px" onclick="hwSet(${!hwOn()})"><div class="box">${hwOn()?'✓':''}</div><div class="txt">Save workouts to Apple Health</div></button>
     <button class="check ${(()=>{ try { return localStorage.getItem('tega-cal')!=='off'; } catch(e){ return true; } })()?'on':''}" style="width:100%;margin-top:8px" onclick="calSet(${(()=>{ try { return localStorage.getItem('tega-cal')==='off'; } catch(e){ return false; } })()})"><div class="box">${(()=>{ try { return localStorage.getItem('tega-cal')!=='off'; } catch(e){ return true; } })()?'✓':''}</div><div class="txt">Put bookings and deadlines in my iPhone calendar</div></button></div>` : '';
-  return `${syncCard()}<div class="card sec"><div class="hdr"><h2>Appearance</h2></div><div class="seg" style="display:flex">${[['crt','Night CRT'],['classic','Classic'],['auto','Match iPhone']].map(([k,l])=>`<button class="${ap===k?'on':''}" style="flex:1" onclick="apprSet('${k}')">${l}</button>`).join('')}</div>
+  return `${syncCard()}${fixCard()}<div class="card sec"><div class="hdr"><h2>Appearance</h2></div><div class="seg" style="display:flex">${[['crt','Night CRT'],['classic','Classic'],['auto','Match iPhone']].map(([k,l])=>`<button class="${ap===k?'on':''}" style="flex:1" onclick="apprSet('${k}')">${l}</button>`).join('')}</div>
     <div class="tag" style="margin:12px 0 6px">Text size</div><div class="seg" style="display:flex">${[[.9,'S'],[1,'M'],[1.1,'L'],[1.2,'XL']].map(([z,l])=>`<button class="${Math.abs(zm-z)<.01?'on':''}" style="flex:1" onclick="zoomSet(${z})">${l}</button>`).join('')}</div>${sk==='crt'?`<div class="tag" style="margin:12px 0 6px">Character</div>`:''}${sk==='crt'?`<button class="check ${S.pxChar!==false?'on':''}" style="margin-top:10px;width:100%" onclick="pxToggle()"><div class="box">${S.pxChar!==false?'✓':''}</div><div class="txt">Pixel character</div></button>${S.pxChar!==false?`<button class="check ${S.sprite!==false?'on':''}" style="margin-top:8px;width:100%" onclick="sprToggle()"><div class="box">${S.sprite!==false?'✓':''}</div><div class="txt">Animated character</div></button>`:''}`:''}</div>${phone}<div class="card sec"><div class="hdr"><h2>Habits on Today</h2><span class="sub">${S.habits.length} shown</span></div>
     <div class="stack" style="gap:6px">${[...S.habits.map(h=>[h,1]),...(S.habitsOff||[]).map(h=>[h,0])].map(([h,on])=>`<div class="check ${on?'on':''}" onclick="habitRestore('${h.id}',${on?0:1})"><div class="box">${on?'✓':''}</div><div class="txt" style="text-decoration:none;color:var(--fg)">${h.icon} ${esc(h.name)}</div></div>`).join('')}</div>
     <div class="help" style="margin-top:8px">Hidden habits keep all their history.</div></div>${vBackup()}<div class="help sec keep" style="text-align:center">Tega.exe · build ${BUILD}</div>`; }
