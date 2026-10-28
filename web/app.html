@@ -1827,7 +1827,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b252';
+const BUILD='b253';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -4630,7 +4630,7 @@ function mSheet(id){
   const curStage = P ? P.stage : (e.t==='option' ? (e.s==='booked'?'confirmed':'option') : '');
   const pipe = e.t==='job'||e.t==='option' ? `<div class="mm-pipe">${PIPE.map(([k,l],i)=>{ const idx=PIPE.findIndex(([x])=>x===curStage); return `<button class="${i<=idx?'on':''}" style="--c:${STC[k]}" ${e.t==='job'&&k!=='option'?`onclick="mPipeSet('${id}','${k}')"`:''}><i></i><span>${l}</span></button>`; }).join('')}</div>
     ${P?`<div class="sub" style="font-size:12px;margin-top:-4px">${P.stage==='paid'?(P.on?`Paid ${nice(P.on)}, ${P.on.slice(0,4)} · ${esc(e.payId||'')} · ${money0(P.net)} to you`:'Before the statement period — assumed paid.'):P.stage==='invoiced'?`<b style="color:var(--warn)">Unpaid</b> · ${e.inv?esc(e.inv)+' · ':''}${money0(P.net)} owed to you · ${Math.round(daysBetween(e.start,TODAY)/30)} months waiting`:P.stage==='shot'&&P.notOnStmt?`Not on ONE's ${nice(stmtNow().asOf)} statement — ask ONE (or the agency that booked it) whether it was invoiced.`:P.stage==='shot'&&P.net?`≈ ${money0(P.net)} coming to you once ONE invoices it.`:''}</div>`:''}`:'';
-  const outcome = e.end<TODAY && ['option','casting','selftape','test'].includes(e.t) ? `<div class="row" style="gap:6px"><button class="btn ghost sm ${e.s==='booked'?'on':''}" onclick="mSet('${id}','booked');mSheet('${id}')">Booked it</button><button class="btn ghost sm ${e.s==='nobook'?'on':''}" onclick="mSet('${id}','nobook');mSheet('${id}')">Didn't book</button></div>` : '';
+  const outcome = e.end<TODAY && ['option','casting','selftape','test'].includes(e.t) ? `<div class="row" style="gap:6px"><button class="btn ghost sm ${e.s==='booked'?'on':''}" onclick="mSet('${id}','booked');mSheet('${id}')">Booked it</button><button class="btn ghost sm ${e.s==='nobook'?'on':''}" onclick="mSet('${id}','nobook');mSheet('${id}')">Didn't book</button></div>` : e.t==='selftape' ? `<div class="row" style="gap:6px"><button class="btn ${e.s==='sent'?'good':'ghost'} sm" onclick="mSet('${id}','sent');mSheet('${id}')">${e.s==='sent'?'✓ Sent':'Mark as sent'}</button></div>` : '';
   const noteBox = (e.t==='job'||e.t==='test') && e.start<=TODAY ? `<div class="mm-note"><div class="tag">Shoot note</div>
       <div class="mm-vibe">${['😬','😐','🙂','🔥','🐐'].map((v,i)=>`<button class="${N.v===i+1?'on':''}" onclick="mNote('${id}','v',${i+1})">${v}</button>`).join('')}</div>
       <input class="inp" placeholder="Team — photographer, stylist, MUA" value="${esc(N.team||'')}" onchange="mNote('${id}','team',this.value)">
@@ -4729,7 +4729,7 @@ function mBook(E, P){
     <details class="card sec mm-list fold"><summary><b>Agents</b><span class="sub">${MODEL_AGENTS.length}</span></summary>${MODEL_AGENTS.map((a,i)=>`<details class="mm-ag"><summary><b>${esc(a.n)}</b><small>${esc(a.r)}</small></summary>${a.c.filter(c=>c.email||c.phone).map(c=>`<div class="mm-ct"><div style="min-width:0"><b>${esc(c.name)}</b>${c.title?`<small>${esc(c.title)}</small>`:''}</div><div class="mm-cv">${c.email?`<span>${esc(c.email)}</span>`:''}${c.phone?`<span class="num">${esc(c.phone)}</span>`:''}</div></div>`).join('')}</details>`).join('')}</details>`;
 }
 function vModel(){
-  if (mcpLib && !mTried && mState().syncDay!==TODAY) setTimeout(()=>mSync(false),0);
+  if (mcpLib && !mTried && Date.now()-(mState().syncAt||0)>30*60e3) setTimeout(()=>mSync(false),0);
   if (mTab==='content'){ mTab='now'; setTimeout(()=>go('content'),0); }
   if (!['now','clients','book','card'].includes(mTab)) mTab='now';
   const mSeg=t=>`<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${t.map(([k,l])=>`<button class="${mTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px" onclick="mTab='${k}';render()">${l}</button>`).join('')}</div>`;
@@ -4759,14 +4759,16 @@ const MMON={january:1,february:2,march:3,april:4,may:5,june:6,july:7,august:8,se
 function mParse(th, body){
   const m=(th.messages||[])[0]||{}, subj=String(m.subject||'').replace(/^((re|fw|fwd):\s*)+/i,'');
   const it=/itinerary/i.exec(subj) && /(\d{1,2})-([A-Z][a-z]{2})/.exec(subj); if (it){ const mo=MMON[Object.keys(MMON).find(k=>k.startsWith(it[2].toLowerCase()))]; if (mo){ const yy=+TODAY.slice(0,4), d0=`${yy}-${String(mo).padStart(2,'0')}-${String(+it[1]).padStart(2,'0')}`; return {id:'A'+th.id, th:th.id, t:'travel', s:'confirmed', c:'Flight', p:'Itinerary from ONE', d:[d0], ag:'ONE', url:th.viewUrl||m.viewUrl||'', auto:1}; } }
-  const tm=subj.match(/^\[?(cancelled)?\]?\s*(job|option|casting|test|fitting|digitals?|self-tape request|go\s?&?\s?see)\b[\s:-]*(.+?)(\s*-\s*ONE (Men|Management.*))?$/i); if(!tm) return null;
-  const typ={job:'job',option:'option',casting:'casting',test:'test',fitting:'fitting',digital:'digitals',digitals:'digitals','self-tape request':'selftape'}[tm[2].toLowerCase()]||'casting';
+  const tm=subj.match(/^\[?(cancelled)?\]?\s*(job|option|self[\s-]?tape(?:\s+request)?|casting\s+video|video\s+casting|e-?casting|casting|test|fitting|digitals?|go\s?&?\s?see)\b[\s:-]*(.+?)(\s*-\s*ONE (Men|Management.*))?$/i); if(!tm) return null;
+  const tk=tm[2].toLowerCase(); let typ=/self|video|e-?cast/.test(tk)?'selftape':({job:'job',option:'option',casting:'casting',test:'test',fitting:'fitting',digital:'digitals',digitals:'digitals'}[tk]||'casting');
   // the full email when we have it (rates for every day of a multi-day booking live past the 200-character preview)
   const text=((body?String(body).replace(/\|/g,' ').replace(/\s+/g,' ')+' ':'')+(th.messages||[]).map(x=>String(x.snippet||'')).join(' ')).replace(/&#39;/g,"'").replace(/&amp;/g,'&');
   const d=[]; for (const x of text.matchAll(/(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday),\s+([a-z]+)\s+(\d{1,2})(?:st|nd|rd|th)?\s+(\d{4})/gi)){ const mo=MMON[x[1].toLowerCase()]; if(mo){ const k=`${x[3]}-${String(mo).padStart(2,'0')}-${String(+x[2]).padStart(2,'0')}`; if(!d.includes(k)) d.push(k); } }
   // short form too ("Tuesday 10/27") — multi-day bookings list the extra days that way
   for (const x of text.matchAll(/(?:monday|tuesday|wednesday|thursday|friday|saturday|sunday)\s+(\d{1,2})\/(\d{1,2})\b/gi)){ const y0=d[0]?d[0].slice(0,4):TODAY.slice(0,4), k=`${y0}-${String(+x[1]).padStart(2,'0')}-${String(+x[2]).padStart(2,'0')}`; if(!d.includes(k)) d.push(k); }
   d.sort();
+  // a 'casting' that asks you to send materials/video is a self-tape — it's due that day, not an appointment
+  if (typ==='casting' && /casting materials|self[\s-]?tape|selftape|\bvideo\b|record yourself|film yourself|get (?:these|this|it|them) over|send (?:these|this|it|them) (?:over|to)|submission|\bsubmit\b/i.test(text)) typ='selftape';
   const time=(text.match(/\/\s*(\d{1,2}:\d{2}\s*[ap]m(?:\s*to\s*\d{1,2}:\d{2}\s*[ap]m)?)/i)||[])[1]||'';
   const rate=(text.match(/\b(?:rate|budget)[:\s]+(?:is\s+)?(\$?[\d.,]+\s*k?(?:\s*\+\s*(?:20%|af|agency))?)/i)||[])[1]||'';
   let c=tm[3].replace(/\s*\(due.*$/i,'').replace(/\s+x\s+.*casting.*$/i,'').trim(); c=c.replace(/\b([A-Z])([A-Z]+)\b/g,(w,a,b)=>a+b.toLowerCase());
@@ -4774,7 +4776,8 @@ function mParse(th, body){
   const dayR=[...new Set([...text.matchAll(/day rate:\s*\$([\d,]+(?:\.\d+)?)/gi)].map(x=>+x[1].replace(/,/g,'')))];
   // unique values: each day's block repeats the whole rate list
   if (dayR.length>1){ rn=dayR.reduce((a,b)=>a+b,0)/Math.max(1,d.length); }  // rn is per day (net = rn × days × 80%)
-  return {id:'A'+th.id, th:th.id, t:typ, s:/cancel/i.test(subj)?'cancelled':typ==='job'?'confirmed':'unknown', c, d, tm:time, r:rate, rn:rn>=100?rn:undefined, ag:'ONE', url:th.viewUrl||m.viewUrl||'', auto:1};
+  const tmOut = typ==='selftape' ? (/\bEOD\b|end of (?:the )?day/i.test(text)?'due end of day':(time.match(/to\s*(\d{1,2}:\d{2}\s*[ap]m)/i)?'due by '+time.match(/to\s*(\d{1,2}:\d{2}\s*[ap]m)/i)[1]:'due')) : time;
+  return {id:'A'+th.id, th:th.id, t:typ, s:/cancel/i.test(subj)?'cancelled':typ==='job'?'confirmed':'unknown', c, d, tm:tmOut, r:rate, rn:rn>=100?rn:undefined, ag:'ONE', url:th.viewUrl||m.viewUrl||'', auto:1};
 }
 function mThreads(r){ let hit=null; const walk=(o,dep)=>{ if(hit||!o||dep>6) return; if (typeof o==='string'){ if(o.includes('"threads"')){ try{ walk(JSON.parse(o),dep+1);}catch(e){} } return; } if (typeof o!=='object') return; if (Array.isArray(o.threads)){ hit=o.threads; return; } for (const v of Object.values(o)) walk(v,dep+1); }; walk(r,0); return hit; }
 async function mSync(manual){
@@ -4784,7 +4787,7 @@ async function mSync(manual){
     const r=await mcpLib.callTool('Gmail','search_threads',{query:'(from:onemanagement.com OR from:activemodelmanagement.com) newer_than:30d', pageSize:40});
     const ths=mThreads(r&&r.payload!==undefined?r.payload:r); if(!ths) throw new Error('no threads');
     try { payNoticeScan(ths); } catch(e){}
-    const bodies={}; let nb=0; for (const th of ths){ const sj=String(((th.messages||[])[0]||{}).subject||''); if (nb>=10 || !/^(\[?cancelled\]?\s*)?(job|option|fitting)\b/i.test(sj.replace(/^((re|fw|fwd):\s*)+/i,''))) continue; nb++;
+    const bodies={}; let nb=0; for (const th of ths){ const sj=String(((th.messages||[])[0]||{}).subject||''); if (nb>=10 || !/^(\[?cancelled\]?\s*)?(job|option|fitting|casting|self[\s-]?tape|video|e-?casting)\b/i.test(sj.replace(/^((re|fw|fwd):\s*)+/i,''))) continue; nb++;
       try { const g=await mcpLib.callTool('Gmail','get_thread',{threadId:th.id, messageFormat:'PLAIN_TEXT'}), G=g&&g.payload!==undefined?g.payload:g, ms=(G&&G.messages)||[]; const b=ms.map(m=>m.plaintextBody||'').join('\n'); if (b) bodies[th.id]=b.slice(0,4000); } catch(e){} }
     const M=mState(), before=mAll().filter(e=>e.auto).length; for (const th of ths){ const e=mParse(th, bodies[th.id]); if(!e) continue; M.auto[e.id]={...(M.auto[e.id]||{}), ...e}; } const n=Math.max(0,mAll().filter(e=>e.auto).length-before);
     M.syncDay=TODAY; M.syncAt=Date.now(); M.syncN=n; mBusy=false; commit({skipXp:true}); if (manual) toast(n?`${n} new from your agents`:'Up to date');
@@ -4796,7 +4799,7 @@ async function mSync(manual){
 let hDay=null;
 function agendaFor(from, to){
   const out=[];
-  try { for (const e of mAll()) { if (['cancelled','released','declined','nobook'].includes(e.s)) continue; for (const k of e.d) if (k>=from && k<=to) out.push({d:k, c:(MT[e.t]||['','#94a3b8'])[1], tag:(MT[e.t]||[e.t])[0], text:e.c+(e.tm&&e.d.length===1?' · '+e.tm:''), go:`mSheet('${e.id}')`}); } } catch(err){}
+  try { for (const e of mAll()) { if (['cancelled','released','declined','nobook'].includes(e.s)) continue; for (const k of e.d) if (k>=from && k<=to) out.push({d:k, c:(MT[e.t]||['','#94a3b8'])[1], tag:(MT[e.t]||[e.t])[0], text:e.c+(e.t==='selftape'&&e.s==='sent'?' · sent ✓':e.tm&&e.d.length===1?' · '+e.tm:''), go:`mSheet('${e.id}')`}); } } catch(err){}
   try { for (const x of dlAll()) if (!x.done && x.d>=from && x.d<=to) out.push({d:x.d, c:x.src==='check'?'#22c55e':'#f97316', tag:x.src==='check'?'Pay':'Due', text:x.text, own:x.src==='own'?x.id:'', go:x.src==='own'?`dlSheetOpen('${x.id}')`:(x.go||"dlSheetOpen()")}); } catch(err){}
   try { for (const b of BILLS){ let k=billNext(b.day, from); while (k<=to){ const paid = k.slice(0,7)===TODAY.slice(0,7) && billPaidThisCycle(b); if (!out.some(y=>y.d===k&&y.tag==='Due'&&y.text.toLowerCase().includes(b.who.split(' ')[0].toLowerCase()))) out.push({d:k, c:'#ef4444', tag:'Bill', text:`${b.name} $${(+S.money.s[b.key]||0).toLocaleString('en-US',{maximumFractionDigits:0})}${b.auto?' · autopay':''}${paid?' · ✓ paid':''}`, go:"moneyTab='bills';go('money')"}); k=billNext(b.day, addDays(k,1)); } } } catch(err){}
   try { const seen=new Set(out.map(o=>o.d+'|'+o.text.toLowerCase().slice(0,12))); for (const e of (S.ical||[])) if (e.d>=from && e.d<=to && !out.some(o=>o.d===e.d && (o.text.toLowerCase().includes(e.t.toLowerCase().slice(0,10))||e.t.toLowerCase().includes(o.text.toLowerCase().slice(0,10))))) out.push({d:e.d, c:'#8fb8ff', tag:'Cal', text:e.t+(e.tm?' · '+e.tm:''), go:''}); } catch(err){}
@@ -8480,7 +8483,7 @@ function liveRefresh(why){ const now=Date.now(), force=why==='pull'||why==='onli
   if (window.native) q.push(()=>nativeSync());
   if (typeof mcpLib!=='undefined' && mcpLib){
     try { if ((force || bankStale()) && !bankBusy) q.push(()=>bankRefresh(false)); } catch(e){}
-    try { if ((force || mState().syncDay!==TODAY) && !mBusy) q.push(()=>mSync(false)); } catch(e){}
+    try { if ((force || Date.now()-(mState().syncAt||0)>30*60e3) && !mBusy) q.push(()=>mSync(false)); } catch(e){}
     try { if (!igBusy && (force || now-(igData().t||0)>6*3600e3)) q.push(()=>{ igLastTry=Date.now(); return igRefresh(false); }); } catch(e){}
     try { if (force || (S.circle||{}).syncDay!==TODAY) q.push(()=>socSync(false)); } catch(e){}
   }

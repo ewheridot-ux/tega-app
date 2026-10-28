@@ -155,6 +155,17 @@ const ok2 = await page.evaluate(() => { const Q=S.quarters[curQ]; openOkrSug(cur
   S.quarters[curQ].objectives=before.filter(o=>!/^tmp/.test(o.id)); S.quarters[curQ].archive.pop(); commit({skipXp:true}); return {none, same, kept, replaced, archived}; });
 ok('OKR suggestions change nothing until you pick', ok2.none && ok2.same, JSON.stringify(ok2));
 ok('replacing one category keeps every other goal', ok2.kept && ok2.replaced && ok2.archived, JSON.stringify(ok2));
+// self-tapes and casting videos land on the modeling calendar (as self-tapes, due that day)
+const st = await page.evaluate(() => { const d=addDays(TODAY,1), dt=parseD(d), dl=dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})+'th '+d.slice(0,4);
+  const body=`Hey, the client is requesting casting materials for you. Let me know if you can get these over to me by EOD | ${dl} | | Casting / 9:00am to 5:00pm | | Client | Acme Test Co |`;
+  const a=mParse({id:'st1',messages:[{subject:'Casting Acme Test Co - ONE Management LA',snippet:''}]}, body);
+  const b=mParse({id:'st2',messages:[{subject:'Self Tape Request Bolt Brand - ONE Men',snippet:body.replace('casting materials','a tape')}]});
+  const c=mParse({id:'st3',messages:[{subject:'Casting Video Zed Co - ONE Men',snippet:body}]});
+  const M=mState(); M.auto ||= {}; M.auto[a.id]=a; _mVer++; const cal=agendaFor(d,d).some(x=>x.tag==='Self-tape'&&/Acme/.test(x.text)); delete M.auto[a.id]; _mVer++;
+  return {a:[a.t,a.d[0]===d,a.tm], b:b&&b.t, c:c&&c.t, cal}; }).catch(e=>({err:String(e)}));
+ok('a casting asking for materials becomes a self-tape due that day', st.a && st.a[0]==='selftape' && st.a[1] && st.a[2]==='due end of day', JSON.stringify(st));
+ok('self-tape and casting-video emails are read', st.b==='selftape' && st.c==='selftape', JSON.stringify(st));
+ok('self-tapes show on the calendar', st.cal===true, JSON.stringify(st));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
