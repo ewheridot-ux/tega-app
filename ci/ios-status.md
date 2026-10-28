@@ -1,18 +1,8 @@
-# iPhone build #126 — success
+# iPhone build #128 — success
 
-Tue Oct 27 17:38:22 UTC 2026
+Wed Oct 28 01:50:40 UTC 2026
 
 ```
-Build version 17C529
-
-added 113 packages in 9s
-seed injected
-✓ app boots
-✓ private data is in this build
-✓ today page renders
-✓ money page renders
-✓ model page renders
-✓ gym page renders
 ✓ settings page renders
 ✓ social page renders
 ✓ datum page renders
@@ -43,7 +33,7 @@ seed injected
 ✓ season tier within 1–13
 ✓ season boss falls at 70% and gives 300 XP
 ✓ season sheet shows 13 tiers
-✓ top bar shows streak+shields, level, gold, season — 🔥 7 day streak · 🛡️2/3 | Lv 4 · Rookie IV | 💰 110 | 🍂 2/13
+✓ top bar shows streak+shields, level, gold, season — 🔥 7 day streak · 🛡️2/3 | Lv 4 · Rookie IV | 💰 110 | 🍂 1/13
 ✓ XP only went up
 ✓ undo takes the hits back
 ✓ pops wait while a sheet is open
@@ -58,6 +48,16 @@ seed injected
 ✓ …and isn’t counted twice in money coming from ONE — {"yesterday":"shot","today":"shot","future":"confirmed","add":2400,"total":4800}
 ✓ OKR suggestions change nothing until you pick — {"none":true,"same":true,"kept":true,"replaced":true,"archived":true}
 ✓ replacing one category keeps every other goal — {"none":true,"same":true,"kept":true,"replaced":true,"archived":true}
+✓ a casting asking for materials becomes a self-tape due that day — {"a":["selftape",true,"due end of day"],"b":"selftape","c":"selftape","cal":true}
+✓ self-tape and casting-video emails are read — {"a":["selftape",true,"due end of day"],"b":"selftape","c":"selftape","cal":true}
+✓ self-tapes show on the calendar — {"a":["selftape",true,"due end of day"],"b":"selftape","c":"selftape","cal":true}
+✓ Tega sees your money, schedule and goals — {"ctx":true,"added":2,"notDeleted":true,"pend":1,"fix":true,"quest":true,"acts":4,"undone":true}
+✓ asking Tega for goals actually adds them — {"ctx":true,"added":2,"notDeleted":true,"pend":1,"fix":true,"quest":true,"acts":4,"undone":true}
+✓ removals wait for your Confirm tap — {"ctx":true,"added":2,"notDeleted":true,"pend":1,"fix":true,"quest":true,"acts":4,"undone":true}
+✓ Undo puts everything back — {"ctx":true,"added":2,"notDeleted":true,"pend":1,"fix":true,"quest":true,"acts":4,"undone":true}
+✓ problems you report go on the fix list — {"ctx":true,"added":2,"notDeleted":true,"pend":1,"fix":true,"quest":true,"acts":4,"undone":true}
+✓ Tega can add quests — {"ctx":true,"added":2,"notDeleted":true,"pend":1,"fix":true,"quest":true,"acts":4,"undone":true}
+✓ Ask Tega button sits next to your picture
 ✓ no errors anywhere
 
 all checks passed
@@ -66,13 +66,13 @@ all checks passed
 > node scripts/build-www.mjs
 
 www built with Supabase config
-✔ Adding native Xcode project in ios in 20.69ms
-✔ add in 20.96ms
-✔ Copying web assets from www to ios/App/App/public in 39.78ms
-✔ Creating capacitor.config.json in ios/App/App in 943.79μs
-✔ copy ios in 91.56ms
-✔ Updating iOS plugins in 1.42ms
-✔ Updating iOS native dependencies with pod install in 13.83s
+✔ Adding native Xcode project in ios in 22.02ms
+✔ add in 22.27ms
+✔ Copying web assets from www to ios/App/App/public in 32.98ms
+✔ Creating capacitor.config.json in ios/App/App in 463.42μs
+✔ copy ios in 76.69ms
+✔ Updating iOS plugins in 1.47ms
+✔ Updating iOS native dependencies with pod install in 12.75s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -84,15 +84,15 @@ www built with Supabase config
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 13.89s
+✔ update ios in 12.79s
 [success] ios platform added!
 Follow the Developer Workflow guide to get building:
 https://capacitorjs.com/docs/basics/workflow
-✔ Copying web assets from www to ios/App/App/public in 125.29ms
-✔ Creating capacitor.config.json in ios/App/App in 1.23ms
-✔ copy ios in 149.99ms
-✔ Updating iOS plugins in 1.94ms
-✔ Updating iOS native dependencies with pod install in 8.44s
+✔ Copying web assets from www to ios/App/App/public in 66.90ms
+✔ Creating capacitor.config.json in ios/App/App in 671.75μs
+✔ copy ios in 86.69ms
+✔ Updating iOS plugins in 1.97ms
+✔ Updating iOS native dependencies with pod install in 5.10s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -104,8 +104,8 @@ https://capacitorjs.com/docs/basics/workflow
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 8.49s
-[info] Sync finished in 8.714s
+✔ update ios in 5.17s
+[info] Sync finished in 5.281s
 app capabilities: ['IN_APP_PURCHASE', 'HEALTHKIT', 'IN_APP_PURCHASE', 'IN_APP_PURCHASE']
 com.ewheridot.tegaexe.widgets ok
 com.ewheridot.tegaexe.share ok
@@ -116,11 +116,11 @@ entitlements: healthkit keychain-access-groups
 TIER=full
 Running altool at path '/Applications/Xcode_26.3.app/Contents/SharedFrameworks/ContentDelivery.framework/Resources/altool'...
 
-2026-10-27 17:38:22.116  INFO: [ContentDelivery.Uploader.6000008584C0] 
+2026-10-28 01:50:40.256  INFO: [ContentDelivery.Uploader.600001E78040] 
 ==========================================
 UPLOAD SUCCEEDED with no errors
-Delivery UUID: 5cc1bb06-fda8-4305-9880-cabd35886cdd
-Transferred 7251777 bytes in 0.228 seconds (31.8MB/s, 254.458Mbps)
+Delivery UUID: 5f70ccc7-1cc2-4d48-83e8-67f2253c5d6a
+Transferred 7256697 bytes in 0.292 seconds (24.9MB/s, 199.135Mbps)
 ==========================================
 No errors uploading archive at '/Users/runner/work/_temp/out/App.ipa'.
 ```
