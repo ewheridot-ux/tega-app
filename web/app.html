@@ -1830,7 +1830,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b255';
+const BUILD='b256';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2674,8 +2674,7 @@ function vHustle(){ const H=ensureHustle(); hustleSeed(); const [qs]=qRange(THIS
       <div class="row" style="gap:6px;flex-wrap:nowrap"><input class="inp num" name="mins" type="number" min="5" max="720" value="${hzMins}" style="width:76px" aria-label="Minutes"><input class="inp" name="note" placeholder="what you worked on" style="flex:1;min-width:0"><input type="hidden" name="d" value="${TODAY}"><button class="btn sm">Log</button></div></form>
     <form class="row" style="gap:6px;margin-top:10px;flex-wrap:nowrap" onsubmit="return hzShip(event)"><input class="inp" name="t" placeholder="📦 shipped something?" style="flex:1;min-width:0"><button class="btn ghost sm">Ship</button></form>
     <form class="row" style="gap:6px;margin-top:8px;flex-wrap:nowrap" onsubmit="return hzPaid(event)"><input class="inp num" name="amt" type="number" min="1" step="any" placeholder="💸 $" style="width:90px"><input class="inp" name="note" placeholder="got paid for…" style="flex:1;min-width:0"><button class="btn ghost sm">Add</button></form></div>
-  <div class="card sec"><div class="hdr"><h2>Goals · ${THIS_Q}</h2><button class="btn ghost sm" onclick="hzGoal()">＋ Goal</button></div>${objs.length?objs.map(o=>`<button class="hz-o" onclick="curQ='${THIS_Q}';qOpen='${o.id}';go('quarter')"><span><b>${esc(o.title)}</b><small>${(o.krs||[]).map(k=>`${esc(k.text)} ${k.target===1?(krHit(k)?'✓':'—'):`${k.current||0}/${k.target}`}`).join(' · ')}</small></span><em class="num">${Math.round(objPct(o)*100)}%</em></button>`).join(''):'<div class="empty">No goals yet.</div>'}
-    <button class="btn ghost sm" style="margin-top:8px" onclick="coachOpen();setTimeout(()=>{ const i=document.getElementById('co-in'); if(i){ i.value='Help me pick a side hustle and set goals for it'; i.focus(); } },80)">💬 Plan it with Tega</button></div>
+  <div class="card sec"><div class="hdr"><h2>Goals · ${THIS_Q}</h2><button class="btn ghost sm" onclick="hzGoal()">＋ Goal</button></div>${objs.length?objs.map(o=>`<button class="hz-o" onclick="curQ='${THIS_Q}';qOpen='${o.id}';go('quarter')"><span><b>${esc(o.title)}</b><small>${(o.krs||[]).map(k=>`${esc(k.text)} ${k.target===1?(krHit(k)?'✓':'—'):`${k.current||0}/${k.target}`}`).join(' · ')}</small></span><em class="num">${Math.round(objPct(o)*100)}%</em></button>`).join(''):'<div class="empty">No goals yet.</div>'}</div>
   <div class="card sec"><div class="hdr"><h2>Activity</h2></div>${feed.length?feed.map(x=>`<div class="hz-r"><span>${x.ic}</span><span style="flex:1;min-width:0">${esc(x.t)}<small>${nice(x.d)}</small></span><button class="x" onclick="hzDel('${x.k}','${x.id}')" aria-label="Delete">✕</button></div>`).join(''):'<div class="empty">Log your first session above — even 30 minutes counts.</div>'}</div>`; }
 
 function vDatum(){
@@ -3063,7 +3062,7 @@ function renderCheckin(){
   const lvl=levelFor(computeXP());
   const steps=[
     `<h2 style="font-size:22px">${greet}, Tega.</h2><div class="sub" style="margin-bottom:12px">${esc(pick(QUOTES.morning,hr))}</div><div class="tag" style="margin-bottom:8px">How's the energy?</div><div class="feel">${[['😴','Running on empty'],['😐','Meh'],['🙂','Alright'],['💪','Ready'],['🔥','Locked in']].map(([e,l],i)=>`<button class="${ciFeel===i?'on':''}" onclick="ciFeel=${i};renderCheckin()"><span>${e}</span><small>${l}</small></button>`).join('')}</div><div class="tag" style="margin:14px 0 8px">Sleep last night</div><div class="feel sleep">${SLEEP.map((l,i)=>`<button class="${ciSleep===i?'on':''}" onclick="ciSleep=${i};renderCheckin()"><small>${l}</small></button>`).join('')}</div>${ciFeel!==null?`<div class="quip" style="margin-top:10px">“${esc(['Low battery is fine. Pick the smallest Top 3 you\'ve ever written.','Meh days are where streaks are made. Keep it light.','Alright is enough. Three real things.','Then let\'s make it count — money one first.','Don\'t waste it. Big swing today.'][ciFeel])}”</div>`:''}`,
-    `<h2 style="font-size:22px">Today's Top 3</h2><div class="sub" style="margin-bottom:10px">Each one pushes a track. If none touch money (📸 ⚙️ 🔥), rewrite one.</div>${carry.length?`<button class="btn ghost sm" style="margin-bottom:8px" onclick="ciCarry()">↩ Carry over ${carry.length} unfinished from yesterday</button>`:''}<div class="stack">${d.top3.map((t,i)=>`<div class="t3"><div class="n">${i+1}</div><input type="text" placeholder="${['The money one','The build one','The life one'][i]}" value="${esc(t.text)}" onchange="S.days[TODAY].top3[${i}].text=this.value;commit({skipXp:true})">${trackSelect(t.track,`S.days[TODAY].top3[${i}].track=this.value;commit({skipXp:true})`)}</div>`).join('')}</div>`,
+    `<h2 style="font-size:22px">Today's Top 3</h2><div class="sub" style="margin-bottom:10px">Each one pushes a track. If none touch money (📸 ⚙️ 🔥), rewrite one.</div><div class="stack">${d.top3.map((t,i)=>`<div class="t3"><div class="n">${i+1}</div><input type="text" placeholder="${['The money one','The build one','The life one'][i]}" value="${esc(t.text)}" onchange="S.days[TODAY].top3[${i}].text=this.value;commit({skipXp:true})">${trackSelect(t.track,`S.days[TODAY].top3[${i}].track=this.value;commit({skipXp:true})`)}</div>`).join('')}</div>`,
     `<h2 style="font-size:22px">Lock it in.</h2><div class="sub" style="margin-bottom:10px">One tap. +25 vibe, +15 XP, and he's yours for the day.</div><div class="row" style="gap:12px;align-items:center"><div class="avatar" style="cursor:default">${avatarSVG(stageOf(lvl),'hype',110,S.evo||{})}</div><div><div class="quip">“${esc(pick(QUOTES.checkin,hr))}”</div><div class="sub" style="margin-top:6px">${d.top3.filter(t=>t.text.trim()).length}/3 written · energy ${ciFeel!==null?['😴','😐','🙂','💪','🔥'][ciFeel]:'—'}</div></div></div>`,
   ];
   m.className='modal'; m.innerHTML=`<div class="card ci-card"><div class="row between" style="margin-bottom:8px"><span class="tag" style="color:var(--accent2)">Daily check-in · ${ciStep+1}/3</span><button class="x" onclick="closeCheckin()">✕</button></div>${steps[ciStep]}
@@ -4088,7 +4087,7 @@ function vToday(){
     <div class="lvl">
       <div class="avwrap">${isToday?shadowPeek():''}<div class="avatar ringed ${isToday&&!d.checkin?'wants':''}" style="--ringc:conic-gradient(from 0deg,transparent ${Math.round(pctLvl*100)}%,var(--card2) 0),${ringCss(lvl)}" onclick="petAvatar()" title="${isToday&&!d.checkin?'Start the day':`${Math.round(pctLvl*100)}% to Lv ${lvl+1}`}">${charAnim(120)||avWait(120)||avatarSVG(stg, mood, 120, S.evo||{})}<span class="lvlpip num" onclick="event.stopPropagation();go('evolve')">${lvl}</span>${idleEmote(mood,isToday,d)}</div></div>
       <div style="flex:1;min-width:0">
-        <div class="quip say" id="quip" role="button" tabindex="0" style="cursor:pointer;transition:opacity .12s" onclick="voiceNext('${mood}','${curDay}')" title="Tap for another line">${esc(petLine||voiceLine(mood, curDay))}</div>${isToday?`<button class="co-open" onclick="coachOpen()">💬 Ask Tega</button>`:''}
+        <div class="quip say" id="quip" role="button" tabindex="0" style="cursor:pointer;transition:opacity .12s" onclick="voiceNext('${mood}','${curDay}')" title="Tap for another line">${esc(petLine||voiceLine(mood, curDay))}</div>
         <div class="sub" style="margin-top:8px;font-weight:600">${isToday?(hr<12?'Morning':hr<17?'Afternoon':'Tonight')+', Tega':niceLong(curDay)}</div>
         <div class="row" style="margin-top:10px;gap:8px;align-items:center;flex-wrap:nowrap"><span class="tag">Vibe</span><div class="vibe" style="max-width:none"><b style="width:${vibe}%;background:${vibe>=75?'var(--good)':vibe>=35?'var(--accent2)':vibe>=18?'var(--warn)':'var(--bad)'}"></b></div><span class="sub num">${vibe}</span></div>
         <div class="wkdots" aria-label="This week">${dots.map(k=>`<button class="${dayActive(k)?'on':''} ${k===curDay?'cur':''}" ${k>TODAY?'disabled':''} onclick="curDay='${k}';render()" aria-label="${nice(k)}${dayActive(k)?', active':''}">${parseD(k).toLocaleDateString('en-US',{weekday:'narrow'})}</button>`).join('')}</div>
@@ -4108,7 +4107,7 @@ function vToday(){
         <textarea class="t3in" rows="1" placeholder="${['Money move','Build','Life'][i]}" onchange="setTop3(${i},this.value)" oninput="t3fit(this)" onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">${esc(t.text)}</textarea>
         ${trackSelect(t.track,`setTop3Track(${i},this.value)`)}
       </div>`).join('')}</div>
-    ${(()=>{ const sg=d.top3.some(t=>!t.text.trim())&&curDay>=addDays(TODAY,-1)?t3Sug(curDay):[]; return sg.length?`<div class="t3sug">${sg.map(x=>`<button onclick="t3Fill(${JSON.stringify(x.text).replace(/"/g,'&quot;')},'${x.track||''}')">+ ${esc(x.text)}</button>`).join('')}</div>`:''; })()}
+    
     ${isToday?questLine():''}${habitsBlock}${isToday && hr>=17 ? `<button class="btn ${d.close?.at?'ghost':''}" style="width:100%;justify-content:center;margin-top:14px" onclick="closeDayOpen()">${d.close?.at?'🌙 Day closed · edit':'🌙 Close the day'}</button>` : ''}
   </div>
   ${isToday?yogaToday()+rpgStrip()+homeStrips()+homeAgenda():''}
@@ -4165,7 +4164,7 @@ function vWeek(){
     return head + `
   ${one?`<div class="check sec ${wk.oneDone?'on':''}" onclick="toggleOne('${w}')" style="background:var(--card);padding:14px 16px"><div class="box">${wk.oneDone?'✓':''}</div><div class="txt" style="text-decoration:none;color:var(--fg)"><div class="tag">This week's one thing</div><b style="${wk.oneDone?'text-decoration:line-through;color:var(--muted)':''}">${esc(one)}</b></div></div>`:''}
   <div class="card sec">
-    <div class="hdr"><h2>This week's goals</h2><span class="row" style="gap:6px"><span class="sub">${open.length} to go</span>${w>=THIS_WEEK&&!wkEdit?`<button class="btn ghost sm" onclick="tegaPlanOpen()" aria-label="Plan with Tega">✦ Tega</button>`:''}<button class="btn ${wkEdit?'':'ghost'} sm" onclick="wkEdit=!wkEdit;render()">${wkEdit?'Done':'Edit'}</button></span></div>${wkEdit?wkEditHTML(w):`
+    <div class="hdr"><h2>This week's goals</h2><span class="row" style="gap:6px"><span class="sub">${open.length} to go</span><button class="btn ${wkEdit?'':'ghost'} sm" onclick="wkEdit=!wkEdit;render()">${wkEdit?'Done':'Edit'}</button></span></div>${wkEdit?wkEditHTML(w):`
     <div class="stack" style="margin-top:10px">${open.map(row).join('')||`<div class="empty">${list.length?'All done here.':'No initiatives on this track.'}</div>`}</div>
     ${done.length?`<details style="margin-top:12px"><summary>${done.length} done</summary><div class="stack" style="margin-top:8px">${done.map(row).join('')}</div></details>`:''}
     ${carry?`<button class="btn ghost sm" style="margin-top:12px" onclick="carryOver('${w}')">↩ Carry over ${carry} unfinished from last week</button>`:''}`}
@@ -5189,7 +5188,7 @@ function renderOkrSug(){
     :'<div class="empty">No suggestions yet for this quarter.</div>'}
     <div class="okc"><div class="tag" style="margin-bottom:6px">💬 Talk it through</div><div class="okc-log">${okrChat.map(m=>`<div class="okc-m ${m.r}">${esc(m.t)}</div>`).join('')||`<div class="sub" style="font-size:12.5px">Try: “I want Datum to be the big one” · “make modeling more about new clients” · “too much — cut it to 4”</div>`}${okrChatBusy?'<div class="okc-m ai">…</div>':''}</div>
       <form class="ct-add" onsubmit="return okrSend(event)"><input id="okrMsg" class="inp" placeholder="${sampleLib?'tell Tega what to change':'Tega needs a connection'}" ${sampleLib?'':'disabled'} autocomplete="off"><button class="btn sm" ${okrChatBusy||!sampleLib?'disabled':''}>Send</button></form></div>
-    ${sampleLib?`<button class="btn ghost" style="width:100%;justify-content:center;margin-top:10px" ${okrSugBusy?'disabled':''} onclick="okrAsk()">${okrSugBusy?'Thinking…':'✨ Ask Tega for a fresh take'}</button>`:''}
+    ${sampleLib?`<button class="btn ghost" style="width:100%;justify-content:center;margin-top:10px" ${okrSugBusy?'disabled':''} onclick="okrAsk()">${okrSugBusy?'Thinking…':'✨ Fresh suggestions'}</button>`:''}
     ${G?`<button class="btn good" style="width:100%;justify-content:center;margin-top:8px" onclick="okrApply()">${(()=>{ const n=Object.values(okrPick).filter(Boolean).length; return has?(n?`Update ${q} · ${n} change${n>1?'s':''}`:'Nothing picked yet'):`Use these for ${q}`; })()}</button>${has?`<div class="help keep" style="margin-top:6px;text-align:center">Only what you pick changes. Progress carries over to matching key results; replaced goals go to an archive, not deleted.</div>`:''}`:''}
   </div>`;
 }
@@ -7367,7 +7366,7 @@ WHAT YOU CAN DO (actions):
 - delete_kr {id}   (destructive)
 - add_weekly_goal {text, track, week?}
 - delete_weekly_goal {id, week?}   (destructive)
-- set_top3 {date?, items:[...], replace?:true}
+- set_top3 {date?, items:[...], replace?:true}   — ONLY when he explicitly asks you to fill/set his Top 3. If he asks what his priorities are, answer in your reply (2–3 short picks with why, from his deadlines, schedule and goals) and let him write them himself.
 - add_quest {text, size:"S"|"M"|"B", track, defn? (B = boss quest, needs a definition of done)}
 - complete_quest {id}
 - complete_top3 {index (0-2) or text}
@@ -7468,7 +7467,6 @@ function capOpen(){ const D=ensureDatum(), act=D.prototypes.filter(p=>!['complet
       <button onclick="gSheetClose();dView='bench';go('datum')"><span>📷</span>Bench photo</button>
       <button onclick="gSheetClose();go('gym');setTimeout(()=>{ if (G_().setup.done) gStart(); },60)"><span>💪</span>Workout</button>
       <button onclick="gSheetClose();travelSheet()"><span>✈️</span>Travel ${S.travel&&S.travel.on?'on':'mode'}</button>
-      <button onclick="gSheetClose();coachOpen()"><span>💬</span>Ask Tega</button>
     </div>`); setTimeout(()=>document.querySelector('#g-sheet input')?.focus(),60); }
 function capWin(t){ t=String(t||'').trim(); if(!t) return; S.wins.push({id:uid(),d:TODAY,text:t.slice(0,200)}); gSheetClose(); commit(); toast('★ Win logged'); window.native?.haptic?.(); }
 function capIdea(t){ t=String(t||'').trim(); if(!t) return; (S.ideas ||= []).push({id:uid(), text:t.slice(0,140), d:TODAY, done:''}); gSheetClose(); commit({skipXp:true}); toast('💡 Idea saved'); }
@@ -8471,6 +8469,8 @@ function areaSheet(){ const A=areaInfo(skArea); if(!A) return; const st=(()=>{ t
 const AUTO_LOG = (S0=>S0)(null);
 function autoNote(k,msg){ const A=(S.autoLog ||= []); A.unshift({d:TODAY,k,msg}); S.autoLog=A.slice(0,40); }
 // 1) Top 3: empty slots get pre-filled each morning from what's due, booked and behind (marked so you can see it)
+// today's slots stay empty until you write them: anything the app filled in by itself (and you haven't done) is cleared once
+function t3Clear(){ if (S.t3clear===TODAY) return; S.t3clear=TODAY; for (const [k,d] of Object.entries(S.days||{})) if (k>=TODAY) for (const t of d.top3||[]) if (t.auto && !t.done){ t.text=''; t.track=''; delete t.auto; } }
 function autoTop3(){ const d=ensureDay(TODAY); if (d.t3auto) return; const free=d.top3.filter(t=>!t.text.trim()).length; if (!free) { d.t3auto=1; return; }
   let sg=[]; try { sg=t3Sug(TODAY).filter(x=>!d.top3.some(t=>t.text===x.text)); } catch(e){}
   const money=sg.find(x=>['modeling','financial','grillz','cad'].includes(x.track)); const order=[...(money?[money]:[]), ...sg.filter(x=>x!==money)];
@@ -8498,7 +8498,7 @@ function autoChase(){ try { const st=stmtNow(), P=mPipe(), E=mAll(), un=E.filter
   if (!old || daysBetween(old.start,TODAY)<270) { S.chaseQ=null; return; }
   const body=`Hi Roza and Jawahar,\n\nPer my financial statement dated ${nice(st.asOf)}, ${st.asOf.slice(0,4)}, my account balance is ${money0(st.balance)}. The oldest unpaid job is ${old.c} on ${parseD(old.start).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}, and ${un.length} jobs are still outstanding.\n\nCould you share a payment schedule for the remaining balance? Since I'm modeling full time, consistent payments twice a month would really help.\n\nThank you,\nTega`;
   S.chaseQ={key:TODAY.slice(0,7), to:['roza@onemanagement.com','JC@onemanagement.com'], subject:'Payment schedule for outstanding jobs', body}; } catch(e){} }
-function runAutos(){ for (const f of [autoCloseWorkout, autoCarry, autoHabits, autoDeduct, autoTop3, autoChase]) { try { f(); } catch(e){ console.warn('auto',f.name,e); } } }
+function runAutos(){ for (const f of [autoCloseWorkout, autoCarry, autoHabits, autoDeduct, autoChase, t3Clear]) { try { f(); } catch(e){ console.warn('auto',f.name,e); } } }
 
 /* ===================== phone sync (b185): Apple Health, location, iPhone Calendar ===================== */
 const NS_CITIES=[['Chicago',41.88,-87.63],['New York',40.71,-74.0],['Los Angeles',34.05,-118.24],['London',51.51,-0.13],['Milan',45.46,9.19],['Indianapolis',39.77,-86.16],['Miami',25.76,-80.19],['Paris',48.86,2.35],['Atlanta',33.75,-84.39]];
@@ -8767,7 +8767,7 @@ const TAB_GO=(v,set)=>()=>{ try { set&&set(); } catch(e){} go(v); render(); };
 const NAV_QA={
   today:[['✓','Check in',()=>{ go('today'); setTimeout(openCheckin,250); }],['!','Add deadline',()=>{ go('today'); setTimeout(dlAddOpen,250); }],['✦','Quick capture',()=>capOpen()],['⌕','Search',()=>searchOpen()]],
   goals:[['★','New quest',()=>openQuick()],['▦','This week',TAB_GO('week')],['◎','This quarter',TAB_GO('quarter')],['↻','Sunday review',()=>openReview()]],
-  model:[['◉','Now',TAB_GO('model',()=>mTab='now')],['▤','Bookings',TAB_GO('model',()=>mTab='book')],['?','Coach',()=>coachOpen()]],
+  model:[['◉','Now',TAB_GO('model',()=>mTab='now')],['▤','Bookings',TAB_GO('model',()=>mTab='book')]],
   content:[['▶','Log a post',()=>{ go('content'); setTimeout(()=>openLog('post'),250); }],['◇','Ideas',TAB_GO('content',()=>ctTab='ideas')],['▦','Plan',TAB_GO('content',()=>ctTab='plan')]],
   datum:[['⚒︎','Bench',TAB_GO('datum',()=>dView='bench')],['◎','Casters',TAB_GO('datum',()=>dView='casters')],['$','Business',TAB_GO('datum',()=>dView='biz')]],
   gym:[['◆','Start workout',()=>window.tegaDeepLink('tegaexe://workout')],['♥','Recovery',TAB_GO('gym',()=>gTab='recovery')],['▦','Plan',TAB_GO('gym',()=>gTab='plan')]],

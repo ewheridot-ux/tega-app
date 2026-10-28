@@ -199,6 +199,14 @@ ok('side hustle work earns XP, and XP never drops when it is deleted', hz.xpUp &
 ok('side hustle has a stat, skill tree and boss', hz.stat && hz.tree && hz.boss, JSON.stringify(hz));
 ok('you can rename it (e.g. to CAD)', hz.renamed === 'CAD⚙️', JSON.stringify(hz));
 ok('the city shows the side hustle', /Workshop/.test(hzCity), hzCity);
+// Top 3 stays empty until you write it; one way into Tega
+const t3 = await page.evaluate(() => { const d=ensureDay(TODAY); const keep=JSON.stringify(d.top3); d.top3[0]={text:'auto thing',track:'',done:false,auto:1}; d.top3[1]={text:'mine',track:'',done:false}; d.top3[2]={text:'',track:'',done:false}; S.t3clear=''; d.t3auto=0; runAutos();
+  const r={cleared:d.top3[0].text==='', kept:d.top3[1].text==='mine', notFilled:d.top3[2].text===''}; d.top3=JSON.parse(keep); go('today'); return r; });
+await page.waitForTimeout(300);
+const doors = await page.evaluate(() => ({ head:document.querySelectorAll('.tg-ask').length, quip:document.querySelectorAll('.co-open').length, sug:document.querySelectorAll('.t3sug').length }));
+ok('Top 3 is never filled in for you', t3.cleared && t3.kept && t3.notFilled && doors.sug===0, JSON.stringify([t3,doors]));
+ok('one Ask Tega button (next to your picture)', doors.head===1 && doors.quip===0, JSON.stringify(doors));
+if (seed !== 1) ok('Lululemon self-tape is on the calendar', await page.evaluate(() => agendaFor('2026-10-28','2026-10-28').some(x=>x.tag==='Self-tape'&&/Lululemon/.test(x.text))));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
