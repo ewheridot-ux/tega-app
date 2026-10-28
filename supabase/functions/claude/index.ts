@@ -13,7 +13,7 @@ Deno.serve(async (req) => {
     const r = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({ model: tier === 'quick' ? QUICK : MODEL, max_tokens: 2048, system: json ? 'Reply with only valid JSON. No prose, no code fences.' : undefined, messages: [{ role: 'user', content }] }),
+      body: JSON.stringify({ model: tier === 'quick' ? QUICK : MODEL, max_tokens: json ? 8192 : 4096, system: json ? 'Reply with only valid JSON. No prose, no code fences.' : undefined, messages: [{ role: 'user', content }] }),
     });
     const j = await r.json();
     if (!r.ok) return new Response(JSON.stringify({ error: j?.error?.message || 'claude error' }), { status: 502, headers: { ...cors, 'Content-Type': 'application/json' } });
