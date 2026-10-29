@@ -207,6 +207,16 @@ const doors = await page.evaluate(() => ({ head:document.querySelectorAll('.tg-a
 ok('Top 3 is never filled in for you', t3.cleared && t3.kept && t3.notFilled && doors.sug===0, JSON.stringify([t3,doors]));
 ok('one Ask Tega button (next to your picture)', doors.head===1 && doors.quip===0, JSON.stringify(doors));
 if (seed !== 1) ok('Lululemon self-tape is on the calendar', await page.evaluate(() => agendaFor('2026-10-28','2026-10-28').some(x=>x.tag==='Self-tape'&&/Lululemon/.test(x.text))));
+// piece photos: move one to the right piece, delete one (two taps), Undo brings it back
+const ph = await page.evaluate(() => { const D=ensureDatum(), A={id:'PXA',name:'Test A',status:'wax',log:[{kind:'photo',d:TODAY,t:'photo',photo:'phA1'},{kind:'session',d:TODAY,mins:30,photo:'phA2'}]}, B={id:'PXB',name:'Test B',status:'wax',log:[]}; D.prototypes.push(A,B);
+  openPhotoP('PXA','phA1'); const ui=!!document.querySelector('#ph .ph-fix select') && !!document.getElementById('ph-del');
+  phMove('phA1','PXB'); const moved=B.log.some(l=>l.photo==='phA1') && !A.log.some(l=>l.photo==='phA1');
+  openPhotoP('PXA','phA2'); phDel('phA2'); const notYet=A.log.some(l=>l.photo==='phA2'); phDel('phA2'); const gone=!A.log.some(l=>l.photo==='phA2'), keptSession=A.log.some(l=>l.kind==='session'&&l.mins===30);
+  phUndo('phA2'); const back=A.log.some(l=>l.photo==='phA2');
+  D.prototypes=D.prototypes.filter(q=>!/^PX[AB]$/.test(q.id)); D.photoTrash=(D.photoTrash||[]).filter(x=>!/^ph[AB]/.test(x.e.photo)); document.getElementById('ph')?.remove(); commit({skipXp:true});
+  return {ui, moved, notYet, gone, keptSession, back}; });
+ok('a photo on the wrong piece can be moved', ph.ui && ph.moved, JSON.stringify(ph));
+ok('photos delete on a second tap, keep the session, and Undo restores them', ph.notYet && ph.gone && ph.keptSession && ph.back, JSON.stringify(ph));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
