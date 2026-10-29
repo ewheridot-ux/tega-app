@@ -1,22 +1,8 @@
-# iPhone build #128 — success
+# iPhone build #130 — success
 
-Wed Oct 28 01:50:40 UTC 2026
+Thu Oct 29 06:28:35 UTC 2026
 
 ```
-✓ settings page renders
-✓ social page renders
-✓ datum page renders
-✓ week page renders
-✓ XP unchanged after visiting every page
-✓ XP unchanged after a reload
-✓ XP floor holds
-✓ booking: both days found — 2026-10-26,2026-10-27
-✓ booking: start time — 8:30am
-✓ booking: per-day rate from full email ($9,000 over 2 days) — 4500
-✓ booking: rate from preview is a clean number — 3000
-✓ yoga: timer counts down
-✓ yoga: pause holds
-✓ yoga: buttons are not rebuilt every tick
 ✓ yoga: moves to the next pose by itself
 ✓ yoga: breathing guide shows — breathe in · 4
 ✓ pop shows after finishing Top 3 — ✦+29 XP · +35 💰 | 🌫️Fog −4 | 🎁2 chests
@@ -38,7 +24,7 @@ Wed Oct 28 01:50:40 UTC 2026
 ✓ undo takes the hits back
 ✓ pops wait while a sheet is open
 ✓ your picture opens the city — city
-✓ bosses float on their buildings — 7
+✓ bosses float on their buildings — 8
 ✓ quest board marker on the fountain opens the quest log
 ✓ quest board + house cards
 ✓ town and bosses not repeated on the Character page
@@ -58,6 +44,20 @@ Wed Oct 28 01:50:40 UTC 2026
 ✓ problems you report go on the fix list — {"ctx":true,"added":2,"notDeleted":true,"pend":1,"fix":true,"quest":true,"acts":4,"undone":true}
 ✓ Tega can add quests — {"ctx":true,"added":2,"notDeleted":true,"pend":1,"fix":true,"quest":true,"acts":4,"undone":true}
 ✓ Ask Tega button sits next to your picture
+✓ side hustle gets a starter goal — {"seeded":true,"hrs":2,"kr":2,"xpUp":true,"stat":true,"tree":true,"boss":true,"track":"Side Hustle","renamed":"CAD⚙️","xpKept":true}
+✓ logging side hustle time counts toward its goal — {"seeded":true,"hrs":2,"kr":2,"xpUp":true,"stat":true,"tree":true,"boss":true,"track":"Side Hustle","renamed":"CAD⚙️","xpKept":true}
+✓ side hustle work earns XP, and XP never drops when it is deleted — {"seeded":true,"hrs":2,"kr":2,"xpUp":true,"stat":true,"tree":true,"boss":true,"track":"Side Hustle","renamed":"CAD⚙️","xpKept":true}
+✓ side hustle has a stat, skill tree and boss — {"seeded":true,"hrs":2,"kr":2,"xpUp":true,"stat":true,"tree":true,"boss":true,"track":"Side Hustle","renamed":"CAD⚙️","xpKept":true}
+✓ you can rename it (e.g. to CAD) — {"seeded":true,"hrs":2,"kr":2,"xpUp":true,"stat":true,"tree":true,"boss":true,"track":"Side Hustle","renamed":"CAD⚙️","xpKept":true}
+✓ the city shows the side hustle — Studio · Vault|Forge · Molten Golem|Tower · Algorithm|Gym · Iron Warden|Bank · Wyrm|Plaza · Hermit King|Workshop · Someday Spider|Library · Fog
+✓ Top 3 is never filled in for you — [{"cleared":true,"kept":true,"notFilled":true},{"head":1,"quip":0,"sug":0}]
+✓ one Ask Tega button (next to your picture) — {"head":1,"quip":0,"sug":0}
+✓ Lululemon self-tape is on the calendar
+✓ a photo on the wrong piece can be moved — {"ui":true,"moved":true,"notYet":true,"gone":true,"keptSession":true,"back":true}
+✓ photos delete on a second tap, keep the session, and Undo restores them — {"ui":true,"moved":true,"notYet":true,"gone":true,"keptSession":true,"back":true}
+✓ FI plan matches Mom’s PDF ($142,850 at 30, $1,529,615 at 55) — {"a30":142850,"a55":1529615,"ms":5,"ms2":5,"months":1}
+✓ FI milestones are in the 5-year plan once — {"a30":142850,"a55":1529615,"ms":5,"ms2":5,"months":1}
+✓ investing on plan counts as a month for goals — {"a30":142850,"a55":1529615,"ms":5,"ms2":5,"months":1}
 ✓ no errors anywhere
 
 all checks passed
@@ -66,13 +66,13 @@ all checks passed
 > node scripts/build-www.mjs
 
 www built with Supabase config
-✔ Adding native Xcode project in ios in 22.02ms
-✔ add in 22.27ms
-✔ Copying web assets from www to ios/App/App/public in 32.98ms
-✔ Creating capacitor.config.json in ios/App/App in 463.42μs
-✔ copy ios in 76.69ms
-✔ Updating iOS plugins in 1.47ms
-✔ Updating iOS native dependencies with pod install in 12.75s
+✔ Adding native Xcode project in ios in 13.88ms
+✔ add in 14.13ms
+✔ Copying web assets from www to ios/App/App/public in 26.95ms
+✔ Creating capacitor.config.json in ios/App/App in 527.21μs
+✔ copy ios in 61.64ms
+✔ Updating iOS plugins in 1.10ms
+✔ Updating iOS native dependencies with pod install in 15.64s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -84,15 +84,15 @@ www built with Supabase config
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 12.79s
+✔ update ios in 15.67s
 [success] ios platform added!
 Follow the Developer Workflow guide to get building:
 https://capacitorjs.com/docs/basics/workflow
-✔ Copying web assets from www to ios/App/App/public in 66.90ms
-✔ Creating capacitor.config.json in ios/App/App in 671.75μs
-✔ copy ios in 86.69ms
-✔ Updating iOS plugins in 1.97ms
-✔ Updating iOS native dependencies with pod install in 5.10s
+✔ Copying web assets from www to ios/App/App/public in 157.45ms
+✔ Creating capacitor.config.json in ios/App/App in 1.75ms
+✔ copy ios in 209.89ms
+✔ Updating iOS plugins in 3.94ms
+✔ Updating iOS native dependencies with pod install in 5.49s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -104,8 +104,8 @@ https://capacitorjs.com/docs/basics/workflow
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 5.17s
-[info] Sync finished in 5.281s
+✔ update ios in 5.54s
+[info] Sync finished in 5.86s
 app capabilities: ['IN_APP_PURCHASE', 'HEALTHKIT', 'IN_APP_PURCHASE', 'IN_APP_PURCHASE']
 com.ewheridot.tegaexe.widgets ok
 com.ewheridot.tegaexe.share ok
@@ -116,11 +116,11 @@ entitlements: healthkit keychain-access-groups
 TIER=full
 Running altool at path '/Applications/Xcode_26.3.app/Contents/SharedFrameworks/ContentDelivery.framework/Resources/altool'...
 
-2026-10-28 01:50:40.256  INFO: [ContentDelivery.Uploader.600001E78040] 
+2026-10-29 06:28:35.636  INFO: [ContentDelivery.Uploader.6000036C04C0] 
 ==========================================
 UPLOAD SUCCEEDED with no errors
-Delivery UUID: 5f70ccc7-1cc2-4d48-83e8-67f2253c5d6a
-Transferred 7256697 bytes in 0.292 seconds (24.9MB/s, 199.135Mbps)
+Delivery UUID: e065448d-af36-4195-af7d-2ff6baa7ff54
+Transferred 7342785 bytes in 0.696 seconds (10.5MB/s, 84.355Mbps)
 ==========================================
 No errors uploading archive at '/Users/runner/work/_temp/out/App.ipa'.
 ```
