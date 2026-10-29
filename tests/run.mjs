@@ -217,6 +217,14 @@ const ph = await page.evaluate(() => { const D=ensureDatum(), A={id:'PXA',name:'
   return {ui, moved, notYet, gone, keptSession, back}; });
 ok('a photo on the wrong piece can be moved', ph.ui && ph.moved, JSON.stringify(ph));
 ok('photos delete on a second tap, keep the session, and Undo restores them', ph.notYet && ph.gone && ph.keptSession && ph.back, JSON.stringify(ph));
+// Mom's financial-independence roadmap: same math as her PDF, milestones added once, investing counts toward goals
+const fi = await page.evaluate(() => { const F=FI_(), keep=JSON.stringify(F); Object.assign(F,{start:60000, monthly:1000, from:'2026-11'}); const a30=Math.round(fiPlanAt('2030-10')), a55=Math.round(fiAt55().today);
+  Object.assign(F, JSON.parse(keep)); const ms=S.vision.milestones.filter(m=>m.fi).length; fiMilestones(); const ms2=S.vision.milestones.filter(m=>m.fi).length;
+  const n0=F.inv.length; F.inv.push({id:'fiT', d:'2026-11-15', amt:F.monthly}); const months=srcVal('fimonths','2026-11-01','2026-11-30'); F.inv=F.inv.filter(x=>x.id!=='fiT');
+  return {a30, a55, ms, ms2, months}; });
+ok('FI plan matches Mom’s PDF ($142,850 at 30, $1,529,615 at 55)', fi.a30===142850 && fi.a55===1529615, JSON.stringify(fi));
+ok('FI milestones are in the 5-year plan once', fi.ms===5 && fi.ms2===5, JSON.stringify(fi));
+ok('investing on plan counts as a month for goals', fi.months===1, JSON.stringify(fi));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
