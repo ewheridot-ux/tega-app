@@ -225,6 +225,19 @@ const fi = await page.evaluate(() => { const F=FI_(), keep=JSON.stringify(F); Ob
 ok('FI plan matches Mom’s PDF ($142,850 at 30, $1,529,615 at 55)', fi.a30===142850 && fi.a55===1529615, JSON.stringify(fi));
 ok('FI milestones are in the 5-year plan once', fi.ms===5 && fi.ms2===5, JSON.stringify(fi));
 ok('investing on plan counts as a month for goals', fi.months===1, JSON.stringify(fi));
+// Money: filter any category over any period; subscriptions found from the bank feed
+const mf = await page.evaluate(() => { const T=S.money.budget.txns, add=[]; const ref=(bankThrough&&bankThrough())||TODAY;
+  for (let i=0;i<4;i++) add.push({id:'tsN'+i, d:addDays(ref,-30*i-1), desc:'NETFLIX.COM 123'+i, amt:-15.49, acct:'BofA', cat:'flex'});
+  add.push({id:'tsR', d:addDays(ref,-3), desc:'TEST RENT CO', amt:-1200, acct:'BofA', cat:'fixed'}, {id:'tsR2', d:addDays(ref,-33), desc:'TEST RENT CO', amt:-1200, acct:'BofA', cat:'fixed'});
+  T.push(...add); _mVer++;
+  const L=subsList(), nf=L.find(x=>x.k==='NETFLIX'), rent=L.find(x=>/Rent/.test(x.name));
+  bCatF='s:subs'; bPer='all'; const subsRows=txRows(TODAY.slice(0,7)).filter(t=>/^tsN/.test(t.id)).length;
+  bCatF='b:fixed'; const fixedRows=txRows(TODAY.slice(0,7)).filter(t=>/^tsR/.test(t.id)).length;
+  bCatF='m:NETFLIX'; const merch=txRows(TODAY.slice(0,7)).filter(t=>/^tsN/.test(t.id)).length;
+  bCatF=''; bPer='month'; S.money.budget.txns=T.filter(t=>!/^ts[NR]/.test(t.id)); _mVer++;
+  return {nf:nf&&nf.cad, nfBill:nf&&nf.bill, rentBill:rent&&rent.bill, subsRows, fixedRows, merch}; });
+ok('subscriptions are found from the bank (monthly, not bills)', mf.nf==='monthly' && mf.nfBill===false && mf.rentBill===true, JSON.stringify(mf));
+ok('transactions filter by any category, bucket or merchant across all months', mf.subsRows===4 && mf.fixedRows===2 && mf.merch===4, JSON.stringify(mf));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
