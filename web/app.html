@@ -950,6 +950,7 @@ button.g-chips{border:0;background:none;padding:0;text-align:left;font-family:in
 .ph-fix{display:flex;gap:8px;margin:10px auto 0;width:100%;max-width:340px;justify-content:center}.ph-fix select{flex:1;min-width:0;font-size:13px}
 .fi-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fi-row>div{background:var(--card2);border-radius:12px;padding:10px 12px}.fi-row small,.fi-row em{display:block;font-size:11px;color:var(--muted);font-style:normal}.fi-row b{display:block;font-size:20px;margin:2px 0}.fi-m{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;font-size:13.5px}.fi-m small{display:block;color:var(--muted);font-size:11.5px}.fi-more{margin-top:10px}.fi-more>summary{cursor:pointer;font-size:12.5px}.fi-ms{display:grid;gap:4px;margin-top:10px}.fi-ms>div{display:flex;gap:8px;align-items:baseline;font-size:13px}.fi-ms span{flex:1;color:var(--muted)}.fi-ms small{color:var(--muted);font-size:11px;min-width:70px;text-align:right}
 .sub-r{display:flex;align-items:center;gap:6px;border-top:1px solid var(--line)}.sub-m{flex:1;min-width:0;display:flex;gap:10px;align-items:center;background:none;border:0;color:var(--fg);text-align:left;padding:9px 0}.sub-m span{flex:1;min-width:0}.sub-m b:first-child{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sub-m small{display:block;color:var(--muted);font-size:11.5px}.linkbtn{background:none;border:0;color:var(--accent);padding:0;font:inherit;text-decoration:underline;cursor:pointer}
+.sb-r{border-top:1px solid var(--line);padding:9px 0}.sb-r small{display:block;color:var(--muted);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sb-v{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-top:3px}.sb-v b{color:var(--fg)}.sb-chip{flex:none;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--card2)}.sb-chip.ahead,.sb-chip.on{color:var(--good)}.sb-chip.behind{color:var(--bad)}.sb-l{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.sb-l button{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:4px 10px;font-size:12px}.sb-l button.on{border-color:var(--good);color:var(--good)}
 .co-sheet{display:flex!important;flex-direction:column;height:min(78vh,640px)}
 .co-sheet>.row:first-of-type>:first-child{width:48px!important;height:48px!important;min-width:48px;max-width:48px;flex:none;border-radius:12px;overflow:hidden;object-fit:cover}.co-sheet>.row:first-of-type>:first-child *{max-width:48px;max-height:48px}
 .co-acts{display:grid;gap:4px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line);font-size:12.5px}.co-acts span{color:var(--good)}.co-acts.undone span{text-decoration:line-through;opacity:.6}.co-acts button,.co-pend button{justify-self:start;background:none;border:1px solid var(--line);color:var(--fg);border-radius:999px;padding:5px 12px;font-size:12.5px;margin-top:2px}.co-pend{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.co-pend button.danger{border-color:var(--bad);color:var(--bad)}.co-acts small{color:var(--muted)}
@@ -1834,7 +1835,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b259';
+const BUILD='b260';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2378,7 +2379,7 @@ function projection(){
   while (duePtr<DUES.length && DUES[duePtr][0] < TODAY) duePtr++; // dues already passed are ignored
   for (const c of future) {
     while (duePtr<DUES.length && DUES[duePtr][0] <= c.d) { let pay=ctx.buf; ctx.buf=0; if(DUES[duePtr][0].startsWith('2027-04')){pay+=ctx.cush;ctx.cush=0;} payouts.push({d:DUES[duePtr][0],label:DUES[duePtr][1],pay}); duePtr++; }
-    { const i=future.indexOf(c); ctx.nextD = future[i+1] ? future[i+1].d : null; } rows.push({...c, ...waterfall(c.amt, ctx, c.d)});
+    { const i=future.indexOf(c); ctx.nextD = future[i+1] ? future[i+1].d : null; } rows.push({...c, ...waterfall(c.amt, ctx, c.d), bufBal:ctx.buf, houseBal:ctx.house});
   }
   if (duePtr<DUES.length && ctx.buf>0) { payouts.push({d:DUES[duePtr][0],label:DUES[duePtr][1],pay:ctx.buf+ (DUES[duePtr][0].startsWith('2027-04')?ctx.cush:0)}); }
   return {rows, payouts, ctx, future};
@@ -7338,6 +7339,7 @@ function agMoney(){ const L=[]; const T=t=>{ try { const v=t(); if (v) L.push(v)
   T(()=>{ const nx=S.money.checks.filter(c=>!c.got).sort((a,b)=>a.d.localeCompare(b.d))[0]; return nx?`Next paycheck expected ${nx.d}${nx.amt?` · about ${money0(nx.amt)} (estimate until it lands)`:''}.`:'No paycheck scheduled yet.'; });
   T(()=>{ const last=S.money.checks.filter(c=>c.got).sort((a,b)=>(b.gotOn||b.d).localeCompare(a.gotOn||a.d))[0]; return last?`Last check: ${money0(last.amt)} on ${last.gotOn||last.d}.`:''; });
   T(()=>{ const F=FI_(), A=fiActual(), M=fiThisMonth(); return `Financial independence plan (Mom's roadmap, $1.5M today's $ by 55): portfolio ${money0(A.v)} vs plan ${money0(fiPlanAt(TODAY.slice(0,7)))}; this month invested ${money0(M.got)} of ${money0(M.need)}; at this plan he reaches ${money0(fiAt55().today)} (today's $) at 55. Not financial advice — suggest a CPA for account choices.`; });
+  T(()=>{ const R=sbRows(); return R.length?`On schedule (real accounts vs plan): ${R.map(r=>`${r.n} ${money0(r.v)} vs plan ${money0(r.plan)} → ${r.st==='on'?'on track':r.st+' '+money0(Math.abs(r.diff))}`).join('; ')}.`:''; });
   T(()=>{ const L=subsList(); return L.length?`Subscriptions & recurring bills (${money0(L.reduce((a,x)=>a+x.mo,0))}/mo): ${L.slice(0,15).map(x=>`${x.name} ${money0(x.amt)} ${x.cad}`).join('; ')}.`:''; });
   T(()=>{ const O=oneComing(); return O?`ONE Management owes ${money0(O.owed)}; ${money0(O.booked)} more booked; hold ${money0(O.tax)} of that for tax.`:''; });
   return L.join('\n'); }
@@ -8908,7 +8910,8 @@ const ymAdd=(ym,n)=>{ const [y,m]=ym.split('-').map(Number), t=y*12+(m-1)+n; ret
 const ymDiff=(a,b)=>{ const [ya,ma]=a.split('-').map(Number), [yb,mb]=b.split('-').map(Number); return (yb-ya)*12+(mb-ma); };
 function fiMonthly(F,k){ const yr=Math.floor(k/12); return F.monthly*Math.pow(1.1,Math.min(yr,15))*Math.pow(1.05,Math.max(0,yr-15)); }   // k = months since start (0-based)
 function fiPlanAt(ym){ const F=FI_(), n=Math.max(0,ymDiff(F.from,ym)+1); let b=F.start; for (let k=0;k<n;k++) b=b*(1+F.r/12)+fiMonthly(F,k); return b; }   // planned value at the end of month ym
-function fiActual(){ const F=FI_(), last=F.bal.slice().sort((a,b)=>a.d.localeCompare(b.d)).pop(); if (last) { const since=F.inv.filter(x=>x.d>last.d).reduce((a,x)=>a+(+x.amt||0),0); return {v:(+last.v||0)+since, asOf:last.d}; } return {v:F.start+F.inv.reduce((a,x)=>a+(+x.amt||0),0), asOf:null}; }
+function fiActual(){ try { const L=(S.money.links||{}).ret||[], A=(S.money.budget?.accounts||[]).filter(a=>a.bal!=null&&L.includes(a.name)); if (A.length) return {v:A.reduce((t,a)=>t+a.bal,0), asOf:A.map(a=>a.asOf).filter(Boolean).sort().pop()||TODAY, linked:1}; } catch(e){}
+  const F=FI_(), last=F.bal.slice().sort((a,b)=>a.d.localeCompare(b.d)).pop(); if (last) { const since=F.inv.filter(x=>x.d>last.d).reduce((a,x)=>a+(+x.amt||0),0); return {v:(+last.v||0)+since, asOf:last.d}; } return {v:F.start+F.inv.reduce((a,x)=>a+(+x.amt||0),0), asOf:null}; }
 function fiAt55(){ const F=FI_(), n=(F.ageEnd-F.age0)*12; let b=F.start; for (let k=0;k<n;k++) b=b*(1+F.r/12)+fiMonthly(F,k); return {fut:b, today:b/Math.pow(1+F.infl,F.ageEnd-F.age0)}; }
 function fiThisMonth(){ const F=FI_(), ym=TODAY.slice(0,7), k=Math.max(0,ymDiff(F.from,ym)), need=ymDiff(F.from,ym)<0?0:fiMonthly(F,k), got=F.inv.filter(x=>x.d.slice(0,7)===ym).reduce((a,x)=>a+(+x.amt||0),0); return {need, got, ym, raiseOn:ymAdd(F.from,(Math.floor(k/12)+1)*12)}; }
 function fiInvest(e){ e.preventDefault(); const a=+e.target.amt.value||0; if (a<=0) return false; FI_().inv.push({id:uid(), d:TODAY, amt:a}); commit(); toast(`📈 ${money0(a)} invested`); return false; }
@@ -9015,7 +9018,38 @@ function dueSoonCard(days=14){ const s=S.money.s, end=addDays(TODAY,days);
   return `<div class="card sec"><div class="hdr"><h2>Due next 2 weeks</h2><span class="sub num">${money0(tot)}</span></div>
     ${rows.length?`<div class="du-list">${rows.map(r=>{ const dd=daysBetween(TODAY,r.next); return `<div class="du-r"><span class="du-d ${r.late||dd<=3?'hot':''}"><b>${parseD(r.next).toLocaleDateString('en-US',{month:'short'})}</b>${parseD(r.next).getDate()}</span><span class="du-n"><b>${r.icon} ${esc(r.name.replace(/ minimum$/,' card'))}</b><small>${r.late?(r.auto?'not seen in the bank yet':'was due — pay it'):dd===0?'today':dd===1?'tomorrow':'in '+dd+' days'} · ${r.auto?'autopay':'pay by hand'}</small></span><b class="num">${money0(r.amt)}</b></div>`; }).join('')}</div>`:'<div class="sub">Nothing due in the next 2 weeks.</div>'}
     <button class="btn ghost sm" style="margin-top:10px;width:100%;justify-content:center" onclick="setMoneyTab('accounts');setTimeout(()=>document.getElementById('billsAll')?.scrollIntoView({behavior:'smooth'}),60)">All bills</button></div>`; }
-function vMoneyNow(){ if (!S.money.m221) setTimeout(()=>{ try { m221(); } catch(e){} }, 0); try { moneyQuest(); cardKills(); } catch(e){} const b=moneyBits(); return `${moneyHead()}${payNoticeCard()}${wfTodo()}${leftoverCard(b.P)}${moneyLinks()}`; }
+/* ===================== On schedule? (b260): each bucket, real account balance vs the plan ===================== */
+// buckets read your real accounts when they're linked; otherwise the number you keep in the app
+const SB=[['tax','📊','Tax Buffer'],['ef','🛡️','Emergency fund'],['cards','💳','Credit cards'],['house','🏡','House fund'],['ret','📈','Investing (FI plan)']];
+function sbAccts(){ return (S.money.budget?.accounts||[]).filter(a=>a.bal!=null); }
+function sbLinks(){ const M=S.money, A=sbAccts(), L=(M.links ||= {}); const has=k=>Array.isArray(L[k]);
+  if (!has('tax')) L.tax=A.filter(a=>/performance savings|\b360\b|tax/i.test(a.name)).map(a=>a.name);
+  if (!has('ef')) L.ef=A.filter(a=>/emergency|high.?yield|hysa/i.test(a.name)&&!L.tax.includes(a.name)).map(a=>a.name);
+  if (!has('house')) L.house=A.filter(a=>/house|home/i.test(a.name)&&acctKind(a)!=='debt').map(a=>a.name);
+  if (!has('ret')) L.ret=[];   // you choose: the FI plan's start ($12K) may include accounts the bank feed doesn't see (old 401(k))
+  return L; }
+function sbActual(k){ const L=sbLinks(), A=sbAccts(), s=S.money.s, linked=(L[k]||[]).map(n=>A.find(a=>a.name===n)).filter(Boolean), sum=linked.reduce((t,a)=>t+Math.abs(a.bal),0);
+  if (k==='cards') return {v:cardDebt(), src:'your card balances'};
+  if (linked.length) return {v:sum, src:linked.map(a=>a.name.replace(/\s*····\d+/,'')).join(' + ')};
+  const man={tax:+s.taxBufNow||0, ef:+s.efNow||0, house:+s.houseNow||0, ret:(()=>{ try { return fiActual().v; } catch(e){ return 0; } })()}[k];
+  return {v:man, src:'number in the app'}; }
+// the schedule: the plan as it stood when you started tracking, frozen so "behind" means something
+function sbBaseline(){ const s=S.money.s, P=projection(); return {at:TODAY, start:{tax:sbActual('tax').v, ef:+s.efNow||0, cards:cardDebt(), house:+s.houseNow||0}, rows:P.rows.map(r=>({d:r.d, tax:r.bufBal, ef:r.efBal, cards:r.cardsLeft, house:r.houseBal}))}; }
+function sbSched(){ const M=S.money; if (!M.sched || !M.sched.rows) M.sched=sbBaseline(); return M.sched; }
+function sbPlan(k){ if (k==='ret'){ try { const F=FI_(), ym=TODAY.slice(0,7), prev=ymAdd(ym,-1); return ymDiff(F.from,prev)<0?F.start:fiPlanAt(prev); } catch(e){ return null; } }
+  const B=sbSched(); let v=B.start[k]; for (const r of B.rows){ if (r.d>TODAY) break; if (r[k]!=null) v=r[k]; } return v; }
+function sbRows(){ return SB.map(([k,ic,n])=>{ const A=sbActual(k), plan=sbPlan(k); if (plan==null) return null; const lowGood=k==='cards', diff=lowGood?plan-A.v:A.v-plan, tol=Math.max(25,Math.abs(plan)*.03);
+    const st=Math.abs(diff)<=tol?'on':diff>0?'ahead':'behind'; return {k,ic,n,v:A.v,src:A.src,plan,diff,st}; }).filter(r=>r && !(r.k==='house' && !r.v && !r.plan)); }
+let sbEdit=false;
+function sbLink(k, name, on){ const L=sbLinks(); L[k]=(L[k]||[]).filter(n=>n!==name); if (on) L[k].push(name); commit({skipXp:true}); }
+function sbReset(){ S.money.sched=sbBaseline(); commit({skipXp:true}); toast('📅 New schedule from today'); }
+function schedCard(){ try { const R=sbRows(); if (!R.length) return ''; const B=sbSched(), behind=R.filter(r=>r.st==='behind').length, A=sbAccts();
+  return `<div class="card sec sb-c"><div class="hdr"><h2>📅 On schedule?</h2><span class="row" style="gap:6px"><span class="sub">${behind?`${behind} behind`:'all on track'}</span><button class="btn ${sbEdit?'':'ghost'} sm" onclick="sbEdit=!sbEdit;render()">${sbEdit?'Done':'Link accounts'}</button></span></div>
+    ${R.map(r=>`<div class="sb-r"><div class="row between" style="flex-wrap:nowrap;gap:8px"><span style="min-width:0"><b>${r.ic} ${r.n}</b><small>${esc(r.src)}</small></span><span class="sb-chip ${r.st}">${r.st==='on'?'on track':`${r.st} ${money0(Math.abs(r.diff))}`}</span></div>
+      <div class="sb-v"><span><b class="num">${money0(r.v)}</b> now</span><span>plan today <b class="num">${money0(r.plan)}</b></span></div>
+      ${sbEdit&&r.k!=='cards'?`<div class="sb-l">${A.length?A.filter(a=>acctKind(a)!=='debt').map(a=>{ const on=(sbLinks()[r.k]||[]).includes(a.name); return `<button class="${on?'on':''}" onclick="sbLink('${r.k}',${JSON.stringify(a.name).replace(/"/g,'&quot;')},${!on})">${on?'✓ ':''}${esc(a.name.replace(/\s*····\d+/,''))}</button>`; }).join(''):'<small class="sub">No bank accounts synced yet</small>'}</div>`:''}</div>`).join('')}
+    <div class="help keep" style="margin-top:8px">“Plan today” is where your money plan said each bucket would be by now (schedule set ${nice(B.at)}). Linked buckets read your real bank balances. ${sbEdit?`<button class="linkbtn" onclick="sbReset()">Start a new schedule from today</button>`:''}</div></div>`; } catch(e){ return ''; } }
+function vMoneyNow(){ if (!S.money.m221) setTimeout(()=>{ try { m221(); } catch(e){} }, 0); try { moneyQuest(); cardKills(); } catch(e){} const b=moneyBits(); return `${moneyHead()}${payNoticeCard()}${wfTodo()}${schedCard()}${leftoverCard(b.P)}${moneyLinks()}`; }
 function vMoneyAccounts(){ const b=moneyBits(); return `${netCard()}${fiCard()}${bizCard()}${incomeMini()}<div id="billsAll">${vBills()}</div><div id="goalsAll">${goalsCard(b)}</div>${checksCard(b.P)}${b.moreFold}`; }
 function checksCard(P){ const rows=P.rows; if(!rows.length) return '';
   return `<div class="card sec"><div class="hdr"><h2>Expected checks</h2><span class="sub">${rows.length} · dates only</span></div>
