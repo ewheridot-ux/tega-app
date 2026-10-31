@@ -1835,7 +1835,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b260';
+const BUILD='b261';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -4708,7 +4708,7 @@ function mNow(E, P){
   const on=k=>E.filter(e=>live(e)&&e.d.includes(k));
   const sel=mDay||TODAY, selE=on(sel);
   const up=E.filter(e=>e.end>=TODAY && live(e) && !e.d.every(d=>d<TODAY)).sort((a,b)=>a.start.localeCompare(b.start));
-  const wait=E.filter(e=>e.end<TODAY && daysBetween(e.end,TODAY)<=21 && ['option','casting','selftape','test'].includes(e.t) && !['booked','nobook','declined','released','cancelled'].includes(e.s) && !(mState().hide||{})['w'+e.id]).sort((a,b)=>b.end.localeCompare(a.end));
+  const wait=E.filter(e=>e.end<TODAY && daysBetween(e.end,TODAY)<=60 && ['option','casting','selftape','test'].includes(e.t) && !['booked','nobook','declined','released','cancelled'].includes(e.s) && !(mState().hide||{})['w'+e.id]).sort((a,b)=>b.end.localeCompare(a.end));
   const owed=mOwed(P), cnt=k=>Object.values(P).filter(o=>o.stage===k).length;
   const notes=mState().notes||{}, needNote=E.filter(e=>e.t==='job'&&e.s!=='cancelled'&&e.end<TODAY&&daysBetween(e.end,TODAY)<=30&&!notes[e.id]&&!(mState().hide||{})[e.id]).sort((a,b)=>b.end.localeCompare(a.end))[0];
   return `<div class="card sec mm-cal"><div class="mm-strip">${cells.map(k=>{ const ev=on(k), d=parseD(k); return `<button class="${k===sel?'on':''} ${k===TODAY?'today':''} ${d.getDate()===1?'m1':''}" onclick="mDay='${k}';render()"><small>${d.getDate()===1?d.toLocaleDateString('en-US',{month:'short'}):'SMTWTFS'[d.getDay()]}</small><b class="num">${d.getDate()}</b><span>${ev.slice(0,3).map(e=>`<i style="background:${(MT[e.t]||[0,'#94a3b8'])[1]}"></i>`).join('')}</span></button>`; }).join('')}</div>
@@ -4717,7 +4717,7 @@ function mNow(E, P){
 }
 function mHistory(E, P){
   const notes=mState().notes||{}, needNote=E.filter(e=>e.t==='job'&&e.s!=='cancelled'&&e.end<TODAY&&daysBetween(e.end,TODAY)<=30&&!notes[e.id]&&!(mState().hide||{})[e.id]).sort((a,b)=>b.end.localeCompare(a.end))[0];
-  const wait=E.filter(e=>e.end<TODAY && daysBetween(e.end,TODAY)<=21 && ['option','casting','selftape','test'].includes(e.t) && !['booked','nobook','declined','released','cancelled'].includes(e.s) && !(mState().hide||{})['w'+e.id]).sort((a,b)=>b.end.localeCompare(a.end));
+  const wait=E.filter(e=>e.end<TODAY && daysBetween(e.end,TODAY)<=60 && ['option','casting','selftape','test'].includes(e.t) && !['booked','nobook','declined','released','cancelled'].includes(e.s) && !(mState().hide||{})['w'+e.id]).sort((a,b)=>b.end.localeCompare(a.end));
   const jobs=E.filter(e=>e.t==='job'&&e.s!=='cancelled');
   const years=[...new Set(jobs.map(j=>j.start.slice(0,4)))].filter(Boolean).sort().reverse();
   const wraps=years.map(y=>mYear(y,jobs));
