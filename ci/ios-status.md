@@ -1,11 +1,8 @@
-# iPhone build #130 — success
+# iPhone build #131 — success
 
-Thu Oct 29 06:28:35 UTC 2026
+Sat Oct 31 23:01:05 UTC 2026
 
 ```
-✓ yoga: moves to the next pose by itself
-✓ yoga: breathing guide shows — breathe in · 4
-✓ pop shows after finishing Top 3 — ✦+29 XP · +35 💰 | 🌫️Fog −4 | 🎁2 chests
 ✓ daily clear gives a chest
 ✓ weekly clear gives a chest
 ✓ buff row is icons only
@@ -58,6 +55,9 @@ Thu Oct 29 06:28:35 UTC 2026
 ✓ FI plan matches Mom’s PDF ($142,850 at 30, $1,529,615 at 55) — {"a30":142850,"a55":1529615,"ms":5,"ms2":5,"months":1}
 ✓ FI milestones are in the 5-year plan once — {"a30":142850,"a55":1529615,"ms":5,"ms2":5,"months":1}
 ✓ investing on plan counts as a month for goals — {"a30":142850,"a55":1529615,"ms":5,"ms2":5,"months":1}
+✓ subscriptions are found from the bank (monthly, not bills) — {"nf":"monthly","nfBill":false,"rentBill":true,"subsRows":4,"fixedRows":2,"merch":4}
+✓ transactions filter by any category, bucket or merchant across all months — {"nf":"monthly","nfBill":false,"rentBill":true,"subsRows":4,"fixedRows":2,"merch":4}
+✓ each bucket shows its real account vs the plan (ahead / behind) — {"linked":true,"v":500,"plan":1000,"st":"behind","diff":-500}
 ✓ no errors anywhere
 
 all checks passed
@@ -66,13 +66,13 @@ all checks passed
 > node scripts/build-www.mjs
 
 www built with Supabase config
-✔ Adding native Xcode project in ios in 13.88ms
-✔ add in 14.13ms
-✔ Copying web assets from www to ios/App/App/public in 26.95ms
-✔ Creating capacitor.config.json in ios/App/App in 527.21μs
-✔ copy ios in 61.64ms
-✔ Updating iOS plugins in 1.10ms
-✔ Updating iOS native dependencies with pod install in 15.64s
+✔ Adding native Xcode project in ios in 12.83ms
+✔ add in 13.05ms
+✔ Copying web assets from www to ios/App/App/public in 22.83ms
+✔ Creating capacitor.config.json in ios/App/App in 289.54μs
+✔ copy ios in 49.48ms
+✔ Updating iOS plugins in 722.21μs
+✔ Updating iOS native dependencies with pod install in 9.48s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -84,15 +84,15 @@ www built with Supabase config
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 15.67s
+✔ update ios in 9.52s
 [success] ios platform added!
 Follow the Developer Workflow guide to get building:
 https://capacitorjs.com/docs/basics/workflow
-✔ Copying web assets from www to ios/App/App/public in 157.45ms
-✔ Creating capacitor.config.json in ios/App/App in 1.75ms
-✔ copy ios in 209.89ms
-✔ Updating iOS plugins in 3.94ms
-✔ Updating iOS native dependencies with pod install in 5.49s
+✔ Copying web assets from www to ios/App/App/public in 131.31ms
+✔ Creating capacitor.config.json in ios/App/App in 813.71μs
+✔ copy ios in 155.60ms
+✔ Updating iOS plugins in 1.01ms
+✔ Updating iOS native dependencies with pod install in 3.73s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -104,8 +104,8 @@ https://capacitorjs.com/docs/basics/workflow
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 5.54s
-[info] Sync finished in 5.86s
+✔ update ios in 3.82s
+[info] Sync finished in 4.002s
 app capabilities: ['IN_APP_PURCHASE', 'HEALTHKIT', 'IN_APP_PURCHASE', 'IN_APP_PURCHASE']
 com.ewheridot.tegaexe.widgets ok
 com.ewheridot.tegaexe.share ok
@@ -116,11 +116,11 @@ entitlements: healthkit keychain-access-groups
 TIER=full
 Running altool at path '/Applications/Xcode_26.3.app/Contents/SharedFrameworks/ContentDelivery.framework/Resources/altool'...
 
-2026-10-29 06:28:35.636  INFO: [ContentDelivery.Uploader.6000036C04C0] 
+2026-10-31 23:01:05.585  INFO: [ContentDelivery.Uploader.6000038184C0] 
 ==========================================
 UPLOAD SUCCEEDED with no errors
-Delivery UUID: e065448d-af36-4195-af7d-2ff6baa7ff54
-Transferred 7342785 bytes in 0.696 seconds (10.5MB/s, 84.355Mbps)
+Delivery UUID: ba519249-990b-4fd1-80f9-70c20e3d80e9
+Transferred 7347415 bytes in 0.841 seconds (8.7MB/s, 69.905Mbps)
 ==========================================
 No errors uploading archive at '/Users/runner/work/_temp/out/App.ipa'.
 ```
