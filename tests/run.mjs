@@ -131,10 +131,10 @@ ok('your picture opens the city', cy.view === 'city', cy.view); ok('bosses float
 ok('quest board marker on the fountain opens the quest log', cy.quest && cy.qlog); ok('quest board + house cards', cy.board && cy.house);
 ok('town and bosses not repeated on the Character page', cy.noDup);
 // changes made while away pop on the next open
-await page.evaluate(() => { const d = ensureDay(TODAY); d.habits.journal = true; saveLocal(); });
+await page.evaluate(() => { const x0=computeXP(); for (let i=0;i<200 && computeXP()<=x0;i++) S.wins.push({id:'popT'+i, d:TODAY, text:'test win'}); saveLocal(); });   // something new (XP never drops, so re-ticking an old habit adds nothing)
 await page.reload(); await page.waitForTimeout(2500);
 for (let i = 0; i < 3; i++) { try { await page.getByText('CONTINUE').first().click({ timeout: 800 }); await page.waitForTimeout(300); } catch { break; } }
-const since = await page.evaluate(() => { document.querySelectorAll('#lvs, .modal').forEach(e => e.remove()); commit({ skipXp: true }); return [...document.querySelectorAll('.hp-i')].map(e => e.textContent).join(' | '); });
+const since = await page.evaluate(() => { document.querySelectorAll('#lvs, #chestm, .modal').forEach(e => e.remove()); commit({ skipXp: true }); const t=[...document.querySelectorAll('.hp-i')].map(e => e.textContent).join(' | '); return t || ((Date.now()-(R_().hitLast||0))<20000 ? 'XP (popped at open)' : ''); });
 if (seed !== 1) ok('changes since last open pop on the next open', /XP/.test(since), since);
 // every boss has its own animated art: idle, hit and defeat sheets, and draws without errors
 const art = await page.evaluate(() => Object.values(BOSS_SPR).map(k => [k, ['_idle','_hit','_dead'].every(s => PXW[k+s] && PXW[k+s].n > 1)]));
@@ -244,6 +244,19 @@ const sb = await page.evaluate(() => { const keepS=S.money.sched, keepL=S.money.
   const R=sbRows(), t=R.find(r=>r.k==='tax'); const r={linked:t.src.includes('360'), v:t.v, plan:t.plan, st:t.st, diff:Math.round(t.diff)};
   S.money.budget.accounts=A.filter(a=>a.name!=='Test 360 Performance Savings'); S.money.sched=keepS; S.money.links=keepL; return r; });
 ok('each bucket shows its real account vs the plan (ahead / behind)', sb.linked && sb.v===500 && sb.plan===1000 && sb.st==='behind' && sb.diff===-500, JSON.stringify(sb));
+// Datum write-offs: log a purchase or confirm a bank charge → one Datum deductible each, never twice; money plan invests Mom's FI amount
+const dw = await page.evaluate(() => { const D=ensureDatum(), B=S.money.budget, n0=D.expenses.length;
+  B.txns.push({id:'tdOF', d:addDays(TODAY,-3), desc:'SP OTTO FREI OAKLAND CA', amt:-42.5, acct:'BofA', cat:'flex'}); _mVer++;
+  const sug=dDedSugg().some(x=>x.t.id==='tdOF'&&x.sure); dDedYes('tdOF'); syncDatumDeductibles(S);
+  const rows=B.deductibles.filter(x=>x.cat==='datum' && Math.abs(x.amt-42.5)<.01).length;
+  const f=document.createElement('form'); f.innerHTML='<input name="n" value="Test wax"><input name="amt" value="12"><input name="v" value="Ferris"><input name="d" value="'+TODAY+'"><select name="b"><option>Wax Work</option></select>'; dLogBuy({preventDefault(){}, target:f}); syncDatumDeductibles(S);
+  const logged=B.deductibles.some(x=>x.cat==='datum'&&x.desc==='Test wax'&&x.amt===12);
+  const ret=fiRetMonthly(FI_().from+'-15')===FI_().monthly;
+  D.expenses=D.expenses.filter(e=>e.txn!=='tdOF'&&e.name!=='Test wax'); B.txns=B.txns.filter(t=>t.id!=='tdOF'); syncDatumDeductibles(S); _mVer++; commit({skipXp:true});
+  return {sug, rows, logged, ret}; });
+ok('Datum: bank charges that look like supplies are suggested and count once', dw.sug && dw.rows===1, JSON.stringify(dw));
+ok('Datum: logged purchases become write-offs', dw.logged, JSON.stringify(dw));
+ok('money plan invests the FI plan amount once it starts', dw.ret, JSON.stringify(dw));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

@@ -951,6 +951,7 @@ button.g-chips{border:0;background:none;padding:0;text-align:left;font-family:in
 .fi-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fi-row>div{background:var(--card2);border-radius:12px;padding:10px 12px}.fi-row small,.fi-row em{display:block;font-size:11px;color:var(--muted);font-style:normal}.fi-row b{display:block;font-size:20px;margin:2px 0}.fi-m{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;font-size:13.5px}.fi-m small{display:block;color:var(--muted);font-size:11.5px}.fi-more{margin-top:10px}.fi-more>summary{cursor:pointer;font-size:12.5px}.fi-ms{display:grid;gap:4px;margin-top:10px}.fi-ms>div{display:flex;gap:8px;align-items:baseline;font-size:13px}.fi-ms span{flex:1;color:var(--muted)}.fi-ms small{color:var(--muted);font-size:11px;min-width:70px;text-align:right}
 .sub-r{display:flex;align-items:center;gap:6px;border-top:1px solid var(--line)}.sub-m{flex:1;min-width:0;display:flex;gap:10px;align-items:center;background:none;border:0;color:var(--fg);text-align:left;padding:9px 0}.sub-m span{flex:1;min-width:0}.sub-m b:first-child{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sub-m small{display:block;color:var(--muted);font-size:11.5px}.linkbtn{background:none;border:0;color:var(--accent);padding:0;font:inherit;text-decoration:underline;cursor:pointer}
 .sb-r{border-top:1px solid var(--line);padding:9px 0}.sb-r small{display:block;color:var(--muted);font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sb-v{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-top:3px}.sb-v b{color:var(--fg)}.sb-chip{flex:none;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--card2)}.sb-chip.ahead,.sb-chip.on{color:var(--good)}.sb-chip.behind{color:var(--bad)}.sb-l{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.sb-l button{background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:4px 10px;font-size:12px}.sb-l button.on{border-color:var(--good);color:var(--good)}
+.dd-f{display:grid;grid-template-columns:1fr 1fr;gap:6px}.dd-f .inp{min-width:0;width:100%;box-sizing:border-box;max-width:none!important}.dd-r{display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);padding:8px 0;font-size:13.5px}.dd-r small{display:block;color:var(--muted);font-size:11.5px}.dd-r b:first-child{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .co-sheet{display:flex!important;flex-direction:column;height:min(78vh,640px)}
 .co-sheet>.row:first-of-type>:first-child{width:48px!important;height:48px!important;min-width:48px;max-width:48px;flex:none;border-radius:12px;overflow:hidden;object-fit:cover}.co-sheet>.row:first-of-type>:first-child *{max-width:48px;max-height:48px}
 .co-acts{display:grid;gap:4px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line);font-size:12.5px}.co-acts span{color:var(--good)}.co-acts.undone span{text-decoration:line-through;opacity:.6}.co-acts button,.co-pend button{justify-self:start;background:none;border:1px solid var(--line);color:var(--fg);border-radius:999px;padding:5px 12px;font-size:12.5px;margin-top:2px}.co-pend{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.co-pend button.danger{border-color:var(--bad);color:var(--bad)}.co-acts small{color:var(--muted)}
@@ -1835,7 +1836,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b261';
+const BUILD='b262';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2353,7 +2354,7 @@ const fixedMo = () => { const s=S.money.s; if (s.minCap1==null) s.minCap1=25; if
 const efTarget = () => fixedMo() * S.money.s.efMonths;
 function waterfall(amt, ctx, dateKey){
   // ctx: {ef, buf, cush, house, cards}; returns row and mutates ctx.
-  const s=S.money.s, PER=perMo(), BF=billsFor(dateKey, ctx.nextD||addDays(dateKey, s.payEvery===14?14:15)), fixedCk=BF.amt, efCk=s.efMonthly/PER, retCk=s.retMonthly/PER, cushCk=s.cushionMonthly/PER, yr=+dateKey.slice(0,4);
+  const s=S.money.s, PER=perMo(), BF=billsFor(dateKey, ctx.nextD||addDays(dateKey, s.payEvery===14?14:15)), fixedCk=BF.amt, efCk=s.efMonthly/PER, retCk=fiRetMonthly(dateKey)/PER, cushCk=s.cushionMonthly/PER, yr=+dateKey.slice(0,4);
   const tax = amt*s.taxRate; ctx.buf += tax;
   let left = amt - tax - fixedCk, draw = 0;
   if (left < 0) { draw = -left; ctx.ef -= draw; left = 0; }
@@ -2862,6 +2863,28 @@ function dAddDesign(e){ e.preventDefault(); const [n,c]=e.target.querySelectorAl
 
 /* ---- money ---- */
 function dMoney(){ return dMoney0()+`<div class="help sec" style="padding:0 6px">Datum purchases you log here also show up in Money → Write-offs as Datum deductions. <a style="cursor:pointer;text-decoration:underline" onclick="moneyTab='deduct';go('money')">Open write-offs</a></div>`; }
+/* ---- Datum write-offs (b262): log a purchase, or confirm bank charges that look like Datum supplies ---- */
+const DATUM_LIKE=/OTTO FREI|RIO GRANDE|DN DENTAL|DENTAL|HENRY SCHEIN|PATTERSON|BENCO|DARBY|SAFCO|DREMEL|STULLER|GESSWEIN|PEPE ?TOOLS|KINGSLEY|GRS TOOLS|COOKSON|JEWEL(?:RY|ERS)? SUPPLY|CASTING|CONTENTI|ANSON|FERRIS|KERR|HYGENIC|ALGINATE|WAX|HOOVER|PRECIOUS METAL|REFIN|METALS|HARBOR FREIGHT|HOME DEPOT|LOWES|ACE HARDWARE|MICHAELS|HOBBY LOBBY|BLICK|FORMLABS|ELEGOO|ANYCUBIC|SHAPEWAYS|ULINE|PACKAGING|STICKER ?MULE|VISTAPRINT|SHOPIFY|SQUARESPACE|PRINTFUL|ETSY|POLISHING|FOREDOM|ULTRASONIC|TORCH|KILN/i;
+const DATUM_MAYBE=/AMAZON|AMZN|TEMU|EBAY|WALMART|TARGET|ALIEXPRESS/i;
+function dDedSugg(){ const D=ensureDatum(), no=D.dedNo||{}, since=addDays(TODAY,-150), used=new Set(D.expenses.map(e=>e.txn).filter(Boolean)), dd=S.money.budget.deductibles||[];
+  return (S.money.budget.txns||[]).filter(t=>t.amt<0 && t.d>=since && !no[t.id] && !used.has(t.id) && t.cat!=='transfer' && t.cat!=='ignore' && (DATUM_LIKE.test(t.desc)||DATUM_MAYBE.test(t.desc))
+    && !dd.some(x=>x.txn===t.id && x.cat==='datum' && x.ok)
+    && !D.expenses.some(e=>e.status==='purchased' && e.date && Math.abs(daysBetween(e.date,t.d))<=10 && Math.abs((+e.actual||0)+t.amt)<1))
+    .map(t=>({t, sure:DATUM_LIKE.test(t.desc)})).sort((a,b)=>(b.sure-a.sure)||b.t.d.localeCompare(a.t.d)).slice(0,12); }
+function dDedYes(id, bucket){ const t=S.money.budget.txns.find(x=>x.id===id); if (!t) return; ensureDatum().expenses.push({id:uid(), name:subName(t.desc)||t.desc, bucket:bucket||'Other', cat:'consumable', planned:-t.amt, status:'purchased', actual:-t.amt, date:t.d, vendor:merchKey(t.desc), note:'from your bank', boughtFor:'', txn:t.id, phase:dActivePhase().n});
+  t.user=true; t.sc='work'; commit(); toast(`◆ ${money0(-t.amt)} added as a Datum write-off`); }
+function dDedNo(id){ (ensureDatum().dedNo ||= {})[id]=TODAY; commit({skipXp:true}); toastAct('Hidden','Undo',()=>{ delete ensureDatum().dedNo[id]; commit({skipXp:true}); }); }
+function dLogBuy(e){ e.preventDefault(); const f=e.target, amt=+f.amt.value||0, name=f.n.value.trim(); if (!name||amt<=0) return false;
+  ensureDatum().expenses.push({id:uid(), name, bucket:f.b.value, cat:'consumable', planned:amt, status:'purchased', actual:amt, date:f.d.value||TODAY, vendor:f.v.value.trim(), note:'', boughtFor:'', phase:dActivePhase().n}); commit(); toast(`◆ ${money0(amt)} logged — deductible`); return false; }
+let dDelAsk=null;
+function dDelBuy(id){ if (dDelAsk!==id){ dDelAsk=id; toast('Tap ✕ again to remove'); setTimeout(()=>{ if (dDelAsk===id) dDelAsk=null; },3000); return; } dDelAsk=null; const D=ensureDatum(), e=D.expenses.find(x=>x.id===id); if (!e) return; D.expenses=D.expenses.filter(x=>x!==e); commit({skipXp:true}); toastAct('Purchase removed','Undo',()=>{ ensureDatum().expenses.push(e); commit({skipXp:true}); }); }
+function dDedCard(){ const D=ensureDatum(), S2=dDedSugg(), yr=THIS_Y, bought=D.expenses.filter(e=>e.status==='purchased').sort((a,b)=>(b.date||'').localeCompare(a.date||'')), ytd=bought.filter(e=>(e.date||'').startsWith(yr)).reduce((a,e)=>a+(+e.actual||0),0);
+  const bsel=n=>`<select class="inp" name="${n}" style="width:auto;max-width:120px">${BUCKETS.map(b=>`<option>${b}</option>`).join('')}</select>`;
+  return `<div class="card sec dd-c"><div class="hdr"><h2>◆ Write-offs</h2><span class="sub"><b class="num">${money0(ytd)}</b> in ${yr} · saves ~${money0(ytd*S.money.s.taxRate)} tax</span></div>
+    <form class="dd-f" onsubmit="return dLogBuy(event)"><input class="inp" name="n" placeholder="what you bought" required style="grid-column:1/-1"><input class="inp num" name="amt" type="number" min="0.01" step="any" placeholder="$ amount" required><input class="inp" name="v" placeholder="store"><input class="inp" name="d" type="date" value="${TODAY}">${bsel('b')}<button class="btn sm" style="grid-column:1/-1;justify-content:center">◆ Log purchase</button></form>
+    ${S2.length?`<div class="tag" style="margin:12px 0 4px">From your bank · Datum?</div>${S2.map(({t,sure})=>`<div class="dd-r"><span style="flex:1;min-width:0"><b>${esc(subName(t.desc))}</b><small>${nice(t.d)} · ${esc(t.acct||'')}${sure?'':' · check it'}</small></span><b class="num">${money0(-t.amt)}</b><button class="btn sm" onclick="dDedYes('${t.id}')">Datum</button><button class="x" aria-label="Not Datum" onclick="dDedNo('${t.id}')">✕</button></div>`).join('')}`:''}
+    ${bought.length?`<div class="tag" style="margin:12px 0 4px">Logged</div>${bought.slice(0,6).map(e=>`<div class="dd-r"><span style="flex:1;min-width:0"><b>${esc(e.name)}</b><small>${e.date?nice(e.date):''}${e.vendor?' · '+esc(e.vendor):''} · ${esc(e.bucket)}</small></span><input class="inp num" type="number" step="any" value="${+e.actual||0}" style="width:76px;padding:4px 6px" onchange="dSetExp('${e.id}','actual',+this.value||0)" aria-label="Amount"><button class="x" aria-label="Remove" onclick="dDelBuy('${e.id}')">✕</button></div>`).join('')}${bought.length>6?`<div class="sub" style="font-size:12px;margin-top:4px">+ ${bought.length-6} more in Bought below</div>`:''}`:''}
+    <div class="help keep" style="margin-top:8px">Everything here goes to Money → Taxes → Write-offs as Datum. Suggestions come from your bank: supply stores and tool shops, plus Amazon/eBay-type charges to check.</div></div>`; }
 function dMoney0(){
   const D=ensureDatum(), s=D.pricing;
   const byBucket={}; for(const e of D.expenses){ const b=byBucket[e.bucket] ||= {p:0,a:0}; b.p+=+e.planned||0; if(e.status==='purchased') b.a+=+e.actual||0; }
@@ -2869,7 +2892,7 @@ function dMoney0(){
   const price = s.metal + s.casting + s.consum + s.hours*s.rate; const withMargin = price*(1+s.margin);
   const planned=D.expenses.filter(e=>e.status==='planned'), bought=D.expenses.filter(e=>e.status==='purchased');
   const toBuy=planned.reduce((a,e)=>a+(+e.planned||0),0);
-  return `
+  return `${dDedCard()}
   <div class="card sec"><div class="hdr"><h2>Budget</h2><span class="sub num">${dSpent()>dPlanned()?money0(dSpent()-dPlanned())+' over':money0(dPlanned()-dSpent())+' left'}</span></div>
     <div class="row between" style="font-size:13px"><span>Spent <b class="num">${money0(dSpent())}</b></span><span class="sub">of <b class="num" style="color:var(--fg)">${money0(dPlanned())}</b> planned</span></div>
     <div style="margin-top:8px">${bar(dSpent()/Math.max(1,dPlanned()),'var(--grillz)')}</div>
@@ -4440,6 +4463,7 @@ function syncDatumDeductibles(st=S){
   B.deductibles = B.deductibles.filter(x => !(typeof x.txn==='string' && x.txn.startsWith('datum:')) || live.has(x.txn));
   // a bank row that matches a tracker purchase (same amount, within a week) is the same money — drop the bank duplicate
   B.deductibles = B.deductibles.filter(x => { if (x.cat!=='datum' || !x.txn || String(x.txn).startsWith('datum:')) return true;
+    if (D.expenses.some(e=>e.txn && e.txn===x.txn)) return false;
     return !D.expenses.some(e => { if (e.status!=='purchased' || !e.date || Math.abs(daysBetween(e.date, x.d))>10) return false;
       if (Math.abs((+e.actual||0)-x.amt)<1) return true;                                   // same amount
       const v = (e.vendor||'').split(/[\s\/]+/)[0]; return v.length>=3 && x.desc.toUpperCase().includes(v.toUpperCase()); }); // same vendor, same week → the tracker row already has it
@@ -8905,6 +8929,10 @@ function growthCard(){ const M=S.money, G=(M.growth ||= {target:10000}), v=invNo
     <div class="sub" style="margin-top:8px">${ch!=null?`${ch>=0?'+':'−'}${money0(Math.abs(ch))} in 30 days · `:''}${cardDebt()>0.5?`Roth deposits paused until the cards hit $0${cz?' ('+cz+')':''}`:'Roth deposits are on'}</div></div>`; }
 /* ===================== Financial independence (b258): Mom's roadmap — $1.5M in today's dollars by 55 ===================== */
 // her assumptions: 7%/yr (monthly compounding), 3% inflation, monthly amount +10% a year for 15 years then +5%. Start: what you have now.
+// what the money plan sends to investing each month: Mom's FI amount (with its yearly raises) once it starts, else the old Roth setting
+function fiRetMonthly(d){ try { if (S.fi){ const F=FI_(), k=ymDiff(F.from,String(d).slice(0,7)); if (k>=0) return fiMonthly(F,k); } } catch(e){} return +S.money.s.retMonthly||0; }
+// when your checks actually reach the investing step (after cards, tax catch-up and the emergency fund)
+function fiFundedFrom(){ try { const P=projection(), F=FI_(); const r=P.rows.find(r=>r.d.slice(0,7)>=F.from && r.ret>=fiRetMonthly(r.d)/perMo()-1); return r?r.d:null; } catch(e){ return null; } }
 function FI_(){ if (!S.fi) S.fi={start:12000, from:'2026-11', monthly:1100, r:.07, infl:.03, target:1500000, age0:26, ageEnd:55, inv:[], bal:[]}; const F=S.fi; F.inv ||= []; F.bal ||= []; return F; }
 const ymAdd=(ym,n)=>{ const [y,m]=ym.split('-').map(Number), t=y*12+(m-1)+n; return `${Math.floor(t/12)}-${String(t%12+1).padStart(2,'0')}`; };
 const ymDiff=(a,b)=>{ const [ya,ma]=a.split('-').map(Number), [yb,mb]=b.split('-').map(Number); return (yb-ya)*12+(mb-ma); };
@@ -8934,7 +8962,7 @@ function fiCard(){ try { const F=FI_(), A=fiActual(), ym=TODAY.slice(0,7), plan=
   return `<div class="card sec fi-card"><div class="hdr"><h2>🏁 Financial independence</h2><span class="sub">$1.5M by ${F.ageEnd}</span></div>
     <div class="fi-row"><div><small>Portfolio now</small><b class="num">${money0(A.v)}</b><em>${A.asOf?'updated '+nice(A.asOf):'starting balance'}</em></div><div><small>Plan says</small><b class="num">${money0(plan)}</b><em style="color:${gap>=0?'var(--good)':'var(--warn)'}">${gap>=0?'on track':money0(-gap)+' behind'}</em></div></div>
     <div class="bar" style="height:6px;margin:10px 0 4px"><b style="width:${(pct*100).toFixed(1)}%"></b></div><div class="sub" style="font-size:11.5px">${(pct*100).toFixed(1)}% of the way · at this plan you reach ${money0(P.today)} (today’s $) at ${F.ageEnd}</div>
-    <div class="fi-m"><div><b>${started?`This month: ${money0(M.got)} of ${money0(M.need)}`:`Starts ${nice(F.from+'-01')}`}</b><small>next raise ${MON3[+M.raiseOn.slice(5,7)-1]} ${M.raiseOn.slice(0,4)} → ${money0(fiMonthly(F,Math.max(0,ymDiff(F.from,M.raiseOn))))}/mo</small></div>${started&&M.got>=M.need?'<span class="chip" style="color:var(--good)">✓ done</span>':''}</div>
+    <div class="fi-m"><div><b>${started?`This month: ${money0(M.got)} of ${money0(M.need)}`:`Starts ${nice(F.from+'-01')}`}</b><small>${(()=>{ const f=fiFundedFrom(); return f?`your money plan funds it from ${MON3[+f.slice(5,7)-1]} ${f.slice(0,4)} (after cards, taxes &amp; emergency fund) · `:'your money plan doesn’t reach it yet with the checks on file · '; })()}next raise ${MON3[+M.raiseOn.slice(5,7)-1]} ${M.raiseOn.slice(0,4)} → ${money0(fiMonthly(F,Math.max(0,ymDiff(F.from,M.raiseOn))))}/mo</small></div>${started&&M.got>=M.need?'<span class="chip" style="color:var(--good)">✓ done</span>':''}</div>
     <form class="row" style="gap:6px;margin-top:8px;flex-wrap:nowrap" onsubmit="return fiInvest(event)"><input class="inp num" name="amt" type="number" min="1" step="any" placeholder="$ invested" value="${started&&M.need>M.got?Math.round(M.need-M.got):''}" style="flex:1;min-width:0"><button class="btn sm">📈 Log</button></form>
     <details class="fi-more"><summary class="sub">Update balance · settings · Mom’s milestones</summary>
       <form class="row" style="gap:6px;margin-top:8px;flex-wrap:nowrap" onsubmit="return fiBal(event)"><input class="inp num" name="v" type="number" min="0" step="any" placeholder="real balance from Fidelity" style="flex:1;min-width:0"><button class="btn ghost sm">Update</button></form>

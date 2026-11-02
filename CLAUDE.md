@@ -2,6 +2,7 @@
 
 ## Ask before shipping
 - Every push to main builds a new iPhone app the user has to reinstall. Commit locally, show the change, and **ask before pushing or publishing the web copy**. Batch changes into one update.
+- Whenever you ship (push / publish), end that reply with a short "Shipping in this update" summary of everything in it. Only when shipping.
 
 ## Private data is NOT in web/app.html
 The repo is public. Everything personal (modeling history, agents, ONE statement, bank seeds, bills, events) sits between
