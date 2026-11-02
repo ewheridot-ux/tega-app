@@ -160,10 +160,12 @@ function makeDb() {
   // kept copies of a document (the database archives one every ~2h and every rejected overwrite) — metadata only, bodies stay in the cloud
   const history = async path => api('GET', `/rest/v1/docs_history_meta?path=eq.${enc(path)}&select=id,kind,archived_at,was_updated_at,days,lvl&order=archived_at.desc&limit=60`);
   const restore = async id => api('POST', '/rest/v1/rpc/restore_doc', { hid: id });
+  // one kept copy's body — used to bring back a single piece (e.g. paychecks) without rolling back everything else
+  const historyData = async id => ((await api('GET', `/rest/v1/docs_history?id=eq.${enc(id)}&select=data`))[0] || {}).data || null;
   const collection = path => ({
     onSnapshot(cb, onErr) { return poller(async changed => { const rows = await api('GET', `/rest/v1/docs?path=like.${enc(path + '/*')}&select=path,data,updated_at`); if (changed(rows.map(r => r.path + r.updated_at))) cb({ docs: rows.map(snapOf) }); }, 30000); },
   });
-  return { doc, collection, history, restore };
+  return { doc, collection, history, restore, historyData };
 }
 
 /* ---------------- assets ---------------- */
