@@ -1836,7 +1836,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b264';
+const BUILD='b265';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -8323,18 +8323,21 @@ function hqDraw(D, opts){ const {Buf,P,mix}=ISO, B=new Buf(), t=opts.t||0, night
   const sky2=night?'#191640':'#9ccbea'; let x=0; const r2=R(3); while(x<ISO.W){ const w=6+Math.floor(r2()*10), h=Math.round((8+Math.floor(r2()*22))*(1+era*.32)); B.rect(x,SB-h+Math.floor(r2()*4),w,h+20,sky2); if(night) for(let k=0;k<3+era*2;k++) if(r2()<.6+era*.08) B.px(x+2+Math.floor(r2()*(w-3)),SB-h+4+Math.floor(r2()*Math.max(1,h-4)),era>=3&&k%3===0?'#ff7ad9':'#3a3470'); x+=w+1; }
   if (era>=4){ const ry=SB-44; B.rect(0,ry,ISO.W,2,night?'#3a3470':'#7fa9c9'); for(let px=8;px<ISO.W;px+=26) B.rect(px,ry+2,2,44,night?'#2a2858':'#8bb4d2'); const tx=60; B.rect(tx,ry-6,34,6,night?'#d0d6ff':'#eef4ff'); B.rect(tx,ry-6,34,1,'#4dd8ff'); for(let k=0;k<7;k++) B.rect(tx+2+k*4,ry-4,3,2,night?'#ffe08a':'#4a6a8a'); }
 
-  // b264: the town sits in a neighborhood instead of floating — ring road, sidewalks, hazy blocks with houses and trees out to the edges
-  const HZ=night?'#141238':'#a6d6f4', RD=[-1,HQ_GX], RDy=[-1,HQ_GY], XR=[-9,HQ_GX+8], YR=[-10,HQ_GY+13];
-  const isRoad=(gx,gy)=>RD.includes(gx)||RDy.includes(gy)||gx===-8||gx===HQ_GX+7||gy===HQ_GY+6||gy===-8;
-  const fog=(gx,gy)=>{ const dx=gx<0?-gx:gx>=HQ_GX?gx-HQ_GX+1:0, dy=gy<0?-gy:gy>=HQ_GY?gy-HQ_GY+1:0; return Math.min(.62,.1+Math.hypot(dx,dy)*.07); };
+  // b265: what's around the town grows with it — Outpost: dirt lanes + farm fields · Village: cottages · Town: paved streets, shops · City: mid-rises · Metropolis: towers
+  const HZ=night?'#141238':'#a6d6f4', RD=[-1,HQ_GX], RDy=[-1,HQ_GY], XR=[-7,HQ_GX+6], YR=[-8,HQ_GY+10];
+  const isRoad=(gx,gy)=>RD.includes(gx)||RDy.includes(gy)||(era>=2&&(gx===-6||gx===HQ_GX+5||gy===HQ_GY+5||gy===-6));
+  const fog=(gx,gy)=>{ const dx=gx<0?-gx:gx>=HQ_GX?gx-HQ_GX+1:0, dy=gy<0?-gy:gy>=HQ_GY?gy-HQ_GY+1:0; return Math.min(.55,.06+Math.hypot(dx,dy)*.075); };
+  const dirt=night?['#3a3026','#43372b']:['#a8865a','#b8956a'], crop=night?['#22402c','#2e3a22']:CY.sn===1?['#e6eef4','#d4dee6']:CY.sn===4?['#c8a24a','#a8823a']:['#5fae4f','#7a6a3a'];
+  const field=(gx,gy)=>era===0 && (((gx>>1)+(gy>>1))%3!==0) && !(gx>=-2&&gx<HQ_GX+1&&gy>=-2&&gy<HQ_GY+1);
   B.cy=SB-1;
   for(let gx=XR[0];gx<XR[1];gx++) for(let gy=YR[0];gy<YR[1];gy++){ if(gx>=0&&gx<HQ_GX&&gy>=0&&gy<HQ_GY) continue;
     const tile=[P(gx,gy,-4),P(gx+1,gy,-4),P(gx+1,gy+1,-4),P(gx,gy+1,-4)]; if (tile[2][1]<SB) continue;
-    const road=isRoad(gx,gy), walk=!road&&(isRoad(gx-1,gy)||isRoad(gx+1,gy)||isRoad(gx,gy-1)||isRoad(gx,gy+1));
-    let c=road?((gx+gy)%2?C.road:C.road2):walk?((gx+gy)%2?C.path:C.path2):((gx+gy)%2?C.ground:C.ground2);
-    B.poly(tile,mix(c,HZ,fog(gx,gy)));
-    if (road && RDy.includes(gy) && !RD.includes(gx) && gx%2===0){ const m=P(gx+.5,gy+.5,-4); B.px(m[0],m[1],mix(C.line,HZ,fog(gx,gy))); B.px(m[0]+1,m[1],mix(C.line,HZ,fog(gx,gy))); }
-    if (road && RD.includes(gx) && !RDy.includes(gy) && gy%2===0){ const m=P(gx+.5,gy+.5,-4); B.px(m[0],m[1],mix(C.line,HZ,fog(gx,gy))); B.px(m[0]-1,m[1],mix(C.line,HZ,fog(gx,gy))); } }
+    const road=isRoad(gx,gy), walk=era>=2&&!road&&(isRoad(gx-1,gy)||isRoad(gx+1,gy)||isRoad(gx,gy-1)||isRoad(gx,gy+1)), f=fog(gx,gy);
+    let c=road?(era>=2?((gx+gy)%2?C.road:C.road2):dirt[(gx+gy)&1]):walk?((gx+gy)%2?C.path:C.path2):field(gx,gy)?crop[gy&1]:((gx+gy)%2?C.ground:C.ground2);
+    B.poly(tile,mix(c,HZ,f));
+    if (field(gx,gy)&&!road){ const a=P(gx+.15,gy+.5,-4), b2=P(gx+.85,gy+.5,-4); B.line(a,b2,mix(crop[(gy+1)&1],HZ,f)); }   // furrows
+    if (era>=2 && road && RDy.includes(gy) && !RD.includes(gx) && gx%2===0){ const m=P(gx+.5,gy+.5,-4); B.px(m[0],m[1],mix(C.line,HZ,f)); B.px(m[0]+1,m[1],mix(C.line,HZ,f)); }
+    if (era>=2 && road && RD.includes(gx) && !RDy.includes(gy) && gy%2===0){ const m=P(gx+.5,gy+.5,-4); B.px(m[0],m[1],mix(C.line,HZ,f)); B.px(m[0]-1,m[1],mix(C.line,HZ,f)); } }
   B.cy=0;
   // ground slab: thick tile with dirt sides
   B.box(0,0,HQ_GX,HQ_GY,-4,4,{top:C.ground,left:night?'#4a4a5e':'#a9a397',right:night?'#36364a':'#8a8478'},O);
@@ -8360,17 +8363,34 @@ function hqDraw(D, opts){ const {Buf,P,mix}=ISO, B=new Buf(), t=opts.t||0, night
   objs.push({d:HQ_FTN[0]+HQ_FTN[1]+1.2, f:()=>hqFountainBig(B,HQ_FTN[0],HQ_FTN[1],night)});
   if (era>=3) objs.push({d:12.9+6.6, f:()=>hqBillboard(B,12.6,6.7,night,CY)});
   const MON=[[3.6,3.2],[9.6,3.2],[3.6,5.6],[9.6,5.6],[6.5,7.6]]; for(let i=0;i<Math.min(5,CY.years);i++){ const [mx,my]=MON[i]; objs.push({d:mx+my, f:()=>hqMonument(B,mx,my,night,i)}); }
-  { const rH=R(23), HP=night?[['#3a3560','#2a2648','#221e3a'],['#3d4a66','#2c3850','#222c40'],['#4a3a58','#382a44','#2a2036']]:[['#e8d6c0','#c9a98a','#a8876a'],['#d6e2ee','#a9bccf','#8a9db0'],['#f0c9b8','#cf9a86','#ad7a68'],['#dfe8c8','#b5c48f','#93a270']];
-    const FG=new Buf(); B.fg=FG; FG.cy=0;
-    for(let gx=XR[0];gx<XR[1]-1;gx+=2) for(let gy=YR[0];gy<YR[1]-1;gy+=2){ if(gx>=-3&&gx<HQ_GX+2&&gy>=-3&&gy<HQ_GY+2) continue; const v=rH();
-      if (isRoad(gx,gy)||isRoad(gx+1,gy)||isRoad(gx,gy+1)||isRoad(gx+1,gy+1)) continue; const top=P(gx,gy,-4); if (top[1]<SB+2) continue;
-      const f=fog(gx,gy), front=gy>=HQ_GY+2||gx>=HQ_GX+2&&gy>=4, T=front?FG:B;
-      const draw=()=>{ if (v<.62){ const pal=HP[Math.floor(rH()*HP.length)], h=front?5+Math.floor(rH()*4):7+Math.floor(rH()*9), w=1.3+rH()*.4;
-          const bx=T.box(gx+.3,gy+.3,w,w,-4,h,{top:mix(pal[0],HZ,f),left:mix(pal[1],HZ,f),right:mix(pal[2],HZ,f)},mix(O,HZ,f*.8));
-          const roof=night?'#2a2240':'#b0564a'; T.box(gx+.3,gy+.3,w,w,-4+h,2,{top:mix(roof,HZ,f),left:mix(roof,HZ,f+.1),right:mix(roof,HZ,f+.18)});
-          for(let k=0;k<3;k++) if (!night||rH()<.55) T.faceRect(k%2?'L':'R',gx+.3,gy+.3,w,w,-4,2+k*3,2+(k%2)*3,1,2,night?mix('#ffd36b',HZ,f*.5):mix(C.winOff,HZ,f)); }
-        else if (v<.9){ const p0=P(gx+1,gy+1,-4), lf=CY.sn===1?'#e6f0f8':CY.sn===4?'#d9822b':CY.sn===2?'#f7a8c8':'#3f9a4f', lc=mix(night?'#1f4a34':lf,HZ,f);
-          T.rect(p0[0],p0[1]-4,1,4,mix('#6b4a2e',HZ,f)); T.poly([[p0[0]-4,p0[1]-4],[p0[0],p0[1]-12],[p0[0]+5,p0[1]-4]],lc); } };
+  { const rH=R(23), FG=new Buf(); B.fg=FG;
+    const PAL=night?[['#3a3560','#2a2648','#221e3a'],['#3d4a66','#2c3850','#222c40'],['#4a3a58','#382a44','#2a2036'],['#3a4a4a','#2a3838','#203030']]
+      :[['#f2e2cc','#d6b896','#b39272'],['#dce8f2','#aebfd2','#8c9eb2'],['#f6d2c2','#d8a08c','#b47e6a'],['#e4ecd0','#bccb96','#98a674'],['#e8e0f4','#bdb0d8','#9888b8']];
+    const ROOF=night?['#2a2240','#3a2030','#20283a']:['#b0564a','#5a6a8a','#7a4a3a','#3f6a5a'], AWN=['#ff5a7a','#4dd8ff','#ffd25e','#5fd38a'];
+    const win=(night)=>night?(rH()<.6?C.winOn[Math.floor(rH()*3)]:C.winOff):C.winOff;
+    // one detailed neighbor building: body, windows per floor on both faces, door, roof/awning/rooftop bits by type
+    const bld=(T,gx,gy,w,d,h,type,f)=>{ const pal=PAL[Math.floor(rH()*PAL.length)], q=c=>mix(c,HZ,f), O2=mix(O,HZ,f*.8);
+      T.box(gx,gy,w,d,-4,h,{top:q(pal[0]),left:q(pal[1]),right:q(pal[2])},O2);
+      const Lw=Math.round(w*8), Rw=Math.round(d*8), fl=type==='cottage'?1:Math.max(1,Math.floor((h-3)/6));
+      for (let k=0;k<fl;k++){ const v=3+k*6; if (v+3>h) break;
+        for (let u=2;u<Lw-1;u+=3) if (!(k===0&&u>=Lw/2-1&&u<=Lw/2+1)) T.faceRect('L',gx,gy,w,d,-4,u,v,1,2,q(win(night)));
+        for (let u=2;u<Rw-1;u+=3) T.faceRect('R',gx,gy,w,d,-4,-u,v,1,2,q(win(night))); }
+      T.faceRect('L',gx,gy,w,d,-4,Math.floor(Lw/2)-1,0,2,3,q(night?'#1a1626':'#5a3a2a'));                                   // door
+      if (type==='cottage'){ const rc=ROOF[Math.floor(rH()*ROOF.length)]; T.box(gx-.1,gy-.1,w+.2,d+.2,-4+h,2,{top:q(rc),left:q(mix(rc,'#000000',.2)),right:q(mix(rc,'#000000',.35))},O2); T.box(gx+.2,gy+.2,.3,.3,-4+h+2,3,{top:q('#8a5a4a'),left:q('#6a4a3a'),right:q('#5a3a2a')}); }
+      if (type==='shop'){ const a=AWN[Math.floor(rH()*AWN.length)]; for (let u=0;u<Lw;u++) T.faceRect('L',gx,gy,w,d,-4,u,4,1,1,q(u%2?a:'#ffffff')); }
+      if (type==='mid'||type==='tower'){ T.box(gx+w*.3,gy+d*.3,w*.35,d*.35,-4+h,2,{top:q('#b8bcc8'),left:q('#8a8e9a'),right:q('#6a6e7a')}); }
+      if (type==='tower'){ const t=P(gx+w/2,gy+d/2,-4+h+2); T.line([t[0],t[1]],[t[0],t[1]-6],q('#8a8e9a')); if (night) T.px(t[0],t[1]-7,'#ff4f6d'); } };
+    const tree=(T,gx,gy,f,small)=>{ const p0=P(gx,gy,-4), lf=CY.sn===1?'#e6f0f8':CY.sn===4?'#d9822b':CY.sn===2?'#f7a8c8':'#3f9a4f', lc=mix(night?'#1f4a34':lf,HZ,f), s2=small?3:4;
+      T.rect(p0[0],p0[1]-3,1,3,mix('#6b4a2e',HZ,f)); T.poly([[p0[0]-s2,p0[1]-3],[p0[0],p0[1]-3-s2*2],[p0[0]+s2+1,p0[1]-3]],lc); };
+    const kind=()=>{ const v=rH(); if (era===0) return v<.12?'cottage':v<.5?'tree':null; if (era===1) return v<.45?'cottage':v<.8?'tree':null;
+      if (era===2) return v<.35?'cottage':v<.65?'shop':v<.85?'tree':null; if (era===3) return v<.2?'shop':v<.7?'mid':v<.85?'tree':null; return v<.55?'tower':v<.85?'mid':'tree'; };
+    for(let gx=XR[0];gx<XR[1]-1;gx+=2) for(let gy=YR[0];gy<YR[1]-1;gy+=2){ if(gx>=-2&&gx<HQ_GX+1&&gy>=-2&&gy<HQ_GY+1) continue;
+      if (isRoad(gx,gy)||isRoad(gx+1,gy)||isRoad(gx,gy+1)||isRoad(gx+1,gy+1)) continue; if (field(gx,gy)&&rH()<.9) continue;
+      const top=P(gx,gy,-4); if (top[1]<SB+2) continue; const k=kind(); if (!k) continue;
+      const f=fog(gx,gy), front=gy>=HQ_GY+1||(gx>=HQ_GX+1&&gy>=3), T=front?FG:B;
+      const hMax=front?10:99, H2={cottage:6,shop:9,mid:16+Math.floor(rH()*10),tower:28+Math.floor(rH()*24)}[k]||0;
+      const draw=()=>{ if (k==='tree'){ tree(T,gx+.7,gy+.8,f,false); if (rH()<.5) tree(T,gx+1.4,gy+1.3,f,true); return; }
+        const w=k==='cottage'?1.3:1.6; bld(T,gx+.25,gy+.25,w,w,Math.min(hMax,H2),k,f); if (k==='cottage'&&rH()<.5) tree(T,gx+1.7,gy+1.6,f,true); };
       if (front) draw(); else objs.push({d:gx+gy+2, f:draw}); } }
   objs.sort((a,b)=>a.d-b.d); for(const o of objs) o.f();
   return B; }
@@ -8477,7 +8497,7 @@ function hqFrame(c, now){ const D=HQI.D; if (!D) return; const art=HQI.art ||= (
     if (b.k==='modeling' && night){ const a=P(x+w*.3,y+d*.5,h); ax.fillStyle='rgba(255,246,200,.16)'; for (let k=0;k<14;k++) ax.fillRect(a[0]-k/2+Math.sin(now/900)*k/2, a[1]-6-k, 2+k/3, 1); } }
   // car on the road
   const cs=hqCarSprite(), lane=8.55, span=HQ_GX-1.2, o=HQI.carO, nC=(HQI.city||{}).cars||1;
-  for (let ci=0; ci<nC+1; ci++){ const L2=24, ph=(now/1000*(ci%2?1.25:1)+ci*L2/(nC+1))%L2, cx=-8+ph, p=P(cx,HQ_GY+.15+(ci%2)*.4,-4);
+  for (let ci=0; ci<((HQI.city||{}).era>=2?nC+1:0); ci++){ const L2=24, ph=(now/1000*(ci%2?1.25:1)+ci*L2/(nC+1))%L2, cx=-8+ph, p=P(cx,HQ_GY+.15+(ci%2)*.4,-4);
     {  ax.drawImage(cs, Math.round(p[0]-o[0]), Math.round(p[1]-o[1])); if (night){ ax.fillStyle='rgba(255,240,180,.55)'; ax.fillRect(Math.round(p[0]+8),Math.round(p[1]+1),3,1); ax.fillRect(Math.round(p[0]+10),Math.round(p[1]+2),3,1); } } }
   hqPeople(ax, now, night);
   try { hqLife(ax, now, night); } catch(e){}
