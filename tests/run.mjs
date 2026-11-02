@@ -257,6 +257,10 @@ const dw = await page.evaluate(() => { const D=ensureDatum(), B=S.money.budget, 
 ok('Datum: bank charges that look like supplies are suggested and count once', dw.sug && dw.rows===1, JSON.stringify(dw));
 ok('Datum: logged purchases become write-offs', dw.logged, JSON.stringify(dw));
 ok('money plan invests the FI plan amount once it starts', dw.ret, JSON.stringify(dw));
+// Datum shopping list: suggestions skip what you have, ＋ adds to the list
+const shp = await page.evaluate(() => { const D=ensureDatum(), n0=D.expenses.length, L=dShopSugg(); const first=L[0]&&L[0].n; dShopAdd(0); const added=D.expenses.some(e=>e.name===first&&e.status==='planned'); const gone=!dShopSugg().some(x=>x.n===first);
+  D.expenses=D.expenses.filter(e=>!(e.name===first&&e.note==='suggested')); commit({skipXp:true}); return {n:L.length, added, gone}; });
+ok('Datum shopping suggestions add to the list and disappear once added', shp.n>0 && shp.added && shp.gone, JSON.stringify(shp));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
