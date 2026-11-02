@@ -1836,7 +1836,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b266';
+const BUILD='b267';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2574,7 +2574,28 @@ function avatarStyleToggle(){
 }
 
 const avatarCache = new Map();
+/* ---- b267: your character in PixelLab pixel art — base from your picture, every build piece and mood is a layer ---- */
+window.PXA = window.PXA || {};
+const PXA_ORDER=['torso','neck','pendant','ears','eyes','mouth','head','crown','fx'];
+function pxaKey(item){ for (const l in EVO) for (const k in EVO[l]) if (EVO[l][k]===item) return 'L'+l+k; return null; }
+const pxaAuraC={};
+function pxaAura(c){ if (pxaAuraC[c]) return pxaAuraC[c]; try { const cv=document.createElement('canvas'); cv.width=96; cv.height=116; const x=cv.getContext('2d'); x.fillStyle=c;
+    const B=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5]; for (let y=0;y<116;y++) for (let X=0;X<96;X++){ const d=Math.hypot((X-48)/44,(y-58)/52); const a=Math.max(0,1-d)*1.4; if (a>B[(y&3)*4+(X&3)]/16+.08){ x.globalAlpha=Math.min(.55,a*.5); x.fillRect(X,y,1,1); } }
+    return pxaAuraC[c]=cv.toDataURL(); } catch(e){ return ''; } }
+function pxAvatarSVG(level, mood, size, picks, extra, opts){ if (!PXA.me) return null; opts=opts||{};
+  const eq=equipped(level, picks||{}, extra), n={M:0,E:0,D:0}; for (let l=2;l<=level;l++){ const p=(picks||{})[l]; if (p&&n[p]!==undefined) n[p]++; }
+  if (extra){ const k=pxaKey(extra); if (k) n[k.slice(-1)]++; } const top=Object.entries(n).sort((a,b)=>b[1]-a[1])[0], th=top[1]?top[0]:'0';
+  const H=115, im=(src,y,h,extra2)=>src?`<image href="${src}" x="0" y="${y}" width="96" height="${h}" preserveAspectRatio="${extra2||'xMidYMax meet'}" style="image-rendering:pixelated" image-rendering="optimizeSpeed"/>`:'';
+  let L='';
+  if (!opts.bare){ const bk=eq.bg?pxaKey(eq.bg):null; L+=`<rect width="96" height="${H}" rx="13" fill="#15122a"/>`+im(PXA[bk]||PXA['bg_'+th]||PXA.bg_0, 0, H, 'xMidYMid slice'); }
+  if (eq.aura){ const c=eq.aura.name.includes('Gold')?GOLD:eq.aura.name.includes('Platinum')?'#e5e7eb':CYAN; L+=im(pxaAura(c),0,H,'none'); }
+  L+=im(PXA.me, H-96, 96);
+  const md={smile:'smile',hype:'hype',focused:'focused',tired:'tired',sad:'sad',happy:'smile'}[mood]; if (md&&PXA['mood_'+md]) L+=im(PXA['mood_'+md], H-96, 96);
+  for (const sl of PXA_ORDER){ const it=eq[sl]; if (!it) continue; const k=pxaKey(it); if (k&&PXA[k]) L+=im(PXA[k], H-96, 96); }
+  const flt=eq.filter?'filter:grayscale(1) contrast(1.1);':'', lock=opts.locked?'filter:brightness(0);opacity:.45;':'';
+  return `<svg viewBox="0 0 96 ${H}" width="${size}" height="${Math.round(size*1.2)}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" role="img" aria-label="Level ${level}" style="${flt}${lock}"><defs><clipPath id="pxac"><rect width="96" height="${H}" rx="13"/></clipPath></defs><g clip-path="url(#pxac)">${L}</g></svg>`; }
 function avatarSVG(level, mood='neutral', size=160, picks={}, extra=null, opts={}){
+  if (PXA.me){ const o=pxAvatarSVG(level, mood, size, picks, extra, opts); if (o) return o; }
   const key = dbLib ? `${level}|${mood}|${size}|${JSON.stringify(picks)}|${extra?extra.name:''}|${opts.locked?1:0}${opts.bare?'b':''}|${S.bg??''}|${JSON.stringify(S.dbLook||{})}` : null;
   if (key && avatarCache.has(key)) return avatarCache.get(key);
   const out = avatarSVG_(level, mood, size, picks, extra, opts);
@@ -10448,12 +10469,7 @@ function vCharacter(){
   </div>`)+`
   ${ME_MERGED?'':`<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${tabs.map(([k,t])=>`<button class="${chMode===k?'on':''}" style="flex:1;min-width:0;padding:9px 1px;font-size:12px;letter-spacing:-.01em" onclick="chMode='${k}';render()">${t}</button>`).join('')}</div>`}`;
   if (chMode==='custom') return top + `
-  ${animStudio()}${voiceCard()}
-  <div class="card sec"><div class="hdr"><h2>Face & hair</h2><button class="btn ghost sm" onclick="resetLook()">Reset</button></div>
-    ${dbLib?'':`<div style="margin-bottom:10px">${avatarStyleToggle()}</div>`}
-    <div class="stack" style="gap:8px;grid-template-columns:minmax(0,1fr)">${Object.entries(DB_LOOK).map(([k,v])=>`<div class="row between" style="gap:10px;flex-wrap:nowrap;padding:8px 12px;border-radius:var(--r2);background:var(--card2)"><b>${v.label}</b><span class="row" style="gap:10px;flex-wrap:nowrap;align-items:center"><button class="iconbtn" style="background:var(--card)" onclick="dbLookStep('${k}',-1)" aria-label="Previous ${v.label}">‹</button><span class="num sub" style="min-width:48px;text-align:center">${v.list.indexOf(look[k])+1} / ${v.list.length}</span><button class="iconbtn" style="background:var(--card)" onclick="dbLookStep('${k}',1)" aria-label="Next ${v.label}">›</button></span></div>`).join('')}</div>
-    <div class="help" style="margin-top:10px">Changes show on the character above straight away and are saved with your backup.</div>
-  </div>
+
   <div class="card sec"><div class="hdr"><h2>Rings</h2><span class="sub">${have.length}/${RINGS.length} unlocked</span></div>
     <div class="rings"><button class="ringsw ${S.ring==null?'on':''}" onclick="setRing(-1)" title="Path default"><i style="background:linear-gradient(135deg,#f9ce34,#ee2a7b,#6228d7)"></i><small>auto</small></button>${ringList.map(([r,i])=>`<button class="ringsw ${S.ring===i?'on':''} ${r.lv>real?'lock':''}" onclick="setRing(${i})" title="${r.lv>real?'Locked':r.name}"><i style="background:${r.lv>real?'var(--muted)':r.css}"></i><small>${r.lv>real?'???':esc(r.name)}</small></button>`).join('')}</div>
     <button class="btn ghost sm" style="margin-top:10px;width:100%;justify-content:center" onclick="ringAll=!ringAll;render()">${ringAll?'Show fewer':`Show all ${RINGS.length}`}</button>
