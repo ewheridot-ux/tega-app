@@ -1845,7 +1845,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b280';
+const BUILD='b281';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2276,7 +2276,7 @@ const BADGES = [
   {key:'fullstack',name:'Full Stack Week',icon:'⭐',hint:'Every track ✅ in one Sunday review',auto:()=>Object.keys(S.weeks).some(fullStackWeek)},
   {key:'wins25',name:'Receipts',icon:'🧾',hint:'25 wins logged',auto:()=>S.wins.length>=25,prog:()=>[S.wins.length,25]},
   {key:'kr1',name:'KR Crusher',icon:'🎯',hint:'Hit your first key result',auto:()=>allKRs().some(k=>k.target&&k.current>=k.target)},
-  {key:'ef',name:'Emergency Fund',icon:'🛡️',hint:'HYSA hits the 6-month target',auto:()=>S.money.s.efNow>=efTarget(),prog:()=>[S.money.s.efNow,efTarget()]},
+  {key:'ef',name:'Emergency Fund',icon:'🛡️',hint:'HYSA hits the 6-month target',auto:()=>bal('ef')>=efTarget(),prog:()=>[bal('ef'),efTarget()]},
   {key:'tax',name:'Tax Master',icon:'📊',hint:'Jan 15 payment logged, buffer funded',auto:()=>S.money.taxPaid.some(p=>p.d>='2027-01-01')},
   {key:'sale',name:'First Sale',icon:'💎',hint:'First paid Datum Grillz order',manual:true},
   {key:'rolled',name:'Rolled Over',icon:'🏦',hint:'Schneider 401(k) lands at Fidelity',manual:true},
@@ -2391,7 +2391,7 @@ function waterfall(amt, ctx, dateKey){
   return {billNames: BF.names, amt, tax: tax+cu, taxBase: tax, catchup: cu, bills:fixedCk, flex: flex+left, efAdd, draw, house, ret, cu: 0, cards, cardsLeft:ctx.cards, extra:left, efBal:ctx.ef, retLabel: yr<=2026?'Roth':'SEP'};
 }
 function projection(){
-  const s=S.money.s; const ctx={ef:s.efNow, buf:s.taxBufNow, cush:0, house:0, cards:cardDebt(), behind:taxBehind(), nLeft:S.money.checks.filter(c=>!c.got&&c.d<TAX_CATCHUP_BY).length};
+  const s=S.money.s; const ctx={ef:bal('ef'), buf:bal('tax'), cush:0, house:0, cards:cardDebt(), behind:taxBehind(), nLeft:S.money.checks.filter(c=>!c.got&&c.d<TAX_CATCHUP_BY).length};
   const future = S.money.checks.filter(c=>!c.got).sort((a,b)=>a.d.localeCompare(b.d));
   try { const pre=future.filter(c=>c.d<TAX_CATCHUP_BY), caps=pre.map((c,i)=>{ const nd=future[future.indexOf(c)+1]?.d||addDays(c.d,14); const bl=billsFor(c.d,nd).amt, after=c.amt-c.amt*s.taxRate-bl; return Math.max(0, after-Math.min(s.flexPerCheck, Math.max(0,after))); });
     let need=ctx.behind, lo=0, hi=Math.max(0,...caps,need); const tot=L=>caps.reduce((t,c)=>t+Math.min(c,L),0);
@@ -3599,9 +3599,9 @@ function skMetrics(){
     igF:ig.followers||0, igPeak:Math.max(0,...(ig.daily||[]).map(r=>r[2])), tkF:tk.followers||0,
     active:days.filter(dayActive).length, streak:bestDailyStreak(), early:days.filter(k=>S.days[k].checkin&&S.days[k].checkin.at<'09:00').length, perfect:days.filter(k=>{ const t=S.days[k].top3; return t.every(x=>x.text.trim()&&x.done); }).length,
     resets:Object.values(S.weeks||{}).filter(w=>w.review&&w.review.done).length, pWeeks:perfectWeeks(), quests:(S.quests||[]).filter(q=>q.done).length, dls:(S.dl||[]).filter(x=>x.done).length,
-    split:S.money.checks.filter(c=>c.got&&c.split&&!openMoves(c).length).length, tax:+S.money.s.taxBufNow||0, ef:+S.money.s.efNow||0,
+    split:S.money.checks.filter(c=>c.got&&c.split&&!openMoves(c).length).length, tax:bal('tax'), ef:bal('ef'),
     benchSess:sess.length, wins:S.wins.length, landed:fact('checks'), income:Math.round(fact('income')),
-    roth:+S.money.s.rothYtd||0, house:+S.money.s.houseNow||0, net:Math.round(netWorth()),
+    roth:+S.money.s.rothYtd||0, house:bal('house'), net:Math.round(netWorth()),
     ...(()=>{ let E=[]; try{ E=liveBookings(); }catch(e){} const jobs=E.filter(e=>e.t==='job'), past=k=>k<=TODAY;
       const gw={}; for (const k of gymDays()) gw[isoWeek(k)]=(gw[isoWeek(k)]||0)+1;
       let soc=[]; try { soc=socAll(); } catch(e){}
@@ -4141,12 +4141,12 @@ function landmarks(){
   add('📨','First proposal sent', min((S.logs||[]).filter(l=>l.kind==='proposal').map(l=>l.d)));
   add('🔥','First piece sent to casting', min(D.prototypes.map(p=>p.stageAt?.cast)));
   add('✅','First piece finished', min(D.prototypes.map(p=>p.stageAt?.complete||(p.status==='complete'?(p.completed||'done'):''))));
-  add('🛡️','First $1,000 in the emergency fund', (H.find(h=>h.ef>=1000)||{}).d || (+M.s.efNow>=1000?'done':''));
+  add('🛡️','First $1,000 in the emergency fund', (H.find(h=>h.ef>=1000)||{}).d || (bal('ef')>=1000?'done':''));
   add('🧾','First Datum order', min(D.orders.map(o=>o.opened)));
   add('💎','First Datum sale delivered', D.orders.some(o=>o.status==='delivered'||o.status==='closed')?'done':'');
   add('📊','First tax payment made', min(M.taxPaid.map(p=>p.d)));
   for (const p of DPHASES) add('🚪',`Datum Phase ${p.n} cleared · ${p.name}`, D.phases[p.n]?.status==='complete'?'done':'');
-  add('🛡️','Emergency fund full', (H.find(h=>h.ef>=efTarget())||{}).d || (+M.s.efNow>=efTarget()?'done':''));
+  add('🛡️','Emergency fund full', (H.find(h=>h.ef>=efTarget())||{}).d || (bal('ef')>=efTarget()?'done':''));
   for (let l=5;l<=MAXLVL;l+=5) add(l===MAXLVL?'👑':'🧬', l===MAXLVL?'Level 50 · Apex':`Level ${l} · ${LEVELS[stageOf(l)-1]}`, (S.lvlAt||{})[l] || (lvl>=l?'done':''));
   Object.keys(S.quarters||{}).sort().forEach((q,i)=>{ const Q=S.quarters[q]; add('📖',`Chapter ${i+1} closed${Q.chapter?.title?' · '+Q.chapter.title:''}`, Q.review?.closed||''); });
   const done=L.filter(x=>x.date).sort((a,b)=>(a.date==='done'?'0':a.date).localeCompare(b.date==='done'?'0':b.date)), todo=L.filter(x=>!x.date);
@@ -5822,7 +5822,7 @@ function wyrm(){ return rpgC('wyrm',()=>{ const s=S.money.s; let need=0; try { n
   const paidL=(S.money.taxPaid||[]).filter(p=>!p.d||p.d>='2026-01-01'), hp=taxState().gap;
   const hits=[...paidL.map(p=>({d:p.d||'',amt:p.amt,l:'estimated payment'})), ...R_().wyrm.map(h=>({d:h.d,amt:h.amt,l:'set aside'}))].sort((a,b)=>(b.d||'').localeCompare(a.d||''));
   return {hp, max:Math.max(need,1), need, hits, pct:need?hp/need:0}; }); }
-function wyrmFeed(ev){ ev.preventDefault(); const v=+ev.target.querySelector('input').value; if (!(v>0)) return false; S.money.s.taxBufNow=(+S.money.s.taxBufNow||0)+v; R_().wyrm.push({d:TODAY, amt:v}); _bossHit.wyrm=v; commit(); confetti(); toast(`🗡️ ${money0(v)} hit on the Tax Wyrm`); return false; }
+function wyrmFeed(ev){ ev.preventDefault(); const v=+ev.target.querySelector('input').value; if (!(v>0)) return false; S.money.s.taxBufNow=(bal('tax'))+v; R_().wyrm.push({d:TODAY, amt:v}); _bossHit.wyrm=v; commit(); confetti(); toast(`🗡️ ${money0(v)} hit on the Tax Wyrm`); return false; }
 function wyrmCursed(k){ return rpgC('curse:'+k,()=>{ const hitDays=[...R_().wyrm.map(h=>h.d), ...(S.money.taxPaid||[]).map(p=>p.d||'')]; return S.money.checks.some(c=>c.got&&c.gotOn&&c.gotOn>=addDays(k,-14)&&c.gotOn<=addDays(k,-3)&&c.gotOn>=addDays(RPG_START,-14)&&!hitDays.some(d=>d>=c.gotOn&&d<=k)); }); }
 
 /* ---------- crafting ---------- */
@@ -7431,7 +7431,7 @@ let ciSleep = null;
 function coachData(){ const out=[], T=TODAY; const tryp=f=>{ try { const v=f(); if (v) out.push(v); } catch(e){} };
   tryp(()=>`Today is ${niceLong(T)}. Level ${levelFor(computeXP())}, ${dailyStreak()}-day streak.`);
   tryp(()=>{ const d=S.days[T]; return `Check-in: ${d&&d.checkin?`done, energy ${d.checkin.feel}/4${d.checkin.sleep!=null?`, slept ${SLEEP[d.checkin.sleep]}`:''}`:'not yet'}. Top 3: ${d?d.top3.filter(t=>t.text.trim()).map(t=>(t.done?'[done] ':'')+t.text).join('; ')||'not set':'not set'}.`; });
-  tryp(()=>`Money: ONE Management owes him ${money0(mOwed(mPipe()))}. Tax buffer holds ${money0(S.money.s.taxBufNow||0)}. Expected checks: ${S.money.checks.filter(c=>!c.got).slice(0,3).map(c=>`${money0(c.amt)} on ${c.d}`).join(', ')||'none'}.`);
+  tryp(()=>`Money: ONE Management owes him ${money0(mOwed(mPipe()))}. Tax buffer holds ${money0(bal('tax'))}. Expected checks: ${S.money.checks.filter(c=>!c.got).slice(0,3).map(c=>`${money0(c.amt)} on ${c.d}`).join(', ')||'none'}.`);
   tryp(()=>{ const up=mAll().filter(e=>e.start>=T&&!['cancelled','released','declined','nobook'].includes(e.s)).sort((a,b)=>a.start.localeCompare(b.start)).slice(0,5); return `Bookings ahead: ${up.map(e=>`${e.t} for ${e.c} on ${e.start}${e.loc?' in '+e.loc:''}`).join('; ')||'none'}.`; });
   tryp(()=>`Deadlines in the next 2 weeks: ${dlAll().filter(x=>!x.done&&x.d<=addDays(T,14)).slice(0,6).map(x=>`${x.text} (${x.d})`).join('; ')||'none'}.`);
   tryp(()=>S.gym&&S.gym.setup&&S.gym.setup.done?`Gym: ${gWeekCount()}/${G_().setup.days} workouts this week, goal ${GGOAL[G_().setup.goal].n}. Last workout: ${(G_().sessions.slice(-1)[0]||{}).name||'none yet'}.`:'');
@@ -7808,11 +7808,11 @@ const KSRC = [
   ['Money','fiport','Portfolio ($) · FI plan','📈','$',()=>Math.round(fiActual().v),1],
   ['Money','fiinv','Invested ($) · FI plan','💹','$',(a,b)=>Math.round(FI_().inv.filter(x=>x.d>=a&&x.d<=b).reduce((s,x)=>s+(+x.amt||0),0))],
   ['Money','fimonths','Months invested on plan','🗓','',(a,b)=>{ const F=FI_(), by={}; for (const x of F.inv) if (x.d>=a&&x.d<=b) by[x.d.slice(0,7)]=(by[x.d.slice(0,7)]||0)+(+x.amt||0); return Object.entries(by).filter(([ym,v])=>ymDiff(F.from,ym)>=0 && v>=fiMonthly(F,ymDiff(F.from,ym))-0.5).length; }],
-  ['Money','ef','Emergency fund ($)','🛟','$',()=>Math.round(+S.money.s.efNow||0),1],
-  ['Money','tax','Tax Buffer ($)','🏛','$',()=>Math.round(+S.money.s.taxBufNow||0),1],
+  ['Money','ef','Emergency fund ($)','🛟','$',()=>Math.round(bal('ef')),1],
+  ['Money','tax','Tax Buffer ($)','🏛','$',()=>Math.round(bal('tax')),1],
   ['Money','roth','Roth this year ($)','🌱','$',()=>Math.round(+S.money.s.rothYtd||0),1],
   ['Money','cush','Cushion ($)','🛋','$',()=>Math.round(+S.money.s.cushNow||0),1],
-  ['Money','house','House fund ($)','🏠','$',()=>Math.round(+S.money.s.houseNow||0),1],
+  ['Money','house','House fund ($)','🏠','$',()=>Math.round(bal('house')),1],
   ['Money','writeoffs','Write-offs logged ($)','🧾','$',(a,b)=>Math.round(((S.money.budget||{}).deductibles||[]).filter(x=>(x.d||x.date||'')>=a&&(x.d||x.date||'')<=b).reduce((s,x)=>s+(+x.amt||0),0))],
   ['Side hustle','hustlehrs','Side hustle hours','🚀','h',(a,b)=>Math.round(ensureHustle().log.filter(l=>l.d>=a&&l.d<=b).reduce((s,l)=>s+(+l.mins||0),0)/6)/10],
   ['Side hustle','hustlen','Side hustle sessions','🛠️','',(a,b)=>new Set(ensureHustle().log.filter(l=>l.d>=a&&l.d<=b&&(+l.mins||0)>0).map(l=>l.d)).size],
@@ -9231,13 +9231,13 @@ function cardsCard(P){ const L=cardList(); if(!L.length) return ''; const tot=L.
   return `<div class="card sec"><div class="hdr"><h2>💳 Cards</h2><span class="sub num">${money0(tot)} owed</span></div>
     ${L.map(c=>{ const m0=meta[c.name]||{lim:c.bal,min:0,due:null}, m={lim:c.limit||m0.lim, min:c.minDue!=null?c.minDue:m0.min, due:c.dueDate?+c.dueDate.slice(8):m0.due}, pct=clamp(c.bal/(m.lim||c.bal||1),0,1.2); return `<div class="cc-r"><div class="row between"><b>${esc(c.name)}</b><b class="num">${money0(c.bal)}<span class="sub" style="font-weight:500"> / ${money0(m.lim)}</span></b></div><div class="bar" style="height:8px;margin:6px 0 4px"><b style="width:${Math.min(100,Math.round(pct*100))}%;background:${pct>=1?'var(--bad)':'var(--accent)'}"></b></div><div class="sub" style="font-size:12px">min ${money0(m.min)}${m.due?` · due the ${m.due}${m.due===3?'rd':'th'}`:''}${pct>1?' · over limit':''}</div></div>`; }).join('')}
     <div class="sub" style="margin-top:8px">Every check's leftover goes here, smallest first, until both are $0.</div></div>`; }
-function goalsCard(b){ const s=S.money.s, M=S.money, G=(M.growth ||= {target:10000}), inv=invNow(), ef=+s.efNow||0, eft=efTarget();
+function goalsCard(b){ const s=S.money.s, M=S.money, G=(M.growth ||= {target:10000}), inv=invNow(), ef=bal('ef'), eft=efTarget();
   const row=(ic,l,v,t,sub,k,col)=>`<div class="gl-r"><div class="row between"><span>${ic} <b>${l}</b></span><b class="num">${money0(v)}<span class="sub" style="font-weight:500"> / ${k==='growth'?`<input class="inp num" type="number" inputmode="decimal" value="${t}" style="width:84px;padding:2px 6px;display:inline-block" onchange="S.money.growth.target=+this.value||10000;commit({skipXp:true})">`:money0(t)}</span></b></div><div class="bar" style="height:8px;margin:6px 0 4px"><b style="width:${Math.round(clamp(v/(t||1),0,1)*100)}%;background:${col}"></b></div>${sub?`<div class="sub" style="font-size:12px">${sub}</div>`:''}</div>`;
   return `<div class="card sec"><div class="hdr"><h2>Goals</h2><button class="btn ${mAdj?'':'ghost'} sm" onclick="mAdj=!mAdj;render()">${mAdj?'Done':'Edit'}</button></div>
     ${mAdj?`<div class="settings"><label>Emergency fund now<input class="inp num" type="number" value="${ef}" onchange="setMoney('efNow',this.value)"></label><label>House fund now<input class="inp num" type="number" value="${+s.houseNow||0}" onchange="setMoney('houseNow',this.value)"></label></div>`:''}
     ${row('🛡️','Emergency fund',ef,eft,'starts after the cards and taxes','emergency','var(--good)')}
     ${row('🌱','Fidelity',inv,G.target,cardDebt()>0.5?'Roth deposits resume once the cards and taxes are done':'','growth','var(--accent2)')}
-    ${(+s.houseNow||0)>0?row('🏡','House',+s.houseNow,0,'','house','var(--warn)'):''}</div>`; }
+    ${(bal('house'))>0?row('🏡','House',bal('house'),0,'','house','var(--warn)'):''}</div>`; }
 function vMoneyTaxes(){ const b=moneyBits(), s=S.money.s, sh=taxShortApril(); return `${taxCard()}
   ${taxBehind()>0.5?`<div class="help sec keep" style="margin:-6px 4px 12px">Catch-up starts once the cards hit $0.</div>`:''}
   ${b.taxFold}${datumCard()}${vDeduct()}`; }
@@ -9273,7 +9273,7 @@ function lastLanded(){ return S.money.checks.filter(c=>c.got).sort((a,b)=>(b.got
 function nextCheckCard(P){ const nx=P.rows[0]; if (!nx) return `<div class="card sec"><div class="tag">Next check</div><div class="sub" style="margin-top:6px">Nothing expected. A new one appears here by itself when an agency deposit lands.</div></div>`;
   const dd=daysBetween(TODAY,nx.d), ll=lastLanded(), owe=agencyOwed();
   const nn=P.rows[1], bills=Math.round(nx.bills||0), flex=Math.round(nx.flex||0), cd=cardDebt(), tb=taxBehind();
-  const CL=cardList(), rest=[cd>0.5?['💳',CL[0]?CL[0].name:'Credit cards',CL.map(c=>`${c.name} ${money0(c.bal)}`).join(' → ')+' · smallest first']:null, tb>0.5?['📊','Tax catch-up',`${money0(tb)} behind`]:null, (+S.money.s.efNow||0)<efTarget()-.5?['🛡️','Emergency fund',`${money0(+S.money.s.efNow||0)} of ${money0(efTarget())}`]:null, ['🌱','Roth IRA','']].filter(Boolean);
+  const CL=cardList(), rest=[cd>0.5?['💳',CL[0]?CL[0].name:'Credit cards',CL.map(c=>`${c.name} ${money0(c.bal)}`).join(' → ')+' · smallest first']:null, tb>0.5?['📊','Tax catch-up',`${money0(tb)} behind`]:null, (bal('ef'))<efTarget()-.5?['🛡️','Emergency fund',`${money0(bal('ef'))} of ${money0(efTarget())}`]:null, ['🌱','Roth IRA','']].filter(Boolean);
   return `<div class="card sec nc-card">
     <div class="tag">Next check</div><b class="nc-when">${dd<0?'Any day now':dd===0?'Today':nice(nx.d)}</b><div class="sub">${dd<0?`was expected ${nice(nx.d)} · shows up here once the bank posts it`:dd===0?'expected today':`expected in ${dd} days`}</div>
     <div class="nc-amt">Amount: <b>unknown until it lands</b></div>
@@ -9304,9 +9304,16 @@ function sbLinks(){ const M=S.money, A=sbAccts(), L=(M.links ||= {}); const has=
   if (!has('house')) L.house=A.filter(a=>/house|home/i.test(a.name)&&acctKind(a)!=='debt').map(a=>a.name);
   if (!has('ret')) L.ret=[];   // you choose: the FI plan's start ($12K) may include accounts the bank feed doesn't see (old 401(k))
   return L; }
-function sbActual(k){ const L=sbLinks(), A=sbAccts(), s=S.money.s, linked=(L[k]||[]).map(n=>A.find(a=>a.name===n)).filter(Boolean), sum=linked.reduce((t,a)=>t+Math.abs(a.bal),0);
+// b281: one account can hold more than one bucket (e.g. Tax Buffer + Emergency fund in the same savings). Its balance is split in priority order — Tax first (up to what you owe), then Emergency fund (up to its target), then House — never counted twice.
+function taxNeedRaw(){ try { const s=S.money.s, taxable=Math.max(0,taxReceived()+datumInc('2026-01-01')-dedTotal('2026-01-01')); return Math.max(0,taxable*s.taxRate-taxPaidSince()); } catch(e){ return 0; } }
+function sbShare(){ const L=sbLinks(), A=sbAccts(), out={tax:0,ef:0,house:0}, used={}, cap={tax:taxNeedRaw(), ef:efTarget(), house:Infinity};
+  for (const a of A){ const ks=['tax','ef','house'].filter(k=>(L[k]||[]).includes(a.name)); if (!ks.length) continue; let left=Math.abs(a.bal);
+    ks.forEach((k,i)=>{ const take=i===ks.length-1?left:Math.min(left, Math.max(0,cap[k]-out[k])); out[k]+=take; left-=take; (used[k] ||= []).push(a.name+(ks.length>1?' (shared)':'')); }); }
+  return {out, used}; }
+function bal(k){ try { return sbActual(k).v; } catch(e){ const s=S.money.s; return +({tax:s.taxBufNow, ef:s.efNow, house:s.houseNow}[k])||0; } }
+function sbActual(k){ const L=sbLinks(), A=sbAccts(), s=S.money.s, linked=(L[k]||[]).map(n=>A.find(a=>a.name===n)).filter(Boolean), sum=(['tax','ef','house'].includes(k)&&linked.length)?sbShare().out[k]:linked.reduce((t,a)=>t+Math.abs(a.bal),0);
   if (k==='cards') return {v:cardDebt(), src:'your card balances'};
-  if (linked.length) return {v:sum, src:linked.map(a=>a.name.replace(/\s*····\d+/,'')).join(' + ')};
+  if (linked.length) return {v:sum, src:linked.map(a=>a.name.replace(/\s*····\d+/,'')).join(' + ')+(linked.some(a=>['tax','ef','house'].filter(x=>(L[x]||[]).includes(a.name)).length>1)?' · shared, split by priority':'')};
   const man={tax:+s.taxBufNow||0, ef:+s.efNow||0, house:+s.houseNow||0, ret:(()=>{ try { return fiActual().v; } catch(e){ return 0; } })()}[k];
   return {v:man, src:'number in the app'}; }
 // the schedule: the plan as it stood when you started tracking, frozen so "behind" means something
@@ -9459,9 +9466,9 @@ function coinChip(){ const C=coins(); if (!C) return ''; const up=C.banked>=0;
   return `<div class="coin-chip ${up?'up':'down'}"><span>🪙</span><div><b class="num">${up?'+':'−'}${money0(Math.abs(C.banked))}</b> ${up?'banked':'over pace'}<small>spending pace ${money0(C.per)}/day · through ${nice(C.thru)} · 5 XP per day under</small></div></div>`; }
 // ranks: real milestones, in order
 const MRANKS=[['🌊','Underwater','a card is over its limit'],['🏊','Surfaced','both cards under their limits'],['🔓','Debt-free','cards at $0'],['🧾','Covered','taxes caught up'],['🛡️','Cushioned','3 months of bills saved'],['📈','Compounding','Fidelity at your growth target']];
-function moneyRank(){ const C=cardsAll(), s=S.money.s; const tests=[()=>C.every(c=>!(c.limit||CARD_LIM[c.name])||c.bal<=(c.limit||CARD_LIM[c.name])+1), ()=>C.every(c=>c.bal<=0.5), ()=>taxBehind()<=0.5, ()=>(+s.efNow||0)>=fixedMo()*3, ()=>invNow()>=(+(S.money.growth||{}).target||10000)];
+function moneyRank(){ const C=cardsAll(), s=S.money.s; const tests=[()=>C.every(c=>!(c.limit||CARD_LIM[c.name])||c.bal<=(c.limit||CARD_LIM[c.name])+1), ()=>C.every(c=>c.bal<=0.5), ()=>taxBehind()<=0.5, ()=>(bal('ef'))>=fixedMo()*3, ()=>invNow()>=(+(S.money.growth||{}).target||10000)];
   let i=0; while (i<tests.length && tests[i]()) i++; const nx=MRANKS[i+1];
-  const hint=(()=>{ if (i===0){ const o=C.filter(c=>c.bal>(c.limit||CARD_LIM[c.name]||1e12)+1); return o.map(c=>`${c.name} ${money0(c.bal-(c.limit||CARD_LIM[c.name]))} over`).join(' · '); } if (i===1) return `${money0(C.reduce((a,c)=>a+c.bal,0))} left on cards`; if (i===2) return `${money0(taxBehind())} tax gap`; if (i===3) return `${money0(Math.max(0,fixedMo()*3-(+s.efNow||0)))} to go`; if (i===4) return `${money0(Math.max(0,(+(S.money.growth||{}).target||10000)-invNow()))} to go`; return ''; })();
+  const hint=(()=>{ if (i===0){ const o=C.filter(c=>c.bal>(c.limit||CARD_LIM[c.name]||1e12)+1); return o.map(c=>`${c.name} ${money0(c.bal-(c.limit||CARD_LIM[c.name]))} over`).join(' · '); } if (i===1) return `${money0(C.reduce((a,c)=>a+c.bal,0))} left on cards`; if (i===2) return `${money0(taxBehind())} tax gap`; if (i===3) return `${money0(Math.max(0,fixedMo()*3-(bal('ef'))))} to go`; if (i===4) return `${money0(Math.max(0,(+(S.money.growth||{}).target||10000)-invNow()))} to go`; return ''; })();
   return {i, r:MRANKS[i], next:nx, hint}; }
 function rankCard(){ const R=moneyRank(), M=S.money;
   if ((M.rankMax??-1)<R.i){ if (M.rankMax!=null) setTimeout(()=>{ confetti(); toast(`${R.r[0]} Rank up: ${R.r[1]}`); S.wins.push({id:uid(), d:TODAY, text:`${R.r[0]} Money rank: ${R.r[1]}`}); commit(); },300); M.rankMax=R.i; }
@@ -9923,7 +9930,7 @@ function moneyHead(){ const R=moneyRank(), M=S.money, C=coins(), q=(S.quests||[]
     <div class="mh-f ${age>3?'old':''}">🏦 Bank history through <b>${th?nice(th):'—'}</b>${age>3?` · ${age} days behind`:''}${bizLine()}${bankErr?` · <span style="color:var(--warn)">${esc(bankErr)}</span>`:''}</div></div>`; }
 function nextCheckFold(P){ const nx=P.rows[0]; if (!nx) return `<details class="pc-edit"><summary>Next check: none expected</summary><div class="sub" style="margin-top:6px">A new one appears by itself when an agency deposit lands.</div></details>`;
   const dd=daysBetween(TODAY,nx.d), ll=lastLanded(), owe=agencyOwed(), bills=Math.round(nx.bills||0), flex=Math.round(nx.flex||0), cd=cardDebt(), tb=taxBehind(), CL=cardList();
-  const rest=[cd>0.5?['💳',CL[0]?CL[0].name:'Credit cards',CL.map(c=>`${c.name} ${money0(c.bal)}`).join(' → ')+' · smallest first']:null, tb>0.5?['📊','Tax catch-up',`${money0(tb)} behind`]:null, (+S.money.s.efNow||0)<efTarget()-.5?['🛡️','Emergency fund',`${money0(+S.money.s.efNow||0)} of ${money0(efTarget())}`]:null, ['🌱','Roth IRA','']].filter(Boolean);
+  const rest=[cd>0.5?['💳',CL[0]?CL[0].name:'Credit cards',CL.map(c=>`${c.name} ${money0(c.bal)}`).join(' → ')+' · smallest first']:null, tb>0.5?['📊','Tax catch-up',`${money0(tb)} behind`]:null, (bal('ef'))<efTarget()-.5?['🛡️','Emergency fund',`${money0(bal('ef'))} of ${money0(efTarget())}`]:null, ['🌱','Roth IRA','']].filter(Boolean);
   return `<details class="pc-edit nc-fold"><summary><b>Next check ${dd<0?'any day now':dd===0?'today':nice(nx.d)}</b> <span class="sub">· ${dd>0?`in ${dd}d · `:''}amount unknown until it lands${ll?` · last ${money0(ll.amt)}`:''}</span></summary>
     <div class="tag" style="margin:10px 0 6px">When it lands, in this order</div>
     <ol class="nc-steps"><li><span>📊</span><b>Taxes</b><em>32% of it</em><small>Tax Buffer</small></li>
@@ -10127,7 +10134,7 @@ function vDeduct(){
 /* ---- waterfall tab: landed-check to-dos, upcoming checks, auto-detected deposits ---- */
 const r2 = n => Math.round((+n||0)*100)/100;
 const MOVES = [['own','BofA checking','ownDraws','🏦'],['tax','Tax Buffer','taxBufNow','📊'],['ef','Emergency fund','efNow','🛡️'],['cards','Credit cards','cardsPaid','💳'],['house','House fund','houseNow','🏠'],['ret','Retirement','rothYtd','🌱']];
-function splitFor(c){ const s=S.money.s, r=waterfall(c.amt,{ef:+s.efNow||0,buf:0,cush:0,house:0,cards:cardDebt(),behind:Math.max(0,taxBehind()-c.amt*s.taxRate),nLeft:1+S.money.checks.filter(x=>!x.got&&x.d<TAX_CATCHUP_BY).length,nextD:(S.money.checks.filter(x=>!x.got&&x.d>(c.gotOn||c.d)).map(x=>x.d).sort()[0]||null)},c.gotOn||c.d); const o={tax:r2(r.tax),ef:r2(r.efAdd),cu:r2(r.cu),cards:r2(r.cards),house:r2(r.house),ret:r2(r.ret),retLabel:r.retLabel,draw:r2(r.draw)}; o.stay=r2(c.amt-o.tax-o.ef-o.house-o.ret-o.cu-o.cards); if (bizS().dep){ o.own=o.stay; o.taxKeep=r2(Math.min(o.tax, Math.max(0, bizS().floor-(bizBal()??0)))); } return o; }
+function splitFor(c){ const s=S.money.s, r=waterfall(c.amt,{ef:bal('ef'),buf:0,cush:0,house:0,cards:cardDebt(),behind:Math.max(0,taxBehind()-c.amt*s.taxRate),nLeft:1+S.money.checks.filter(x=>!x.got&&x.d<TAX_CATCHUP_BY).length,nextD:(S.money.checks.filter(x=>!x.got&&x.d>(c.gotOn||c.d)).map(x=>x.d).sort()[0]||null)},c.gotOn||c.d); const o={tax:r2(r.tax),ef:r2(r.efAdd),cu:r2(r.cu),cards:r2(r.cards),house:r2(r.house),ret:r2(r.ret),retLabel:r.retLabel,draw:r2(r.draw)}; o.stay=r2(c.amt-o.tax-o.ef-o.house-o.ret-o.cu-o.cards); if (bizS().dep){ o.own=o.stay; o.taxKeep=r2(Math.min(o.tax, Math.max(0, bizS().floor-(bizBal()??0)))); } return o; }
 // credit cards only (the auto loan keeps its normal payment); smallest balance first
 function cardList(){ return (S.money.budget?.accounts||[]).filter(a=>a.bal!=null && a.bal<0 && !/auto|loan|mortgage/i.test(a.name+' '+a.type)).map(a=>({name:a.name.replace(/ Card$/,'').replace(/^Discover it$/,'Discover'), bal:-a.bal, minDue:a.minDue, dueDate:a.dueDate, limit:a.limit})).sort((a,b)=>a.bal-b.bal); }
 const TAX_CATCHUP_BY='2027-04-15';
@@ -10137,7 +10144,7 @@ function datumInc(from){ try { return incomeBy(from, TODAY).datum||0; } catch(e)
 function datumOrdersIn(from,to){ try { return ensureDatum().orders.filter(o=>(o.status==='delivered'||o.status==='closed') && (o.delivered||o.opened||'')>=from && (o.delivered||o.opened||'')<=to); } catch(e){ return []; } }
 function taxOwedSoFar(){ return taxState().need; }
 function taxPaidSince(from='2026-01-01'){ return (S.money.taxPaid||[]).filter(p=>!p.d||p.d>=from).reduce((a,p)=>a+(+p.amt||0),0); }
-function taxState(){ const s=S.money.s, rec=taxReceived(), dInc=datumInc('2026-01-01'), ded=dedTotal('2026-01-01'), taxable=Math.max(0,rec+dInc-ded), need=taxable*s.taxRate, paid=taxPaidSince(), buf=+s.taxBufNow||0;
+function taxState(){ const s=S.money.s, rec=taxReceived(), dInc=datumInc('2026-01-01'), ded=dedTotal('2026-01-01'), taxable=Math.max(0,rec+dInc-ded), need=taxable*s.taxRate, paid=taxPaidSince(), buf=bal('tax');
   return {rec, dInc, ded, taxable, need, paid, buf, gap:Math.max(0,need-paid-buf), saved:Math.min(rec+dInc,ded)*s.taxRate}; }
 function taxBehind(){ return taxState().gap; }
 function taxShortApril(){ try { const P=projection(); return Math.max(0, taxBehind()-P.rows.filter(r=>r.d<TAX_CATCHUP_BY).reduce((t,r)=>t+(r.catchup||0),0)); } catch(e){ return 0; } }
@@ -10160,7 +10167,7 @@ function wfTodo(){
       <div class="row" style="margin-top:10px;justify-content:flex-end"><button class="btn ghost sm" onclick="dismissMoves('${c.id}')">Already handled</button></div></div>`; }).join('');
 }
 function wfTiles(P, nextPay){
-  const owed=P.future.reduce((a,c)=>a+c.amt,0), nx=P.rows[0], dd=nx?daysBetween(TODAY,nx.d):0, yr=Math.max(S.money.checks.filter(c=>c.got&&(c.gotOn||c.d).startsWith(THIS_Y)).reduce((a,c)=>a+c.amt,0), stmtReceived(THIS_Y).reduce((a,r)=>a+r.amt,0)), tgap=Math.max(0,stmtReceived(THIS_Y).reduce((a,r)=>a+r.amt,0)*S.money.s.taxRate-(S.money.taxPaid||[]).reduce((a,p)=>a+p.amt,0)-(+S.money.s.taxBufNow||0));
+  const owed=P.future.reduce((a,c)=>a+c.amt,0), nx=P.rows[0], dd=nx?daysBetween(TODAY,nx.d):0, yr=Math.max(S.money.checks.filter(c=>c.got&&(c.gotOn||c.d).startsWith(THIS_Y)).reduce((a,c)=>a+c.amt,0), stmtReceived(THIS_Y).reduce((a,r)=>a+r.amt,0)), tgap=Math.max(0,stmtReceived(THIS_Y).reduce((a,r)=>a+r.amt,0)*S.money.s.taxRate-(S.money.taxPaid||[]).reduce((a,p)=>a+p.amt,0)-(bal('tax')));
   return `<div class="grid g4 sec acct-tiles">
     <div class="stat"><b class="num" style="color:var(--good)">${nx?money0(nx.amt):'—'}</b><small>${nx?`next check · ${nice(nx.d)} · ${dd<0?(-dd)+'d late':dd===0?'today':'in '+dd+'d'}`:'no checks scheduled'}</small></div>
     <div class="stat"><b class="num">${money0(owed)}</b><small>still owed · ${P.future.length} checks</small></div>
@@ -10212,7 +10219,7 @@ function detectDeposits(txs, keyAcct){
 let mAdj=false;
 function bucketsCard(sinceSep, paidTot, efFull){ const s=S.money.s, taxNeed=Math.max(0,sinceSep*s.taxRate-paidTot);
   const cz=(()=>{ try { const r=projection().rows.find(r=>r.cardsLeft!=null&&r.cardsLeft<=0.5); return r?'$0 by '+nice(r.d)+', '+r.d.slice(0,4):''; } catch(e){ return ''; } })();
-  const B=[['🛡️','Emergency fund','efNow',efTarget(),efFull?'full by '+nice(efFull.d):(+s.efNow>=efTarget()?'full':''),'var(--good)'],['💳','Credit cards owed','__cards',0,(cardList().map(c=>c.name).join(' → ')||'none')+(cz?' · '+cz:''),'var(--accent)'],['📊','Tax buffer','taxBufNow',Math.max(0,taxOwedSoFar()-(S.money.taxPaid||[]).reduce((a,p)=>a+(+p.amt||0),0)),taxBehind()>0.5?(()=>{ const sh=taxShortApril(); return `behind ${money0(taxBehind())} · catch-up starts once the cards hit $0`+(sh>50?` · ~${money0(sh)} paid after Apr 15`:' · covered by Apr 15'); })():'on track','var(--warn)'],['🌱',`Roth IRA ${THIS_Y}`,'rothYtd',s.rothLimit,'','var(--accent)'],['🏠','House fund','houseNow',0,'starts when the emergency fund is full','var(--fg)']];
+  const B=[['🛡️','Emergency fund','efNow',efTarget(),efFull?'full by '+nice(efFull.d):(bal('ef')>=efTarget()?'full':''),'var(--good)'],['💳','Credit cards owed','__cards',0,(cardList().map(c=>c.name).join(' → ')||'none')+(cz?' · '+cz:''),'var(--accent)'],['📊','Tax buffer','taxBufNow',Math.max(0,taxOwedSoFar()-(S.money.taxPaid||[]).reduce((a,p)=>a+(+p.amt||0),0)),taxBehind()>0.5?(()=>{ const sh=taxShortApril(); return `behind ${money0(taxBehind())} · catch-up starts once the cards hit $0`+(sh>50?` · ~${money0(sh)} paid after Apr 15`:' · covered by Apr 15'); })():'on track','var(--warn)'],['🌱',`Roth IRA ${THIS_Y}`,'rothYtd',s.rothLimit,'','var(--accent)'],['🏠','House fund','houseNow',0,'starts when the emergency fund is full','var(--fg)']];
   return `<div class="card sec"><div class="hdr"><h2>Buckets</h2><button class="btn ${mAdj?'':'ghost'} sm" onclick="mAdj=!mAdj;render()">${mAdj?'Done':'Adjust'}</button></div>
     <div class="stack" style="gap:14px;grid-template-columns:minmax(0,1fr)">${B.map(([ic,l,k,target,sub,col])=>{ const v=k==='__cards'?cardDebt():+s[k]||0; return `<div><div class="row between" style="gap:8px;flex-wrap:nowrap"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ic} <b>${l}</b></span>${mAdj&&k!=='__cards'?`<input class="inp num" type="number" inputmode="decimal" step="any" style="width:110px;padding:6px 10px;text-align:right" value="${v}" onchange="setMoney('${k}',this.value)" aria-label="${l} balance">`:`<b class="num" style="white-space:nowrap">${money0(v)}${target?`<span class="sub" style="font-weight:500"> / ${money0(target)}</span>`:''}</b>`}</div>${target?`<div class="bar" style="margin-top:6px;height:6px"><b style="width:${Math.round(clamp(v/Math.max(1,target),0,1)*100)}%;background:${col}"></b></div>`:''}${sub?`<div class="sub" style="font-size:11px;margin-top:3px">${sub}</div>`:''}</div>`; }).join('')}</div>
     <div class="help" style="margin-top:12px">Balances go up when you tick a move on a landed check. Use Adjust to correct one by hand.</div></div>`; }
@@ -10227,7 +10234,7 @@ function vMoney(){
 function moneyBits(){
   const s=S.money.s, P=projection(), got=S.money.checks.filter(c=>c.got), owed=P.future.reduce((a,c)=>a+c.amt,0);
   const nextPay=P.payouts.find(p=>p.d>=TODAY), efFull=P.rows.find(r=>r.efBal>=efTarget()-.5);
-  const sample = waterfall(4000, {ef:s.efNow,buf:s.taxBufNow,cush:0,house:0,cards:cardDebt(),behind:taxBehind(),nLeft:1+S.money.checks.filter(x=>!x.got&&x.d<TAX_CATCHUP_BY).length}, TODAY);
+  const sample = waterfall(4000, {ef:bal('ef'),buf:bal('tax'),cush:0,house:0,cards:cardDebt(),behind:taxBehind(),nLeft:1+S.money.checks.filter(x=>!x.got&&x.d<TAX_CATCHUP_BY).length}, TODAY);
   const nextDue = DUES.find(d=>d[0]>=TODAY);
   const sinceSep = got.filter(c=>c.d>='2026-09-01').reduce((a,c)=>a+c.amt,0);
   const paidTot = S.money.taxPaid.reduce((a,p)=>a+p.amt,0);
@@ -10259,7 +10266,7 @@ function depositHtml(r){ return `<div class="flow">
   <div class="fl"><small>→ ${r.retLabel}</small><b class="num">${money0(r.ret)}</b><i>Fidelity</i></div>
   ${r.cu?`<div class="fl"><small>→ 2026 tax gap</small><b class="num">${money0(r.cu)}</b><i>for April</i></div>`:''}
 </div>`; }
-function calcDeposit(e){ e.preventDefault(); const amt=+document.getElementById('depAmt').value||0; const s=S.money.s; document.getElementById('depOut').innerHTML=depositHtml(waterfall(amt,{ef:s.efNow,buf:s.taxBufNow,cush:0,house:0,cards:cardDebt(),behind:taxBehind(),nLeft:1+S.money.checks.filter(x=>!x.got&&x.d<TAX_CATCHUP_BY).length},TODAY)); return false; }
+function calcDeposit(e){ e.preventDefault(); const amt=+document.getElementById('depAmt').value||0; const s=S.money.s; document.getElementById('depOut').innerHTML=depositHtml(waterfall(amt,{ef:bal('ef'),buf:bal('tax'),cush:0,house:0,cards:cardDebt(),behind:taxBehind(),nLeft:1+S.money.checks.filter(x=>!x.got&&x.d<TAX_CATCHUP_BY).length},TODAY)); return false; }
 function setMoney(k,v){ S.money.s[k]=+v||0; commit(); }
 let mcpLib = null, unverifiedId = null;
 (async()=>{ try { if (window.claude && typeof claude.use==='function') mcpLib = await claude.use('mcp'); if (mcpLib && typeof view!=='undefined' && view==='money') render(); } catch(e){} })();
@@ -10756,7 +10763,7 @@ function logsCard(){ const c=logCounts(THIS_Q), recent=(S.logs||[]).slice().sort
 
 /* ---------- bucket history: one point per day the balances change ---------- */
 function recordBuckets(){ const M=S.money, s=M.s; M.hist ||= []; const A=(M.budget.accounts||[]).filter(a=>a.bal!=null);
-  const p={d:TODAY, ef:+s.efNow||0, tax:+s.taxBufNow||0, roth:+s.rothYtd||0, cu:+s.cushNow||0, house:+s.houseNow||0, net:A.length?Math.round(A.reduce((a,x)=>a+x.bal,0)):null};
+  const p={d:TODAY, ef:bal('ef'), tax:bal('tax'), roth:+s.rothYtd||0, cu:+s.cushNow||0, house:bal('house'), net:A.length?Math.round(A.reduce((a,x)=>a+x.bal,0)):null};
   const same=(a,b)=>a&&['ef','tax','roth','cu','house','net'].every(k=>a[k]===b[k]); const last=M.hist[M.hist.length-1];
   if (last && last.d===TODAY){ const prev=M.hist[M.hist.length-2]; if (same(prev,p)) M.hist.pop(); else M.hist[M.hist.length-1]=p; }
   else if (!same(last,p)) M.hist.push(p);
