@@ -14,8 +14,8 @@ def img(o):
 def one(it):
     out = f"{D}/{it['id']}.png"
     if os.path.exists(out): return
-    nm = FIX.get(it['name'], it['name'])
-    body = {'description': f"pixel art icon of {nm}, single object centered, bold dark outline, bright saturated colors, cute game UI icon like an emoji, transparent background",
+    nm = FIX.get(it.get('name',''), it.get('name',''))
+    body = {'description': it.get('desc') or f"pixel art icon of {nm}, single object centered, bold dark outline, bright saturated colors, cute game UI icon like an emoji, transparent background",
             'image_size': {'width': 32, 'height': 32}, 'no_background': True, 'text_guidance_scale': 9}
     for a in range(8):
         try: r = requests.post(B + '/create-image-pixflux', json=body, headers=H, timeout=180)
@@ -23,9 +23,9 @@ def one(it):
         if r.status_code == 429: time.sleep(8 + a * 4); continue
         if r.status_code == 402: log('OUT OF CREDITS'); return
         if r.status_code >= 300: log('ERR', it['id'], r.status_code, r.text[:200]); return
-        img(r.json()['image']).save(out); log('ok', it['id'], it['name']); return
+        img(r.json()['image']).save(out); log('ok', it['id'], it.get('name','')); return
 log('balance', requests.get(B + '/balance', headers=H, timeout=60).text[:200])
-items = json.load(open(f'{D}/items.json'))
+items = json.load(open(f'{D}/items.json')) + (json.load(open(f'{D}/extra.json')) if os.path.exists(f'{D}/extra.json') else [])
 with ThreadPoolExecutor(4) as ex: list(ex.map(one, items))
 log('done', sum(os.path.exists(f"{D}/{i['id']}.png") for i in items), 'of', len(items))
 log('balance after', requests.get(B + '/balance', headers=H, timeout=60).text[:200])
