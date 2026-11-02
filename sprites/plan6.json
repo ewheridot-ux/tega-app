@@ -1,228 +1,594 @@
 [
- {
-  "id": "algo2",
-  "kind": "style",
-  "desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Algorithm: a floating spiked dark gunmetal orb with one huge glowing RED slit eye under a heavy angled metal brow, a jaw of metal fangs with red glow inside, red glowing cracks across the shell, five barbed black cables ending in small red-eyed pods, two blade-tipped cables below."
- },
- {
-  "id": "hermit2",
-  "kind": "style",
-  "desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Hermit King: a tall gaunt figure in a torn black hooded robe, the hood is pitch black with two burning GREEN eyes, a dark iron crown with tall spikes and red gems, a long dirty grey beard, bony clawed hands, tiny skulls hanging on a rope belt, glowing green runes on the robe, holding a gnarled staff with a lantern of green soul fire."
- },
- {
-  "id": "fog2",
-  "kind": "style",
-  "desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Fog: a huge black storm cloud monster with narrow slanted burning RED eyes, a wide jagged grin full of white fangs with red glow inside, lightning crackling inside the cloud, dark smoky tendrils hanging below."
- },
- {
-  "id": "stinger2",
-  "kind": "style",
-  "desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Stinger: a big black-shelled scorpion seen from the side, glowing red lava seams between its armor plates, spikes along its back, a curled plated tail with a white stinger dripping toxic green venom, big black pincers, small red eyes."
- },
- {
-  "id": "drake2",
-  "kind": "style",
-  "desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Drake: a dark red-black dragon with molten orange cracks in its scales, long curved bone horns, glowing orange slit eyes, open jaw with fangs and fire, tattered dark wings spread, clutching a black credit card."
- },
- {
-  "id": "spider2",
-  "kind": "style",
-  "desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Someday Spider: a giant black spider hanging from a web thread, glowing LIME GREEN eyes (two big, six small), a glowing green hourglass mark and green cracks on its abdomen, dripping fangs, long jointed spiky legs."
- },
- {
-  "id": "algo2_idle",
-  "kind": "anim",
-  "from": "algo2",
-  "action": "idle loop: hovers menacingly, cables writhe, the red eye glares side to side, red cracks pulse",
-  "frames": 8
- },
- {
-  "id": "hermit2_idle",
-  "kind": "anim",
-  "from": "hermit2",
-  "action": "idle loop: breathes slowly, robe sways, the green lantern flame flickers, eyes glow brighter and dimmer",
-  "frames": 8
- },
- {
-  "id": "fog2_idle",
-  "kind": "anim",
-  "from": "fog2",
-  "action": "idle loop: the storm cloud churns, lightning flashes inside, the red eyes narrow, fangs grind",
-  "frames": 8
- },
- {
-  "id": "stinger2_idle",
-  "kind": "anim",
-  "from": "stinger2",
-  "action": "idle loop: pincers snap, the tail sways ready to strike, venom drips, legs shuffle",
-  "frames": 8
- },
- {
-  "id": "drake2_idle",
-  "kind": "anim",
-  "from": "drake2",
-  "action": "idle loop: wings beat slowly, chest glows, smoke and small flames from the jaw",
-  "frames": 8
- },
- {
-  "id": "spider2_idle",
-  "kind": "anim",
-  "from": "spider2",
-  "action": "idle loop: sways on the web thread, legs twitch, green eyes pulse, venom drips from fangs",
-  "frames": 8
- },
- {
-  "id": "algo2_hit",
-  "kind": "anim",
-  "from": "algo2",
-  "action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
-  "frames": 6
- },
- {
-  "id": "hermit2_hit",
-  "kind": "anim",
-  "from": "hermit2",
-  "action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
-  "frames": 6
- },
- {
-  "id": "fog2_hit",
-  "kind": "anim",
-  "from": "fog2",
-  "action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
-  "frames": 6
- },
- {
-  "id": "stinger2_hit",
-  "kind": "anim",
-  "from": "stinger2",
-  "action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
-  "frames": 6
- },
- {
-  "id": "drake2_hit",
-  "kind": "anim",
-  "from": "drake2",
-  "action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
-  "frames": 6
- },
- {
-  "id": "spider2_hit",
-  "kind": "anim",
-  "from": "spider2",
-  "action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
-  "frames": 6
- },
- {
-  "id": "algo2_dead",
-  "kind": "anim",
-  "from": "algo2",
-  "action": "defeated: the red eye shatters, cracks spread and the orb breaks apart into falling metal pieces",
-  "frames": 8
- },
- {
-  "id": "hermit2_dead",
-  "kind": "anim",
-  "from": "hermit2",
-  "action": "defeated: the lantern goes out, the crown falls off, he collapses into black smoke",
-  "frames": 8
- },
- {
-  "id": "fog2_dead",
-  "kind": "anim",
-  "from": "fog2",
-  "action": "defeated: lightning stops, the cloud tears apart and evaporates into thin wisps",
-  "frames": 8
- },
- {
-  "id": "stinger2_dead",
-  "kind": "anim",
-  "from": "stinger2",
-  "action": "defeated: the tail droops, it flips onto its back, red seams go dark",
-  "frames": 8
- },
- {
-  "id": "drake2_dead",
-  "kind": "anim",
-  "from": "drake2",
-  "action": "defeated: the fire dies, wings fold, it crashes down and the orange cracks go grey",
-  "frames": 8
- },
- {
-  "id": "spider2_dead",
-  "kind": "anim",
-  "from": "spider2",
-  "action": "defeated: the web thread snaps, it falls and curls up its legs, green glow fades",
-  "frames": 8
- },
- {
-  "id": "folk1",
-  "kind": "image",
-  "size": 32,
-  "desc": "tiny pixel art person walking, young man in a hoodie and jeans, side view facing right, 32x32, transparent background, clean outline",
-  "view": "side"
- },
- {
-  "id": "folk2",
-  "kind": "image",
-  "size": 32,
-  "desc": "tiny pixel art person walking, woman with a tote bag and long coat, side view facing right, 32x32, transparent background, clean outline",
-  "view": "side"
- },
- {
-  "id": "folk3",
-  "kind": "image",
-  "size": 32,
-  "desc": "tiny pixel art person walking a small dog on a leash, side view facing right, 32x32, transparent background, clean outline",
-  "view": "side"
- },
- {
-  "id": "folk4",
-  "kind": "image",
-  "size": 32,
-  "desc": "tiny pixel art kid on a skateboard, side view facing right, 32x32, transparent background, clean outline",
-  "view": "side"
- },
- {
-  "id": "pigeon",
-  "kind": "image",
-  "size": 24,
-  "desc": "tiny pixel art grey city pigeon, side view facing right, 24x24, transparent background, clean outline",
-  "view": "side"
- },
- {
-  "id": "folk1_walk",
-  "kind": "anim",
-  "from": "folk1",
-  "action": "walking cycle in place",
-  "frames": 8
- },
- {
-  "id": "folk2_walk",
-  "kind": "anim",
-  "from": "folk2",
-  "action": "walking cycle in place",
-  "frames": 8
- },
- {
-  "id": "folk3_walk",
-  "kind": "anim",
-  "from": "folk3",
-  "action": "walking cycle in place",
-  "frames": 8
- },
- {
-  "id": "folk4_walk",
-  "kind": "anim",
-  "from": "folk4",
-  "action": "riding the skateboard, pushing off with one foot",
-  "frames": 8
- },
- {
-  "id": "pigeon_walk",
-  "kind": "anim",
-  "from": "pigeon",
-  "action": "walks and pecks at the ground",
-  "frames": 8
- }
+{
+"id": "algo2",
+"kind": "style",
+"desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Algorithm: a floating spiked dark gunmetal orb with one huge glowing RED slit eye under a heavy angled metal brow, a jaw of metal fangs with red glow inside, red glowing cracks across the shell, five barbed black cables ending in small red-eyed pods, two blade-tipped cables below."
+},
+{
+"id": "hermit2",
+"kind": "style",
+"desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Hermit King: a tall gaunt figure in a torn black hooded robe, the hood is pitch black with two burning GREEN eyes, a dark iron crown with tall spikes and red gems, a long dirty grey beard, bony clawed hands, tiny skulls hanging on a rope belt, glowing green runes on the robe, holding a gnarled staff with a lantern of green soul fire."
+},
+{
+"id": "fog2",
+"kind": "style",
+"desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Fog: a huge black storm cloud monster with narrow slanted burning RED eyes, a wide jagged grin full of white fangs with red glow inside, lightning crackling inside the cloud, dark smoky tendrils hanging below."
+},
+{
+"id": "stinger2",
+"kind": "style",
+"desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Stinger: a big black-shelled scorpion seen from the side, glowing red lava seams between its armor plates, spikes along its back, a curled plated tail with a white stinger dripping toxic green venom, big black pincers, small red eyes."
+},
+{
+"id": "drake2",
+"kind": "style",
+"desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Drake: a dark red-black dragon with molten orange cracks in its scales, long curved bone horns, glowing orange slit eyes, open jaw with fangs and fire, tattered dark wings spread, clutching a black credit card."
+},
+{
+"id": "spider2",
+"kind": "style",
+"desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Someday Spider: a giant black spider hanging from a web thread, glowing LIME GREEN eyes (two big, six small), a glowing green hourglass mark and green cracks on its abdomen, dripping fangs, long jointed spiky legs."
+},
+{
+"id": "algo2_idle",
+"kind": "anim",
+"from": "algo2",
+"action": "idle loop: hovers menacingly, cables writhe, the red eye glares side to side, red cracks pulse",
+"frames": 8
+},
+{
+"id": "hermit2_idle",
+"kind": "anim",
+"from": "hermit2",
+"action": "idle loop: breathes slowly, robe sways, the green lantern flame flickers, eyes glow brighter and dimmer",
+"frames": 8
+},
+{
+"id": "fog2_idle",
+"kind": "anim",
+"from": "fog2",
+"action": "idle loop: the storm cloud churns, lightning flashes inside, the red eyes narrow, fangs grind",
+"frames": 8
+},
+{
+"id": "stinger2_idle",
+"kind": "anim",
+"from": "stinger2",
+"action": "idle loop: pincers snap, the tail sways ready to strike, venom drips, legs shuffle",
+"frames": 8
+},
+{
+"id": "drake2_idle",
+"kind": "anim",
+"from": "drake2",
+"action": "idle loop: wings beat slowly, chest glows, smoke and small flames from the jaw",
+"frames": 8
+},
+{
+"id": "spider2_idle",
+"kind": "anim",
+"from": "spider2",
+"action": "idle loop: sways on the web thread, legs twitch, green eyes pulse, venom drips from fangs",
+"frames": 8
+},
+{
+"id": "algo2_hit",
+"kind": "anim",
+"from": "algo2",
+"action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
+"frames": 6
+},
+{
+"id": "hermit2_hit",
+"kind": "anim",
+"from": "hermit2",
+"action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
+"frames": 6
+},
+{
+"id": "fog2_hit",
+"kind": "anim",
+"from": "fog2",
+"action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
+"frames": 6
+},
+{
+"id": "stinger2_hit",
+"kind": "anim",
+"from": "stinger2",
+"action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
+"frames": 6
+},
+{
+"id": "drake2_hit",
+"kind": "anim",
+"from": "drake2",
+"action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
+"frames": 6
+},
+{
+"id": "spider2_hit",
+"kind": "anim",
+"from": "spider2",
+"action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
+"frames": 6
+},
+{
+"id": "algo2_dead",
+"kind": "anim",
+"from": "algo2",
+"action": "defeated: the red eye shatters, cracks spread and the orb breaks apart into falling metal pieces",
+"frames": 8
+},
+{
+"id": "hermit2_dead",
+"kind": "anim",
+"from": "hermit2",
+"action": "defeated: the lantern goes out, the crown falls off, he collapses into black smoke",
+"frames": 8
+},
+{
+"id": "fog2_dead",
+"kind": "anim",
+"from": "fog2",
+"action": "defeated: lightning stops, the cloud tears apart and evaporates into thin wisps",
+"frames": 8
+},
+{
+"id": "stinger2_dead",
+"kind": "anim",
+"from": "stinger2",
+"action": "defeated: the tail droops, it flips onto its back, red seams go dark",
+"frames": 8
+},
+{
+"id": "drake2_dead",
+"kind": "anim",
+"from": "drake2",
+"action": "defeated: the fire dies, wings fold, it crashes down and the orange cracks go grey",
+"frames": 8
+},
+{
+"id": "spider2_dead",
+"kind": "anim",
+"from": "spider2",
+"action": "defeated: the web thread snaps, it falls and curls up its legs, green glow fades",
+"frames": 8
+},
+{
+"id": "folk1",
+"kind": "image",
+"size": 32,
+"desc": "tiny pixel art person walking, young man in a hoodie and jeans, side view facing right, 32x32, transparent background, clean outline",
+"view": "side"
+},
+{
+"id": "folk2",
+"kind": "image",
+"size": 32,
+"desc": "tiny pixel art person walking, woman with a tote bag and long coat, side view facing right, 32x32, transparent background, clean outline",
+"view": "side"
+},
+{
+"id": "folk3",
+"kind": "image",
+"size": 32,
+"desc": "tiny pixel art person walking a small dog on a leash, side view facing right, 32x32, transparent background, clean outline",
+"view": "side"
+},
+{
+"id": "folk4",
+"kind": "image",
+"size": 32,
+"desc": "tiny pixel art kid on a skateboard, side view facing right, 32x32, transparent background, clean outline",
+"view": "side"
+},
+{
+"id": "pigeon",
+"kind": "image",
+"size": 32,
+"desc": "tiny pixel art grey city pigeon, side view facing right, 24x24, transparent background, clean outline",
+"view": "side"
+},
+{
+"id": "folk1_walk",
+"kind": "anim",
+"from": "folk1",
+"action": "walking cycle in place",
+"frames": 8
+},
+{
+"id": "folk2_walk",
+"kind": "anim",
+"from": "folk2",
+"action": "walking cycle in place",
+"frames": 8
+},
+{
+"id": "folk3_walk",
+"kind": "anim",
+"from": "folk3",
+"action": "walking cycle in place",
+"frames": 8
+},
+{
+"id": "folk4_walk",
+"kind": "anim",
+"from": "folk4",
+"action": "riding the skateboard, pushing off with one foot",
+"frames": 8
+},
+{
+"id": "pigeon_walk",
+"kind": "anim",
+"from": "pigeon",
+"action": "walks and pecks at the ground",
+"frames": 8
+},
+{
+"id": "bld_modeling_1",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art small humble starter photo studio, pink colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_modeling_2",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art bigger upgraded two-storey photo studio, pink colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_modeling_3",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art grand fully upgraded landmark with lights and banners photo studio, pink colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_grillz_1",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art small humble starter jewelry forge with a chimney, gold and brown colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_grillz_2",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art bigger upgraded two-storey jewelry forge with a chimney, gold and brown colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_grillz_3",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art grand fully upgraded landmark with lights and banners jewelry forge with a chimney, gold and brown colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_content_1",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art small humble starter broadcast tower with an antenna, cyan blue colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_content_2",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art bigger upgraded two-storey broadcast tower with an antenna, cyan blue colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_content_3",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art grand fully upgraded landmark with lights and banners broadcast tower with an antenna, cyan blue colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_fitness_1",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art small humble starter gym, red colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_fitness_2",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art bigger upgraded two-storey gym, red colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_fitness_3",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art grand fully upgraded landmark with lights and banners gym, red colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_financial_1",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art small humble starter bank with columns, mint green colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_financial_2",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art bigger upgraded two-storey bank with columns, mint green colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_financial_3",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art grand fully upgraded landmark with lights and banners bank with columns, mint green colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_relationships_1",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art small humble starter community hall, lavender purple colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_relationships_2",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art bigger upgraded two-storey community hall, lavender purple colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_relationships_3",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art grand fully upgraded landmark with lights and banners community hall, lavender purple colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_personal_1",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art small humble starter library, rose pink colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_personal_2",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art bigger upgraded two-storey library, rose pink colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_personal_3",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art grand fully upgraded landmark with lights and banners library, rose pink colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_hustle_1",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art small humble starter maker workshop with a garage door, lime green colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_hustle_2",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art bigger upgraded two-storey maker workshop with a garage door, lime green colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "bld_hustle_3",
+"kind": "image",
+"size": 64,
+"iso": true,
+"desc": "isometric pixel art grand fully upgraded landmark with lights and banners maker workshop with a garage door, lime green colour scheme, cozy city-builder game building, clean dark outline, single building on a small square base, transparent background"
+},
+{
+"id": "badge_first",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: rocket launching on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_streak7",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: lightning bolt on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_streak30",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: blazing flame on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_review4",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: circular arrows ribbon on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_gym4",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: iron dumbbell on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_post4",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: quill and paper on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_fullstack",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: gold star on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_wins25",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: stack of receipts on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_kr1",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: bullseye target with arrow on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_ef",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: steel shield on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_tax",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: bar chart scroll on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_sale",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: sparkling diamond on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_rolled",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: bank vault on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_pro",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: handshake on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_friend",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: two hearts on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_closer",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: checkered flag on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_milestone",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: treasure map on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_boss1",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: horned demon skull on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_quests50",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: crossed swords on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_s_owl",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: owl at night on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_s_early",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: sunrise on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_s_back",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: boomerang on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_s_fish",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: whale on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "badge_s_long",
+"kind": "image",
+"size": 32,
+"desc": "pixel art achievement badge icon: hourglass on a round gold-rimmed medal, bold dark outline, bright game UI icon, transparent background"
+},
+{
+"id": "shop_shield",
+"kind": "image",
+"size": 32,
+"desc": "pixel art game item icon: glowing blue magic streak shield with a flame emblem, bold outline, transparent background"
+},
+{
+"id": "shop_respec",
+"kind": "image",
+"size": 32,
+"desc": "pixel art game item icon: swirling purple reset orb with circular arrows, bold outline, transparent background"
+},
+{
+"id": "shop_shield_shine",
+"kind": "anim",
+"from": "shop_shield",
+"action": "a bright shine sweeps across the shield and it glows",
+"frames": 6
+},
+{
+"id": "shop_respec_shine",
+"kind": "anim",
+"from": "shop_respec",
+"action": "the orb swirls and sparkles",
+"frames": 6
+},
+{
+"id": "sky_winter",
+"kind": "image",
+"size": 256,
+"h": 96,
+"desc": "pixel art distant city skyline silhouette, side view, many tall buildings with tiny windows, snowy rooftops, pale blue haze, flat muted colours, no ground, game background layer, transparent background"
+},
+{
+"id": "sky_spring",
+"kind": "image",
+"size": 256,
+"h": 96,
+"desc": "pixel art distant city skyline silhouette, side view, many tall buildings with tiny windows, cherry blossom trees between buildings, soft pink haze, flat muted colours, no ground, game background layer, transparent background"
+},
+{
+"id": "sky_summer",
+"kind": "image",
+"size": 256,
+"h": 96,
+"desc": "pixel art distant city skyline silhouette, side view, many tall buildings with tiny windows, bright sunny haze, palm trees and water towers, flat muted colours, no ground, game background layer, transparent background"
+},
+{
+"id": "sky_fall",
+"kind": "image",
+"size": 256,
+"h": 96,
+"desc": "pixel art distant city skyline silhouette, side view, many tall buildings with tiny windows, orange autumn haze, warm sunset glow, flat muted colours, no ground, game background layer, transparent background"
+}
 ]

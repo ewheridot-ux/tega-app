@@ -1,4 +1,4 @@
-# b264: PixelLab-quality remakes of the six code-drawn bosses (style-matched to golem/warden/wyrm/vault) + townsfolk for the city
+# b265: + building tiers, badges, shop icons, season skylines. b264: PixelLab-quality remakes of the six code-drawn bosses (style-matched to golem/warden/wyrm/vault) + townsfolk for the city
 import os, sys, time, json, base64, io, requests
 from PIL import Image
 K = os.environ.get('PXKEY'); B = 'https://api.pixellab.ai/v2'; H = {'Authorization': 'Bearer ' + (K or '')}
@@ -24,7 +24,7 @@ def wait(jid):
         if j.get('status') == 'failed': log('FAILED', json.dumps(j)[:500]); return None
     return None
 log('balance', requests.get(B + '/balance', headers=H, timeout=60).text[:300])
-plan = json.load(open(f'{D}/plan6.json')); STY=[b64(Image.open(f'{D}/{n}.png').convert('RGBA')) for n in ('golem','warden','wyrm','vault')]
+plan = json.load(open(f'{D}/plan6.json')); STY=[{'image':b64(Image.open(f'{D}/{n}.png').convert('RGBA')),'width':96,'height':96} for n in ('golem','warden','wyrm','vault')]
 pal = Image.open(f'{D}/base.png').convert('RGB')
 for it in plan:
     bal = requests.get(B + '/balance', headers=H, timeout=60).json()
@@ -33,7 +33,7 @@ for it in plan:
     out = f"{D}/{it['id']}.png"
     if os.path.exists(out): continue
     if it['kind'] == 'style':
-        r = post('/generate-with-style-v2', {'style_images': STY, 'description': it['desc'], 'style_description': 'dark menacing pixel art boss sprites, 96x96, thick dark outlines, glowing accents', 'no_background': True})
+        r = post('/generate-with-style-v2', {'style_images': STY, 'description': it['desc'], 'style_description': it.get('sdesc','dark menacing pixel art boss sprites, 96x96, thick dark outlines, glowing accents'), 'no_background': True})
         if not r: continue
         lr = wait(r['background_job_id']) if r.get('background_job_id') else r
         ims = (lr or {}).get('images') or ([lr.get('image')] if (lr or {}).get('image') else [])
@@ -42,7 +42,8 @@ for it in plan:
         log('style', it['id'], len(ims), 'options', img(ims[0]).size)
         continue
     if it['kind'] == 'image':
-        body = {'description': it['desc'], 'image_size': {'width': it['size'], 'height': it['size']}, 'no_background': True, 'background_removal_task': 'remove_complex_background'}
+        body = {'description': it['desc'], 'image_size': {'width': it['size'], 'height': it.get('h', it['size'])}, 'no_background': it.get('nobg', True), 'background_removal_task': 'remove_complex_background'}
+        if it.get('iso'): body['isometric'] = True
         if it.get('view'): body['view'] = it['view']
         if it.get('direction'): body['direction'] = it['direction']
         if it.get('palette'): body['color_image'] = b64(pal)
