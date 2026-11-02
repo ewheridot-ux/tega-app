@@ -1,0 +1,228 @@
+[
+ {
+  "id": "algo2",
+  "kind": "style",
+  "desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Algorithm: a floating spiked dark gunmetal orb with one huge glowing RED slit eye under a heavy angled metal brow, a jaw of metal fangs with red glow inside, red glowing cracks across the shell, five barbed black cables ending in small red-eyed pods, two blade-tipped cables below."
+ },
+ {
+  "id": "hermit2",
+  "kind": "style",
+  "desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Hermit King: a tall gaunt figure in a torn black hooded robe, the hood is pitch black with two burning GREEN eyes, a dark iron crown with tall spikes and red gems, a long dirty grey beard, bony clawed hands, tiny skulls hanging on a rope belt, glowing green runes on the robe, holding a gnarled staff with a lantern of green soul fire."
+ },
+ {
+  "id": "fog2",
+  "kind": "style",
+  "desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Fog: a huge black storm cloud monster with narrow slanted burning RED eyes, a wide jagged grin full of white fangs with red glow inside, lightning crackling inside the cloud, dark smoky tendrils hanging below."
+ },
+ {
+  "id": "stinger2",
+  "kind": "style",
+  "desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Stinger: a big black-shelled scorpion seen from the side, glowing red lava seams between its armor plates, spikes along its back, a curled plated tail with a white stinger dripping toxic green venom, big black pincers, small red eyes."
+ },
+ {
+  "id": "drake2",
+  "kind": "style",
+  "desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Drake: a dark red-black dragon with molten orange cracks in its scales, long curved bone horns, glowing orange slit eyes, open jaw with fangs and fire, tattered dark wings spread, clutching a black credit card."
+ },
+ {
+  "id": "spider2",
+  "kind": "style",
+  "desc": "Menacing pixel art RPG boss, same style as the reference bosses: dark near-black body, thick dark outline, glowing accent light, dramatic shading, front-facing, full body centered, transparent background. The Someday Spider: a giant black spider hanging from a web thread, glowing LIME GREEN eyes (two big, six small), a glowing green hourglass mark and green cracks on its abdomen, dripping fangs, long jointed spiky legs."
+ },
+ {
+  "id": "algo2_idle",
+  "kind": "anim",
+  "from": "algo2",
+  "action": "idle loop: hovers menacingly, cables writhe, the red eye glares side to side, red cracks pulse",
+  "frames": 8
+ },
+ {
+  "id": "hermit2_idle",
+  "kind": "anim",
+  "from": "hermit2",
+  "action": "idle loop: breathes slowly, robe sways, the green lantern flame flickers, eyes glow brighter and dimmer",
+  "frames": 8
+ },
+ {
+  "id": "fog2_idle",
+  "kind": "anim",
+  "from": "fog2",
+  "action": "idle loop: the storm cloud churns, lightning flashes inside, the red eyes narrow, fangs grind",
+  "frames": 8
+ },
+ {
+  "id": "stinger2_idle",
+  "kind": "anim",
+  "from": "stinger2",
+  "action": "idle loop: pincers snap, the tail sways ready to strike, venom drips, legs shuffle",
+  "frames": 8
+ },
+ {
+  "id": "drake2_idle",
+  "kind": "anim",
+  "from": "drake2",
+  "action": "idle loop: wings beat slowly, chest glows, smoke and small flames from the jaw",
+  "frames": 8
+ },
+ {
+  "id": "spider2_idle",
+  "kind": "anim",
+  "from": "spider2",
+  "action": "idle loop: sways on the web thread, legs twitch, green eyes pulse, venom drips from fangs",
+  "frames": 8
+ },
+ {
+  "id": "algo2_hit",
+  "kind": "anim",
+  "from": "algo2",
+  "action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
+  "frames": 6
+ },
+ {
+  "id": "hermit2_hit",
+  "kind": "anim",
+  "from": "hermit2",
+  "action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
+  "frames": 6
+ },
+ {
+  "id": "fog2_hit",
+  "kind": "anim",
+  "from": "fog2",
+  "action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
+  "frames": 6
+ },
+ {
+  "id": "stinger2_hit",
+  "kind": "anim",
+  "from": "stinger2",
+  "action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
+  "frames": 6
+ },
+ {
+  "id": "drake2_hit",
+  "kind": "anim",
+  "from": "drake2",
+  "action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
+  "frames": 6
+ },
+ {
+  "id": "spider2_hit",
+  "kind": "anim",
+  "from": "spider2",
+  "action": "takes a heavy hit: recoils backward, flashes white, shakes, then recovers to the same pose",
+  "frames": 6
+ },
+ {
+  "id": "algo2_dead",
+  "kind": "anim",
+  "from": "algo2",
+  "action": "defeated: the red eye shatters, cracks spread and the orb breaks apart into falling metal pieces",
+  "frames": 8
+ },
+ {
+  "id": "hermit2_dead",
+  "kind": "anim",
+  "from": "hermit2",
+  "action": "defeated: the lantern goes out, the crown falls off, he collapses into black smoke",
+  "frames": 8
+ },
+ {
+  "id": "fog2_dead",
+  "kind": "anim",
+  "from": "fog2",
+  "action": "defeated: lightning stops, the cloud tears apart and evaporates into thin wisps",
+  "frames": 8
+ },
+ {
+  "id": "stinger2_dead",
+  "kind": "anim",
+  "from": "stinger2",
+  "action": "defeated: the tail droops, it flips onto its back, red seams go dark",
+  "frames": 8
+ },
+ {
+  "id": "drake2_dead",
+  "kind": "anim",
+  "from": "drake2",
+  "action": "defeated: the fire dies, wings fold, it crashes down and the orange cracks go grey",
+  "frames": 8
+ },
+ {
+  "id": "spider2_dead",
+  "kind": "anim",
+  "from": "spider2",
+  "action": "defeated: the web thread snaps, it falls and curls up its legs, green glow fades",
+  "frames": 8
+ },
+ {
+  "id": "folk1",
+  "kind": "image",
+  "size": 32,
+  "desc": "tiny pixel art person walking, young man in a hoodie and jeans, side view facing right, 32x32, transparent background, clean outline",
+  "view": "side"
+ },
+ {
+  "id": "folk2",
+  "kind": "image",
+  "size": 32,
+  "desc": "tiny pixel art person walking, woman with a tote bag and long coat, side view facing right, 32x32, transparent background, clean outline",
+  "view": "side"
+ },
+ {
+  "id": "folk3",
+  "kind": "image",
+  "size": 32,
+  "desc": "tiny pixel art person walking a small dog on a leash, side view facing right, 32x32, transparent background, clean outline",
+  "view": "side"
+ },
+ {
+  "id": "folk4",
+  "kind": "image",
+  "size": 32,
+  "desc": "tiny pixel art kid on a skateboard, side view facing right, 32x32, transparent background, clean outline",
+  "view": "side"
+ },
+ {
+  "id": "pigeon",
+  "kind": "image",
+  "size": 24,
+  "desc": "tiny pixel art grey city pigeon, side view facing right, 24x24, transparent background, clean outline",
+  "view": "side"
+ },
+ {
+  "id": "folk1_walk",
+  "kind": "anim",
+  "from": "folk1",
+  "action": "walking cycle in place",
+  "frames": 8
+ },
+ {
+  "id": "folk2_walk",
+  "kind": "anim",
+  "from": "folk2",
+  "action": "walking cycle in place",
+  "frames": 8
+ },
+ {
+  "id": "folk3_walk",
+  "kind": "anim",
+  "from": "folk3",
+  "action": "walking cycle in place",
+  "frames": 8
+ },
+ {
+  "id": "folk4_walk",
+  "kind": "anim",
+  "from": "folk4",
+  "action": "riding the skateboard, pushing off with one foot",
+  "frames": 8
+ },
+ {
+  "id": "pigeon_walk",
+  "kind": "anim",
+  "from": "pigeon",
+  "action": "walks and pecks at the ground",
+  "frames": 8
+ }
+]
