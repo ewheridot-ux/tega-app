@@ -20,10 +20,13 @@ jobs:
           curl -sS https://api.pixellab.ai/v2/llms.txt -o ci/pixellab/llms.txt || true
           curl -sS https://api.pixellab.ai/v2/openapi.json -o ci/pixellab/openapi.json || true
           [ -n "$PXKEY" ] && echo "key present" > ci/pixellab/key.txt || echo "KEY MISSING" > ci/pixellab/key.txt
-          : > ci/pixellab/run.log; if grep -q avatar ci/run-pixellab; then python scripts/pixellab7.py 2>&1 | tee -a ci/pixellab/run.log; else python scripts/pixellab6.py 2>&1 | tee -a ci/pixellab/run.log; fi
+          if grep -q avatar ci/run-pixellab; then python scripts/pixellab7.py 2>&1 | tee ci/pixellab/run7.log; else python scripts/pixellab6.py 2>&1 | tee ci/pixellab/run6.log; fi
       - name: Report
         if: always()
         run: |
           git config user.name "tega-ci"; git config user.email "ci@users.noreply.github.com"
           git add ci/pixellab || true; git add sprites 2>/dev/null || true; git commit -qm "ci: pixellab [skip ci]" || true
-          git pull --rebase -q origin main || true; git push -q origin HEAD:main || true
+          for i in 1 2 3 4 5; do git pull --rebase -X theirs -q origin main && git push -q origin HEAD:main && break; git rebase --abort 2>/dev/null; sleep 10; done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: sprites, path: sprites, retention-days: 7 }
