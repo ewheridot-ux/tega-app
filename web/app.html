@@ -262,6 +262,8 @@ a{color:var(--fg);text-decoration-thickness:1px;text-underline-offset:3px}
 .objb{padding:0 16px 14px}.krl{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}.krl:has(>.krbox){grid-template-columns:auto minmax(0,1fr) auto}.krt{display:grid;gap:5px;min-width:0}.krn{font-size:14px;line-height:1.3}.krl.hit .krn{color:var(--muted);text-decoration:line-through}.krdue{font-size:11px;font-weight:600;color:var(--muted)}.krauto{font-size:10px;font-weight:700;color:var(--muted);background:var(--card2);border-radius:999px;padding:2px 7px;letter-spacing:.04em;text-transform:uppercase}
 .krc{display:flex;gap:6px;align-items:center;white-space:nowrap}
 .dg-l,.nu-t b,.nu-t small,.mm-c,.mm-t small,.mm-pay .sub,.ag-t,.lo-sum em{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:anywhere;line-height:1.3}
+.bmini{display:inline-block;width:1.7em;height:1.7em;image-rendering:pixelated;background-repeat:no-repeat;vertical-align:middle}.bmini.dead{filter:grayscale(1) brightness(.8)}.cy-b i.bmini{width:40px;height:40px;border-radius:0;background-color:transparent;overflow:visible}.cy-m:has(.bmini){width:32px;height:32px}.cy-m span:has(.bmini){width:27px;height:27px;overflow:hidden}.cy-m .bmini{width:25px;height:25px}
+.pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
 .pxb{width:1.6em;height:1.6em;image-rendering:pixelated;vertical-align:middle;display:inline-block}
 textarea.grow{resize:none!important;overflow:hidden;display:block;min-height:0;line-height:1.35;white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}textarea.grow.inp{min-height:38px!important;padding-right:12px}.kr-src input{flex:none;width:64px!important}
 .krl.ed{grid-template-columns:minmax(0,1fr)}.krl.ed .krc{justify-content:flex-end}.krl.ed .krc .x{margin-left:6px}
@@ -1839,7 +1841,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b272';
+const BUILD='b273';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -5987,6 +5989,10 @@ function seasonRecapCheck(force){ try { const R=R_(), [y,n]=THIS_Q.split('-Q').m
 
 /* ===================== b248: the city — the game's home base (opened from your picture, top left) ===================== */
 const CITY_BOSS={HUSTLE:['ab_hustle'],MODEL:['vault'],DATUM:['ab_datum'],CONTENT:['ab_content'],BODY:['warden'],MONEY:['wyrm'],SOCIAL:['ab_social'],MIND:['ab_mind']};
+// b273: mini PixelLab boss portraits for the town (first idle frame; defeated → last frame of the defeat animation, greyed)
+function bossMini(id, dead){ const k=['vault','wyrm','warden'].includes(id)?id:BOSS_SPR[String(id).replace(/^ab_/,'')]; if (!k) return null;
+  const S2=dead&&PXW[k+'_dead']?PXW[k+'_dead']:(PXW[k+'_still']||PXW[k+'_idle']); if (!S2) return null; const n=S2.n||1;
+  return `<i class="bmini${dead?' dead':''}" style="background-image:url('${S2.src}');background-size:${n*100}% 100%;background-position:${dead&&n>1?'100%':'0%'} 0"></i>`; }
 function cityBosses(){ const g=gameSnap(), out={}; for (const [a,ids] of Object.entries(CITY_BOSS)){ for (const id of ids){ const b=g.b[id]; if (!b) continue; let max=1;
   try { if (id==='vault') max=vault().max; else if (id==='wyrm') max=wyrm().max; else if (id==='warden') max=aBoss().max; else max=aBossState(id.slice(3)).max; } catch(e){}
   out[a]={id, ic:b[1], n:b[2], hp:b[0], pct:Math.max(0,Math.min(1,b[0]/Math.max(1,max))), dead:b[0]<=0.5}; } } return out; }
@@ -5997,7 +6003,7 @@ function cityMore(){ const W=(()=>{ try { return world(); } catch(e){ return nul
 function vCity(){ const D=hqData(), CY=hqCity(D), B=cityBosses(), Q=questLogData(), lvl=levelFor(computeXP()), ch=chestsWaiting().length, pf=ptsFree();
   window.__cityMarks=1; setTimeout(()=>{ const box=document.getElementById('cy-mk'); if (!box||!HQI.boxes) return; const fq=ISO.P(HQ_FTN[0],HQ_FTN[1],38), qd=Q.daily&&Q.weekly;
     box.innerHTML=`<button class="cy-qm ${qd?'done':''}" style="left:${fq[0]/ISO.W*100}%;top:${fq[1]/ISO.H*100}%" onclick="questLogOpen()" aria-label="Quest board">📜<b>${qd?'✓':'!'}</b></button>`+(HQI._mk=[[fq[0]/ISO.W*100,fq[1]/ISO.H*100]],HQI.boxes).map(bx=>{ let b=D[bx.i], bo=B[b.a], L=HQ_LOT[b.k], rp=ISO.P(L[0]+L[2]/2, L[1]+L[3]/2, (b.lvl?hqH(b):4)+12), cx=rp[0]/ISO.W*100, ty=rp[1]/ISO.H*100; if (bo){ const hit=(x,y)=>HQI._mk.some(q=>Math.abs(q[0]-x)<9 && Math.abs(q[1]-y)<7); const o=[[0,0],[-9,0],[9,0],[0,-8],[-9,-6],[9,-6],[-9,6]].find(([dx,dy])=>!hit(cx+dx,ty+dy)&&cx+dx>5&&cx+dx<95)||[0,0]; cx+=o[0]; ty+=o[1]; HQI._mk.push([cx,ty]); }
-    return bo?`<button class="cy-m ${bo.dead?'dead':''}" style="left:${cx}%;top:${ty}%;--c:${b.c};--p:${Math.round(bo.pct*100)}" onclick="hqTap(${bx.i})" aria-label="${b.n} · ${esc(bo.n)}"><span>${bo.dead?'💀':((TRACKS.find(t=>t.key===b.k)||{}).icon||bo.ic)}</span></button>`:''; }).join(''); },60);
+    return bo?`<button class="cy-m ${bo.dead?'dead':''}" style="left:${cx}%;top:${ty}%;--c:${b.c};--p:${Math.round(bo.pct*100)}" onclick="hqTap(${bx.i})" aria-label="${b.n} · ${esc(bo.n)}"><span>${bossMini(bo.id,bo.dead)||(bo.dead?'💀':((TRACKS.find(t=>t.key===b.k)||{}).icon||bo.ic))}</span></button>`:''; }).join(''); },60);
   return `<div class="card sec cy-card"><div class="row between" style="padding:0 2px 6px"><span class="tag">🏙️ Your city · Year ${CY.year} of 5</span><span class="sub" style="font-size:11.5px">${CY.eraName}</span></div>
     <div class="cy-wrap">${hqLive()}<div id="cy-mk" class="cy-mk"></div></div>
     <div class="sub" style="font-size:11.5px;text-align:center;margin-top:4px">The quest board stands on the fountain · bosses sit on their building</div></div>
@@ -6007,7 +6013,7 @@ function vCity(){ const D=hqData(), CY=hqCity(D), B=cityBosses(), Q=questLogData
     <div class="card cy-house ${ch||pf?'glow':''}"><div class="cy-pin">🏠 YOUR HOUSE</div><div class="cy-hh"><button class="cy-av" onclick="stMode='progress';go('evolve')" aria-label="Character">${pfpMini(stageOf(lvl))}</button><div><b>Lv ${lvl}</b><small>💰 ${goldNow()} · 🛡️ ${shieldsLeft()}/3</small></div></div>
       <div class="cy-hb"><button onclick="gSheetLive(vRpgStats)">🧬 Stats${pf?`<i>${pf}</i>`:''}</button><button onclick="stMode='progress';go('evolve')">✨ Evolve</button><button onclick="stMode='settings';setTab='trophies';go('evolve')">🏆 Loot${ch?`<i>${ch}</i>`:''}</button><button onclick="shopOpen()">💰 Shop</button><button onclick="stMode='settings';go('evolve')">⚙️ Settings</button><button onclick="gSheetLive(trophiesBody)">🏆 Titles</button></div></div></div>
   <div class="card sec cy-awake"><div class="row between"><span class="tag">⚔️ Bosses awake</span><span class="sub">${Object.values(B).filter(b=>!b.dead).length} of ${Object.keys(B).length}</span></div>
-    <div class="cy-bl">${Object.entries(B).map(([a,b])=>`<button class="cy-b ${b.dead?'dead':''}" onclick="go('bosses')"><span>${b.dead?'💀':b.ic}</span><b>${esc(b.n)}</b><i><u style="width:${Math.round(b.pct*100)}%"></u></i></button>`).join('')}</div></div>${cityMore()}`; }
+    <div class="cy-bl">${Object.entries(B).map(([a,b])=>`<button class="cy-b ${b.dead?'dead':''}" onclick="go('bosses')"><span>${bossMini(b.id,b.dead)||(b.dead?'💀':b.ic)}</span><b>${esc(b.n)}</b><i><u style="width:${Math.round(b.pct*100)}%"></u></i></button>`).join('')}</div></div>${cityMore()}`; }
 
 /* ---------- UI: Stats tab ---------- */
 function vRpgStats(){ const R=R_(), free=ptsFree(), P=perks(), F=rpgFx(TODAY), cls=classFor(THIS_Q), cq=classQuest(THIS_Q), T=titlesAll(), open=R.respec===THIS_Q+':open';
@@ -10713,4 +10719,17 @@ setTimeout(_settle, 12000);
   document.addEventListener('keydown',e=>{ if (e.key==='Enter'&&!e.shiftKey&&e.target.matches&&e.target.matches('textarea.grow')){ e.preventDefault(); e.target.blur(); } });
   new MutationObserver(()=>requestAnimationFrame(all)).observe(document.documentElement,{childList:true,subtree:true});
   addEventListener('resize',all); })();
+
+// b273: every emoji on screen shows as its PixelLab pixel icon (🛡️ uses the streak-shield art)
+window.PXE = window.PXE || {};
+(function(){ let RX=null; const SKIP=new Set(['SCRIPT','STYLE','TEXTAREA','INPUT','SELECT','OPTION','TITLE','CANVAS','svg','text','NOSCRIPT','CODE','PRE']);
+  const build=()=>{ const keys=Object.keys(PXE); if (!keys.length) return null; keys.sort((a,b)=>b.length-a.length); return new RegExp(keys.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').split('').join('\\uFE0F?')+'\\uFE0F?').join('|'),'gu'); };
+  const fix=root=>{ if (!RX) RX=build(); if (!RX) return; const w=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode:n=>{ const p=n.parentNode; if (!p||SKIP.has(p.nodeName)||p.closest&&p.closest('svg,[contenteditable],.no-pxe')) return NodeFilter.FILTER_REJECT; RX.lastIndex=0; return RX.test(n.data)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP; } });
+    const L=[]; while (w.nextNode()) L.push(w.currentNode);
+    for (const n of L){ const f=document.createDocumentFragment(); let last=0; RX.lastIndex=0; const t=n.data; let m;
+      while ((m=RX.exec(t))){ if (m.index>last) f.appendChild(document.createTextNode(t.slice(last,m.index))); const k=m[0].replace(/️/g,''); const im=document.createElement('img'); im.className='pxe'; im.src=PXE[k]; im.alt=m[0]; im.draggable=false; f.appendChild(im); last=m.index+m[0].length; }
+      if (last<t.length) f.appendChild(document.createTextNode(t.slice(last))); n.parentNode.replaceChild(f,n); } };
+  window.pxeFix=fix;
+  const go=()=>{ if (!Object.keys(PXE).length) return; fix(document.body); new MutationObserver(ms=>{ for (const m of ms) for (const n of m.addedNodes){ if (n.nodeType===1) fix(n); else if (n.nodeType===3&&n.parentNode) fix(n.parentNode); } for (const m of ms) if (m.type==='characterData'&&m.target.parentNode) fix(m.target.parentNode); }).observe(document.body,{childList:true,subtree:true,characterData:true}); };
+  if (document.readyState==='loading') document.addEventListener('DOMContentLoaded',go); else setTimeout(go,0); })();
 </script>
