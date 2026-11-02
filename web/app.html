@@ -1104,7 +1104,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 .skin-pick small{color:var(--muted);font-size:12px}
 .px-c{position:absolute;pointer-events:none;z-index:1}
 .px-on .px-src{opacity:0!important}
-.px-on :is(.arena>svg,.room-live>svg,.lvs-in svg,.b-cracks){filter:url(#pxf)}
+.px-on :is(.arena>svg,.room-live>svg,.b-cracks){filter:url(#pxf)}   /* not on the level-up character: iPhone draws a filtered avatar blank */
 .px-on .room-live:not(:has(.room-walk)){filter:url(#pxf)}
 
 .room-walk{position:absolute;inset:0;width:100%;height:100%;z-index:4;pointer-events:none}
@@ -1836,7 +1836,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b262';
+const BUILD='b263';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
