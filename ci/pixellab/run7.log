@@ -1,0 +1,30 @@
+balance {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"active","plan":"Tier 1: Pixel Apprentice","generations":1045.7,"total":2000.0}}
+layer L2M
+layer L2E
+layer L2D
+layer L3M
+layer L3E
+layer L3D
+layer L4M
+layer L4E
+layer L4D
+layer L5M
+layer L5E
+layer L5D
+layer L6M
+layer L6D
+layer L7E
+layer L7D
+layer L9E
+layer L10M
+layer L10E
+layer L10D
+layer mood_smile
+layer mood_hype
+layer mood_focused
+layer mood_tired
+layer mood_sad
+bg L6E
+bg L7M
+bg L8D
+balance after {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"active","plan":"Tier 1: Pixel Apprentice","generations":792.7,"total":2000.0}}
