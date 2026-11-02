@@ -1,0 +1,1787 @@
+[
+{
+"id": "e_1f525",
+"e": "🔥",
+"name": "fire"
+},
+{
+"id": "e_1f4b0",
+"e": "💰",
+"name": "money bag"
+},
+{
+"id": "e_1f6e1",
+"e": "🛡",
+"name": "shield"
+},
+{
+"id": "e_1f4aa",
+"e": "💪",
+"name": "flexed biceps"
+},
+{
+"id": "e_1f4f8",
+"e": "📸",
+"name": "camera with flash"
+},
+{
+"id": "e_1f480",
+"e": "💀",
+"name": "skull"
+},
+{
+"id": "e_1f451",
+"e": "👑",
+"name": "crown"
+},
+{
+"id": "e_2694",
+"e": "⚔",
+"name": "crossed swords"
+},
+{
+"id": "e_1f4b5",
+"e": "💵",
+"name": "banknote with dollar sign"
+},
+{
+"id": "e_1f3c6",
+"e": "🏆",
+"name": "trophy"
+},
+{
+"id": "e_2705",
+"e": "✅",
+"name": "white heavy check mark"
+},
+{
+"id": "e_1f4f1",
+"e": "📱",
+"name": "mobile phone"
+},
+{
+"id": "e_1f9fe",
+"e": "🧾",
+"name": "receipt"
+},
+{
+"id": "e_1f319",
+"e": "🌙",
+"name": "crescent moon"
+},
+{
+"id": "e_1f3af",
+"e": "🎯",
+"name": "direct hit"
+},
+{
+"id": "e_1f680",
+"e": "🚀",
+"name": "rocket"
+},
+{
+"id": "e_1f501",
+"e": "🔁",
+"name": "clockwise rightwards and leftwards open circle arrows"
+},
+{
+"id": "e_1f4ca",
+"e": "📊",
+"name": "bar chart"
+},
+{
+"id": "e_1f381",
+"e": "🎁",
+"name": "wrapped present"
+},
+{
+"id": "e_1f4f7",
+"e": "📷",
+"name": "camera"
+},
+{
+"id": "e_1f4b3",
+"e": "💳",
+"name": "credit card"
+},
+{
+"id": "e_1f3e6",
+"e": "🏦",
+"name": "bank"
+},
+{
+"id": "e_2708",
+"e": "✈",
+"name": "airplane"
+},
+{
+"id": "e_1f91d",
+"e": "🤝",
+"name": "handshake"
+},
+{
+"id": "e_1f3b8",
+"e": "🎸",
+"name": "guitar"
+},
+{
+"id": "e_26a1",
+"e": "⚡",
+"name": "high voltage sign"
+},
+{
+"id": "e_1f48e",
+"e": "💎",
+"name": "gem stone"
+},
+{
+"id": "e_1f3db",
+"e": "🏛",
+"name": "classical building"
+},
+{
+"id": "e_1f512",
+"e": "🔒",
+"name": "lock"
+},
+{
+"id": "e_1f4c8",
+"e": "📈",
+"name": "chart with upwards trend"
+},
+{
+"id": "e_2699",
+"e": "⚙",
+"name": "gear"
+},
+{
+"id": "e_1f5e1",
+"e": "🗡",
+"name": "dagger knife"
+},
+{
+"id": "e_1f4b8",
+"e": "💸",
+"name": "money with wings"
+},
+{
+"id": "e_1f331",
+"e": "🌱",
+"name": "seedling"
+},
+{
+"id": "e_1f4dc",
+"e": "📜",
+"name": "scroll"
+},
+{
+"id": "e_1f3e0",
+"e": "🏠",
+"name": "house building"
+},
+{
+"id": "e_1f5d1",
+"e": "🗑",
+"name": "wastebasket"
+},
+{
+"id": "e_1f4cd",
+"e": "📍",
+"name": "round pushpin"
+},
+{
+"id": "e_1f4da",
+"e": "📚",
+"name": "books"
+},
+{
+"id": "e_1f3c1",
+"e": "🏁",
+"name": "chequered flag"
+},
+{
+"id": "e_2728",
+"e": "✨",
+"name": "sparkles"
+},
+{
+"id": "e_1f5d3",
+"e": "🗓",
+"name": "spiral calendar pad"
+},
+{
+"id": "e_1f4e6",
+"e": "📦",
+"name": "package"
+},
+{
+"id": "e_1f9f1",
+"e": "🧱",
+"name": "brick"
+},
+{
+"id": "e_1f4af",
+"e": "💯",
+"name": "hundred points symbol"
+},
+{
+"id": "e_23f3",
+"e": "⏳",
+"name": "hourglass with flowing sand"
+},
+{
+"id": "e_1f5ff",
+"e": "🗿",
+"name": "moyai"
+},
+{
+"id": "e_23f1",
+"e": "⏱",
+"name": "stopwatch"
+},
+{
+"id": "e_2600",
+"e": "☀",
+"name": "black sun with rays"
+},
+{
+"id": "e_1f3ac",
+"e": "🎬",
+"name": "clapper board"
+},
+{
+"id": "e_1f4c5",
+"e": "📅",
+"name": "calendar"
+},
+{
+"id": "e_1f517",
+"e": "🔗",
+"name": "link symbol"
+},
+{
+"id": "e_1f409",
+"e": "🐉",
+"name": "dragon"
+},
+{
+"id": "e_1f6cd",
+"e": "🛍",
+"name": "shopping bags"
+},
+{
+"id": "e_1f310",
+"e": "🌐",
+"name": "globe with meridians"
+},
+{
+"id": "e_1f4a1",
+"e": "💡",
+"name": "electric light bulb"
+},
+{
+"id": "e_1f4ce",
+"e": "📎",
+"name": "paperclip"
+},
+{
+"id": "e_1f9e0",
+"e": "🧠",
+"name": "brain"
+},
+{
+"id": "e_1f4dd",
+"e": "📝",
+"name": "memo"
+},
+{
+"id": "e_1f56f",
+"e": "🕯",
+"name": "candle"
+},
+{
+"id": "e_1f9ec",
+"e": "🧬",
+"name": "dna double helix"
+},
+{
+"id": "e_1f3a8",
+"e": "🎨",
+"name": "artist palette"
+},
+{
+"id": "e_1f5bc",
+"e": "🖼",
+"name": "frame with picture"
+},
+{
+"id": "e_1f382",
+"e": "🎂",
+"name": "birthday cake"
+},
+{
+"id": "e_1f4a5",
+"e": "💥",
+"name": "collision symbol"
+},
+{
+"id": "e_1f44d",
+"e": "👍",
+"name": "thumbs up sign"
+},
+{
+"id": "e_1f4ac",
+"e": "💬",
+"name": "speech balloon"
+},
+{
+"id": "e_1f3e2",
+"e": "🏢",
+"name": "office building"
+},
+{
+"id": "e_1f4d6",
+"e": "📖",
+"name": "open book"
+},
+{
+"id": "e_1f305",
+"e": "🌅",
+"name": "sunrise"
+},
+{
+"id": "e_1f6e0",
+"e": "🛠",
+"name": "hammer and wrench"
+},
+{
+"id": "e_1f642",
+"e": "🙂",
+"name": "slightly smiling face"
+},
+{
+"id": "e_270f",
+"e": "✏",
+"name": "pencil"
+},
+{
+"id": "e_1f5c2",
+"e": "🗂",
+"name": "card index dividers"
+},
+{
+"id": "e_1f39e",
+"e": "🎞",
+"name": "film frames"
+},
+{
+"id": "e_1f317",
+"e": "🌗",
+"name": "last quarter moon symbol"
+},
+{
+"id": "e_1f4e8",
+"e": "📨",
+"name": "incoming envelope"
+},
+{
+"id": "e_26a0",
+"e": "⚠",
+"name": "warning sign"
+},
+{
+"id": "e_1f44e",
+"e": "👎",
+"name": "thumbs down sign"
+},
+{
+"id": "e_1f9d8",
+"e": "🧘",
+"name": "person in lotus position"
+},
+{
+"id": "e_1f479",
+"e": "👹",
+"name": "japanese ogre"
+},
+{
+"id": "e_1f3cb",
+"e": "🏋",
+"name": "weight lifter"
+},
+{
+"id": "e_1f5fa",
+"e": "🗺",
+"name": "world map"
+},
+{
+"id": "e_1f6aa",
+"e": "🚪",
+"name": "door"
+},
+{
+"id": "e_1f6d2",
+"e": "🛒",
+"name": "shopping trolley"
+},
+{
+"id": "e_1f4c4",
+"e": "📄",
+"name": "page facing up"
+},
+{
+"id": "e_1f610",
+"e": "😐",
+"name": "neutral face"
+},
+{
+"id": "e_23f0",
+"e": "⏰",
+"name": "alarm clock"
+},
+{
+"id": "e_1f3c3",
+"e": "🏃",
+"name": "runner"
+},
+{
+"id": "e_1f30b",
+"e": "🌋",
+"name": "volcano"
+},
+{
+"id": "e_1f5c3",
+"e": "🗃",
+"name": "card file box"
+},
+{
+"id": "e_1f4c6",
+"e": "📆",
+"name": "tear-off calendar"
+},
+{
+"id": "e_1f9ee",
+"e": "🧮",
+"name": "abacus"
+},
+{
+"id": "e_1f31f",
+"e": "🌟",
+"name": "glowing star"
+},
+{
+"id": "e_1f3b6",
+"e": "🎶",
+"name": "multiple musical notes"
+},
+{
+"id": "e_1f30d",
+"e": "🌍",
+"name": "earth globe europe-africa"
+},
+{
+"id": "e_1f4bc",
+"e": "💼",
+"name": "briefcase"
+},
+{
+"id": "e_1f389",
+"e": "🎉",
+"name": "party popper"
+},
+{
+"id": "e_1f6df",
+"e": "🛟",
+"name": "ring buoy"
+},
+{
+"id": "e_1f697",
+"e": "🚗",
+"name": "automobile"
+},
+{
+"id": "e_1f300",
+"e": "🌀",
+"name": "cyclone"
+},
+{
+"id": "e_1f504",
+"e": "🔄",
+"name": "anticlockwise downwards and upwards open circle arrows"
+},
+{
+"id": "e_1f4de",
+"e": "📞",
+"name": "telephone receiver"
+},
+{
+"id": "e_1f3e1",
+"e": "🏡",
+"name": "house with garden"
+},
+{
+"id": "e_1f989",
+"e": "🦉",
+"name": "owl"
+},
+{
+"id": "e_1f50e",
+"e": "🔎",
+"name": "right-pointing magnifying glass"
+},
+{
+"id": "e_1f393",
+"e": "🎓",
+"name": "graduation cap"
+},
+{
+"id": "e_1f634",
+"e": "😴",
+"name": "sleeping face"
+},
+{
+"id": "e_1f58c",
+"e": "🖌",
+"name": "lower left paintbrush"
+},
+{
+"id": "e_1f529",
+"e": "🔩",
+"name": "nut and bolt"
+},
+{
+"id": "e_1f3d7",
+"e": "🏗",
+"name": "building construction"
+},
+{
+"id": "e_1f9ed",
+"e": "🧭",
+"name": "compass"
+},
+{
+"id": "e_1f4cc",
+"e": "📌",
+"name": "pushpin"
+},
+{
+"id": "e_1f9e9",
+"e": "🧩",
+"name": "jigsaw puzzle piece"
+},
+{
+"id": "e_1f5c4",
+"e": "🗄",
+"name": "file cabinet"
+},
+{
+"id": "e_1f396",
+"e": "🎖",
+"name": "military medal"
+},
+{
+"id": "e_1f3b5",
+"e": "🎵",
+"name": "musical note"
+},
+{
+"id": "e_1f465",
+"e": "👥",
+"name": "busts in silhouette"
+},
+{
+"id": "e_1faa9",
+"e": "🪩",
+"name": "mirror ball"
+},
+{
+"id": "e_1f511",
+"e": "🔑",
+"name": "key"
+},
+{
+"id": "e_1f4cb",
+"e": "📋",
+"name": "clipboard"
+},
+{
+"id": "e_1f9b7",
+"e": "🦷",
+"name": "tooth"
+},
+{
+"id": "e_2709",
+"e": "✉",
+"name": "envelope"
+},
+{
+"id": "e_1f9f3",
+"e": "🧳",
+"name": "luggage"
+},
+{
+"id": "e_1fa78",
+"e": "🩸",
+"name": "drop of blood"
+},
+{
+"id": "e_1f32b",
+"e": "🌫",
+"name": "fog"
+},
+{
+"id": "e_1f6ab",
+"e": "🚫",
+"name": "no entry sign"
+},
+{
+"id": "e_1f9b5",
+"e": "🦵",
+"name": "leg"
+},
+{
+"id": "e_270d",
+"e": "✍",
+"name": "writing hand"
+},
+{
+"id": "e_2601",
+"e": "☁",
+"name": "cloud"
+},
+{
+"id": "e_2b50",
+"e": "⭐",
+"name": "white medium star"
+},
+{
+"id": "e_1fac2",
+"e": "🫂",
+"name": "people hugging"
+},
+{
+"id": "e_1f50d",
+"e": "🔍",
+"name": "left-pointing magnifying glass"
+},
+{
+"id": "e_1f44a",
+"e": "👊",
+"name": "fisted hand sign"
+},
+{
+"id": "e_1f618",
+"e": "😘",
+"name": "face throwing a kiss"
+},
+{
+"id": "e_1f3d4",
+"e": "🏔",
+"name": "snow capped mountain"
+},
+{
+"id": "e_267e",
+"e": "♾",
+"name": "permanent paper sign"
+},
+{
+"id": "e_1f3f7",
+"e": "🏷",
+"name": "label"
+},
+{
+"id": "e_1f4e3",
+"e": "📣",
+"name": "cheering megaphone"
+},
+{
+"id": "e_2692",
+"e": "⚒",
+"name": "hammer and pick"
+},
+{
+"id": "e_1f4d3",
+"e": "📓",
+"name": "notebook"
+},
+{
+"id": "e_1f4d4",
+"e": "📔",
+"name": "notebook with decorative cover"
+},
+{
+"id": "e_1f6f0",
+"e": "🛰",
+"name": "satellite"
+},
+{
+"id": "e_1f48d",
+"e": "💍",
+"name": "ring"
+},
+{
+"id": "e_1f3c5",
+"e": "🏅",
+"name": "sports medal"
+},
+{
+"id": "e_1f3a5",
+"e": "🎥",
+"name": "movie camera"
+},
+{
+"id": "e_1f9f2",
+"e": "🧲",
+"name": "magnet"
+},
+{
+"id": "e_1f44b",
+"e": "👋",
+"name": "waving hand sign"
+},
+{
+"id": "e_1f578",
+"e": "🕸",
+"name": "spider web"
+},
+{
+"id": "e_1f4ec",
+"e": "📬",
+"name": "open mailbox with raised flag"
+},
+{
+"id": "e_1f4ee",
+"e": "📮",
+"name": "postbox"
+},
+{
+"id": "e_26d3",
+"e": "⛓",
+"name": "chains"
+},
+{
+"id": "e_1f947",
+"e": "🥇",
+"name": "first place medal"
+},
+{
+"id": "e_1f4a0",
+"e": "💠",
+"name": "diamond shape with a dot inside"
+},
+{
+"id": "e_2702",
+"e": "✂",
+"name": "black scissors"
+},
+{
+"id": "e_1f52a",
+"e": "🔪",
+"name": "hocho"
+},
+{
+"id": "e_1f3d8",
+"e": "🏘",
+"name": "house buildings"
+},
+{
+"id": "e_1f981",
+"e": "🦁",
+"name": "lion face"
+},
+{
+"id": "e_1f5dd",
+"e": "🗝",
+"name": "old key"
+},
+{
+"id": "e_1f31e",
+"e": "🌞",
+"name": "sun with face"
+},
+{
+"id": "e_1f3d9",
+"e": "🏙",
+"name": "cityscape"
+},
+{
+"id": "e_1f6eb",
+"e": "🛫",
+"name": "airplane departure"
+},
+{
+"id": "e_1f3ad",
+"e": "🎭",
+"name": "performing arts"
+},
+{
+"id": "e_1faaa",
+"e": "🪪",
+"name": "identification card"
+},
+{
+"id": "e_1f355",
+"e": "🍕",
+"name": "slice of pizza"
+},
+{
+"id": "e_1f942",
+"e": "🥂",
+"name": "clinking glasses"
+},
+{
+"id": "e_1f306",
+"e": "🌆",
+"name": "cityscape at dusk"
+},
+{
+"id": "e_1f3a1",
+"e": "🎡",
+"name": "ferris wheel"
+},
+{
+"id": "e_1f35c",
+"e": "🍜",
+"name": "steaming bowl"
+},
+{
+"id": "e_1f573",
+"e": "🕳",
+"name": "hole"
+},
+{
+"id": "e_1f9ca",
+"e": "🧊",
+"name": "ice cube"
+},
+{
+"id": "e_1f7e2",
+"e": "🟢",
+"name": "large green circle"
+},
+{
+"id": "e_1f7e1",
+"e": "🟡",
+"name": "large yellow circle"
+},
+{
+"id": "e_1f695",
+"e": "🚕",
+"name": "taxi"
+},
+{
+"id": "e_1f687",
+"e": "🚇",
+"name": "metro"
+},
+{
+"id": "e_1f354",
+"e": "🍔",
+"name": "hamburger"
+},
+{
+"id": "e_1f39f",
+"e": "🎟",
+"name": "admission tickets"
+},
+{
+"id": "e_1f3e7",
+"e": "🏧",
+"name": "automated teller machine"
+},
+{
+"id": "e_2753",
+"e": "❓",
+"name": "black question mark ornament"
+},
+{
+"id": "e_1f441",
+"e": "👁",
+"name": "eye"
+},
+{
+"id": "e_1f590",
+"e": "🖐",
+"name": "raised hand with fingers splayed"
+},
+{
+"id": "e_1f30a",
+"e": "🌊",
+"name": "water wave"
+},
+{
+"id": "e_1f513",
+"e": "🔓",
+"name": "open lock"
+},
+{
+"id": "e_1f9cd",
+"e": "🧍",
+"name": "standing person"
+},
+{
+"id": "e_1f6cb",
+"e": "🛋",
+"name": "couch and lamp"
+},
+{
+"id": "e_1f6b6",
+"e": "🚶",
+"name": "pedestrian"
+},
+{
+"id": "e_1f648",
+"e": "🙈",
+"name": "see-no-evil monkey"
+},
+{
+"id": "e_1faa2",
+"e": "🪢",
+"name": "knot"
+},
+{
+"id": "e_1f528",
+"e": "🔨",
+"name": "hammer"
+},
+{
+"id": "e_270b",
+"e": "✋",
+"name": "raised hand"
+},
+{
+"id": "e_1fa99",
+"e": "🪙",
+"name": "coin"
+},
+{
+"id": "e_1f577",
+"e": "🕷",
+"name": "spider"
+},
+{
+"id": "e_1f98b",
+"e": "🦋",
+"name": "butterfly"
+},
+{
+"id": "e_1fa83",
+"e": "🪃",
+"name": "boomerang"
+},
+{
+"id": "e_1f40b",
+"e": "🐋",
+"name": "whale"
+},
+{
+"id": "e_1f575",
+"e": "🕵",
+"name": "sleuth or spy"
+},
+{
+"id": "e_2744",
+"e": "❄",
+"name": "snowflake"
+},
+{
+"id": "e_1f338",
+"e": "🌸",
+"name": "cherry blossom"
+},
+{
+"id": "e_1f342",
+"e": "🍂",
+"name": "fallen leaf"
+},
+{
+"id": "e_1f464",
+"e": "👤",
+"name": "bust in silhouette"
+},
+{
+"id": "e_1fa9f",
+"e": "🪟",
+"name": "window"
+},
+{
+"id": "e_1fab4",
+"e": "🪴",
+"name": "potted plant"
+},
+{
+"id": "e_1fad9",
+"e": "🫙",
+"name": "jar"
+},
+{
+"id": "e_1f933",
+"e": "🤳",
+"name": "selfie"
+},
+{
+"id": "e_1f5a4",
+"e": "🖤",
+"name": "black heart"
+},
+{
+"id": "e_270c-1f3ff",
+"e": "✌🏿",
+"name": "victory hand"
+},
+{
+"id": "e_1f49e",
+"e": "💞",
+"name": "revolving hearts"
+},
+{
+"id": "e_1f498",
+"e": "💘",
+"name": "heart with arrow"
+},
+{
+"id": "e_1f497",
+"e": "💗",
+"name": "growing heart"
+},
+{
+"id": "e_1f92f",
+"e": "🤯",
+"name": "shocked face with exploding head"
+},
+{
+"id": "e_1f527",
+"e": "🔧",
+"name": "wrench"
+},
+{
+"id": "e_1f3ed",
+"e": "🏭",
+"name": "factory"
+},
+{
+"id": "e_1f6e4",
+"e": "🛤",
+"name": "railway track"
+},
+{
+"id": "e_1f69a",
+"e": "🚚",
+"name": "delivery truck"
+},
+{
+"id": "e_1f91a",
+"e": "🤚",
+"name": "raised back of hand"
+},
+{
+"id": "e_1f400",
+"e": "🐀",
+"name": "rat"
+},
+{
+"id": "e_1f4d0",
+"e": "📐",
+"name": "triangular ruler"
+},
+{
+"id": "e_1f9f0",
+"e": "🧰",
+"name": "toolbox"
+},
+{
+"id": "e_1f58d",
+"e": "🖍",
+"name": "lower left crayon"
+},
+{
+"id": "e_1f58b",
+"e": "🖋",
+"name": "lower left fountain pen"
+},
+{
+"id": "e_1f5de",
+"e": "🗞",
+"name": "rolled-up newspaper"
+},
+{
+"id": "e_1f52c",
+"e": "🔬",
+"name": "microscope"
+},
+{
+"id": "e_1f4be",
+"e": "💾",
+"name": "floppy disk"
+},
+{
+"id": "e_1f5a5",
+"e": "🖥",
+"name": "desktop computer"
+},
+{
+"id": "e_1f32a",
+"e": "🌪",
+"name": "cloud with tornado"
+},
+{
+"id": "e_1fa90",
+"e": "🪐",
+"name": "ringed planet"
+},
+{
+"id": "e_1f9f7",
+"e": "🧷",
+"name": "safety pin"
+},
+{
+"id": "e_1f537",
+"e": "🔷",
+"name": "large blue diamond"
+},
+{
+"id": "e_1fa79",
+"e": "🩹",
+"name": "adhesive bandage"
+},
+{
+"id": "e_1f39a",
+"e": "🎚",
+"name": "level slider"
+},
+{
+"id": "e_1fab5",
+"e": "🪵",
+"name": "wood"
+},
+{
+"id": "e_1f50a",
+"e": "🔊",
+"name": "speaker with three sound waves"
+},
+{
+"id": "e_1f9fc",
+"e": "🧼",
+"name": "bar of soap"
+},
+{
+"id": "e_1f4d2",
+"e": "📒",
+"name": "ledger"
+},
+{
+"id": "e_1f3bc",
+"e": "🎼",
+"name": "musical score"
+},
+{
+"id": "e_1f3a4",
+"e": "🎤",
+"name": "microphone"
+},
+{
+"id": "e_1f3b9",
+"e": "🎹",
+"name": "musical keyboard"
+},
+{
+"id": "e_1f3ba",
+"e": "🎺",
+"name": "trumpet"
+},
+{
+"id": "e_1f3bb",
+"e": "🎻",
+"name": "violin"
+},
+{
+"id": "e_1f3b7",
+"e": "🎷",
+"name": "saxophone"
+},
+{
+"id": "e_1f4fc",
+"e": "📼",
+"name": "videocassette"
+},
+{
+"id": "e_1f502",
+"e": "🔂",
+"name": "clockwise rightwards and leftwards open circle arrows with circled one overlay"
+},
+{
+"id": "e_1f4c0",
+"e": "📀",
+"name": "dvd"
+},
+{
+"id": "e_1f4e4",
+"e": "📤",
+"name": "outbox tray"
+},
+{
+"id": "e_270c",
+"e": "✌",
+"name": "victory hand"
+},
+{
+"id": "e_1f51f",
+"e": "🔟",
+"name": "keycap ten"
+},
+{
+"id": "e_1f4fd",
+"e": "📽",
+"name": "film projector"
+},
+{
+"id": "e_1f45f",
+"e": "👟",
+"name": "athletic shoe"
+},
+{
+"id": "e_1f315",
+"e": "🌕",
+"name": "full moon symbol"
+},
+{
+"id": "e_1f5fb",
+"e": "🗻",
+"name": "mount fuji"
+},
+{
+"id": "e_1f3f9",
+"e": "🏹",
+"name": "bow and arrow"
+},
+{
+"id": "e_1f4eb",
+"e": "📫",
+"name": "closed mailbox with raised flag"
+},
+{
+"id": "e_1faa3",
+"e": "🪣",
+"name": "bucket"
+},
+{
+"id": "e_1f3f0",
+"e": "🏰",
+"name": "european castle"
+},
+{
+"id": "e_2696",
+"e": "⚖",
+"name": "scales"
+},
+{
+"id": "e_1f33f",
+"e": "🌿",
+"name": "herb"
+},
+{
+"id": "e_1f333",
+"e": "🌳",
+"name": "deciduous tree"
+},
+{
+"id": "e_1f9be",
+"e": "🦾",
+"name": "mechanical arm"
+},
+{
+"id": "e_1f402",
+"e": "🐂",
+"name": "ox"
+},
+{
+"id": "e_1f98d",
+"e": "🦍",
+"name": "gorilla"
+},
+{
+"id": "e_1f4d7",
+"e": "📗",
+"name": "green book"
+},
+{
+"id": "e_1f4d8",
+"e": "📘",
+"name": "blue book"
+},
+{
+"id": "e_1f4d9",
+"e": "📙",
+"name": "orange book"
+},
+{
+"id": "e_1f52d",
+"e": "🔭",
+"name": "telescope"
+},
+{
+"id": "e_1f5d2",
+"e": "🗒",
+"name": "spiral note pad"
+},
+{
+"id": "e_1f58a",
+"e": "🖊",
+"name": "lower left ballpoint pen"
+},
+{
+"id": "e_1f4ad",
+"e": "💭",
+"name": "thought balloon"
+},
+{
+"id": "e_1fab6",
+"e": "🪶",
+"name": "feather"
+},
+{
+"id": "e_1f304",
+"e": "🌄",
+"name": "sunrise over mountains"
+},
+{
+"id": "e_1f324",
+"e": "🌤",
+"name": "white sun with small cloud"
+},
+{
+"id": "e_1f413",
+"e": "🐓",
+"name": "rooster"
+},
+{
+"id": "e_1f33b",
+"e": "🌻",
+"name": "sunflower"
+},
+{
+"id": "e_1f506",
+"e": "🔆",
+"name": "high brightness symbol"
+},
+{
+"id": "e_1f308",
+"e": "🌈",
+"name": "rainbow"
+},
+{
+"id": "e_1f454",
+"e": "👔",
+"name": "necktie"
+},
+{
+"id": "e_1f9e7",
+"e": "🧧",
+"name": "red gift envelope"
+},
+{
+"id": "e_1f37b",
+"e": "🍻",
+"name": "clinking beer mugs"
+},
+{
+"id": "e_1f57a",
+"e": "🕺",
+"name": "man dancing"
+},
+{
+"id": "e_1f303",
+"e": "🌃",
+"name": "night with stars"
+},
+{
+"id": "e_1f9d1-200d-1f91d-200d-1f9d1",
+"e": "🧑‍🤝‍🧑",
+"name": "adult and handshake and adult"
+},
+{
+"id": "e_1f3df",
+"e": "🏟",
+"name": "stadium"
+},
+{
+"id": "e_1f37d",
+"e": "🍽",
+"name": "fork and knife with plate"
+},
+{
+"id": "e_1f32e",
+"e": "🌮",
+"name": "taco"
+},
+{
+"id": "e_1f363",
+"e": "🍣",
+"name": "sushi"
+},
+{
+"id": "e_1f377",
+"e": "🍷",
+"name": "wine glass"
+},
+{
+"id": "e_1f958",
+"e": "🥘",
+"name": "shallow pan of food"
+},
+{
+"id": "e_1f364",
+"e": "🍤",
+"name": "fried shrimp"
+},
+{
+"id": "e_1f371",
+"e": "🍱",
+"name": "bento box"
+},
+{
+"id": "e_2b55",
+"e": "⭕",
+"name": "heavy large circle"
+},
+{
+"id": "e_1f4cf",
+"e": "📏",
+"name": "straight ruler"
+},
+{
+"id": "e_274c",
+"e": "❌",
+"name": "cross mark"
+},
+{
+"id": "e_1f3b2",
+"e": "🎲",
+"name": "game die"
+},
+{
+"id": "e_26aa",
+"e": "⚪",
+"name": "medium white circle"
+},
+{
+"id": "e_1f3e8",
+"e": "🏨",
+"name": "hotel"
+},
+{
+"id": "e_1f62c",
+"e": "😬",
+"name": "grimacing face"
+},
+{
+"id": "e_1f410",
+"e": "🐐",
+"name": "goat"
+},
+{
+"id": "e_1f534",
+"e": "🔴",
+"name": "large red circle"
+},
+{
+"id": "e_1f629",
+"e": "😩",
+"name": "weary face"
+},
+{
+"id": "e_1f9df",
+"e": "🧟",
+"name": "zombie"
+},
+{
+"id": "e_1f90f",
+"e": "🤏",
+"name": "pinching hand"
+},
+{
+"id": "e_1f340",
+"e": "🍀",
+"name": "four leaf clover"
+},
+{
+"id": "e_265f",
+"e": "♟",
+"name": "black chess pawn"
+},
+{
+"id": "e_1f9b4",
+"e": "🦴",
+"name": "bone"
+},
+{
+"id": "e_1f3da",
+"e": "🏚",
+"name": "derelict house building"
+},
+{
+"id": "e_1f5fd",
+"e": "🗽",
+"name": "statue of liberty"
+},
+{
+"id": "e_1f334",
+"e": "🌴",
+"name": "palm tree"
+},
+{
+"id": "e_1f5fc",
+"e": "🗼",
+"name": "tokyo tower"
+},
+{
+"id": "e_2615",
+"e": "☕",
+"name": "hot beverage"
+},
+{
+"id": "e_1f3ab",
+"e": "🎫",
+"name": "ticket"
+},
+{
+"id": "e_1f9e4",
+"e": "🧤",
+"name": "gloves"
+},
+{
+"id": "e_1f3a7",
+"e": "🎧",
+"name": "headphone"
+},
+{
+"id": "e_1fa9e",
+"e": "🪞",
+"name": "mirror"
+},
+{
+"id": "e_1f339",
+"e": "🌹",
+"name": "rose"
+},
+{
+"id": "e_1f383",
+"e": "🎃",
+"name": "jack-o-lantern"
+},
+{
+"id": "e_1f52e",
+"e": "🔮",
+"name": "crystal ball"
+},
+{
+"id": "e_1f30e",
+"e": "🌎",
+"name": "earth globe americas"
+},
+{
+"id": "e_1f552",
+"e": "🕒",
+"name": "clock face three oclock"
+},
+{
+"id": "e_1f9d7",
+"e": "🧗",
+"name": "person climbing"
+},
+{
+"id": "e_1f514",
+"e": "🔔",
+"name": "bell"
+},
+{
+"id": "e_1f938",
+"e": "🤸",
+"name": "person doing cartwheel"
+},
+{
+"id": "e_1f6b4",
+"e": "🚴",
+"name": "bicyclist"
+},
+{
+"id": "e_1fac0",
+"e": "🫀",
+"name": "anatomical heart"
+},
+{
+"id": "e_26d3-200d-1f4a5",
+"e": "⛓‍💥",
+"name": "chains and collision symbol"
+},
+{
+"id": "e_1f4b9",
+"e": "💹",
+"name": "chart with upwards trend and yen sign"
+},
+{
+"id": "e_1f64b",
+"e": "🙋",
+"name": "happy person raising one hand"
+},
+{
+"id": "e_1f4a2",
+"e": "💢",
+"name": "anger symbol"
+},
+{
+"id": "e_1f982",
+"e": "🦂",
+"name": "scorpion"
+},
+{
+"id": "e_1f432",
+"e": "🐲",
+"name": "dragon face"
+},
+{
+"id": "e_1f3ca",
+"e": "🏊",
+"name": "swimmer"
+},
+{
+"id": "e_1f9ce",
+"e": "🧎",
+"name": "kneeling person"
+},
+{
+"id": "e_1f408",
+"e": "🐈",
+"name": "cat"
+},
+{
+"id": "e_1f9f5",
+"e": "🧵",
+"name": "spool of thread"
+},
+{
+"id": "e_1f415",
+"e": "🐕",
+"name": "dog"
+},
+{
+"id": "e_1f9ce-200d-2642",
+"e": "🧎‍♂",
+"name": "kneeling person and male sign"
+},
+{
+"id": "e_1f54a",
+"e": "🕊",
+"name": "dove of peace"
+},
+{
+"id": "e_1f647",
+"e": "🙇",
+"name": "person bowing deeply"
+},
+{
+"id": "e_1fac1",
+"e": "🫁",
+"name": "lungs"
+},
+{
+"id": "e_1f476",
+"e": "👶",
+"name": "baby"
+},
+{
+"id": "e_1f436",
+"e": "🐶",
+"name": "dog face"
+},
+{
+"id": "e_1f985",
+"e": "🦅",
+"name": "eagle"
+},
+{
+"id": "e_1f404",
+"e": "🐄",
+"name": "cow"
+},
+{
+"id": "e_1f646",
+"e": "🙆",
+"name": "face with ok gesture"
+},
+{
+"id": "e_26e9",
+"e": "⛩",
+"name": "shinto shrine"
+},
+{
+"id": "e_1f98e",
+"e": "🦎",
+"name": "lizard"
+},
+{
+"id": "e_1f438",
+"e": "🐸",
+"name": "frog face"
+},
+{
+"id": "e_1f53a",
+"e": "🔺",
+"name": "up-pointing red triangle"
+},
+{
+"id": "e_1f53b",
+"e": "🔻",
+"name": "down-pointing red triangle"
+},
+{
+"id": "e_1f40d",
+"e": "🐍",
+"name": "snake"
+},
+{
+"id": "e_1f309",
+"e": "🌉",
+"name": "bridge at night"
+},
+{
+"id": "e_1f34c",
+"e": "🍌",
+"name": "banana"
+},
+{
+"id": "e_1f40e",
+"e": "🐎",
+"name": "horse"
+},
+{
+"id": "e_1f351",
+"e": "🍑",
+"name": "peach"
+},
+{
+"id": "e_1f4ba",
+"e": "💺",
+"name": "seat"
+},
+{
+"id": "e_1f48a",
+"e": "💊",
+"name": "pill"
+},
+{
+"id": "e_1f488",
+"e": "💈",
+"name": "barber pole"
+},
+{
+"id": "e_1f43e",
+"e": "🐾",
+"name": "paw prints"
+},
+{
+"id": "e_1f4e7",
+"e": "📧",
+"name": "e-mail symbol"
+}
+]
