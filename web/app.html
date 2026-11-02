@@ -1836,7 +1836,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b263';
+const BUILD='b264';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -8454,6 +8454,7 @@ function hqFrame(c, now){ const D=HQI.D; if (!D) return; const art=HQI.art ||= (
   for (let ci=0; ci<0; ci++){   // no road, no cars const ph=(now/1100+ci*(span+5)/nC)%(span+5), cx=.3+ph, p=P(cx,lane,0);
     if (ph<span+.6){ ax.drawImage(cs, Math.round(p[0]-o[0]), Math.round(p[1]-o[1])); if (night){ ax.fillStyle='rgba(255,240,180,.55)'; ax.fillRect(Math.round(p[0]+8),Math.round(p[1]+1),3,1); ax.fillRect(Math.round(p[0]+10),Math.round(p[1]+2),3,1); } } }
   hqPeople(ax, now, night);
+  try { hqLife(ax, now, night); } catch(e){}
   for (const m of (window.__cityMarks?[]:(HQI.boss||[]))){ const b=D.find(x=>x.k===m.k), L=HQ_LOT[m.k]; if(!b||!L) continue; const [x,y,w,d]=L, a=P(x+w*.5,y+d*.5,(b.lvl?hqH(b):6)+12+m.row*7), bw=16, bx=Math.round(a[0]-bw/2), by=Math.round(a[1]-(Math.floor(now/500)%2));
     ax.fillStyle='#120b18'; ax.fillRect(bx-1,by-1,bw+2,4); ax.fillStyle='#3a2a3a'; ax.fillRect(bx,by,bw,2); ax.fillStyle=m.col; ax.fillRect(bx,by,Math.max(1,Math.round(bw*m.pct)),2); ax.fillStyle=m.col; ax.fillRect(bx-4,by-1,2,4); }
   if (HQI.fg) ax.drawImage(HQI.fg,0,0);
@@ -8474,6 +8475,45 @@ function hqWalker(x, c, now){ const k=c.width/ISO.W, W=HQI.hw, D=HQI.D; if (!PXW
   ox.globalCompositeOperation='source-in'; ox.fillStyle=HQI.night?'rgba(255,230,160,.9)':'rgba(255,255,255,.95)'; ox.fillRect(0,0,o.width,o.height); ox.globalCompositeOperation='source-over';
   const rr=Math.max(1,Math.round(k*.6)); for (const [a,b] of [[rr,0],[-rr,0],[0,rr],[0,-rr]]) x.drawImage(o, dx+a, dy+b, S2.w*sc, S2.h*sc);
   pxwFrame(x, kk2, ff, dx, dy, flip, sc); }
+
+
+// b264: more life on the square — fountain spray, pigeons, strollers, bench sitters, birds, falling leaves/snow/petals, fireflies & lamp glow at night
+const HQ_TREES=era=>[[3.3,2.3],[10.6,2.4],[3.2,6.5],[10.7,6.5],[2.5,6.6],[13.4,3.4]].concat(era>=1?[[11.3,6.6],[7.4,2.2],[5.6,2.2]]:[]);
+function hqLife(ax, now, night){ const {P}=ISO, CY=HQI.city||{}, era=CY.era||0, sn=CY.sn||4, fx=HQ_FTN[0], fy=HQ_FTN[1], T=now/1000;
+  const px=(x,y,c,a)=>{ ax.globalAlpha=a==null?1:a; ax.fillStyle=c; ax.fillRect(Math.round(x),Math.round(y),1,1); ax.globalAlpha=1; };
+  // fountain: water arcs from the top and ripples in the basin
+  const top=P(fx,fy,16), wt=night?'#7fb8ff':'#c8f0ff', wt2=night?'#4f86c8':'#7fd0ff';
+  for (let i=0;i<10;i++){ const ph=((T*0.9)+i/10)%1, side=i%2?1:-1, ang=(i%5)/5, dx=side*(2+ang*3)*ph, dy=-6*ph*(1-ph)*4+ph*12; px(top[0]+dx, top[1]-3+dy, i%3?wt:wt2, 1-ph*.4); }
+  for (let r=0;r<2;r++){ const ph=((T*0.6)+r/2)%1, rad=.25+ph*.85; for (let k=0;k<10;k++){ const a=k/10*2*Math.PI, q=P(fx+Math.cos(a)*rad, fy+Math.sin(a)*rad, 4); px(q[0],q[1],wt,(1-ph)*.8); } }
+  // pigeons around the fountain: peck, hop, and scatter now and then
+  const scat=(Math.floor(T/14)%3===0) && (T%14)<2.2;
+  for (let i=0;i<5;i++){ const a=i*1.3+.4, rr=1.7+(i%2)*.35, base=P(fx+Math.cos(a)*rr, fy+Math.sin(a)*rr, 0); let x=base[0], y=base[1];
+    if (scat){ const u=(T%14)/2.2; x+=Math.cos(a)*u*18; y-=u*22+Math.sin(u*9+i)*2; }
+    const peck=!scat && Math.floor(T*2+i*.7)%4===0;
+    ax.fillStyle=night?'#5a5a6a':'#8a8a98'; ax.fillRect(Math.round(x),Math.round(y)-2,3,2); ax.fillStyle=night?'#7a7a8a':'#c8c8d4'; ax.fillRect(Math.round(x)+(i%2?0:2),Math.round(y)-(peck?2:3),1,1);
+    if (scat){ ax.fillStyle='#e8e8f0'; const fl=Math.floor(T*12)%2; ax.fillRect(Math.round(x)-1,Math.round(y)-3-fl,1,1); ax.fillRect(Math.round(x)+3,Math.round(y)-3-fl,1,1); } }
+  // strollers looping the square (more when your social life is busy)
+  const nS=Math.min(6, 2+Math.floor((CY.folk||3)/3)), cols=[['#ff5a7a','#2a2a3a'],['#4dd8ff','#3a2a1a'],['#ffd25e','#1a2a4a'],['#9b7bff','#2a2a2a'],['#5fd38a','#3a2a3a'],['#ff9a3d','#22222f']], skin=['#8a5a3c','#c68b5f','#5a3a28','#e0b08a'];
+  for (let i=0;i<nS;i++){ const dir=i%2?1:-1, sp=.05+(i%3)*.012, a=(T*sp*dir)+i*1.05, rr=2.55+(i%3)*.32, p=P(fx+Math.cos(a)*rr, fy+Math.sin(a)*rr*.95, 0), x=Math.round(p[0]), y=Math.round(p[1]), st=Math.floor(T*5+i)%2;
+    ax.fillStyle='rgba(0,0,0,.25)'; ax.fillRect(x-1,y,4,1); ax.fillStyle=cols[i][1]; ax.fillRect(x+(st?0:1),y-2,1,2); ax.fillRect(x+(st?1:0),y-2,1,1); ax.fillStyle=cols[i][0]; ax.fillRect(x,y-5,2,3); ax.fillStyle=skin[i%4]; ax.fillRect(x,y-7,2,2);
+    if (i===1){ ax.fillStyle='#c68b5f'; ax.fillRect(x+3+(st?1:0),y-1,3,1); ax.fillRect(x+5,y-2,1,1); }   // a dog on a walk
+    if (night && i%2===0){ ax.fillStyle='rgba(180,220,255,.8)'; ax.fillRect(x+2,y-5,1,1); } }               // phone glow
+  // someone sitting on each bench
+  for (const [bx,by] of [[4.2,4.1],[8.9,4.1],[6.5,6.4]].slice(0,era>=1?3:2)){ const p=P(bx,by,3), x=Math.round(p[0]), y=Math.round(p[1]), nod=Math.floor(T/3+bx)%5===0;
+    ax.fillStyle='#3a5a8a'; ax.fillRect(x,y-3,2,3); ax.fillStyle='#c68b5f'; ax.fillRect(x,y-5-(nod?0:0),2,2); ax.fillStyle='#2a2a3a'; ax.fillRect(x+2,y-1,1,2); if (nod){ ax.fillStyle='#ffffff'; ax.fillRect(x+3,y-7,1,1); } }
+  // falling leaves / snow / petals by season
+  const fall = sn===1?['#ffffff','#e8f4ff']: sn===2?['#ffc2da','#ff8fb3']: sn===3?null:['#ff9a3d','#d9622a','#ffd25e'];
+  if (fall) for (const [tx,ty] of HQ_TREES(era)) for (let k=0;k<2;k++){ const ph=((T*.18)+k*.5+tx*.13)%1, b=P(tx,ty,18), x=b[0]+Math.sin(ph*9+k)*3+ph*4, y=b[1]+ph*20; px(x,y,fall[(k+Math.round(tx))%fall.length],1-ph*.5); }
+  if (sn===1) for (let k=0;k<14;k++){ const ph=((T*.08)+k/14)%1; px((k*37+T*6)%ISO.W, ph*ISO.H*.9, '#ffffff', .8); }
+  if (!night){ // a few birds crossing the sky
+    const ph=(T/22)%1; if (ph<.6){ const bx=ph/.6*(ISO.W+40)-20, by=28+Math.sin(T)*2; for (let k=0;k<3;k++){ const x=bx-k*7, y=by+k*3, w=Math.floor(T*6+k)%2; ax.fillStyle='#1c1a28'; ax.fillRect(Math.round(x)-1,Math.round(y)-w,1,1); ax.fillRect(Math.round(x),Math.round(y),1,1); ax.fillRect(Math.round(x)+1,Math.round(y)-w,1,1); } } }
+  else { // fireflies near the trees + warm glow under lamps
+    for (const [tx,ty] of HQ_TREES(era)) for (let k=0;k<2;k++){ const b=P(tx,ty,6), on=(Math.sin(T*3+tx*5+k*2)+1)/2; px(b[0]+Math.sin(T*.7+k+tx)*6, b[1]-4+Math.cos(T*.9+k)*4, '#f6ff9a', on); }
+    for (const lx of (era>=2?[1,2.5,4.5,6.5,8.5,10.5,12.5]:[2.5,6.5,10.5])){ const p=P(lx,7.6,0); ax.fillStyle='rgba(255,220,140,.12)'; ax.beginPath(); ax.ellipse(p[0],p[1],7,3,0,0,7); ax.fill(); } }
+  // PixelLab townsfolk (when their sprites are loaded): walk the front edge of the square
+  try { const F=['folk1','folk2','folk3','folk4'].filter(k=>PXW[k+'_walk']&&pxwReady(k+'_walk')); F.forEach((k,i)=>{ const S2=PXW[k+'_walk'], span=11, raw=((T*(.32+i*.05))+i*3.1)%(span*2), fw=raw<span, gx=1.5+(fw?raw:span*2-raw), p=P(gx,7.05+i*.12,0), sc=15/S2.h, f=Math.floor(now/110+i)%S2.n;
+    pxwFrame(ax, k+'_walk', f, p[0]-S2.w*sc/2, p[1]-S2.h*sc+1, !fw, sc); }); } catch(e){}
+}
 
 // tiny townsfolk: 2px wide, 6px tall, walking the sidewalk and turning around at the ends
 const HQ_FOLK=[['#ff5a7a','#2a2a3a',.5,7.25,.55],['#4dd8ff','#3a2a1a',5.2,7.7,.4],['#ffd25e','#1a2a4a',9.6,7.3,.7],['#9b7bff','#2a2a2a',12.4,7.65,.45],['#5fd38a','#3a2a3a',3.1,7.5,.6],['#ffffff','#4a3a2a',7.4,7.35,.5],['#ff9a3d','#22222f',11.0,7.6,.35]];
