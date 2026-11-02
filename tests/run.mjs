@@ -238,11 +238,11 @@ const mf = await page.evaluate(() => { const T=S.money.budget.txns, add=[]; cons
   return {nf:nf&&nf.cad, nfBill:nf&&nf.bill, rentBill:rent&&rent.bill, subsRows, fixedRows, merch}; });
 ok('subscriptions are found from the bank (monthly, not bills)', mf.nf==='monthly' && mf.nfBill===false && mf.rentBill===true, JSON.stringify(mf));
 ok('transactions filter by any category, bucket or merchant across all months', mf.subsRows===4 && mf.fixedRows===2 && mf.merch===4, JSON.stringify(mf));
-// On schedule: real balances vs the frozen plan, per bucket
+// On schedule: real balances vs where the checks that landed say each bucket should be
 const sb = await page.evaluate(() => { const keepS=S.money.sched, keepL=S.money.links, A=S.money.budget.accounts; A.push({name:'Test 360 Performance Savings', type:'savings', bal:500});
-  delete S.money.links; S.money.sched={at:TODAY, start:{tax:900,ef:0,cards:cardDebt(),house:0}, rows:[{d:addDays(TODAY,-1), tax:1000, ef:0, cards:cardDebt(), house:0}]};
+  delete S.money.links; S.money.sched={v:2, at:addDays(TODAY,-3), start:{tax:900,ef:0,cards:cardDebt(),house:0,ret:0}, rows:[]}; const tc={id:'tchk', d:addDays(TODAY,-1), gotOn:addDays(TODAY,-1), amt:400, got:true, split:{tax:100}}; S.money.checks.push(tc);
   const R=sbRows(), t=R.find(r=>r.k==='tax'); const r={linked:t.src.includes('360'), v:t.v, plan:t.plan, st:t.st, diff:Math.round(t.diff)};
-  S.money.budget.accounts=A.filter(a=>a.name!=='Test 360 Performance Savings'); S.money.sched=keepS; S.money.links=keepL; return r; });
+  S.money.budget.accounts=A.filter(a=>a.name!=='Test 360 Performance Savings'); S.money.checks=S.money.checks.filter(c=>c.id!=='tchk'); S.money.sched=keepS; S.money.links=keepL; return r; });
 ok('each bucket shows its real account vs the plan (ahead / behind)', sb.linked && sb.v===500 && sb.plan===1000 && sb.st==='behind' && sb.diff===-500, JSON.stringify(sb));
 // Datum write-offs: log a purchase or confirm a bank charge → one Datum deductible each, never twice; money plan invests Mom's FI amount
 const dw = await page.evaluate(() => { const D=ensureDatum(), B=S.money.budget, n0=D.expenses.length;
