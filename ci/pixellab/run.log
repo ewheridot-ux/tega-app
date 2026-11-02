@@ -1,36 +1,38 @@
-balance {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"active","plan":"Tier 1: Pixel Apprentice","generations":2000.0,"total":2000.0}}
-ERR /generate-with-style-v2 422 {"detail":[{"type":"missing","loc":["body","style_images",0,"image"],"msg":"Field required","input":{"type":"base64","base64":"iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAf4UlEQVR4nO19e3Bb13nnD8C9xEMkIQAkAIIUQVECJZKO3rKVWKwcxZZjSQ03cceNu7F3m/2jM93ESWaT3XZ2J81mZifZ2qkTb/rIbOPtVu049iR13FqsLSuSGFG2ZIkSSZukRIoSSfEBgARAEBQJ4F7g7h8X5+DcB0CQlGx5Vr8ZDIH7POf7zved73UOgfu4j/u4j/v4/xWGj7sBq4V/3RaJ/S2ISfCcBWO3r32i+sR93A1YKXxmvwQAtspyWG02elwUBPm86JemUmOfGCZ8ohhQbnFKvMkCu8sBAPC410MUM+A4E0QxAwCora2GdbBCEgXhEyENnwgGlFucUiYrwmWq1pzjOBNqt7rp77EPp9EYqEcoFIUfW6R7nQn3JAP867ZIgpgEAMwbEshkRbj5Gno+HolhKRVHbW01YvEEG
-ERR /generate-with-style-v2 422 {"detail":[{"type":"missing","loc":["body","style_images",0,"image"],"msg":"Field required","input":{"type":"base64","base64":"iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAf4UlEQVR4nO19e3Bb13nnD8C9xEMkIQAkAIIUQVECJZKO3rKVWKwcxZZjSQ03cceNu7F3m/2jM93ESWaT3XZ2J81mZifZ2qkTb/rIbOPtVu049iR13FqsLSuSGFG2ZIkSSZukRIoSSfEBgARAEBQJ4F7g7h8X5+DcB0CQlGx5Vr8ZDIH7POf7zved73UOgfu4j/u4j/v4/xWGj7sBq4V/3RaJ/S2ISfCcBWO3r32i+sR93A1YKXxmvwQAtspyWG02elwUBPm86JemUmOfGCZ8ohhQbnFKvMkCu8sBAPC410MUM+A4E0QxAwCora2GdbBCEgXhEyENnwgGlFucUiYrwmWq1pzjOBNqt7rp77EPp9EYqEcoFIUfW6R7nQn3JAP867ZIgpgEAMwbEshkRbj5Gno+HolhKRVHbW01YvEEG
-ERR /generate-with-style-v2 422 {"detail":[{"type":"missing","loc":["body","style_images",0,"image"],"msg":"Field required","input":{"type":"base64","base64":"iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAf4UlEQVR4nO19e3Bb13nnD8C9xEMkIQAkAIIUQVECJZKO3rKVWKwcxZZjSQ03cceNu7F3m/2jM93ESWaT3XZ2J81mZifZ2qkTb/rIbOPtVu049iR13FqsLSuSGFG2ZIkSSZukRIoSSfEBgARAEBQJ4F7g7h8X5+DcB0CQlGx5Vr8ZDIH7POf7zved73UOgfu4j/u4j/v4/xWGj7sBq4V/3RaJ/S2ISfCcBWO3r32i+sR93A1YKXxmvwQAtspyWG02elwUBPm86JemUmOfGCZ8ohhQbnFKvMkCu8sBAPC410MUM+A4E0QxAwCora2GdbBCEgXhEyENnwgGlFucUiYrwmWq1pzjOBNqt7rp77EPp9EYqEcoFIUfW6R7nQn3JAP867ZIgpgEAMwbEshkRbj5Gno+HolhKRVHbW01YvEEG
-ERR /generate-with-style-v2 422 {"detail":[{"type":"missing","loc":["body","style_images",0,"image"],"msg":"Field required","input":{"type":"base64","base64":"iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAf4UlEQVR4nO19e3Bb13nnD8C9xEMkIQAkAIIUQVECJZKO3rKVWKwcxZZjSQ03cceNu7F3m/2jM93ESWaT3XZ2J81mZifZ2qkTb/rIbOPtVu049iR13FqsLSuSGFG2ZIkSSZukRIoSSfEBgARAEBQJ4F7g7h8X5+DcB0CQlGx5Vr8ZDIH7POf7zved73UOgfu4j/u4j/v4/xWGj7sBq4V/3RaJ/S2ISfCcBWO3r32i+sR93A1YKXxmvwQAtspyWG02elwUBPm86JemUmOfGCZ8ohhQbnFKvMkCu8sBAPC410MUM+A4E0QxAwCora2GdbBCEgXhEyENnwgGlFucUiYrwmWq1pzjOBNqt7rp77EPp9EYqEcoFIUfW6R7nQn3JAP867ZIgpgEAMwbEshkRbj5Gno+HolhKRVHbW01YvEEG
-ERR /generate-with-style-v2 422 {"detail":[{"type":"missing","loc":["body","style_images",0,"image"],"msg":"Field required","input":{"type":"base64","base64":"iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAf4UlEQVR4nO19e3Bb13nnD8C9xEMkIQAkAIIUQVECJZKO3rKVWKwcxZZjSQ03cceNu7F3m/2jM93ESWaT3XZ2J81mZifZ2qkTb/rIbOPtVu049iR13FqsLSuSGFG2ZIkSSZukRIoSSfEBgARAEBQJ4F7g7h8X5+DcB0CQlGx5Vr8ZDIH7POf7zved73UOgfu4j/u4j/v4/xWGj7sBq4V/3RaJ/S2ISfCcBWO3r32i+sR93A1YKXxmvwQAtspyWG02elwUBPm86JemUmOfGCZ8ohhQbnFKvMkCu8sBAPC410MUM+A4E0QxAwCora2GdbBCEgXhEyENnwgGlFucUiYrwmWq1pzjOBNqt7rp77EPp9EYqEcoFIUfW6R7nQn3JAP867ZIgpgEAMwbEshkRbj5Gno+HolhKRVHbW01YvEEG
-ERR /generate-with-style-v2 422 {"detail":[{"type":"missing","loc":["body","style_images",0,"image"],"msg":"Field required","input":{"type":"base64","base64":"iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAf4UlEQVR4nO19e3Bb13nnD8C9xEMkIQAkAIIUQVECJZKO3rKVWKwcxZZjSQ03cceNu7F3m/2jM93ESWaT3XZ2J81mZifZ2qkTb/rIbOPtVu049iR13FqsLSuSGFG2ZIkSSZukRIoSSfEBgARAEBQJ4F7g7h8X5+DcB0CQlGx5Vr8ZDIH7POf7zved73UOgfu4j/u4j/v4/xWGj7sBq4V/3RaJ/S2ISfCcBWO3r32i+sR93A1YKXxmvwQAtspyWG02elwUBPm86JemUmOfGCZ8ohhQbnFKvMkCu8sBAPC410MUM+A4E0QxAwCora2GdbBCEgXhEyENnwgGlFucUiYrwmWq1pzjOBNqt7rp77EPp9EYqEcoFIUfW6R7nQn3JAP867ZIgpgEAMwbEshkRbj5Gno+HolhKRVHbW01YvEEG
-skip algo2_idle (no base image yet)
-skip hermit2_idle (no base image yet)
-skip fog2_idle (no base image yet)
-skip stinger2_idle (no base image yet)
-skip drake2_idle (no base image yet)
-skip spider2_idle (no base image yet)
-skip algo2_hit (no base image yet)
-skip hermit2_hit (no base image yet)
-skip fog2_hit (no base image yet)
-skip stinger2_hit (no base image yet)
-skip drake2_hit (no base image yet)
-skip spider2_hit (no base image yet)
-skip algo2_dead (no base image yet)
-skip hermit2_dead (no base image yet)
-skip fog2_dead (no base image yet)
-skip stinger2_dead (no base image yet)
-skip drake2_dead (no base image yet)
-skip spider2_dead (no base image yet)
-image folk1 {'type': 'generations', 'generations': 1.0}
-image folk2 {'type': 'generations', 'generations': 1.0}
-image folk3 {'type': 'generations', 'generations': 1.0}
-image folk4 {'type': 'generations', 'generations': 1.0}
-ERR /create-image-pixflux 422 {"detail":"Canvas must be size 32x32 area or larger"}
-anim folk1_walk 9 frames 32 32
-anim folk2_walk 9 frames 32 32
-anim folk3_walk 9 frames 32 32
-anim folk4_walk 9 frames 32 32
-skip pigeon_walk (no base image yet)
-balance after {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"active","plan":"Tier 1: Pixel Apprentice","generations":1991.8,"total":2000.0}}
+balance {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"active","plan":"Tier 1: Pixel Apprentice","generations":1919.45,"total":2000.0}}
+raw (96, 96)
+pro (115, 112)
+base me_base True
+base me_base_pro True
+layer L2M
+layer L2E
+layer L2D
+layer L3M
+layer L3E
+layer L3D
+layer L4M
+layer L4E
+layer L4D
+layer L5M
+layer L5E
+layer L5D
+layer L6M
+layer L6D
+layer L7E
+layer L7D
+layer L9E
+layer L10M
+layer L10E
+layer L10D
+layer mood_smile
+layer mood_hype
+layer mood_focused
+layer mood_tired
+layer mood_sad
+bg L6E
+bg L7M
+bg L8D
+bg bg_M
+bg bg_E
+bg bg_D
+bg bg_0
+balance after {"credits":{"type":"usd","usd":0.0},"subscription":{"type":"generations","status":"active","plan":"Tier 1: Pixel Apprentice","generations":1590.85,"total":2000.0}}
