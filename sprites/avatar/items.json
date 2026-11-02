@@ -101,28 +101,28 @@
 },
 {
 "id": "mood_smile",
-"mask": "face",
-"desc": "warm happy smile, wearing black glasses"
+"mask": "mouthx",
+"desc": "warm happy smile, only the mouth changes"
 },
 {
 "id": "mood_hype",
-"mask": "face",
-"desc": "excited huge open grin, eyebrows raised, wearing black glasses"
+"mask": "mouthx",
+"desc": "excited huge open grin, eyebrows raised, only the mouth changes"
 },
 {
 "id": "mood_focused",
-"mask": "face",
-"desc": "focused determined squint, mouth closed, wearing black glasses"
+"mask": "mouthx",
+"desc": "focused determined squint, mouth closed, only the mouth changes"
 },
 {
 "id": "mood_tired",
-"mask": "face",
-"desc": "sleepy half-closed eyes, small tired frown, wearing black glasses"
+"mask": "mouthx",
+"desc": "sleepy half-closed eyes, small tired frown, only the mouth changes"
 },
 {
 "id": "mood_sad",
-"mask": "face",
-"desc": "sad droopy eyes, small frown, wearing black glasses"
+"mask": "mouthx",
+"desc": "sad droopy eyes, small frown, only the mouth changes"
 },
 {
 "id": "L6E",

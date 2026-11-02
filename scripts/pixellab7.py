@@ -52,8 +52,8 @@ base = Image.open(base_p).convert('RGBA')
 
 # 2. every upgrade, inpainted onto your character; we keep only the masked area as a layer
 MASK = {'eyes': (16, 33, 66, 55), 'mouth': (32, 52, 58, 66), 'ears': (62, 38, 82, 58), 'neck': (32, 63, 64, 84), 'pendant': (36, 68, 60, 94),
-        'torso': (14, 66, 82, 96), 'head': (14, 6, 94, 38), 'crown': (20, 0, 76, 22), 'hud': (62, 0, 96, 26), 'glint': (48, 34, 72, 54), 'face': (16, 28, 66, 68)}
-KEEP = ' Keep the same character, same skin tone, same pixel art style and outline.'
+        'torso': (14, 66, 82, 96), 'head': (14, 6, 94, 38), 'crown': (20, 0, 76, 22), 'hud': (62, 0, 96, 26), 'glint': (48, 34, 72, 54), 'face': (16, 28, 66, 68), 'mouthx': (28, 52, 62, 70)}
+KEEP = ' Keep the same character, same skin tone, same clean pixel art style with a crisp 1-pixel dark outline and flat colors.'
 ITEMS = json.load(open(f'{D}/items.json'))
 for it in ITEMS:
     out = f"{D}/{it['id']}.png"
