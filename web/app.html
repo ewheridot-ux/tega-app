@@ -1847,7 +1847,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b285';
+const BUILD='b286';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2606,12 +2606,13 @@ const pxaAuraC={};
 function pxaAura(c){ if (pxaAuraC[c]) return pxaAuraC[c]; try { const cv=document.createElement('canvas'); cv.width=96; cv.height=116; const x=cv.getContext('2d'); x.fillStyle=c;
     const B=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5]; for (let y=0;y<116;y++) for (let X=0;X<96;X++){ const d=Math.hypot((X-48)/44,(y-58)/52); const a=Math.max(0,1-d)*1.4; if (a>B[(y&3)*4+(X&3)]/16+.08){ x.globalAlpha=Math.min(.55,a*.5); x.fillRect(X,y,1,1); } }
     return pxaAuraC[c]=cv.toDataURL(); } catch(e){ return ''; } }
+pxAvatarSVG.n=0;
 function pxAvatarSVG(level, mood, size, picks, extra, opts){ if (!PXA.me) return null; opts=opts||{};
   const eq=equipped(level, picks||{}, extra), n={M:0,E:0,D:0}; for (let l=2;l<=level;l++){ const p=(picks||{})[l]; if (p&&n[p]!==undefined) n[p]++; }
   if (extra){ const k=pxaKey(extra); if (k) n[k.slice(-1)]++; } const top=Object.entries(n).sort((a,b)=>b[1]-a[1])[0], th=top[1]?top[0]:'0';
   const H=115, im=(src,y,h,extra2)=>src?`<image href="${src}" x="0" y="${y}" width="96" height="${h}" preserveAspectRatio="${extra2||'xMidYMax meet'}" style="image-rendering:pixelated" image-rendering="optimizeSpeed"/>`:'';
   let L='';
-  if (!opts.bare){ const bk=eq.bg?pxaKey(eq.bg):null; L+=`<rect width="96" height="${H}" rx="13" fill="#15122a"/>`+im(PXA[bk]||PXA['bg_'+th]||PXA.bg_0, 0, H, 'xMidYMid slice'); }
+  if (!opts.bare){ const ub=!opts.locked&&(()=>{ try { return userBg('pxa'+(++pxAvatarSVG.n)); } catch(e){ return null; } })(); if (ub) L+=`<svg x="0" y="0" width="96" height="${H}" viewBox="0 0 200 240" preserveAspectRatio="xMidYMid slice">${ub}</svg>`; else { const bk=eq.bg?pxaKey(eq.bg):null; L+=`<rect width="96" height="${H}" rx="13" fill="#15122a"/>`+im(PXA[bk]||PXA['bg_'+th]||PXA.bg_0, 0, H, 'xMidYMid slice'); } }
   if (eq.aura){ const c=eq.aura.name.includes('Gold')?GOLD:eq.aura.name.includes('Platinum')?'#e5e7eb':CYAN; L+=im(pxaAura(c),0,H,'none'); }
   L+=im(PXA.me, H-96, 96);
   const md={smile:'smile',hype:'hype',focused:'focused',tired:'tired',sad:'sad',happy:'smile'}[mood]; if (md&&PXA['mood_'+md]) L+=im(PXA['mood_'+md], H-96, 96);
@@ -3068,7 +3069,7 @@ function render(){
   app.innerHTML = `
     <div class="topbar">
       <div class="brand"><button class="pfp-sm ${view==='city'||view==='evolve'||view==='social'?'on':''}" style="--ringc:${ringCss(lvl)}" onclick="go('city')" aria-label="Your city · character and settings">${pfpMini(stg)}</button><button class="iconbtn tg-ask" onclick="coachOpen()" title="Ask Tega" aria-label="Ask Tega"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h.01M12 10h.01M16 10h.01" stroke-linecap="round" stroke-width="3"/></svg></button></div>
-      <div class="wordmark logo">${logoSVG(24)}</div>
+      <div class="wordmark logo" role="button" tabindex="0" aria-label="Home" style="cursor:pointer" onclick="go('today');scrollTo({top:0,behavior:'smooth'})">${logoSVG(24)}</div>
       <div class="right"><span class="sync ${dbStatus==='cloud'?'on':''}" id="sync" onclick="syncInfo()" style="padding:10px 6px;cursor:pointer"><i></i></span><button class="iconbtn" onclick="searchOpen()" title="Search" aria-label="Search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button><button class="iconbtn" onclick="capOpen()" title="Quick capture" aria-label="Quick capture">＋</button></div>
     </div>
     <div class="pills">
@@ -5598,16 +5599,17 @@ async function socSync(manual){ if (!mcpLib){ if(manual) toast('Email check isn�
 
 // b285: plans made over text never reach email — paste the invite and Tega pulls out the hangout
 let socPasteBusy=false;
-async function socPaste(ev){ ev.preventDefault(); const ta=ev.target.querySelector('textarea'), txt=(ta.value||'').trim(); if (!txt) return false; if (socPasteBusy) return false;
-  if (typeof sampleLib==='undefined'||!sampleLib||!sampleLib.json){ toast('Tega can’t read it right now — log it with the form'); return false; }
-  socPasteBusy=true; toast('Reading the invite…');
+async function socPaste(ev){ ev.preventDefault(); const ta=ev.target.querySelector('textarea'), txt=(ta.value||'').trim(); if (!txt) return false; const n=await socFromText(txt); if (n) ta.value=''; return false; }
+async function socFromText(txt){ if (socPasteBusy) return 0;
+  if (typeof sampleLib==='undefined'||!sampleLib||!sampleLib.json){ const C=(S.circle ||= {ev:[],people:[]}); C.ev.push({id:'P'+uid(), d:TODAY, name:txt.slice(0,60), where:'', src:'shared'}); commit(); toast('🤝 Logged for today — change it in Social'); return 1; }
+  socPasteBusy=true; toast('Reading the invite…'); let n=0;
   try { const prompt=`Today is ${TODAY} (${new Date(TODAY+'T12:00').toLocaleDateString('en-US',{weekday:'long'})}). Extract every social plan from this text the user pasted (a text message, a Partiful invite, an OpenTable or Resy reservation, an iMessage). For each: name (short, e.g. "Partiful · Sam's birthday" or "Dinner · Kasama"), date YYYY-MM-DD (resolve words like "tonight", "Friday" against today; if no date, use today), time (like "8:00 PM" or ""), where (venue/area or ""), who (names mentioned, comma separated, or ""), src ("Partiful", "OpenTable", "Resy", "text" …). Ignore anything that isn't a plan. TEXT:\n"""${txt.slice(0,4000)}"""\nReturn JSON only: {"hangouts":[{"name":"","date":"","time":"","where":"","who":"","src":""}]}`;
     const r=await sampleLib.json(prompt), o=r&&(r.hangouts?r:r.value||r.data||r.result)||{}, L=(o.hangouts||[]).filter(h=>h&&h.name&&/^\d{4}-\d{2}-\d{2}$/.test(h.date||''));
-    const C=(S.circle ||= {ev:[],people:[]}); let n=0;
+    const C=(S.circle ||= {ev:[],people:[]});
     for (const h of L){ if (C.ev.some(x=>x.d===h.date&&x.name.toLowerCase()===String(h.name).toLowerCase())) continue; C.ev.push({id:'P'+uid(), d:h.date, name:String(h.name).slice(0,80), where:[h.time,h.where,h.who].filter(Boolean).join(' · ').slice(0,100), src:(h.src||'pasted')+' · pasted'}); for (const p of String(h.who||'').split(',').map(x=>x.trim()).filter(Boolean)) socSeen(p, h.date); n++; }
-    if (n){ ta.value=''; commit(); toast(`🤝 Logged ${n} hangout${n===1?'':'s'}`); } else toast('Couldn’t find a plan in that — try the form');
+    if (n){ commit(); toast(`🤝 Logged ${n} hangout${n===1?'':'s'}`); } else toast('Couldn’t find a plan in that — try the form');
   } catch(e){ toast('Couldn’t read it: '+String(e&&e.message||e).slice(0,60)); }
-  socPasteBusy=false; return false; }
+  socPasteBusy=false; return n; }
 function socAdd(ev){ ev.preventDefault(); const f=ev.target, g=k=>f.querySelector(`[name=${k}]`).value.trim(); if(!g('name')) return false; const C=(S.circle ||= {ev:[],people:[]}); C.ev.push({id:'M'+uid(), d:g('d')||TODAY, name:g('name'), where:g('who'), src:'by hand'}); for (const p of g('who').split(',').map(x=>x.trim()).filter(Boolean)) socSeen(p, g('d')||TODAY); commit(); toast('🤝 Logged'); return false; }
 function socSeen(name,d){ const C=(S.circle ||= {ev:[],people:[]}); const p=C.people.find(p=>p.name.toLowerCase()===name.toLowerCase()); if (p){ p.last=d>p.last?d:p.last; p.n=(p.n||1)+1; } else C.people.push({name, first:d, last:d, n:1}); }
 function socPersonAdd(ev){ ev.preventDefault(); const v=ev.target.querySelector('input').value.trim(); if(!v) return false; socSeen(v,TODAY); commit({skipXp:true}); return false; }
@@ -9067,9 +9069,10 @@ window.tegaInbox = L => { _inbox=_inbox.concat(L||[]).slice(-20); if (_inbox.len
 function inboxOpen(){ if (!_inbox.length) return gSheetClose&&gSheetClose(); const x=_inbox[0], u=x.url||'', t=(x.text||'').trim(), host=(()=>{ try { return new URL(u).hostname.replace(/^www\./,''); } catch(e){ return ''; } })();
   const label=(t&&t!==u?t:host||u).slice(0,120);
   gSheet(`<span class="tag">Shared into Tega${_inbox.length>1?` · 1 of ${_inbox.length}`:''}</span><h2 class="g-sh-t">${esc(label||'Shared item')}</h2>${u?`<div class="sub" style="word-break:break-all">${esc(u.slice(0,140))}</div>`:''}
-    <div class="g-opts" style="margin-top:12px"><button onclick="inboxFile('idea')">Content idea</button><button onclick="inboxFile('dl')">Deadline</button><button onclick="inboxFile('note')">Note for today</button><button onclick="inboxFile('skip')">Skip</button></div>`); }
+    <div class="g-opts" style="margin-top:12px"><button onclick="inboxFile('hang')" style="${/partiful|opentable|resy|posh|eventbrite|dice\.fm|axs|tock/i.test(u)||SOC_RE.test(t)?'order:-1;outline:2px solid var(--good)':''}">🤝 Hangout</button><button onclick="inboxFile('idea')">Content idea</button><button onclick="inboxFile('dl')">Deadline</button><button onclick="inboxFile('note')">Note for today</button><button onclick="inboxFile('skip')">Skip</button></div>`); }
 function inboxFile(kind){ const x=_inbox.shift(); if (!x) return; const u=x.url||'', t=((x.text||'').trim()||u).slice(0,140);
-  if (kind==='idea'){ (S.ideas ||= []).push({id:uid(), text:t, url:u||undefined, d:TODAY, done:'', stage:'idea', pillar:pillarOf(t)}); commit({skipXp:true}); toast('Added to Content ideas'); }
+  if (kind==='hang'){ socFromText([x.text,x.url].filter(Boolean).join('\n')); }
+  else if (kind==='idea'){ (S.ideas ||= []).push({id:uid(), text:t, url:u||undefined, d:TODAY, done:'', stage:'idea', pillar:pillarOf(t)}); commit({skipXp:true}); toast('Added to Content ideas'); }
   else if (kind==='dl'){ (S.dl ||= []).push({id:uid(), d:addDays(TODAY,7), text:t, type:'other', done:'', url:u||undefined}); commit({skipXp:true}); toast('Deadline in a week — change the date in Today'); }
   else if (kind==='note'){ const d=ensureDay(TODAY); d.note=((d.note||'')+(d.note?'\n':'')+t+(u&&u!==t?' '+u:'')).slice(0,2000); commit({skipXp:true}); toast('Saved to today'); }
   if (_inbox.length) inboxOpen(); else gSheetClose(); }
