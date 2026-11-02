@@ -1345,7 +1345,7 @@ button.check{width:100%;border:0;background:none;color:inherit;font:inherit;text
 .ttl-more>summary{cursor:pointer;color:var(--muted);padding:8px 2px;font-size:13px}
 #view .card button.check .txt{text-decoration:none;color:var(--fg)}
 /* b184: isometric HQ */
-.hq-iso{display:block;width:100%;height:auto;aspect-ratio:216/168;image-rendering:pixelated;border-radius:8px;cursor:pointer;background:#000}
+.hq-iso{display:block;width:100%;height:auto;aspect-ratio:168/151;image-rendering:pixelated;border-radius:8px;cursor:pointer;background:#000}
 .hq-live{position:relative}
 /* b184: 3D pixel logo */
 .wordmark.logo{display:flex;align-items:center;justify-content:center;line-height:0;text-shadow:none!important}
@@ -1836,7 +1836,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b265';
+const BUILD='b266';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -8273,7 +8273,7 @@ function vHQ(){
 const hShort=h=>String(h.name||'').split(/[\s\/·]+/)[0];
 /* ===== HQ · isometric pixel town (b184). Software-rasterized so every edge stays crisp. ===== */
 const ISO=(()=>{
-  const W=216, H=196, TW=8, TH=4, OX=100, OY=90;
+  const W=168, H=176, TW=8, TH=4, OX=52, OY=82;   // b266: camera zoomed in on the town
   const P=(x,y,z=0)=>[OX+(x-y)*TW, OY+(x+y)*TH-z];
   const HX={}; const hex=h=>HX[h]||(HX[h]=(()=>{ const n=parseInt(h.slice(1),16); return [(n>>16)&255,(n>>8)&255,n&255]; })());
   const mix=(a,b,t)=>{ const A=hex(a),B=hex(b); return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join(''); };
@@ -8294,7 +8294,7 @@ const ISO=(()=>{
     facePx(face,x,y,w,d,z,u,v,c){ const s = face==='L' ? P(x,y+d,z) : P(x+w,y+d,z); const k = face==='L' ? .5 : -.5; this.px(s[0]+u, s[1]+u*k-v, c); }
     faceRect(face,x,y,w,d,z,u,v,ww,hh,c){ for(let i=0;i<ww;i++) for(let j=0;j<hh;j++) this.facePx(face,x,y,w,d,z,u+i,v+j,c); }
   }
-  return {W,H,P,Buf,mix,hex};
+  return {W,H,P,Buf,mix,hex,OX,OY};
 })();
 function hqPal(night){ return night ? {
     sky:['#0b0a22','#141238','#1f1a4a','#2a2058'], ground:'#1d3b2c', ground2:'#22442f', grass:'#2c5a3a', side:'#132519', path:'#4a4a5e', path2:'#55556b', road:'#262634', road2:'#30303f', line:'#ffd25e', out:'#0a0814', winOff:'#1b2140', winOn:['#ffd36b','#ffe9a3','#ffbf4a'], lamp:'#ffe08a', star:'#cfd6ff', haze:'#2a2058' }
@@ -8309,6 +8309,84 @@ const HQ_ST={
   relationships:{n:'Plaza',top:'#dccbff',left:'#8d6ad8',right:'#6a4bb0',trim:'#c3a8ff'},
   personal:{n:'Library', top:'#ffd0e6',left:'#c96f9b',right:'#9c4d76',trim:'#ffa3cf'},
   hustle:{n:'Workshop', top:'#e8ffc2',left:'#7fb52a',right:'#5a8a1a',trim:'#c6ff4d'} };
+
+// ---- b266: the land around the town ----
+function hqLand(CY, night, C){ const {P,mix}=ISO, era=CY.era||0, sn=CY.sn||4;
+  const hs=(i,j)=>{ const v=Math.sin(i*127.1+j*311.7)*43758.5453; return v-Math.floor(v); };
+  const vn=(x,y)=>{ const i=Math.floor(x), j=Math.floor(y), fx=x-i, fy=y-j, u=fx*fx*(3-2*fx), v=fy*fy*(3-2*fy); return (hs(i,j)*(1-u)+hs(i+1,j)*u)*(1-v)+(hs(i,j+1)*(1-u)+hs(i+1,j+1)*u)*v; };
+  const fbm=(x,y)=>vn(x,y)*.65+vn(x*2.1+7,y*2.1+3)*.35;
+  const BAY=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5];
+  // grass shades by season (dark → light), path, water
+  const G = night ? (sn===1?['#3c4a5c','#4a5a6c','#5a6a7c','#6a7a8c']:['#14301f','#1a3a26','#22462e','#2a5236'])
+    : sn===1?['#c4d4e2','#d6e2ee','#e6eef6','#f4f8fc'] : sn===4?['#3f7e3e','#4f9048','#62a052','#78ad5a'] : sn===2?['#3f9448','#4fa654','#62b860','#7cc86e'] : ['#3a8a40','#4a9c4a','#5cae54','#72be5e'];
+  const DIRT = night?['#3a3026','#4a3c2e','#2a221c']:['#b08a5a','#c49c6a','#8a6a44'];
+  const PAVE = night?[C.path,C.path2,'#3a3a4c']:[C.path,C.path2,'#9a9488'];
+  const WAT = night?['#1a2a5a','#24387a','#3a5aa0','#0e1838']:['#3a8ad6','#5aa8ea','#a6dcff','#2a6aa8'];
+  const fA=gy=>9.6+1.5*Math.sin((gy-9)*.42), fB=gx=>3.5+1.1*Math.sin((gx-14)*.55);       // path out the front · path out the right side
+  const pathD=(gx,gy)=>Math.min(gy>8.6?Math.abs(gx-fA(gy)):9, gx>13.6?Math.abs(gy-fB(gx)):9);
+  const POND=[7.4,13.2], pondR=1.7, pondD=(gx,gy)=>Math.hypot(gx-POND[0],(gy-POND[1])*1.15)-pondR-(fbm(gx*1.3,gy*1.3)-.5)*.9;
+  const FIELD=[15.2,6.2,19.6,9.8], inField=(gx,gy)=>era<=2 && gx>FIELD[0]&&gx<FIELD[2]&&gy>FIELD[1]&&gy<FIELD[3] && fbm(gx*.9+3,gy*.9)>.3;
+  const townDist=(gx,gy)=>Math.hypot(Math.max(0,-gx,gx-HQ_GX), Math.max(0,-gy,gy-HQ_GY));
+  // town lots that are plain grass (not plaza / sidewalk) share the same ground so there's no seam
+  const townGrass=(gx,gy)=>{ const [px0,py0,px1,py1]=HQ_PLAZA, X=Math.floor(gx), Y=Math.floor(gy); return !(Y>=7 || (X>=px0&&X<=px1&&Y>=py0&&Y<=py1) || (Y===6&&X>px1)); };
+  const pathMat = era>=2?PAVE:DIRT, hz=night?'#2a2058':'#cbe8f8';
+  function color(gx,gy,sx,sy){ const d=BAY[(sy&3)*4+(sx&3)]/16-.5;
+    const pd=pondD(gx,gy); if (pd<0){ const deep=pd<-.55; const sh=(Math.sin(gx*9+gy*4)>.92)&&!deep?WAT[2]:deep?WAT[0]:WAT[1]; return pd>-.12?WAT[3]:sh; }
+    if (pd<.18) return night?'#3a3a2a':'#c8b888';                                          // sandy shore
+    const ph=pathD(gx,gy); if (ph<.5+d*.12 && townDist(gx,gy)>0) return ph>.4?pathMat[2]:pathMat[(Math.floor(gx*2)+Math.floor(gy*2))&1];
+    if (inField(gx,gy)){ const row=Math.floor((gx-FIELD[0])*3)%2; const cr=night?['#2a3a22','#3a3422']:sn===1?['#e8eef4','#d0d8e0']:sn===4?['#d0a84a','#9a7a3a']:['#6aa848','#7a5a34']; return cr[row]; }
+    let t=fbm(gx*.32,gy*.32)+d*.28; const k=Math.max(0,Math.min(3,Math.floor(t*4.2-.6)));
+    let c=G[k];
+    const h=hs(Math.floor(gx*6),Math.floor(gy*6));                                          // specks: flowers, leaf litter, tufts
+    if (h>.985) c = sn===2?(h>.993?'#ffffff':'#ff9fc8'):sn===3?'#ffe066':sn===4?(night?'#7a4a22':'#e07b39'):sn===1?'#ffffff':c;
+    else if (h<.02) c=G[Math.min(3,k+1)];
+    if (sy<ISO.OY+2){ c=mix(c,hz,Math.max(0,(ISO.OY+2-sy)/14)*.5); }                          // soft haze at the horizon only
+    return c; }
+  // ---- objects ----
+  const out=[]; const R=(()=>{ let v=97; return ()=>((v=(v*16807)%2147483647)-1)/2147483646; })();
+  const isFront=(gx,gy)=>gy>=HQ_GY||gx>=HQ_GX;
+  // homes along the paths, nearest to town first — more of them (and taller) as the town grows
+  const SPOTS=[[fA(11)+1.7,11,'A'],[16.2,fB(16.2)-1.9,'B'],[fA(13.6)-1.9,13.6,'A'],[18.6,fB(18.6)+1.8,'B'],[fA(16)+1.8,16,'A'],[21,fB(21)-1.9,'B'],[fA(18.4)-1.9,18.4,'A'],[23.2,fB(23.2)+1.8,'B']];
+  const nH=[0,3,5,7,8][Math.min(4,era)], homes=[];
+  SPOTS.slice(0,nH).forEach(([x,y],i)=>{ if (pondD(x,y)<.6) return; const st=era>=3?(i%3===0?3:2):era>=2&&i%2===0?2:1; homes.push([x,y]); out.push({d:x+y+1.2, front:isFront(x,y), f:T=>hqHome(T,x-.6,y-.6,1.2,1.1,st,night,sn,i,C)}); });
+  if (era===0){ const x=fA(10.4)+1.3, y=10.4; homes.push([x,y]); out.push({d:x+y, front:true, f:T=>hqWell(T,x,y,night)}); }
+  // fence around the field
+  if (era<=2) out.push({d:FIELD[2]+FIELD[3]-.5, front:true, f:T=>{ const o=night?'#4a3a2a':'#8a6a44'; for (let u=FIELD[0];u<=FIELD[2];u+=.5){ const a=P(u,FIELD[3]); T.rect(a[0],a[1]-3,1,3,o); } const a=P(FIELD[0],FIELD[3],2), b=P(FIELD[2],FIELD[3],2); T.line(a,b,o); for (let v=FIELD[1];v<=FIELD[3];v+=.5){ const q=P(FIELD[2],v); T.rect(q[0],q[1]-3,1,3,o); } T.line(P(FIELD[2],FIELD[1],2),P(FIELD[2],FIELD[3],2),o); }});
+  // trees and bushes in clumps, kept off the path, pond, field and homes
+  const thr=.5+era*.035;
+  for (let gx=-7; gx<25; gx+=.85) for (let gy=-8; gy<22; gy+=.85){ const x=gx+(R()-.5)*.6, y=gy+(R()-.5)*.6, td=townDist(x,y); if (td<1.1) continue;
+    const a=x-y, b2=x+y; if (a<-8||a>16||b2<-2||b2>25) continue;
+    if (pathD(x,y)<1 || pondD(x,y)<.5 || inField(x,y) || (era<=2&&x>FIELD[0]-.6&&x<FIELD[2]+.6&&y>FIELD[1]-.6&&y<FIELD[3]+.6) || homes.some(([hx,hy])=>Math.hypot(hx-x,hy-y)<1.5)) continue;
+    const n=fbm(x*.28+20,y*.28-5)+(td>4?.08:0);
+    if (n>thr) out.push({d:x+y+1, front:isFront(x,y), f:T=>hqTree(T,x,y,C,night,sn)});
+    else if (n>thr-.07 && R()<.5) out.push({d:x+y+.5, front:isFront(x,y), f:T=>hqBush(T,x,y,night,sn)}); }
+  // reeds + a lily pad on the pond
+  out.push({d:POND[0]+POND[1], front:true, f:T=>{ const c=night?'#2a4a2a':'#4a8a3a'; for (let k=0;k<7;k++){ const an=k*.9+.3, q=P(POND[0]+Math.cos(an)*(pondR+.15),POND[1]+Math.sin(an)*(pondR+.15)/1.15); T.rect(q[0],q[1]-3,1,3,c); T.px(q[0],q[1]-4,night?'#5a4a2a':'#8a6a3a'); } const l=P(POND[0]-.4,POND[1]+.2); T.rect(l[0],l[1],3,1,night?'#2a5a3a':'#5ab85a'); if (sn===2||sn===3) T.px(l[0]+1,l[1]-1,'#ff9fc8'); }});
+  return {color, townGrass, objs:out}; }
+function hqBush(T,x,y,night,sn){ const {P}=ISO, p=P(x,y); const c=sn===1?(night?['#5a6a7a','#8a9aaa']:['#b9d3e0','#f2f8ff']):sn===4?(night?['#5a2e12','#8a4a1f']:['#a8552a','#e07b39']):(night?['#174a2e','#2a7048']:['#2f7a3c','#5cc163']);
+  T.poly([[p[0]-3,p[1]],[p[0]-2,p[1]-3],[p[0]+2,p[1]-4],[p[0]+4,p[1]-1],[p[0]+3,p[1]+1],[p[0]-2,p[1]+1]],c[0]); T.poly([[p[0]-2,p[1]-1],[p[0]-1,p[1]-3],[p[0]+2,p[1]-3],[p[0]+2,p[1]-1]],c[1]); if (sn===2) T.px(p[0]+1,p[1]-2,'#ffffff'); }
+function hqWell(T,x,y,night){ const {P}=ISO; const st=night?{top:'#5a5a6a',left:'#4a4a5a',right:'#3a3a4a'}:{top:'#b8b0a0',left:'#9a9282',right:'#7a7264'}, O=night?'#0a0814':'#1c1a28';
+  T.box(x-.3,y-.3,.6,.6,0,4,st,O); const a=P(x-.3,y,4), b=P(x+.3,y,4); const t=P(x,y,12); T.line([a[0],a[1]],[a[0],a[1]-7],night?'#3a2a1f':'#6b4a2e'); T.line([b[0],b[1]],[b[0],b[1]-7],night?'#3a2a1f':'#6b4a2e');
+  T.poly([[t[0]-6,t[1]+3],[t[0],t[1]-1],[t[0]+6,t[1]+3]],night?'#3a2030':'#b0564a'); const w=P(x,y,4); T.px(w[0],w[1],night?'#24387a':'#5aa8ea'); }
+// a home: walls, pitched roof, door, windows, chimney, a little garden. st = storeys
+function hqHome(T,x,y,w,d,st,night,sn,i,C){ const {P,mix}=ISO, O=night?'#0a0814':'#1c1a28';
+  const WALL=night?[['#4a4466','#3a3456'],['#3a4a5e','#2c3a4c'],['#5a4450','#463440']]:[['#f4e4cc','#d8bc98'],['#dde8f0','#b4c4d4'],['#f6d8c8','#dcae96'],['#eae2f4','#c6b8de']];
+  const ROOF=night?['#3a2030','#20283a','#2a2a20']:['#c0584a','#4a6a9a','#6a7a3a','#8a4a6a'];
+  const wl=WALL[i%WALL.length], rf=ROOF[(i*3+1)%ROOF.length], h=st*7, rh=5;
+  const sx0=x, sy0=y;
+  T.box(sx0,sy0,w,d,0,h,{top:wl[0],left:wl[0],right:wl[1]},O);
+  // roof: ridge runs along x
+  const A=P(sx0-.08,sy0+d+.08,h), Bq=P(sx0+w+.08,sy0+d+.08,h), Cq=P(sx0+w+.08,sy0+d/2,h+rh), Dq=P(sx0-.08,sy0+d/2,h+rh), E=P(sx0+w+.08,sy0-.08,h), F0=P(sx0-.08,sy0-.08,h);
+  T.poly([F0,E,Cq,Dq],mix(rf,'#000000',.3)); T.poly([[Bq[0],Bq[1]],[E[0],E[1]],[Cq[0],Cq[1]]],wl[1]); T.poly([A,Bq,Cq,Dq],rf);
+  for (let k=1;k<4;k++){ const u=k/4; T.line([A[0]+(Dq[0]-A[0])*u,A[1]+(Dq[1]-A[1])*u],[Bq[0]+(Cq[0]-Bq[0])*u,Bq[1]+(Cq[1]-Bq[1])*u],mix(rf,'#000000',.15)); }
+  T.line(A,Bq,O); T.line(Bq,Cq,O); T.line(Cq,Dq,O); T.line(Dq,A,O); T.line(Bq,E,O); T.line(E,Cq,O);
+  const ch=P(sx0+w*.75,sy0+d*.35,h+rh-1); T.rect(ch[0],ch[1]-4,2,4,night?'#4a3030':'#8a4a3a'); T.px(ch[0],ch[1]-4,O);
+  // door + windows (lit at night)
+  const Lw=Math.round(w*8), Rw=Math.round(d*8), lit=k=>night?((k+i)%3?C.winOn[(k+i)%3]:C.winOff):C.winOff;
+  T.faceRect('L',sx0,sy0,w,d,0,3,0,2,4,night?'#2a1a14':'#7a4a2a');
+  for (let s2=0;s2<st;s2++){ T.faceRect('L',sx0,sy0,w,d,0,Lw-3,2+s2*7,2,2,lit(s2)); if (s2>0) T.faceRect('L',sx0,sy0,w,d,0,3,2+s2*7,2,2,lit(s2+1)); T.faceRect('R',sx0,sy0,w,d,0,-Math.floor(Rw/2),2+s2*7,2,2,lit(s2+2)); }
+  // garden: two flower pixels by the door
+  const g=P(sx0+.2,sy0+d+.15); T.px(g[0],g[1],sn===1?'#ffffff':'#ff7ad9'); T.px(g[0]+2,g[1]+1,sn===1?'#ffffff':'#ffd25e'); }
 // lots on the grid (x,y,w,d). Back row y=0, front row y=4, sidewalk y=7, road y=8..9
 const HQ_LOT={ personal:[0,0,3,2], modeling:[4,0,3,2], content:[8,0,2,2], financial:[11,0,3,3], grillz:[0,2,2,2], fitness:[0,4,2,2], relationships:[12,4,2,2], hustle:[12,7,2,2] };
 const HQ_GX=14, HQ_GY=9;   // town square: no road, the front two rows are the square's open side
@@ -8316,37 +8394,28 @@ const HQ_PLAZA=[3,2,10,6], HQ_FTN=[6.5,4];   // paved square x0,y0,x1,y1 · foun
 function hqDraw(D, opts){ const {Buf,P,mix}=ISO, B=new Buf(), t=opts.t||0, night=opts.night, C=hqPal(night), O=C.out, R=opts.rand||((s)=>{ let v=s; return ()=>((v=(v*16807)%2147483647)-1)/2147483646; });
   // sky: banded gradient (pixel-art style), stars, sun/moon, far skyline
   for(let y=0;y<ISO.H;y++){ const k=Math.min(3,Math.floor(y/22)); B.rect(0,y,ISO.W,1,C.sky[k]); if(y%22===21&&k<3) for(let x=(y>>1)%2;x<ISO.W;x+=2) B.px(x,y,C.sky[k+1]); }
-  const r=R(7); if(night){ for(let i=0;i<50;i++){ const x=Math.floor(r()*ISO.W), y=Math.floor(r()*86); B.px(x,y,C.star); } const mx=176,my=16; B.poly([[mx-6,my],[mx-4,my-5],[mx,my-7],[mx+5,my-5],[mx+7,my],[mx+5,my+5],[mx,my+7],[mx-4,my+5]],'#f4efd2'); B.poly([[mx-2,my-6],[mx+4,my-6],[mx+8,my],[mx+4,my+6],[mx-2,my+6],[mx+2,my]],C.sky[0]); }
-  else { const sx=178,sy=18; for(let a=0;a<8;a++){ const an=a*Math.PI/4; B.line([sx+Math.cos(an)*9,sy+Math.sin(an)*9],[sx+Math.cos(an)*12,sy+Math.sin(an)*12],'#ffe58a'); } B.poly([[sx-6,sy-3],[sx-3,sy-6],[sx+3,sy-6],[sx+6,sy-3],[sx+6,sy+3],[sx+3,sy+6],[sx-3,sy+6],[sx-6,sy+3]],'#ffd75e'); }
+  const r=R(7); if(night){ for(let i=0;i<50;i++){ const x=Math.floor(r()*ISO.W), y=Math.floor(r()*(ISO.OY-4)); B.px(x,y,C.star); } const mx=ISO.W-28,my=14; B.poly([[mx-6,my],[mx-4,my-5],[mx,my-7],[mx+5,my-5],[mx+7,my],[mx+5,my+5],[mx,my+7],[mx-4,my+5]],'#f4efd2'); B.poly([[mx-2,my-6],[mx+4,my-6],[mx+8,my],[mx+4,my+6],[mx-2,my+6],[mx+2,my]],C.sky[0]); }
+  else { const sx=ISO.W-26,sy=16; for(let a=0;a<8;a++){ const an=a*Math.PI/4; B.line([sx+Math.cos(an)*9,sy+Math.sin(an)*9],[sx+Math.cos(an)*12,sy+Math.sin(an)*12],'#ffe58a'); } B.poly([[sx-6,sy-3],[sx-3,sy-6],[sx+3,sy-6],[sx+6,sy-3],[sx+6,sy+3],[sx+3,sy+6],[sx-3,sy+6],[sx-6,sy+3]],'#ffd75e'); }
   // far skyline silhouette
-  const CY=opts.city||{era:0,sn:4,years:0,folk:3,cars:1}, era=CY.era, SB=86;
+  const CY=opts.city||{era:0,sn:4,years:0,folk:3,cars:1}, era=CY.era, SB=ISO.OY-4;
   const sky2=night?'#191640':'#9ccbea'; let x=0; const r2=R(3); while(x<ISO.W){ const w=6+Math.floor(r2()*10), h=Math.round((8+Math.floor(r2()*22))*(1+era*.32)); B.rect(x,SB-h+Math.floor(r2()*4),w,h+20,sky2); if(night) for(let k=0;k<3+era*2;k++) if(r2()<.6+era*.08) B.px(x+2+Math.floor(r2()*(w-3)),SB-h+4+Math.floor(r2()*Math.max(1,h-4)),era>=3&&k%3===0?'#ff7ad9':'#3a3470'); x+=w+1; }
   if (era>=4){ const ry=SB-44; B.rect(0,ry,ISO.W,2,night?'#3a3470':'#7fa9c9'); for(let px=8;px<ISO.W;px+=26) B.rect(px,ry+2,2,44,night?'#2a2858':'#8bb4d2'); const tx=60; B.rect(tx,ry-6,34,6,night?'#d0d6ff':'#eef4ff'); B.rect(tx,ry-6,34,1,'#4dd8ff'); for(let k=0;k<7;k++) B.rect(tx+2+k*4,ry-4,3,2,night?'#ffe08a':'#4a6a8a'); }
 
-  // b265: what's around the town grows with it — Outpost: dirt lanes + farm fields · Village: cottages · Town: paved streets, shops · City: mid-rises · Metropolis: towers
-  const HZ=night?'#141238':'#a6d6f4', RD=[-1,HQ_GX], RDy=[-1,HQ_GY], XR=[-7,HQ_GX+6], YR=[-8,HQ_GY+10];
-  const isRoad=(gx,gy)=>RD.includes(gx)||RDy.includes(gy)||(era>=2&&(gx===-6||gx===HQ_GX+5||gy===HQ_GY+5||gy===-6));
-  const fog=(gx,gy)=>{ const dx=gx<0?-gx:gx>=HQ_GX?gx-HQ_GX+1:0, dy=gy<0?-gy:gy>=HQ_GY?gy-HQ_GY+1:0; return Math.min(.55,.06+Math.hypot(dx,dy)*.075); };
-  const dirt=night?['#3a3026','#43372b']:['#a8865a','#b8956a'], crop=night?['#22402c','#2e3a22']:CY.sn===1?['#e6eef4','#d4dee6']:CY.sn===4?['#c8a24a','#a8823a']:['#5fae4f','#7a6a3a'];
-  const field=(gx,gy)=>era===0 && (((gx>>1)+(gy>>1))%3!==0) && !(gx>=-2&&gx<HQ_GX+1&&gy>=-2&&gy<HQ_GY+1);
-  B.cy=SB-1;
-  for(let gx=XR[0];gx<XR[1];gx++) for(let gy=YR[0];gy<YR[1];gy++){ if(gx>=0&&gx<HQ_GX&&gy>=0&&gy<HQ_GY) continue;
-    const tile=[P(gx,gy,-4),P(gx+1,gy,-4),P(gx+1,gy+1,-4),P(gx,gy+1,-4)]; if (tile[2][1]<SB) continue;
-    const road=isRoad(gx,gy), walk=era>=2&&!road&&(isRoad(gx-1,gy)||isRoad(gx+1,gy)||isRoad(gx,gy-1)||isRoad(gx,gy+1)), f=fog(gx,gy);
-    let c=road?(era>=2?((gx+gy)%2?C.road:C.road2):dirt[(gx+gy)&1]):walk?((gx+gy)%2?C.path:C.path2):field(gx,gy)?crop[gy&1]:((gx+gy)%2?C.ground:C.ground2);
-    B.poly(tile,mix(c,HZ,f));
-    if (field(gx,gy)&&!road){ const a=P(gx+.15,gy+.5,-4), b2=P(gx+.85,gy+.5,-4); B.line(a,b2,mix(crop[(gy+1)&1],HZ,f)); }   // furrows
-    if (era>=2 && road && RDy.includes(gy) && !RD.includes(gx) && gx%2===0){ const m=P(gx+.5,gy+.5,-4); B.px(m[0],m[1],mix(C.line,HZ,f)); B.px(m[0]+1,m[1],mix(C.line,HZ,f)); }
-    if (era>=2 && road && RD.includes(gx) && !RDy.includes(gy) && gy%2===0){ const m=P(gx+.5,gy+.5,-4); B.px(m[0],m[1],mix(C.line,HZ,f)); B.px(m[0]-1,m[1],mix(C.line,HZ,f)); } }
+  // b266: one continuous landscape around the town — dithered grass, a winding path, a pond, clumps of trees; homes appear along the path as the town grows
+  const LS=hqLand(CY, night, C), {P:_P}=ISO;
+  B.cy=SB;
+  for (let sy=SB; sy<ISO.H; sy++) for (let sx=0; sx<ISO.W; sx++){ const a=(sx-ISO.OX)/8, b=(sy-ISO.OY)/4, gx=(a+b)/2, gy=(b-a)/2;
+    if (gx>=0&&gx<HQ_GX&&gy>=0&&gy<HQ_GY && !LS.townGrass(gx,gy)) continue;
+    B.px(sx,sy,LS.color(gx,gy,sx,sy)); }
   B.cy=0;
   // ground slab: thick tile with dirt sides
-  B.box(0,0,HQ_GX,HQ_GY,-4,4,{top:C.ground,left:night?'#4a4a5e':'#a9a397',right:night?'#36364a':'#8a8478'},O);
+
   // grass checker + road + sidewalk + paths
   for(let gx=0;gx<HQ_GX;gx++) for(let gy=0;gy<HQ_GY;gy++){ const tile=[P(gx,gy),P(gx+1,gy),P(gx+1,gy+1),P(gx,gy+1)];
     let c=(gx+gy)%2?C.ground:C.ground2;
     const [px0,py0,px1,py1]=HQ_PLAZA, inPlaza=gx>=px0&&gx<=px1&&gy>=py0&&gy<=py1, ring=Math.max(Math.abs(gx+.5-HQ_FTN[0]),Math.abs(gy+.5-HQ_FTN[1]))<2.2;
     if(gy>=7) c=ring?(night?'#5c5a70':'#d6cfbf'):((gx+gy)%2?C.path:C.path2); else if(inPlaza) c=ring?(night?'#5c5a70':'#d6cfbf'):((gx+gy)%2?C.path:C.path2); else if(gy===6&&gx>px1) c=(gx%2)?C.path:C.path2;
-    B.poly(tile,c); }
+    if (!LS.townGrass(gx+.5,gy+.5)) B.poly(tile,c); }
   // road dashes
 
   // curb highlight
@@ -8363,35 +8432,9 @@ function hqDraw(D, opts){ const {Buf,P,mix}=ISO, B=new Buf(), t=opts.t||0, night
   objs.push({d:HQ_FTN[0]+HQ_FTN[1]+1.2, f:()=>hqFountainBig(B,HQ_FTN[0],HQ_FTN[1],night)});
   if (era>=3) objs.push({d:12.9+6.6, f:()=>hqBillboard(B,12.6,6.7,night,CY)});
   const MON=[[3.6,3.2],[9.6,3.2],[3.6,5.6],[9.6,5.6],[6.5,7.6]]; for(let i=0;i<Math.min(5,CY.years);i++){ const [mx,my]=MON[i]; objs.push({d:mx+my, f:()=>hqMonument(B,mx,my,night,i)}); }
-  { const rH=R(23), FG=new Buf(); B.fg=FG;
-    const PAL=night?[['#3a3560','#2a2648','#221e3a'],['#3d4a66','#2c3850','#222c40'],['#4a3a58','#382a44','#2a2036'],['#3a4a4a','#2a3838','#203030']]
-      :[['#f2e2cc','#d6b896','#b39272'],['#dce8f2','#aebfd2','#8c9eb2'],['#f6d2c2','#d8a08c','#b47e6a'],['#e4ecd0','#bccb96','#98a674'],['#e8e0f4','#bdb0d8','#9888b8']];
-    const ROOF=night?['#2a2240','#3a2030','#20283a']:['#b0564a','#5a6a8a','#7a4a3a','#3f6a5a'], AWN=['#ff5a7a','#4dd8ff','#ffd25e','#5fd38a'];
-    const win=(night)=>night?(rH()<.6?C.winOn[Math.floor(rH()*3)]:C.winOff):C.winOff;
-    // one detailed neighbor building: body, windows per floor on both faces, door, roof/awning/rooftop bits by type
-    const bld=(T,gx,gy,w,d,h,type,f)=>{ const pal=PAL[Math.floor(rH()*PAL.length)], q=c=>mix(c,HZ,f), O2=mix(O,HZ,f*.8);
-      T.box(gx,gy,w,d,-4,h,{top:q(pal[0]),left:q(pal[1]),right:q(pal[2])},O2);
-      const Lw=Math.round(w*8), Rw=Math.round(d*8), fl=type==='cottage'?1:Math.max(1,Math.floor((h-3)/6));
-      for (let k=0;k<fl;k++){ const v=3+k*6; if (v+3>h) break;
-        for (let u=2;u<Lw-1;u+=3) if (!(k===0&&u>=Lw/2-1&&u<=Lw/2+1)) T.faceRect('L',gx,gy,w,d,-4,u,v,1,2,q(win(night)));
-        for (let u=2;u<Rw-1;u+=3) T.faceRect('R',gx,gy,w,d,-4,-u,v,1,2,q(win(night))); }
-      T.faceRect('L',gx,gy,w,d,-4,Math.floor(Lw/2)-1,0,2,3,q(night?'#1a1626':'#5a3a2a'));                                   // door
-      if (type==='cottage'){ const rc=ROOF[Math.floor(rH()*ROOF.length)]; T.box(gx-.1,gy-.1,w+.2,d+.2,-4+h,2,{top:q(rc),left:q(mix(rc,'#000000',.2)),right:q(mix(rc,'#000000',.35))},O2); T.box(gx+.2,gy+.2,.3,.3,-4+h+2,3,{top:q('#8a5a4a'),left:q('#6a4a3a'),right:q('#5a3a2a')}); }
-      if (type==='shop'){ const a=AWN[Math.floor(rH()*AWN.length)]; for (let u=0;u<Lw;u++) T.faceRect('L',gx,gy,w,d,-4,u,4,1,1,q(u%2?a:'#ffffff')); }
-      if (type==='mid'||type==='tower'){ T.box(gx+w*.3,gy+d*.3,w*.35,d*.35,-4+h,2,{top:q('#b8bcc8'),left:q('#8a8e9a'),right:q('#6a6e7a')}); }
-      if (type==='tower'){ const t=P(gx+w/2,gy+d/2,-4+h+2); T.line([t[0],t[1]],[t[0],t[1]-6],q('#8a8e9a')); if (night) T.px(t[0],t[1]-7,'#ff4f6d'); } };
-    const tree=(T,gx,gy,f,small)=>{ const p0=P(gx,gy,-4), lf=CY.sn===1?'#e6f0f8':CY.sn===4?'#d9822b':CY.sn===2?'#f7a8c8':'#3f9a4f', lc=mix(night?'#1f4a34':lf,HZ,f), s2=small?3:4;
-      T.rect(p0[0],p0[1]-3,1,3,mix('#6b4a2e',HZ,f)); T.poly([[p0[0]-s2,p0[1]-3],[p0[0],p0[1]-3-s2*2],[p0[0]+s2+1,p0[1]-3]],lc); };
-    const kind=()=>{ const v=rH(); if (era===0) return v<.12?'cottage':v<.5?'tree':null; if (era===1) return v<.45?'cottage':v<.8?'tree':null;
-      if (era===2) return v<.35?'cottage':v<.65?'shop':v<.85?'tree':null; if (era===3) return v<.2?'shop':v<.7?'mid':v<.85?'tree':null; return v<.55?'tower':v<.85?'mid':'tree'; };
-    for(let gx=XR[0];gx<XR[1]-1;gx+=2) for(let gy=YR[0];gy<YR[1]-1;gy+=2){ if(gx>=-2&&gx<HQ_GX+1&&gy>=-2&&gy<HQ_GY+1) continue;
-      if (isRoad(gx,gy)||isRoad(gx+1,gy)||isRoad(gx,gy+1)||isRoad(gx+1,gy+1)) continue; if (field(gx,gy)&&rH()<.9) continue;
-      const top=P(gx,gy,-4); if (top[1]<SB+2) continue; const k=kind(); if (!k) continue;
-      const f=fog(gx,gy), front=gy>=HQ_GY+1||(gx>=HQ_GX+1&&gy>=3), T=front?FG:B;
-      const hMax=front?10:99, H2={cottage:6,shop:9,mid:16+Math.floor(rH()*10),tower:28+Math.floor(rH()*24)}[k]||0;
-      const draw=()=>{ if (k==='tree'){ tree(T,gx+.7,gy+.8,f,false); if (rH()<.5) tree(T,gx+1.4,gy+1.3,f,true); return; }
-        const w=k==='cottage'?1.3:1.6; bld(T,gx+.25,gy+.25,w,w,Math.min(hMax,H2),k,f); if (k==='cottage'&&rH()<.5) tree(T,gx+1.7,gy+1.6,f,true); };
-      if (front) draw(); else objs.push({d:gx+gy+2, f:draw}); } }
+  { const FG=new Buf(); B.fg=FG; const front=[];
+    for (const o of LS.objs){ const draw=T=>o.f(T); if (o.front) front.push(o); else objs.push({d:o.d, f:()=>draw(B)}); }
+    front.sort((a,b)=>a.d-b.d).forEach(o=>o.f(FG)); }
   objs.sort((a,b)=>a.d-b.d); for(const o of objs) o.f();
   return B; }
 function hqTree(B,tx,ty,C,night,sn){ const {P}=ISO, p=P(tx,ty); const tr=night?'#3b2a1f':'#6b4a2e'; let l1=night?'#1f5a3a':'#3f9a4f', l2=night?'#2a7048':'#5cc163', l3=night?'#174a2e':'#2f7a3c';
@@ -8497,7 +8540,7 @@ function hqFrame(c, now){ const D=HQI.D; if (!D) return; const art=HQI.art ||= (
     if (b.k==='modeling' && night){ const a=P(x+w*.3,y+d*.5,h); ax.fillStyle='rgba(255,246,200,.16)'; for (let k=0;k<14;k++) ax.fillRect(a[0]-k/2+Math.sin(now/900)*k/2, a[1]-6-k, 2+k/3, 1); } }
   // car on the road
   const cs=hqCarSprite(), lane=8.55, span=HQ_GX-1.2, o=HQI.carO, nC=(HQI.city||{}).cars||1;
-  for (let ci=0; ci<((HQI.city||{}).era>=2?nC+1:0); ci++){ const L2=24, ph=(now/1000*(ci%2?1.25:1)+ci*L2/(nC+1))%L2, cx=-8+ph, p=P(cx,HQ_GY+.15+(ci%2)*.4,-4);
+  for (let ci=0; ci<0; ci++){ const L2=24, ph=(now/1000*(ci%2?1.25:1)+ci*L2/(nC+1))%L2, cx=-8+ph, p=P(cx,HQ_GY+.15+(ci%2)*.4,-4);
     {  ax.drawImage(cs, Math.round(p[0]-o[0]), Math.round(p[1]-o[1])); if (night){ ax.fillStyle='rgba(255,240,180,.55)'; ax.fillRect(Math.round(p[0]+8),Math.round(p[1]+1),3,1); ax.fillRect(Math.round(p[0]+10),Math.round(p[1]+2),3,1); } } }
   hqPeople(ax, now, night);
   try { hqLife(ax, now, night); } catch(e){}
