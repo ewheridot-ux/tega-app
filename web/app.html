@@ -1841,7 +1841,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b273';
+const BUILD='b274';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -5919,17 +5919,35 @@ function goldEarned(){ return rpgC('goldE',()=>{ const B={}, add=(k,n)=>{ if (n>
 const goldSpent=()=>(R_().spent||[]).reduce((a,x)=>a+(+x.cost||0),0);
 function goldNow(){ return Math.max(0, Object.values(goldEarned()).reduce((a,b)=>a+b,0) - goldSpent()); }
 // ---- shop ----
-const SHOP=[{id:'shield',ic:'🛡️',n:'Streak shield',d:'Covers one missed day so your streak holds. Hold up to 3.',cost:150},{id:'respec',ic:'🔄',n:'Skill-point reset',d:'Refund every stat point and spend them again.',cost:200}];
+const SHOP=[{id:'shield',ic:'🛡️',n:'Streak shield',d:'Covers one missed day so your streak holds. Hold up to 3.',cost:150,g:'p'},{id:'respec',ic:'🔄',n:'Skill-point reset',d:'Refund every stat point and spend them again.',cost:200,g:'p'},
+  {id:'xp2',ic:'⚡',n:'Double XP today',d:'Everything you log today earns 2× XP.',cost:250,g:'p'},
+  {id:'chest',ic:'🎁',n:'Open a chest now',d:'A loot chest lands in your inbox right away.',cost:200,g:'p'},
+  {id:'bomb',ic:'🧨',n:'Boss bomb',d:'25 damage to a boss of your choice this month.',cost:350,g:'p'},
+  {id:'reroll',ic:'🎲',n:'Re-roll the weekly quest',d:'Swap this week’s money quest for a different one.',cost:75,g:'p'},
+  {id:'rw_food',ic:'🍜',n:'Guilt-free takeout',d:'Order the thing. No tracking guilt.',cost:300,g:'r'},
+  {id:'rw_movie',ic:'🎬',n:'Movie or night out',d:'A night out, earned.',cost:450,g:'r'},
+  {id:'rw_off',ic:'🛋️',n:'Night off',d:'No tasks tonight — rest is part of the plan.',cost:500,g:'r'},
+  {id:'rw_treat',ic:'👟',n:'Treat under $50',d:'Something small you’ve been eyeing.',cost:800,g:'r'},
+  {id:'rw_event',ic:'🎟️',n:'Experience or event',d:'Concert, game, class — something to do.',cost:1500,g:'r'},
+  {id:'rw_big',ic:'🛍️',n:'Big treat under $150',d:'The bigger thing. Saved up for it.',cost:2500,g:'r'}];
 const shieldsBought=()=>(R_().spent||[]).filter(x=>x.item==='shield').length;
 function shopBuy(id){ const it=SHOP.find(x=>x.id===id); if (!it) return; if (goldNow()<it.cost) return toast(`Need ${it.cost-goldNow()} more 💰`);
   if (id==='shield' && shieldsLeft()>=3) return toast('You already hold 3 shields');
   if (id==='respec' && !Object.values(R_().pts||{}).some(v=>+v>0)) return toast('No points spent yet — nothing to reset');
+  if (id==='xp2' && (R_().spent||[]).some(x=>x.item==='xp2'&&x.d===TODAY)) return toast('Double XP is already on today');
+  if (id==='reroll'){ const q=weekQ(isoWeek(TODAY)); if (!q) return toast('No weekly quest yet'); if (q.done) return toast('This week’s quest is already done'); }
+  if (id==='bomb') return bombPick();
   const R=R_(); (R.spent ||= []).push({d:TODAY, item:id, cost:it.cost}); if (id==='respec') R.pts={};
-  commit({skipXp:true}); toast(id==='shield'?'🛡️ Shield bought':'🔄 Points refunded — spend them again'); }
+  if (id==='chest') chestGive('shop'+Date.now(), 'Shop chest', 0);
+  if (id==='reroll'){ const q=weekQ(isoWeek(TODAY)), O=mqOpts().filter(t=>'💰 '+t!==q.text); if (O.length) q.text='💰 '+O[Math.floor(Math.random()*O.length)]; }
+  commit({skipXp:true});
+  toast(id==='shield'?'🛡️ Shield bought':id==='respec'?'🔄 Points refunded — spend them again':id==='xp2'?'⚡ Double XP is on for today':id==='chest'?'🎁 Chest added — open it from your loot':id==='reroll'?'🎲 New weekly quest':`${it.ic} ${it.n} — enjoy it, you earned it`); }
+function bombPick(){ const it=SHOP.find(x=>x.id==='bomb'); gSheet(`<span class="tag">Boss bomb · ${it.cost} 💰</span><h2 class="g-sh-t">Which boss?</h2><div class="shop">${Object.entries(ABOSS).map(([k,B])=>{ let st=null; try { st=aBossState(k); } catch(e){} return `<div class="shop-i"><span>${bossMini('ab_'+k)||B.ic||'👹'}</span><div><b>${esc(B.n||B.name||k)}</b><small>${st?`${Math.round(st.hp)}/${st.max} HP`:''}</small></div><button class="btn sm" onclick="bombBoss('${k}')">Bomb</button></div>`; }).join('')}</div>`); }
+function bombBoss(k){ const it=SHOP.find(x=>x.id==='bomb'); if (goldNow()<it.cost) return toast(`Need ${it.cost-goldNow()} more 💰`); const R=R_(); (R.spent ||= []).push({d:TODAY, item:'bomb', cost:it.cost, k}); commit({skipXp:true}); gSheetClose(); toast('🧨 Boom — 25 damage'); }
 function shopOpen(){ gSheetLive(shopBody); }
 function shopBody(){ const g=goldNow(), E=goldEarned(), sl=shieldsLeft();
   return (`<span class="tag">Gold</span><h2 class="g-sh-t">💰 ${g.toLocaleString()}</h2>
-    <div class="shop">${SHOP.map(it=>`<div class="shop-i"><span>${PXB['shop_'+it.id]?`<img class="pxb" src="${PXB['shop_'+it.id]}" alt="">`:it.ic}</span><div><b>${it.n}</b><small>${it.d}</small></div><button class="btn sm ${g<it.cost||(it.id==='shield'&&sl>=3)?'ghost':''}" onclick="shopBuy('${it.id}')">${it.cost} 💰</button></div>`).join('')}</div>
+    ${[['p','Power-ups'],['r','Real-life rewards']].map(([gk,gl])=>`<div class="tag" style="margin:14px 0 6px">${gl}</div><div class="shop">${SHOP.filter(it=>it.g===gk).map(it=>`<div class="shop-i"><span>${PXB['shop_'+it.id]?`<img class="pxb" src="${PXB['shop_'+it.id]}" alt="">`:it.ic}</span><div><b>${it.n}</b><small>${it.d}</small></div><button class="btn sm ${g<it.cost||(it.id==='shield'&&sl>=3)?'ghost':''}" onclick="shopBuy('${it.id}')">${it.cost} 💰</button></div>`).join('')}</div>`).join('')}${(()=>{ const L=(R_().spent||[]).filter(x=>/^rw_/.test(x.item)).slice(-5).reverse(); return L.length?`<div class="tag" style="margin:14px 0 6px">Rewards you’ve claimed</div>${L.map(x=>{ const it=SHOP.find(y=>y.id===x.item)||{}; return `<div class="sub" style="font-size:13px;padding:4px 0">${it.ic||''} ${esc(it.n||x.item)} · ${nice(x.d)}</div>`; }).join('')}`:''; })()}
     ${(()=>{ let e=perfectWeeks(); try { e+=tierShields()+shieldsBought(); } catch(x){} const extra=Math.max(0,e-Object.keys(S.shieldUsed||{}).length-3); return extra?`<div class="shop-sh">➕ ${extra} more shield${extra===1?'':'s'} waiting — one refills you each time you use one.</div>`:''; })()}
     ${(()=>{ const owe=goldSpent()-Object.values(E).reduce((a,b)=>a+b,0); return owe>0?`<div class="shop-sh" style="color:var(--bad)">Gold is ${owe} under — something you were paid for got unticked. New gold fills that first.</div>`:''; })()}
     <div class="shop-sh">🛡️ <b>${sl}/3</b> shields · earned from perfect weeks (all 7 days active) and season tiers 4 & 9, or bought here. When you miss a day, Today offers to use one.</div>
@@ -8879,6 +8897,7 @@ function liveRefresh(why){ const now=Date.now(), force=why==='pull'||why==='onli
 document.addEventListener('visibilitychange',()=>{ if (document.visibilityState==='visible' && typeof _dbSettled!=='undefined' && _dbSettled) setTimeout(()=>liveRefresh('resume'),800); });
 // one number for today's XP: base × (1 + 2× day + every buff and debuff)
 function xpMult(k){ const parts=[]; const r=rareDay(k); if (r&&r.type==='double') parts.push({ic:'⚡',n:'2× XP day',m:1,t:'Random double-XP day'});
+  try { if ((R_().spent||[]).some(x=>x.item==='xp2'&&x.d===k)) parts.push({ic:'⚡',n:'Double XP (shop)',m:1,t:'Bought in the shop'}); } catch(e){}
   for (const f of rpgFx(k)) if (f.m) parts.push({ic:f.ic,n:f.n,m:f.m,t:f.t});
   const raw=1+parts.reduce((a,p)=>a+p.m,0); return {parts, total:Math.max(.5,Math.min(5,raw))}; }
 function xpSheet(){ const X=xpMult(TODAY), pc=m=>`${m>0?'+':'−'}${Math.round(Math.abs(m)*100)}%`;
@@ -9365,8 +9384,9 @@ function paydayShow(c){ try { if (!c||!c.split) return; const sp=c.split, A=card
   el.innerHTML=`<div class="pd-box"><div class="pd-k">💵 Payday</div><div class="pd-amt num">+${money0(c.amt)}</div><div class="pd-bk">${rows.map((r,i)=>`<div class="pd-b" style="--i:${i};--c:${r[3]}"><span>${r[0]}</span><b>${esc(r[1])}</b><em class="num">${money0(r[2])}</em></div>`).join('')}</div><div class="pd-tap">Tap to start moving it · tick all within 48h for a clean check</div></div>`;
   document.body.appendChild(el); confetti(); } catch(e){} }
 // weekly money quest (one per week, joins your quests)
+function mqOpts(){ const cur=cardBosses().find(b=>!b.dead), F=flexNow(); return [cur?`Hit ${cur.name} with an extra $50 this week`:null, 'No food delivery apps this week', F?`Stay under the ${money0(F.earned/Math.max(1,F.days)*7)}/week spending pace`:null, 'Check your bank app twice this week and type any new check into Money', 'Cancel or pause one subscription you don’t use', 'Cook at home 4 nights this week', 'Move $25 extra into the emergency fund'].filter(Boolean); }
 function moneyQuest(){ const wk=isoWeek(TODAY), M=S.money; if (M.mqWeek===wk) return; M.mqWeek=wk; const cur=cardBosses().find(b=>!b.dead), F=flexNow();
-  const opts=[cur?`Hit ${cur.name} with an extra $50 this week`:null, 'No food delivery apps this week', F?`Stay under the ${money0(F.earned/Math.max(1,F.days)*7)}/week spending pace`:null, 'Check your bank app twice this week and type any new check into Money', 'Cancel or pause one subscription you don’t use'].filter(Boolean);
+  const opts=mqOpts();
   const t=opts[(parseInt(wk.slice(-2))||0)%opts.length]; S.quests ||= []; S.quests.push({id:uid(), text:'💰 '+t, size:'M', track:'financial', defn:'', created:TODAY, done:'', mq:wk}); setTimeout(()=>commit({skipXp:true}),0); }
 function mqCard(){ const q=(S.quests||[]).find(q=>q.mq===isoWeek(TODAY)); if (!q) return '';
   return `<div class="card sec mq-card"><div class="row between"><span class="tag">Weekly money quest · +${QSIZE.M.xp} XP</span>${q.done?'<span class="chip">✓ done</span>':''}</div><div class="check ${q.done?'on':''}" style="margin-top:8px" onclick="${q.done?'':`questDone('${q.id}')`}"><div class="box">${q.done?'✓':''}</div><div class="txt">${esc(q.text.replace(/^💰 /,''))}</div></div></div>`; }
@@ -9396,6 +9416,7 @@ const ABOSS={
 };
 const monthDays = m => new Date(+m.slice(0,4), +m.slice(5,7), 0).getDate();
 function aBossEvents(k, m){ const E=[], inM=d=>d&&String(d).slice(0,7)===m, past=d=>d<=TODAY;
+  for (const x of (R_().spent||[])) if (x.item==='bomb' && x.k===k && inM(x.d)) E.push({d:x.d, dmg:25, l:'Boss bomb 🧨', crit:1});
   if (k==='datum'){ const D=ensureDatum(); for (const p of D.prototypes||[]){ for (const l of p.log||[]) if (l.kind==='session' && inM(l.d) && (+l.mins||0)>0) E.push({d:l.d, dmg:Math.round((+l.mins||0)/60*12), l:`Bench ${fmtMins(+l.mins||0)}`}); for (const [st,d] of Object.entries(p.stageAt||{})) if (inM(d)) E.push({d, dmg:20, l:`${p.name||'Piece'} → ${st}`}); }
     for (const o of D.orders||[]) if (inM(o.delivered)) E.push({d:o.delivered, dmg:40, l:`Delivered: ${o.who||'order'}`, crit:1});
     const sd=[...new Set(E.filter(e=>/^Bench/.test(e.l)).map(e=>e.d))].sort(); heals(E, m, sd, 7, 15, 'Cold Bench'); }
