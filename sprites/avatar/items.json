@@ -1,0 +1,162 @@
+[
+{
+"id": "L2M",
+"mask": "neck",
+"desc": "wearing a shiny silver cuban link chain necklace"
+},
+{
+"id": "L2E",
+"mask": "eyes",
+"desc": "wearing clear engineer glasses with thin black frames"
+},
+{
+"id": "L2D",
+"mask": "mouth",
+"desc": "mouth with a single shiny gold tooth showing"
+},
+{
+"id": "L3M",
+"mask": "pendant",
+"desc": "silver cross pendant hanging on the chest"
+},
+{
+"id": "L3E",
+"mask": "torso",
+"desc": "wearing a black tech hoodie with glowing cyan circuit stitching"
+},
+{
+"id": "L3D",
+"mask": "ears",
+"desc": "ear with a sparkling diamond stud and a small gold hoop earring"
+},
+{
+"id": "L4M",
+"mask": "torso",
+"desc": "wearing a sleek black long-sleeve shirt with white contrast stitching"
+},
+{
+"id": "L4E",
+"mask": "hud",
+"desc": "floating holographic cyan HUD screen panel with data lines"
+},
+{
+"id": "L4D",
+"mask": "neck",
+"desc": "wearing a thick gold rope chain necklace"
+},
+{
+"id": "L5M",
+"mask": "head",
+"desc": "wearing a black fitted baseball cap turned backwards"
+},
+{
+"id": "L5E",
+"mask": "eyes",
+"desc": "wearing a sleek black carbon visor across the eyes with a cyan light strip"
+},
+{
+"id": "L5D",
+"mask": "mouth",
+"desc": "mouth showing silver grillz on the top six teeth"
+},
+{
+"id": "L6M",
+"mask": "eyes",
+"desc": "wearing rectangular dark sunglasses with silver frames"
+},
+{
+"id": "L6D",
+"mask": "mouth",
+"desc": "mouth showing shiny gold grillz on the top six teeth"
+},
+{
+"id": "L7E",
+"mask": "torso",
+"desc": "wearing a black shirt with mechanical exoskeleton shoulder armor rig"
+},
+{
+"id": "L7D",
+"mask": "pendant",
+"desc": "big iced-out gold cross pendant covered in diamonds hanging on the chest"
+},
+{
+"id": "L9E",
+"mask": "glint",
+"desc": "glowing cyan cybernetic glint in one eye"
+},
+{
+"id": "L10M",
+"mask": "crown",
+"desc": "glowing platinum halo floating above the head"
+},
+{
+"id": "L10E",
+"mask": "crown",
+"desc": "glowing cyan mechanical gear halo floating above the head"
+},
+{
+"id": "L10D",
+"mask": "crown",
+"desc": "golden jeweled king crown on top of the head"
+},
+{
+"id": "mood_smile",
+"mask": "face",
+"desc": "warm happy smile, wearing black glasses"
+},
+{
+"id": "mood_hype",
+"mask": "face",
+"desc": "excited huge open grin, eyebrows raised, wearing black glasses"
+},
+{
+"id": "mood_focused",
+"mask": "face",
+"desc": "focused determined squint, mouth closed, wearing black glasses"
+},
+{
+"id": "mood_tired",
+"mask": "face",
+"desc": "sleepy half-closed eyes, small tired frown, wearing black glasses"
+},
+{
+"id": "mood_sad",
+"mask": "face",
+"desc": "sad droopy eyes, small frown, wearing black glasses"
+},
+{
+"id": "L6E",
+"bg": true,
+"desc": "pixel art background: dark navy CAD engineering workshop wall with cyan blueprint grid and glowing schematics"
+},
+{
+"id": "L7M",
+"bg": true,
+"desc": "pixel art background: dark fashion runway with a bright white spotlight beam from above"
+},
+{
+"id": "L8D",
+"bg": true,
+"desc": "pixel art background: Chicago skyline at golden hour, deep purple sky fading to orange, silhouetted towers"
+},
+{
+"id": "bg_M",
+"bg": true,
+"desc": "pixel art background: dark grey photo studio backdrop with soft spotlight"
+},
+{
+"id": "bg_E",
+"bg": true,
+"desc": "pixel art background: dark navy wall with faint cyan grid lines"
+},
+{
+"id": "bg_D",
+"bg": true,
+"desc": "pixel art background: warm black velvet with faint gold sparkle"
+},
+{
+"id": "bg_0",
+"bg": true,
+"desc": "pixel art background: deep purple night gradient with faint stars"
+}
+]
