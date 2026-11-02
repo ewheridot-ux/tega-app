@@ -1,11 +1,8 @@
-# iPhone build #131 — success
+# iPhone build #133 — success
 
-Sat Oct 31 23:01:05 UTC 2026
+Mon Nov  2 02:08:59 UTC 2026
 
 ```
-✓ daily clear gives a chest
-✓ weekly clear gives a chest
-✓ buff row is icons only
 ✓ tapping a buff shows its line
 ✓ quest log has Daily, Weekly, Season, Side
 ✓ no duplicate quest card on Today
@@ -16,7 +13,7 @@ Sat Oct 31 23:01:05 UTC 2026
 ✓ season tier within 1–13
 ✓ season boss falls at 70% and gives 300 XP
 ✓ season sheet shows 13 tiers
-✓ top bar shows streak+shields, level, gold, season — 🔥 7 day streak · 🛡️2/3 | Lv 4 · Rookie IV | 💰 110 | 🍂 1/13
+✓ top bar shows streak+shields, level, gold, season — 🔥 7 day streak · 🛡️2/3 | Lv 4 · Rookie IV | 💰 110 | 🍂 2/13
 ✓ XP only went up
 ✓ undo takes the hits back
 ✓ pops wait while a sheet is open
@@ -25,7 +22,7 @@ Sat Oct 31 23:01:05 UTC 2026
 ✓ quest board marker on the fountain opens the quest log
 ✓ quest board + house cards
 ✓ town and bosses not repeated on the Character page
-✓ changes since last open pop on the next open — ✦+5 XP | 🌫️Fog −2
+✓ changes since last open pop on the next open — ✦+10 XP
 ✓ all six bosses have idle, hit and defeat animations — []
 ✓ a finished shoot day is added to what ONE owes — {"yesterday":"shot","today":"shot","future":"confirmed","add":2400,"total":4800}
 ✓ …and isn’t counted twice in money coming from ONE — {"yesterday":"shot","today":"shot","future":"confirmed","add":2400,"total":4800}
@@ -58,6 +55,9 @@ Sat Oct 31 23:01:05 UTC 2026
 ✓ subscriptions are found from the bank (monthly, not bills) — {"nf":"monthly","nfBill":false,"rentBill":true,"subsRows":4,"fixedRows":2,"merch":4}
 ✓ transactions filter by any category, bucket or merchant across all months — {"nf":"monthly","nfBill":false,"rentBill":true,"subsRows":4,"fixedRows":2,"merch":4}
 ✓ each bucket shows its real account vs the plan (ahead / behind) — {"linked":true,"v":500,"plan":1000,"st":"behind","diff":-500}
+✓ Datum: bank charges that look like supplies are suggested and count once — {"sug":true,"rows":1,"logged":true,"ret":true}
+✓ Datum: logged purchases become write-offs — {"sug":true,"rows":1,"logged":true,"ret":true}
+✓ money plan invests the FI plan amount once it starts — {"sug":true,"rows":1,"logged":true,"ret":true}
 ✓ no errors anywhere
 
 all checks passed
@@ -66,13 +66,13 @@ all checks passed
 > node scripts/build-www.mjs
 
 www built with Supabase config
-✔ Adding native Xcode project in ios in 12.83ms
-✔ add in 13.05ms
-✔ Copying web assets from www to ios/App/App/public in 22.83ms
-✔ Creating capacitor.config.json in ios/App/App in 289.54μs
-✔ copy ios in 49.48ms
-✔ Updating iOS plugins in 722.21μs
-✔ Updating iOS native dependencies with pod install in 9.48s
+✔ Adding native Xcode project in ios in 16.88ms
+✔ add in 17.14ms
+✔ Copying web assets from www to ios/App/App/public in 37.78ms
+✔ Creating capacitor.config.json in ios/App/App in 433.79μs
+✔ copy ios in 76.06ms
+✔ Updating iOS plugins in 1.36ms
+✔ Updating iOS native dependencies with pod install in 12.32s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -84,15 +84,15 @@ www built with Supabase config
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 9.52s
+✔ update ios in 12.38s
 [success] ios platform added!
 Follow the Developer Workflow guide to get building:
 https://capacitorjs.com/docs/basics/workflow
-✔ Copying web assets from www to ios/App/App/public in 131.31ms
-✔ Creating capacitor.config.json in ios/App/App in 813.71μs
-✔ copy ios in 155.60ms
-✔ Updating iOS plugins in 1.01ms
-✔ Updating iOS native dependencies with pod install in 3.73s
+✔ Copying web assets from www to ios/App/App/public in 143.96ms
+✔ Creating capacitor.config.json in ios/App/App in 1.01ms
+✔ copy ios in 173.36ms
+✔ Updating iOS plugins in 2.35ms
+✔ Updating iOS native dependencies with pod install in 6.03s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -104,8 +104,8 @@ https://capacitorjs.com/docs/basics/workflow
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 3.82s
-[info] Sync finished in 4.002s
+✔ update ios in 6.11s
+[info] Sync finished in 6.324s
 app capabilities: ['IN_APP_PURCHASE', 'HEALTHKIT', 'IN_APP_PURCHASE', 'IN_APP_PURCHASE']
 com.ewheridot.tegaexe.widgets ok
 com.ewheridot.tegaexe.share ok
@@ -116,11 +116,11 @@ entitlements: healthkit keychain-access-groups
 TIER=full
 Running altool at path '/Applications/Xcode_26.3.app/Contents/SharedFrameworks/ContentDelivery.framework/Resources/altool'...
 
-2026-10-31 23:01:05.585  INFO: [ContentDelivery.Uploader.6000038184C0] 
+2026-11-02 02:08:59.100  INFO: [ContentDelivery.Uploader.600002A4C4C0] 
 ==========================================
 UPLOAD SUCCEEDED with no errors
-Delivery UUID: ba519249-990b-4fd1-80f9-70c20e3d80e9
-Transferred 7347415 bytes in 0.841 seconds (8.7MB/s, 69.905Mbps)
+Delivery UUID: 1d36140d-218d-4d4c-b57e-e47fdf2643bc
+Transferred 7349929 bytes in 0.256 seconds (28.7MB/s, 229.939Mbps)
 ==========================================
 No errors uploading archive at '/Users/runner/work/_temp/out/App.ipa'.
 ```
