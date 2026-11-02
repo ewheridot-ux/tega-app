@@ -1847,7 +1847,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b284';
+const BUILD='b285';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -5595,6 +5595,19 @@ async function socSync(manual){ if (!mcpLib){ if(manual) toast('Email check isn�
       C.ev.push({id, d:e.d, name:e.name.slice(0,60), where:(e.where||'').slice(0,60), src:e.src, url:th.viewUrl||''}); n++;
       if (e.who && e.d<=TODAY) socSeen(e.who, e.d); }
     C.syncDay=TODAY; commit({skipXp:true}); if (manual) toast(n?`${n} new hangout${n===1?'':'s'}`:'Up to date'); } catch(e){ if (manual) toast('Couldn’t reach Gmail'); } }
+
+// b285: plans made over text never reach email — paste the invite and Tega pulls out the hangout
+let socPasteBusy=false;
+async function socPaste(ev){ ev.preventDefault(); const ta=ev.target.querySelector('textarea'), txt=(ta.value||'').trim(); if (!txt) return false; if (socPasteBusy) return false;
+  if (typeof sampleLib==='undefined'||!sampleLib||!sampleLib.json){ toast('Tega can’t read it right now — log it with the form'); return false; }
+  socPasteBusy=true; toast('Reading the invite…');
+  try { const prompt=`Today is ${TODAY} (${new Date(TODAY+'T12:00').toLocaleDateString('en-US',{weekday:'long'})}). Extract every social plan from this text the user pasted (a text message, a Partiful invite, an OpenTable or Resy reservation, an iMessage). For each: name (short, e.g. "Partiful · Sam's birthday" or "Dinner · Kasama"), date YYYY-MM-DD (resolve words like "tonight", "Friday" against today; if no date, use today), time (like "8:00 PM" or ""), where (venue/area or ""), who (names mentioned, comma separated, or ""), src ("Partiful", "OpenTable", "Resy", "text" …). Ignore anything that isn't a plan. TEXT:\n"""${txt.slice(0,4000)}"""\nReturn JSON only: {"hangouts":[{"name":"","date":"","time":"","where":"","who":"","src":""}]}`;
+    const r=await sampleLib.json(prompt), o=r&&(r.hangouts?r:r.value||r.data||r.result)||{}, L=(o.hangouts||[]).filter(h=>h&&h.name&&/^\d{4}-\d{2}-\d{2}$/.test(h.date||''));
+    const C=(S.circle ||= {ev:[],people:[]}); let n=0;
+    for (const h of L){ if (C.ev.some(x=>x.d===h.date&&x.name.toLowerCase()===String(h.name).toLowerCase())) continue; C.ev.push({id:'P'+uid(), d:h.date, name:String(h.name).slice(0,80), where:[h.time,h.where,h.who].filter(Boolean).join(' · ').slice(0,100), src:(h.src||'pasted')+' · pasted'}); for (const p of String(h.who||'').split(',').map(x=>x.trim()).filter(Boolean)) socSeen(p, h.date); n++; }
+    if (n){ ta.value=''; commit(); toast(`🤝 Logged ${n} hangout${n===1?'':'s'}`); } else toast('Couldn’t find a plan in that — try the form');
+  } catch(e){ toast('Couldn’t read it: '+String(e&&e.message||e).slice(0,60)); }
+  socPasteBusy=false; return false; }
 function socAdd(ev){ ev.preventDefault(); const f=ev.target, g=k=>f.querySelector(`[name=${k}]`).value.trim(); if(!g('name')) return false; const C=(S.circle ||= {ev:[],people:[]}); C.ev.push({id:'M'+uid(), d:g('d')||TODAY, name:g('name'), where:g('who'), src:'by hand'}); for (const p of g('who').split(',').map(x=>x.trim()).filter(Boolean)) socSeen(p, g('d')||TODAY); commit(); toast('🤝 Logged'); return false; }
 function socSeen(name,d){ const C=(S.circle ||= {ev:[],people:[]}); const p=C.people.find(p=>p.name.toLowerCase()===name.toLowerCase()); if (p){ p.last=d>p.last?d:p.last; p.n=(p.n||1)+1; } else C.people.push({name, first:d, last:d, n:1}); }
 function socPersonAdd(ev){ ev.preventDefault(); const v=ev.target.querySelector('input').value.trim(); if(!v) return false; socSeen(v,TODAY); commit({skipXp:true}); return false; }
@@ -5603,11 +5616,11 @@ function vCircle(){
   const E=socAll(), C=S.circle||{people:[]}, [qs,qe]=qRange(THIS_Q), inQ=E.filter(e=>e.d>=qs&&e.d<=qe&&e.d<=TODAY), P=(C.people||[]).slice().sort((a,b)=>a.last.localeCompare(b.last));
   return `<div class="card sec"><div class="row between"><span class="tag">Circle · ${THIS_Q}</span>${mcpLib?`<button class="btn ghost sm" onclick="socSync(true)">↻ Check email</button>`:''}</div>
       <div class="mm-big" style="margin-top:6px"><b class="num">${inQ.length}</b><span>nights out & hangouts<br><em>this quarter</em></span></div></div>
-    <div class="card sec"><div class="hdr"><h2>Log a hangout</h2></div><form class="mm-add" onsubmit="return socAdd(event)"><input class="inp" name="name" placeholder="What (dinner, game, party)" required><input class="inp" type="date" name="d" value="${TODAY}"><input class="inp" name="who" placeholder="Who (names, comma separated)" style="grid-column:1/-1"><button class="btn">Log it</button></form></div>
-    <div class="card sec mm-list"><div class="tag mm-lab">Events</div>${E.map(e=>`<div class="ag-r" style="cursor:default"><span class="ag-d num">${nice(e.d)}${e.d.slice(0,4)!==THIS_Y?' '+e.d.slice(2,4):''}</span><span class="ag-t"><b>${esc(e.name)}</b><small class="sub" style="display:block;font-size:11.5px">${esc(e.where||'')}${e.src?` · ${e.src}`:''}</small></span>${e.url?`<a href="${e.url}" target="_blank" rel="noopener" class="mm-pl">📎</a>`:''}</div>`).join('')||'<div class="empty">Nothing yet.</div>'}</div>
+    <div class="card sec"><div class="hdr"><h2>Log a hangout</h2></div><form onsubmit="return socPaste(event)" style="margin-bottom:10px"><textarea class="inp grow" rows="2" placeholder="Paste an invite — a Partiful link or text, an OpenTable or Resy text, a group chat plan"></textarea><button class="btn sm" style="margin-top:6px;width:100%;justify-content:center">Log from the invite</button></form><form class="mm-add" onsubmit="return socAdd(event)"><input class="inp" name="name" placeholder="What (dinner, game, party)" required><input class="inp" type="date" name="d" value="${TODAY}"><input class="inp" name="who" placeholder="Who (names, comma separated)" style="grid-column:1/-1"><button class="btn">Log it</button></form></div>
+    <div class="card sec mm-list"><div class="tag mm-lab">Events</div>${E.map(e=>`<div class="ag-r" style="cursor:default${e.d>TODAY?';opacity:.75':''}"><span class="ag-d num">${e.d>TODAY?'⏳ ':''}${nice(e.d)}${e.d.slice(0,4)!==THIS_Y?' '+e.d.slice(2,4):''}</span><span class="ag-t"><b>${esc(e.name)}</b><small class="sub" style="display:block;font-size:11.5px">${esc(e.where||'')}${e.src?` · ${e.src}`:''}</small></span>${e.url?`<a href="${e.url}" target="_blank" rel="noopener" class="mm-pl">📎</a>`:''}</div>`).join('')||'<div class="empty">Nothing yet.</div>'}</div>
     <div class="card sec mm-list"><div class="tag mm-lab">People</div>${P.map(p=>{ const dd=daysBetween(p.last,TODAY); return `<div class="mm-pay"><span><span class="fire" style="opacity:${Math.max(.15,1-daysBetween(p.last,TODAY)/45)}">🔥</span> ${esc(p.name)}</span><span class="sub"><span class="bond b${bondOf(p).i}">${bondOf(p).name}</span> · ${p.n}×${p.first?` · since ${nice(p.first)}`:''}</span><b class="num" style="${dd>30?'color:var(--warn)':''}">${dd===0?'today':dd+'d'}</b><button class="mm-dis" onclick="socSeen(${JSON.stringify(p.name).replace(/"/g,'&quot;')},TODAY);commit({skipXp:true})" aria-label="Saw them today">✓</button></div>`; }).join('')||'<div class="sub" style="padding:6px 10px">Add the people you want to keep close.</div>'}
       <form class="ct-add" style="padding:8px 10px" onsubmit="return socPersonAdd(event)"><input class="inp" placeholder="add a person"><button class="btn sm">Add</button></form></div>
-    <div class="help" style="padding:0 6px">Posh tickets, Resy and OpenTable dinners, and tickets friends send you come in from your email by themselves. Plans made over text don't, so log those here — everything counts toward your Hangouts OKR.</div>`;
+    <div class="help" style="padding:0 6px">Posh tickets, Resy and OpenTable dinners, and tickets friends send you come in from your email by themselves. Plans made over text don't — paste the invite above, ask Tega (“log Sam’s party Friday”), or add it to your iPhone calendar (turn on calendar sync in Partiful, tap Add to Calendar in OpenTable) and it comes in by itself. Upcoming plans show here and count once the day passes.</div>`;
 }
 
 /* ===================== Quarter Close: a ceremony, not a form ===================== */
@@ -7497,6 +7510,7 @@ function agDo(a){ const A=a.args||a, t=a.tool||a.type;
     case 'complete_quest': { const q=(S.quests||[]).find(q=>q.id===A.id&&!q.done); if (!q) return null; questDone(q.id); return `${QSIZE[q.size]?.icon||'✓'} Quest done: ${q.text}`; }
     case 'complete_top3': { const d=ensureDay(TODAY), i=Number.isInteger(+A.index)?+A.index:d.top3.findIndex(t=>t.text&&A.text&&t.text.toLowerCase().includes(String(A.text).toLowerCase())); const t=d.top3[i]; if (!t||!t.text||t.done) return null; t.done=true; return `✓ Top 3 done: ${t.text}`; }
     case 'complete_weekly_goal': { const w=A.week||THIS_WEEK, W=ensureWeek(w), it=weekInits(w).find(i=>i.id===A.id); if (!it) return null; (W.inits ||= {})[it.id]=true; return `✓ Weekly goal done: ${it.text}`; }
+    case 'add_hangout': { if (!/^\d{4}-\d{2}-\d{2}$/.test(A.date||'')||!A.name) return null; const C=(S.circle ||= {ev:[],people:[]}); C.ev.push({id:'A'+uid(), d:A.date, name:String(A.name).slice(0,80), where:[A.where,A.who].filter(Boolean).join(' · ').slice(0,100), src:'via Tega'}); for (const p of String(A.who||'').split(',').map(x=>x.trim()).filter(Boolean)) socSeen(p, A.date); return `Hangout ${nice(A.date)}: ${A.name}`; }
     case 'add_deadline': { if (!/^\d{4}-\d{2}-\d{2}$/.test(A.date||'')) return null; (S.dl ||= []).push({id:uid(), d:A.date, text:String(A.text||'').slice(0,90), type:A.kind||'other', done:''}); return `Deadline ${nice(A.date)}: ${A.text}`; }
     case 'add_milestone': { (S.vision.milestones ||= []).push({id:uid(), year:String(A.year||+THIS_Y+1), track:A.track||'personal', text:String(A.text||'').slice(0,140), done:false}); return `5-year milestone added: ${A.year} ${A.text}`; }
     case 'report_problem': { (S.fixes ||= []).push({id:uid(), at:new Date().toISOString(), text:String(A.text||'').slice(0,600), build:BUILD, view}); return `Logged for Claude: “${String(A.text||'').slice(0,60)}”`; }
@@ -7521,6 +7535,7 @@ WHAT YOU CAN DO (actions):
 - complete_top3 {index (0-2) or text}
 - complete_weekly_goal {id, week?}
 - add_deadline {text, date, kind?}
+- add_hangout {name, date, where?, who?}   — a social plan or night out (Partiful, dinner, party, date); counts toward Social
 - add_milestone {year, track, text}   (5-year plan)
 - report_problem {text}   — when he says something in the app is broken/wrong; write it clearly for the developer (what he did, what happened, what he expected). Then tell him it's on his Fix list (Settings → Fix list for Claude → Copy for Claude) so he can paste it to Claude.
 - go {view}   — a button that opens a page (${VIEWS.join(', ')})
@@ -8822,12 +8837,12 @@ async function nsLocation(){ if (!window.native?.locate) return; const T=T_(); i
   const home=NS_CITIES[0], away=kmBetween(la,lo,home[1],home[2]);
   if (away>150 && !T.on){ const near=NS_CITIES.slice(1).map(c=>[c[0],kmBetween(la,lo,c[1],c[2])]).sort((a,b)=>a[1]-b[1])[0]; T.city=near&&near[1]<120?near[0]:''; T.autoOn=1; autoNote('travel',`Travel mode on${T.city?' · '+T.city:''}`); travelSet(true); }
   else if (away<60 && T.on && T.autoOn){ T.autoOn=0; autoNote('travel','Back home — travel mode off'); travelSet(false); } }
-const SOC_RE=/dinner|drinks|party|birthday|bday|club|brunch|hang|movie|concert|game night|kickback|date\b/i;
+const SOC_RE=/dinner|drinks|party|birthday|bday|club|brunch|lunch|hang|movie|concert|show\b|game night|kickback|date\b|partiful|opentable|resy|reservation|table for|rsvp|happy hour|pregame|festival|pop-?up|launch|gala|mixer|celebration|wedding|shower|potluck|cookout|bbq|day party|rooftop|listening|screening|tasting|meetup/i;
 async function nsCalendar(){ if (!window.native?.calendar) return; if (S.icalAt && Date.now()-S.icalAt<6*3600e3) return; S.icalAt=Date.now();
   let r; try { r=await window.native.calendar(Date.now()-14*864e5, Date.now()+30*864e5); } catch(e){ return; } if (!r||!r.ok) return;
   const dk=ms=>{ const d=new Date(ms); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
   S.ical=(r.events||[]).filter(e=>e.title).slice(0,120).map(e=>({id:e.id, d:dk(e.start), t:e.title.slice(0,80), tm:e.allDay?'':new Date(e.start).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}), loc:e.loc.slice(0,60)}));
-  const C=(S.circle ||= {ev:[],people:[]}); let n=0; for (const e of S.ical) if (e.d<=TODAY && SOC_RE.test(e.t) && !C.ev.some(x=>x.id==='cal:'+e.id || (x.d===e.d && x.name===e.t))){ C.ev.push({id:'cal:'+e.id, d:e.d, name:e.t, where:e.loc||'', src:'from your calendar'}); n++; }
+  const C=(S.circle ||= {ev:[],people:[]}); let n=0; for (const e of S.ical) if (e.d<=addDays(TODAY,30) && SOC_RE.test(e.t+' '+(e.loc||'')) && !C.ev.some(x=>x.id==='cal:'+e.id || (x.d===e.d && x.name===e.t))){ C.ev.push({id:'cal:'+e.id, d:e.d, name:e.t, where:e.loc||'', src:'from your calendar'}); n++; }
   if (n) autoNote('cal',`${n} hangout${n===1?'':'s'} from your calendar`); commit({skipXp:true}); }
 async function nativeSync(){ if (!window.native) return; for (const f of [nsLocation, nsHealth, nsCalendar]) { try { await f(); } catch(e){ console.warn('native sync',f.name,e); } } }
 window.tegaNativeSync = ()=>liveRefresh('resume');
