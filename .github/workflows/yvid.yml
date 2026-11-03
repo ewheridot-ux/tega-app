@@ -1,0 +1,21 @@
+name: Stretch demo videos
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['ci/run-yvid', 'ci/poses.json']
+concurrency: { group: yvid, cancel-in-progress: false }
+permissions: { contents: read }
+jobs:
+  yvid:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -q requests
+      - name: Find and verify one demo per stretch
+        env:
+          SUPA_SERVICE: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPA_URL: https://rlgoetbrlrsdijtlwnsb.supabase.co
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/yvid.py

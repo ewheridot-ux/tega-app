@@ -19,11 +19,13 @@ def quarter_goals():
 learned = [l.get('skill', '') for l in ((st.get('datum') or {}).get('learning') or [])][-10:]
 hustle = (st.get('hustle') or {}).get('name') or 'side hustle'
 seen = [x.get('t', '') for x in ((st.get('newsSeen') or {}).get('learn') or [])][-30:]
+subjects = [x.get('name', '') for x in ((st.get('learn') or {}).get('subjects') or []) if not x.get('archived')]
 profile = {
     'who': 'Full-time fashion model (agency in NYC, lives in Chicago), building a custom grillz / dental-jewelry brand called Datum (wax carving, casting, finishing), posts content, plays guitar, learning to draw, lifts, self-employed so taxes/SEP-IRA matter.',
     'categories': ['Modeling', 'Datum Grillz', 'Content', 'Financial', 'Personal', 'Relationships', 'Fitness', 'Learning', hustle],
     'goals_this_quarter': quarter_goals(),
-    'recently_learned': learned,
+    'learning_now': subjects,
+    'recently_learned': learned + [g.get('t', '') for x in ((st.get('learn') or {}).get('subjects') or []) for g in (x.get('log') or [])][-10:],
     'already_suggested': seen,
 }
 today = datetime.date.today().isoformat()

@@ -309,9 +309,11 @@ html[data-look="gallery"] body .nav[data-hl="study"] button.on{background:#fff!i
 .lr-look{border:0;background:var(--lr-tile);color:var(--lr-ink);font:600 11px 'Space Mono',monospace;padding:5px 8px;border-radius:var(--lr-rad);cursor:pointer;white-space:nowrap}
 .lr-h{font-size:22px;line-height:1.2;margin:4px 0 14px}
 [data-look="gallery"] .lr-h{font-size:30px;font-weight:600;line-height:1.05}
-.lr-tiles{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
-.lr-tiles button{grid-column:span 2;display:grid;gap:2px;justify-items:start;text-align:left;padding:10px;border:0;border-radius:var(--lr-rad);background:var(--lr-tile);color:inherit;font:inherit;cursor:pointer;min-width:0}
-.lr-tiles button.w{grid-column:span 3}
+.lr-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}.lr-more{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:8px}.lr-more button{display:flex!important;align-items:center;gap:6px;padding:8px 9px}.lr-more b{font-size:16px}.lr-more span{font-size:13px}.lr-n{margin-left:auto;font-size:12px;color:var(--lr-mute);font-weight:700}
+.lr-add{display:grid;place-content:center;justify-items:center;gap:2px;border:1.5px dashed color-mix(in srgb,var(--lr-ink) 35%,transparent);border-radius:var(--lr-rad);background:transparent;color:var(--lr-mute);font:inherit;font-size:12px;cursor:pointer;min-height:84px}.lr-add i{font-style:normal;font-size:20px;color:var(--lr-mark)}
+.lr-new{gap:6px;flex-wrap:nowrap;margin-top:8px}.lr-edit{display:grid;gap:6px;margin-top:8px}
+.lr-link{display:flex;width:100%;align-items:center;justify-content:space-between;gap:10px;text-align:left;color:inherit;font:inherit;cursor:pointer}.lr-link span{display:grid;gap:2px}.lr-link small{color:var(--lr-mute);font-size:12.5px}.lr-link i{font-style:normal;color:var(--lr-mute)}
+.lr-tiles button{display:grid;gap:2px;justify-items:start;text-align:left;padding:10px;border:0;border-radius:var(--lr-rad);background:var(--lr-tile);color:inherit;font:inherit;cursor:pointer;min-width:0}
 [data-look="zine"] .lr-tiles button{border:2px solid #111}
 .lr-tiles button.on{background:var(--lr-hi2);box-shadow:inset 0 0 0 1.5px var(--lr-ink)}
 .lr-tiles i{font-style:normal;color:var(--lr-mark);font-size:15px}
@@ -326,6 +328,13 @@ html[data-look="gallery"] body .nav[data-hl="study"] button.on{background:#fff!i
 .fy-i{padding:12px;border-radius:var(--lr-rad);background:var(--lr-tile);margin-top:8px}
 .fy-i b{font-family:var(--lr-head);font-size:18px}.fy-i p{margin:4px 0 8px;font-size:14px;line-height:1.4}
 .fy-i .row{gap:6px;flex-wrap:wrap}
+.y-fig{display:block;width:100%}.y-fig svg{width:100%;height:auto;display:block}
+.yg-ring .yg-ic svg.yg-fig{width:82%;height:auto;transform:none;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35))}
+.yg-steps{margin:6px auto 0;padding-left:22px;max-width:330px;text-align:left;font-size:15px;line-height:1.45;opacity:.9}.yg-steps li{margin-bottom:4px}
+.y-steps{margin:10px 0 12px;padding-left:22px;font-size:15px;line-height:1.5}.y-steps li{margin-bottom:6px}
+.yf-pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 2px}.yf-pair>div{background:#141923;border-radius:12px;padding:4px 4px 6px;text-align:center}.yf-pair svg{width:100%;height:auto;display:block}.yf-pair small{font:700 11px 'Space Mono',monospace;letter-spacing:.06em;color:#8a93a6}
+.yv-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000}.yv-wrap.sh{aspect-ratio:9/16;max-height:62vh;width:auto;margin:0 auto}.yv-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.yg-poses .y-fig{width:64px;height:auto;border-radius:10px;background:#141923}
 .ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
 .pxb{width:1.6em;height:1.6em;image-rendering:pixelated;vertical-align:middle;display:inline-block}
@@ -1909,7 +1918,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b291';
+const BUILD='b293';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -3133,7 +3142,7 @@ function render(){
   if (typeof S!=='undefined' && S && S.money && !S.money.m221 && (typeof _dbSettled==='undefined' || _dbSettled)) setTimeout(()=>{ try { if (!S.money.m221) m221(); } catch(e){} }, 0);
   if (!_nsKick && typeof _dbSettled!=='undefined' && _dbSettled){ _nsKick=true; setTimeout(()=>liveRefresh('open'), 1200); }
   _mVer++;
-  try { const want = view==='gym' ? 'arise' : view==='model' ? 'holo' : view==='datum' ? 'chrome' : view==='money' ? 'lab' : view==='content' ? 'vf' : view==='learn' ? 'study' : (()=>{ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(S&&S.skin)||'crt'; })(); if (document.documentElement.getAttribute('data-skin')!==want) document.documentElement.setAttribute('data-skin', want); if (want==='study') document.documentElement.setAttribute('data-look', S.learnLook||'notebook'); else document.documentElement.removeAttribute('data-look'); } catch(e){}
+  try { const want = view==='gym' ? 'arise' : view==='model' ? 'holo' : view==='datum' ? 'chrome' : view==='money' ? 'lab' : view==='content' ? 'vf' : view==='learn' ? 'study' : (()=>{ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(S&&S.skin)||'crt'; })(); if (document.documentElement.getAttribute('data-skin')!==want) document.documentElement.setAttribute('data-skin', want); if (want==='study') document.documentElement.setAttribute('data-look', S.learnLook||'zine'); else document.documentElement.removeAttribute('data-look'); } catch(e){}
   refreshToday(); releaseEvo(); try { travelTick(); } catch(e){}
   const xp=computeXP(), lvl=levelFor(xp), st=streaks();
   const app=document.getElementById('app');
@@ -3987,16 +3996,54 @@ function drawDone(k){ const L=(S.drawLearn ||= {}); if (L[k]) delete L[k]; else 
 function drawDrill(k){ const st=DRAW_PATH.find(x=>x.k===k); if(!st) return; openArtAdd(); if (artDraft){ artDraft.title='Drill · '+st.n; artDraft.kind=k==='procreate'?'procreate':'paper'; renderArtAdd(); } }
 
 /* ---- b290: Learning — its own page and its own look (a study notebook). Datum craft lessons, the drawing path, and your Learning goals in one place ---- */
-let lrTab='craft';
-const LR_LOOKS=[['notebook','Notebook'],['chalk','Chalkboard'],['library','Library'],['zine','Zine'],['gallery','Gallery']];
-function lrLook(){ const i=LR_LOOKS.findIndex(([k])=>k===(S.learnLook||'notebook')); S.learnLook=LR_LOOKS[(i+1)%LR_LOOKS.length][0]; commit({skipXp:true}); }
+let lrTab='datum';
+const LR_LOOKS=[['zine','Zine'],['notebook','Notebook'],['chalk','Chalkboard'],['library','Library'],['gallery','Gallery']];
+function lrLook(){ const i=LR_LOOKS.findIndex(([k])=>k===(S.learnLook||'zine')); S.learnLook=LR_LOOKS[(i+1)%LR_LOOKS.length][0]; commit({skipXp:true}); }
+/* b292: Learning is a list of subjects you keep adding to. Datum craft and Drawing have their own built-in paths; every other subject
+   (Guitar first) has lessons you add or let Tega suggest, a log of what you got out of each, and links to related pages. Archived, never deleted. */
+const LR_SEED_GTR=[['Tune up and hold the pick','tuning a guitar and holding a pick beginner'],['First chords: D, A and E','justin guitar first chords D A E beginner'],['One-minute chord changes','one minute chord changes guitar exercise'],['Strumming: down-up in time','beginner strumming pattern down up guitar'],['G and C chords','beginner G and C chord guitar lesson'],['Your first 4-chord song','easy 4 chord songs guitar beginner lesson'],['Reading tabs','how to read guitar tabs beginner'],['Power chords','power chords beginner guitar lesson']].map(([t,q],i)=>({id:'g'+i,t,url:'https://www.youtube.com/results?search_query='+encodeURIComponent(q),src:'YouTube search',mins:15}));
+function lrSubs(){ const L=(S.learn ||= {}); if (!L.subjects){ L.subjects=[{id:'datum',name:'Datum craft',icon:'◆',kind:'datum'},{id:'draw',name:'Drawing',icon:'✎',kind:'draw'},{id:'guitar',name:'Guitar',icon:'♪',kind:'custom',link:'guitar',lessons:LR_SEED_GTR,log:[]}]; }
+  return L.subjects; }
+const lrSub=id=>lrSubs().find(x=>x.id===id);
+function lrProg(x){ if (x.kind==='datum'){ const D=ensureDatum(); D.learnDone ||= {}; const n=LEARN_RES.filter(r=>D.learnDone[r.url]).length; return [n,LEARN_RES.length]; }
+  if (x.kind==='draw'){ const L=S.drawLearn||{}; return [DRAW_PATH.filter(z=>L[z.k]).length, DRAW_PATH.length]; }
+  const ls=x.lessons||[]; return [ls.filter(l=>l.done).length, ls.length]; }
+function lrAddSub(ev){ ev.preventDefault(); const f=ev.target, name=f.n.value.trim(); if (!name) return false; const id='s'+uid();
+  lrSubs().push({id, name:name.slice(0,40), icon:(f.ic.value.trim()||'✦').slice(0,2), kind:'custom', lessons:[], log:[], link:/guitar/i.test(name)?'guitar':undefined}); lrTab=id; lrAdding=false; commit({skipXp:true}); return false; }
+let lrAdding=false, lrEdit=false, lrBusy=false;
+function lrArchive(id){ const x=lrSub(id); if (!x) return; x.archived=!x.archived; if (x.archived&&lrTab===id) lrTab=(lrSubs().find(z=>!z.archived)||{}).id||'news'; commit({skipXp:true}); toast(x.archived?`${x.name} archived — bring it back from Edit`:`${x.name} is back`); }
+function lrRename(id,v){ const x=lrSub(id); if (x&&v.trim()){ x.name=v.trim().slice(0,40); commit({skipXp:true}); } }
+function lrAddLesson(ev,id){ ev.preventDefault(); const f=ev.target, t=f.t.value.trim(); if (!t) return false; let u=f.u.value.trim(); if (u&&!/^https?:/i.test(u)) u='https://'+u;
+  (lrSub(id).lessons ||= []).push({id:uid(), t:t.slice(0,90), url:u||'https://www.youtube.com/results?search_query='+encodeURIComponent(t+' '+lrSub(id).name), src:u?'':'YouTube search', mins:+f.m.value||0}); commit({skipXp:true}); return false; }
+function lrDone(id,lid){ const x=lrSub(id), l=(x.lessons||[]).find(z=>z.id===lid); if (!l) return; l.done=l.done?null:TODAY; if (l.done) (x.log ||= []).push({id:uid(), d:TODAY, t:l.t, out:''}); else x.log=(x.log||[]).filter(g=>!(g.t===l.t&&g.d===TODAY&&!g.out)); commit(); if (l.done) toast('Nice — add what you got out of it below'); }
+function lrDelLesson(id,lid){ const x=lrSub(id); x.lessons=(x.lessons||[]).filter(z=>z.id!==lid); commit({skipXp:true}); }
+function lrLogOut(id,gid,v){ const g=(lrSub(id).log||[]).find(z=>z.id===gid); if (g){ g.out=v.trim(); commit({skipXp:true}); } }
+function lrLogAdd(ev,id){ ev.preventDefault(); const f=ev.target; if (!f.t.value.trim()) return false; (lrSub(id).log ||= []).push({id:uid(), d:TODAY, t:f.t.value.trim().slice(0,90), out:f.o.value.trim()}); commit(); return false; }
+async function lrSuggest(id){ const x=lrSub(id); if (lrBusy) return; if (typeof sampleLib==='undefined'||!sampleLib||!sampleLib.json) return toast('Tega can’t suggest right now — add lessons by hand');
+  lrBusy=true; render(); try { const have=(x.lessons||[]).map(l=>l.t), done=(x.log||[]).map(g=>g.t);
+    const r=await sampleLib.json(`The user is learning "${x.name}". Done so far: ${JSON.stringify(done.slice(-15))}. Already on the list: ${JSON.stringify(have)}. Suggest the next 6 lessons in a sensible order, each a concrete 10-30 minute step a beginner-to-intermediate can do. For each give a YouTube search query that will surface a good free lesson. Return JSON only: {"lessons":[{"t":"short title","q":"youtube search query","mins":15}]}`);
+    const o=r&&(r.lessons?r:r.value||r.data||r.result)||{}, L=(o.lessons||[]).filter(l=>l&&l.t&&!have.includes(l.t)).slice(0,8);
+    for (const l of L) (x.lessons ||= []).push({id:uid(), t:String(l.t).slice(0,90), url:'https://www.youtube.com/results?search_query='+encodeURIComponent(l.q||l.t), src:'YouTube search', mins:+l.mins||15});
+    commit({skipXp:true}); toast(L.length?`Added ${L.length} lessons`:'No new lessons came back'); } catch(e){ toast('Couldn’t get suggestions: '+String(e&&e.message||e).slice(0,50)); }
+  lrBusy=false; render(); }
+function lrLinked(x){ if (x.link!=='guitar'||!S.gtr) return ''; const G=S.gtr, wk=weekMonday(THIS_WEEK), mins=(G.log||[]).filter(l=>l.d>=wk).reduce((a,l)=>a+(+l.mins||0),0), lrn=(G.songs||[]).filter(z=>z.status===0);
+  return `<button class="card sec lr-link" onclick="crMode='guitar';ctTab='create';go('content')"><span><b>🎸 Practice</b><small>${mins} min this week${lrn.length?` · learning ${lrn.slice(0,2).map(z=>esc(z.t||z.name||'')).join(', ')}`:''}</small></span><i>›</i></button>`; }
+function lrCustom(x){ const ls=x.lessons||[], todo=ls.filter(l=>!l.done), done=ls.filter(l=>l.done), log=(x.log||[]).slice().reverse();
+  return `${lrLinked(x)}<div class="card sec"><div class="hdr"><h2>Up next</h2><span class="sub">${done.length}/${ls.length} done</span></div>
+    <div class="stack">${todo.map(l=>`<div class="res"><div class="res-ic">▶</div><div style="min-width:0"><a class="res-t" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.t)}</a><div class="sub">${esc(l.src||'')}${l.mins?` · ~${l.mins} min`:''}${lrEdit?` · <button class="linkbtn" onclick="lrDelLesson('${x.id}','${l.id}')">remove</button>`:''}</div></div><button class="btn ghost sm" style="align-self:center" onclick="lrDone('${x.id}','${l.id}')">Done</button></div>`).join('')||'<div class="empty">Nothing queued. Add a lesson or let Tega line some up.</div>'}</div>
+    <button class="btn sm" style="width:100%;justify-content:center;margin-top:10px" onclick="lrSuggest('${x.id}')">${lrBusy?'Thinking…':'✦ Suggest what’s next'}</button>
+    ${infold('lra_'+x.id,'Add a lesson','a video, article, or a song to learn',`<form onsubmit="return lrAddLesson(event,'${x.id}')" class="stack" style="gap:6px"><input class="inp" name="t" placeholder="What to learn (e.g. F barre chord)" required><input class="inp" name="u" placeholder="Link (optional — leave blank to search YouTube)"><div class="row" style="gap:6px;flex-wrap:nowrap"><input class="inp num" name="m" type="number" min="0" placeholder="min" style="width:80px"><button class="btn sm" style="flex:1;justify-content:center">Add</button></div></form>`)}
+    ${done.length?infold('lrd_'+x.id,'Done',`${done.length}`,`<div class="stack" style="gap:6px">${done.map(l=>`<div class="row between" style="flex-wrap:nowrap;gap:8px;font-size:14px"><span style="min-width:0">✓ ${esc(l.t)} <span class="sub">· ${nice(l.done)}</span></span><button class="linkbtn" onclick="lrDone('${x.id}','${l.id}')">undo</button></div>`).join('')}</div>`):''}</div>
+  <div class="card sec lr-log"><div class="hdr"><h2>Log</h2><span class="sub">what each one gave you</span></div>
+    <div class="stack">${log.map(g=>`<div class="check ${g.out?'on':''}" style="cursor:default"><div class="box" style="${g.out?'':'border-color:var(--warn)'}">${g.out?'✓':'!'}</div><div class="txt" style="text-decoration:none;color:var(--fg);min-width:0"><b>${esc(g.t)}</b> <span class="sub">· ${nice(g.d)}</span>${g.out?`<div style="font-size:13px">${esc(g.out)}</div>`:`<input class="inp" style="margin-top:6px;width:100%" placeholder="What can you do now? (e.g. clean D→A change)" onchange="lrLogOut('${x.id}','${g.id}',this.value)">`}</div></div>`).join('')||'<div class="empty">Finish a lesson and it lands here.</div>'}</div>
+    ${infold('lrl_'+x.id,'Log something else','',`<form class="inline" onsubmit="return lrLogAdd(event,'${x.id}')"><input class="inp" name="t" placeholder="what you learned" required><input class="inp" name="o" placeholder="what you can do now"><button class="btn sm">+ Log</button></form>`)}</div>`; }
 // today's news + things to learn come from a daily cloud job (Claude searches the web each morning)
 let lrNews=null, lrNewsAt=0;
 async function lrNewsLoad(force){ if (!dbHandle||!dbHandle.doc) return; if (!force && Date.now()-lrNewsAt<10*60e3) return; lrNewsAt=Date.now();
   try { const sn=await dbHandle.doc('news/latest').get(); const d=sn&&sn.exists?sn.data():null; if (d&&(!lrNews||d.at!==lrNews.at)){ lrNews=d; if (view==='learn') render(); } } catch(e){} }
 function fySeen(t,v){ const N=(S.newsSeen ||= {learn:[]}); N.learn=(N.learn||[]).filter(x=>x.t!==t); N.learn.push({t, v, d:TODAY}); N.learn=N.learn.slice(-80); }
 function fyAct(i,v){ const x=(lrNews?.learn||[])[i]; if (!x) return; fySeen(x.t,v);
-  if (v==='did'){ const D=ensureDatum(); D.learning.push({id:uid(), d:TODAY, skill:x.t, resource:x.first||'', output:''}); commit(); toast('Logged — add what it produced in the log'); return; }
+  if (v==='sub'){ const id='s'+uid(); lrSubs().push({id, name:String(x.t).slice(0,40), icon:'✦', kind:'custom', lessons:x.first?[{id:uid(), t:String(x.first).slice(0,90), url:x.url||'https://www.youtube.com/results?search_query='+encodeURIComponent(x.t), src:'', mins:+x.mins||0}]:[], log:[]}); lrTab=id; commit({skipXp:true}); toast('Added as a subject'); return; }
   commit({skipXp:true}); if (v==='no') toast('Got it — fewer like that'); }
 function lrNewsHtml(){ const N=lrNews; if (!N) return `<div class="card sec"><div class="empty">${dbHandle&&dbHandle.doc?'Today’s news arrives each morning around 6. Pull down to check again.':'News shows in the iPhone app.'}</div></div>`;
   const item=x=>`<a class="nw-i" href="${esc(x.url)}" target="_blank" rel="noopener">${x.tag?`<span class="nw-tag">${esc(x.tag)}</span>`:''}<b>${esc(x.h)}</b><p>${esc(x.sum||'')}</p>${x.why?`<span class="nw-why">→ ${esc(x.why)}</span>`:''}<small>${esc(x.src||'')}</small></a>`;
@@ -4004,20 +4051,26 @@ function lrNewsHtml(){ const N=lrNews; if (!N) return `<div class="card sec"><di
     ${(N.yours||[]).length?`<div class="card sec"><div class="hdr"><h2>Your world</h2></div>${N.yours.map(item).join('')}</div>`:''}`; }
 function lrForYouHtml(){ const L=(lrNews?.learn||[]), seen=new Set(((S.newsSeen||{}).learn||[]).map(x=>x.t)), open=L.map((x,i)=>[x,i]).filter(([x])=>!seen.has(x.t));
   if (!lrNews) return lrNewsHtml();
-  return `<div class="card sec"><div class="hdr"><h2>Worth learning</h2><span class="sub">picked from your goals</span></div>${open.length?open.map(([x,i])=>`<div class="fy-i"><b>${esc(x.t)}</b><p>${esc(x.why||'')}</p>${x.first?`<div class="sub" style="font-size:13px;margin-bottom:8px">Start: ${x.url?`<a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">${esc(x.first)}</a>`:esc(x.first)}${x.mins?` · ~${x.mins} min`:''}</div>`:''}<div class="row"><button class="btn sm" onclick="fyAct(${i},'did')">Learned it</button><button class="btn ghost sm" onclick="fyAct(${i},'later')">Not now</button><button class="btn ghost sm" onclick="fyAct(${i},'no')">Not for me</button></div></div>`).join(''):'<div class="empty">You’ve gone through today’s picks. New ones come tomorrow morning.</div>'}</div>`; }
-function vLearning(){ lrNewsLoad(); const D=ensureDatum(); D.learnDone ||= {}; const L=S.drawLearn||{}, mo=TODAY.slice(0,7);
-  const dDone=LEARN_RES.filter(r=>D.learnDone[r.url]).length, gDone=DRAW_PATH.filter(x=>L[x.k]).length;
-  const month=(D.learning||[]).filter(l=>(l.d||'').startsWith(mo)).length+Object.values(L).filter(d=>String(d).startsWith(mo)).length;
+  return `<div class="card sec"><div class="hdr"><h2>Worth learning</h2><span class="sub">picked from your goals</span></div>${open.length?open.map(([x,i])=>`<div class="fy-i"><b>${esc(x.t)}</b><p>${esc(x.why||'')}</p>${x.first?`<div class="sub" style="font-size:13px;margin-bottom:8px">Start: ${x.url?`<a href="${esc(x.url)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">${esc(x.first)}</a>`:esc(x.first)}${x.mins?` · ~${x.mins} min`:''}</div>`:''}<div class="row"><button class="btn sm" onclick="fyAct(${i},'sub')">＋ Start learning it</button><button class="btn ghost sm" onclick="fyAct(${i},'later')">Not now</button><button class="btn ghost sm" onclick="fyAct(${i},'no')">Not for me</button></div></div>`).join(''):'<div class="empty">You’ve gone through today’s picks. New ones come tomorrow morning.</div>'}</div>`; }
+function vLearning(){ lrNewsLoad(); const SUB=lrSubs(), live=SUB.filter(x=>!x.archived), arch=SUB.filter(x=>x.archived), mo=TODAY.slice(0,7), D=ensureDatum(), L=S.drawLearn||{};
+  if (lrTab==='craft') lrTab='datum'; if (!['goals','news','foryou'].includes(lrTab) && !live.some(x=>x.id===lrTab)) lrTab=(live[0]||{}).id||'news';
+  const month=(D.learning||[]).filter(l=>(l.d||'').startsWith(mo)).length+Object.values(L).filter(d=>String(d).startsWith(mo)).length+SUB.reduce((a,x)=>a+(x.log||[]).filter(g=>(g.d||'').startsWith(mo)).length,0);
   const objs=(S.quarters?.[THIS_Q]?.objectives||[]).filter(o=>o.track==='learning'), op=objs.length?Math.round(objs.reduce((a,o)=>a+objPct(o),0)/objs.length*100):null;
-  const owed=(D.learning||[]).filter(l=>!l.output).length, seen=new Set(((S.newsSeen||{}).learn||[]).map(x=>x.t)), fyN=(lrNews?.learn||[]).filter(x=>!seen.has(x.t)).length, nwN=(lrNews?.top||[]).length+(lrNews?.yours||[]).length;
-  const tiles=[['craft','◆','Datum craft',`${dDone}<small>/${LEARN_RES.length}</small>`,dDone/LEARN_RES.length,''],['draw','✎','Drawing',`${gDone}<small>/${DRAW_PATH.length}</small>`,gDone/DRAW_PATH.length,''],['goals','★','Goals',op==null?'—':`${op}<small>%</small>`,(op||0)/100,''],
-    ['news','◉','News today',lrNews?`${nwN}<small> stories</small>`:'—',null,'w'],['foryou','✦','For you',lrNews?`${fyN}<small> new</small>`:'—',null,'w']];
-  const look=(LR_LOOKS.find(([k])=>k===(S.learnLook||'notebook'))||LR_LOOKS[0])[1];
+  const owed=(D.learning||[]).filter(l=>!l.output).length+SUB.reduce((a,x)=>a+(x.log||[]).filter(g=>!g.out).length,0), seen=new Set(((S.newsSeen||{}).learn||[]).map(x=>x.t)), fyN=(lrNews?.learn||[]).filter(x=>!seen.has(x.t)).length, nwN=(lrNews?.top||[]).length+(lrNews?.yours||[]).length;
+  const look=(LR_LOOKS.find(([k])=>k===(S.learnLook||'zine'))||LR_LOOKS[0])[1];
+  const tile=(k,ic,l,v,f,w)=>`<button role="tab" aria-selected="${lrTab===k}" class="${lrTab===k?'on':''} ${w||''}" onclick="lrTab='${k}';render()"><i>${esc(ic)}</i><b class="num">${v}</b><span>${esc(l)}</span>${f==null?'':`<em><u style="width:${Math.round(Math.min(1,f)*100)}%"></u></em>`}</button>`;
+  const subT=live.map(x=>{ const [n,t]=lrProg(x); return tile(x.id,x.icon||'✦',x.name,`${n}<small>/${t}</small>`,t?n/t:0); }).join('');
   const goals=`<div class="card sec"><div class="hdr"><h2>Learning goals · ${THIS_Q}</h2><button class="btn ghost sm" onclick="curQ=THIS_Q;qAdd=true;qAddTrack='learning';go('quarter')">＋ Goal</button></div>${objs.length?objs.map(o=>`<button class="hz-o" onclick="curQ='${THIS_Q}';qOpen='${o.id}';go('quarter')"><span><b>${esc(o.title)}</b><small>${(o.krs||[]).map(k=>`${esc(k.text)} ${k.target===1?(krHit(k)?'✓':'—'):`${k.current||0}/${k.target}`}`).join(' · ')}</small></span><em class="num">${Math.round(objPct(o)*100)}%</em></button>`).join(''):'<div class="empty">No Learning goals this quarter. Add one and every lesson you finish moves it.</div>'}</div>`;
+  const cur=live.find(x=>x.id===lrTab);
+  const body=lrTab==='goals'?goals:lrTab==='news'?lrNewsHtml():lrTab==='foryou'?lrForYouHtml():!cur?'':cur.kind==='datum'?dLearn():cur.kind==='draw'?vLearn():lrCustom(cur);
+  const edit=lrEdit?`<div class="lr-edit">${SUB.map(x=>`<div class="row" style="gap:6px;flex-wrap:nowrap"><span style="width:22px;text-align:center">${esc(x.icon||'✦')}</span><input class="inp" style="flex:1;min-width:0" value="${esc(x.name)}" onchange="lrRename('${x.id}',this.value)"><button class="btn ghost sm" onclick="lrArchive('${x.id}')">${x.archived?'Restore':'Archive'}</button></div>`).join('')}</div>`:'';
   return `<div class="card sec lr-hero"><div class="lr-top"><div class="lr-k">Learning · ${new Date(TODAY+'T12:00').toLocaleDateString('en-US',{month:'long'})}</div><button class="lr-look" onclick="lrLook()" aria-label="Change the look">Look: ${look} ↻</button></div><h2 class="lr-h">${month?`${month} thing${month===1?'':'s'} learned this month`:'Nothing logged this month yet'}</h2>
-    <div class="lr-tiles" role="tablist">${tiles.map(([k,ic,l,v,f,w])=>`<button role="tab" aria-selected="${lrTab===k}" class="${lrTab===k?'on':''} ${w}" onclick="lrTab='${k}';render()"><i>${ic}</i><b class="num">${v}</b><span>${l}</span>${f==null?'':`<em><u style="width:${Math.round(Math.min(1,f)*100)}%"></u></em>`}</button>`).join('')}</div>
-    ${owed?`<button class="lr-owe" onclick="lrTab='craft';render();setTimeout(()=>document.querySelector('.lr-log')?.scrollIntoView({behavior:'smooth'}),60)">✍️ ${owed} lesson${owed===1?'':'s'} still need what you made from ${owed===1?'it':'them'}</button>`:''}</div>
-  ${lrTab==='draw'?vLearn():lrTab==='goals'?goals:lrTab==='news'?lrNewsHtml():lrTab==='foryou'?lrForYouHtml():dLearn()}`; }
+    <div class="lr-tiles lr-subs" role="tablist">${subT}</div>
+    ${''}${lrAdding?`<form class="row lr-new" onsubmit="return lrAddSub(event)"><input class="inp" name="ic" placeholder="🎹" style="width:48px;text-align:center;padding-left:4px;padding-right:4px"><input class="inp" name="n" placeholder="What are you learning? (e.g. Spanish)" style="flex:1;min-width:0" required><button class="btn sm">Add</button></form>`:''}
+    <div class="lr-tiles lr-more" role="tablist">${[['goals','★','Goals',op==null?'':op+'%'],['news','◉','News',lrNews?nwN:''],['foryou','✦','For you',lrNews&&fyN?fyN:'']].map(([k,ic,l,n])=>`<button role="tab" aria-selected="${lrTab===k}" class="${lrTab===k?'on':''}" onclick="lrTab='${k}';render()"><i>${ic}</i><span style="color:var(--lr-ink);font-weight:600">${l}</span>${n!==''?`<small class="num lr-n">${n}</small>`:''}</button>`).join('')}</div>
+    ${owed?`<div class="lr-owe">✍️ ${owed} lesson${owed===1?'':'s'} still need what you got out of ${owed===1?'it':'them'} — see each subject’s log</div>`:''}
+    <div class="row" style="gap:14px;margin-top:8px"><button class="linkbtn" style="font-size:12px" onclick="lrAdding=!lrAdding;render()">${lrAdding?'Cancel':'＋ Subject'}</button><button class="linkbtn" style="font-size:12px" onclick="lrEdit=!lrEdit;render()">${lrEdit?'Done editing':`Edit subjects${arch.length?` · ${arch.length} archived`:''}`}</button></div>${edit}</div>
+  ${body}`; }
 function vLearn(){ const L=S.drawLearn||{}, done=DRAW_PATH.filter(x=>L[x.k]).length, cur=DRAW_PATH.find(x=>!L[x.k]), tip=DRAW_TIPS[dayHash(TODAY)%DRAW_TIPS.length];
   const drills=k=>(S.art||[]).filter(a=>(a.title||'').startsWith('Drill · '+DRAW_PATH.find(x=>x.k===k).n)).length;
   return `<div class="card sec"><div class="hdr"><h2>Learn to draw</h2><span class="sub">${done} of ${DRAW_PATH.length} stages</span></div>${bar(done/DRAW_PATH.length,'#ff8fc7')}
@@ -7241,8 +7294,179 @@ function vGym(){ const g=G_();
   return seg + (gTab==='recovery'?gRecoveryView():gTab==='log'?gLogView():gTab==='results'?gResultsView():gTab==='plan'?gSetupView():gWorkoutView()); }
 const GXIMG=new Set(["abductor", "arnold", "band_apart", "band_curl", "band_row", "bb_bench", "bb_curl", "bb_row", "bench_dip", "bicycle", "bike", "bridge", "bulgarian", "bw_squat", "c_lat_raise", "cable_crunch", "cable_curl", "cable_fly", "cable_row", "calf_bw", "calf_db", "calf_m", "cg_bench", "chinup", "cs_row", "db_bench", "db_curl", "db_fly", "db_rdl", "db_row", "db_sp", "db_thrust", "dead_bug", "deadlift", "diamond", "dips", "face_pull", "goblet", "hammer", "hip_thrust", "hlr", "incl_bb", "incl_curl", "incl_db", "inv_row", "kb_swing", "kickback", "lat_raise", "leg_curl", "leg_ext", "leg_press", "lunge", "m_chest", "m_sp", "oh_ext", "ohp", "pec_deck", "pike_pu", "plank", "pulldown", "pullup", "pushdown", "pushup", "rdl", "rear_fly", "rope", "russian", "sa_pulldown", "side_plank", "skull", "sl_rdl", "squat", "st_abs", "st_chest", "st_glute", "st_ham", "st_lat", "st_quad", "st_shoulder", "st_tri", "stairs", "step_up", "treadmill", "st_bicep", "st_calf", "st_child", "st_hipflex", "st_neck", "st_pigeon", "wu_armcirc", "wu_bandpa", "wu_bwsquat", "wu_catcow", "wu_glutebr", "wu_inchworm", "wu_jacks", "wu_legswing", "wu_scappu", "wu_tspine", "wu_wgs", "wu_wristcirc"]);
 // yoga pose photos live at ex/y_<id>_0.webp (free-exercise-db + hand-drawn)
-const YIMG=new Set(["babyhappy","butterfly","catcow","chestopen","child","dog","figure4","fold","halfsplit","legsup","lowlunge","pigeon","savasana","sphinx","thread","twist"]);
-function yImg(id,f){ return YIMG.has(id)?`<img class="y-ph" src="ex/y_${id}_${f||0}.webp" alt="" loading="lazy" decoding="async" onerror="this.remove()">`:""; }
+// b292: stretch figures — a mannequin built from joint angles so proportions are always right.
+// Angles in degrees: 0 = toward the face side (right), 90 = down, -90 = up, 180 = back (left).
+// Each pose: a = how you get set, b = the hold. view: 'side' (default) | 'front' | 'top' (lying, seen from above).
+const YFL={T:46,NK:9,HR:11,UA:24,FA:22,TH:36,SH:34,FT:10};
+const YFRAD=a=>a*Math.PI/180, yfp=(p,a,l)=>[p[0]+Math.cos(YFRAD(a))*l, p[1]+Math.sin(YFRAD(a))*l];
+function yfJoints(f){ const L=YFL, hp=[0,0], t=f.t??-90, sh=yfp(hp,t,L.T), hd=yfp(sh,t+(f.h||0),L.NK+L.HR);
+  const arm=(a)=>{ a=a||[90,90]; const e=yfp(sh,a[0],L.UA); return [e, yfp(e,a[1],L.FA)]; };
+  const leg=(l,ft)=>{ l=l||[90,90]; const k=yfp(hp,l[0],L.TH), an=l[1]==='x'?k:yfp(k,l[1],L.SH); if (l[1]==='x') return [k,an,k]; return [k, an, yfp(an, ft??(l[1]-90), L.FT)]; };
+  const [eN,wN]=arm(f.aN), [eF,wF]=arm(f.aF||f.aN), [kN,aN,tN]=leg(f.lN,f.fN), [kF,aF,tF]=leg(f.lF||f.lN,f.fF??f.fN);
+  // in front view the two sides mirror around the body line unless given separately
+  return {hp,sh,hd,eN,wN,eF,wF,kN,aN,tN,kF,aF,tF}; }
+function yfPlace(J,view,props){ const pts=Object.values(J), ground=view==='top'?null:150; let dx, dy;
+  const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]); const minx=Math.min(...xs), maxx=Math.max(...xs), maxy=Math.max(...ys), miny=Math.min(...ys);
+  dx=120-(minx+maxx)/2; dy=ground==null?(80-(miny+maxy)/2):(ground-5-Math.max(maxy, J.hd[1]+YFL.HR-5));
+  const sc=view==='top'?.8:1, cx=(minx+maxx)/2, cy=(miny+maxy)/2; const o={}; for (const k in J) o[k]=view==='top'?[120+(J[k][0]-cx)*sc, 79+(J[k][1]-cy)*sc]:[J[k][0]+dx, J[k][1]+dy]; return o; }
+function yfDraw(P,o){ o=o||{}; const view=o.view||'side', hot=o.hot||[], C={near:'#ffd6b3',far:o.flat?'#ffd6b3':'#a5826a',torso:'#5ec8ff',skin:'#f2c9a6',hot:'#ff5d7a'};
+  const L=(a,b,w,c,op)=>`<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"${op?` opacity="${op}"`:''}/>`;
+  const H=(k,c)=>hot.includes(k)?C.hot:c, far=view==='side'&&!o.flat;
+  let s='';
+  s+=L(P.hp,P.kF,12,H('legF',C.far))+L(P.kF,P.aF,10,H('shinF',C.far))+L(P.aF,P.tF,7,C.far);
+  s+=L(P.sh,P.eF,10,H('armF',C.far))+L(P.eF,P.wF,8,H('foreF',C.far));
+  const mid=[(P.sh[0]+P.hp[0])/2,(P.sh[1]+P.hp[1])/2], bend=o.bend||0, dx=P.sh[0]-P.hp[0], dy=P.sh[1]-P.hp[1], len=Math.hypot(dx,dy)||1, cp=[mid[0]+(-dy/len)*bend, mid[1]+(dx/len)*bend];
+  s+=`<path d="M${P.hp[0].toFixed(1)} ${P.hp[1].toFixed(1)} Q${cp[0].toFixed(1)} ${cp[1].toFixed(1)} ${P.sh[0].toFixed(1)} ${P.sh[1].toFixed(1)}" stroke="${H('torso',C.torso)}" stroke-width="21" stroke-linecap="round" fill="none"/>`;
+  s+=L(P.sh,P.hd,8,H('neck',C.skin))+`<circle cx="${P.hd[0].toFixed(1)}" cy="${P.hd[1].toFixed(1)}" r="${YFL.HR}" fill="${C.skin}"/>`;
+  s+=L(P.hp,P.kN,13,H('legN',C.near))+L(P.kN,P.aN,11,H('shinN',C.near))+L(P.aN,P.tN,8,C.near);
+  s+=L(P.sh,P.eN,11,H('armN',C.near))+L(P.eN,P.wN,9,H('foreN',C.near));
+  return s; }
+function yfProps(props,P){ let s=''; for (const pr of props||[]){
+    if (pr==='wall') s+=`<rect x="${(Math.max(P.tN[0],P.tF[0],P.wN[0],P.wF[0])+4).toFixed(0)}" y="0" width="60" height="150" fill="#2a3242"/>`;
+    if (pr==='wallL') s+=`<rect x="${(Math.min(P.tN[0],P.tF[0],P.wN[0],P.wF[0])-64).toFixed(0)}" y="0" width="60" height="150" fill="#2a3242"/>`;
+    if (pr==='strap') s+=`<line x1="${P.wN[0].toFixed(1)}" y1="${P.wN[1].toFixed(1)}" x2="${P.tN[0].toFixed(1)}" y2="${P.tN[1].toFixed(1)}" stroke="#ffcf5a" stroke-width="3" stroke-dasharray="5 3"/>`;
+  } return s; }
+function yfSVG(pose, fr, cls){ const F=pose[fr], view=pose.view||'side', J=yfPlace(yfJoints(F),view);
+  const bg=view==='top'?`<rect x="26" y="22" width="188" height="114" rx="12" fill="#1d2431"/><rect x="30" y="59" width="16" height="40" rx="6" fill="#273043"/>`:`<line x1="0" y1="150" x2="240" y2="150" stroke="#2a3242" stroke-width="2"/>`;
+  return `<svg viewBox="20 -14 200 172" class="${cls||'yf'}" role="img" aria-label="${fr==='a'?'Get set':'Hold'}">${bg}${yfProps(F.props||pose.props,J)}${view==='top'?'<g transform="rotate(-90 120 79)">':''}${yfDraw(J,{view,hot:fr==='b'?(pose.hot||[]):[],bend:F.bend,flat:view!=='side'})}${view==='top'?'</g>':''}</svg>`; }
+// moving version: eases from set-up to hold and back, so you see the motion
+function yfAnim(pose, cls){ const view=pose.view||'side', A=yfPlace(yfJoints(pose.a),view), B=yfPlace(yfJoints(pose.b),view), id='yf'+Math.random().toString(36).slice(2,8);
+  return `<svg viewBox="20 -14 200 172" class="${cls||'yf'}" id="${id}" data-yf="${encodeURIComponent(JSON.stringify({A,B,view,hot:pose.hot||[],ba:pose.a.bend||0,bb:pose.b.bend||0,props:pose.b.props||pose.props||[]}))}"></svg>`; }
+let yfRaf=null;
+function yfTick(){ const els=document.querySelectorAll('svg[data-yf]'); if (!els.length){ yfRaf=null; return; }
+  const t=(performance.now()/1000)%5, k=t<1.2?0:t<2.4?(t-1.2)/1.2:t<4.4?1:1-(t-4.4)/0.6, e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+  for (const el of els){ let D=el._yf; if (!D){ D=el._yf=JSON.parse(decodeURIComponent(el.dataset.yf)); }
+    const P={}; for (const j in D.A) P[j]=[D.A[j][0]+(D.B[j][0]-D.A[j][0])*e, D.A[j][1]+(D.B[j][1]-D.A[j][1])*e];
+    const bg=D.view==='top'?`<rect x="26" y="22" width="188" height="114" rx="12" fill="#1d2431"/><rect x="30" y="59" width="16" height="40" rx="6" fill="#273043"/>`:`<line x1="0" y1="150" x2="240" y2="150" stroke="#2a3242" stroke-width="2"/>`;
+    const fig=yfDraw(P,{view:D.view,hot:e>.6?D.hot:[],bend:D.ba+(D.bb-D.ba)*e,flat:D.view!=='side'}); el.innerHTML=bg+yfProps(D.props,P)+(D.view==='top'?`<g transform="rotate(-90 120 79)">${fig}</g>`:fig); }
+  yfRaf=requestAnimationFrame(yfTick); }
+function yfStart(){ if (!yfRaf) yfRaf=requestAnimationFrame(yfTick); }
+// two-bone reach: limb from its root toward a target point (relative to the root), elbow/knee bending forward (+1) or back (-1)
+function yfIK(root,tgt,a,b,bend){ const dx=tgt[0],dy=tgt[1]; let d=Math.hypot(dx,dy); d=Math.min(d,a+b-0.01); const th=Math.atan2(dy,dx)*180/Math.PI, al=Math.acos(Math.max(-1,Math.min(1,(a*a+d*d-b*b)/(2*a*d))))*180/Math.PI;
+  const j=yfp(root,th-al*(bend||1),a), end=[root[0]+dx*(d/Math.hypot(dx,dy)||1), root[1]+dy*(d/Math.hypot(dx,dy)||1)]; return [j,end]; }
+const _yfJ=yfJoints;
+yfJoints=function(f){ const J=_yfJ(f), L=YFL;
+  const leg=(spec,ft,kk,ak,tk)=>{ if (!spec||!spec.ik) return; const [k,an]=yfIK(J.hp,spec.ik,L.TH,L.SH,spec.b??1); J[kk]=k; J[ak]=an; const sa=Math.atan2(an[1]-k[1],an[0]-k[0])*180/Math.PI; J[tk]=yfp(an, ft??(spec.ft??(sa-90)), L.FT); };
+  const arm=(spec,ek,wk)=>{ if (!spec||!spec.ik) return; const [e,w]=yfIK(J.sh,spec.ik,L.UA,L.FA,spec.b??-1); J[ek]=e; J[wk]=w; };
+  leg(f.lN,f.fN,'kN','aN','tN'); leg(f.lF||f.lN,f.fF??f.fN,'kF','aF','tF'); arm(f.aN,'eN','wN'); arm(f.aF||f.aN,'eF','wF'); return J; };
+
+// b292: how to get into each pose (a → b), what to look for, in three plain steps. Facing right; see yfig.js for the angle rules.
+const YB={
+  stand:{t:-90,lN:[90,90],lF:[90,90],aN:[90,90]},
+  kneel:{t:-90,lN:[90,180],fN:180,aN:[90,90]},
+  heels:{t:-90,lN:{ik:[34,12],b:1},fN:180,aN:[95,95]},
+  all4:{t:-12,aN:[90,90],lN:[90,180],fN:180},
+  back:{t:180,lN:[0,0],fN:-90,aN:[0,0]},
+  backknees:{t:180,lN:{ik:[46,0],ft:0},aN:[0,0]},
+  belly:{t:0,lN:[180,180],fN:180,aN:[180,180]},
+  sit:{t:-90,lN:[0,0],fN:-90,aN:[90,90]},
+};
+const yx=(base,o)=>Object.assign(JSON.parse(JSON.stringify(YB[base])),o||{});
+const YPOSE={
+ child:{hot:['torso','armN'],steps:['Kneel, big toes touching, knees wide.','Sit your hips back onto your heels.','Walk your hands forward and rest your forehead down.'],
+  a:{t:-90,lN:[15,180],fN:180,aN:[95,95]}, b:{t:20,h:-40,lN:[15,180],fN:180,aN:[6,2]}},
+ catcow:{hot:['torso'],steps:['Hands under shoulders, knees under hips.','Breathe in: belly drops, chest and eyes lift (cow).','Breathe out: round your back up, chin to chest (cat).'],
+  a:yx('all4',{h:-40,bend:9}), b:yx('all4',{h:55,bend:-12})},
+ thread:{hot:['armF','torso'],steps:['Start on hands and knees.','Slide one arm under your chest, palm up, toward the other side.','Lower that shoulder and cheek to the floor. Other hand stays planted.'],
+  a:yx('all4'), b:{t:25,h:0,lN:[90,180],fN:180,aN:{ik:[4,16.6]},aF:{ik:[-40,16]}}},
+ dog:{hot:['legN','shinN','torso'],steps:['Start on hands and knees, tuck your toes.','Lift your hips up and back into an upside-down V.','Press the floor away, heels reach down, head hangs.'],
+  a:yx('all4',{fN:-30}), b:{t:52,h:0,aN:[52,52],lN:{ik:[-36,62]},fN:0}},
+ lowlunge:{hot:['legF'],steps:['Step one foot forward between your hands, back knee down.','Front knee stacked over the ankle, back foot flat.','Ease your hips forward and lift your chest. Arms up if it feels good.'],
+  a:{t:-82,lN:{ik:[36,35.5],b:1},lF:[100,180],fF:180,aN:{ik:[34,26]}}, b:{t:-92,lN:{ik:[44,33],b:1},lF:[118,180],fF:180,aN:[-95,-95]}},
+ halfsplit:{hot:['legN','shinN'],steps:['From the low lunge, shift your hips back over the back knee.','Straighten the front leg, toes pointing up.','Fold your chest toward the front leg with a long back.'],
+  a:{t:-82,lN:{ik:[36,35.5],b:1},lF:[100,180],fF:180,aN:{ik:[34,26]}}, b:{t:-22,h:10,lN:[31,31],fN:-60,lF:[95,180],fF:180,aN:{ik:[22,40]}}},
+ pigeon:{hot:['legN'],steps:['From hands and knees, bring one knee forward behind that wrist.','Slide the other leg straight back, top of the foot down.','Square your hips, then walk your hands forward and fold down.'],
+  a:{t:-60,lN:[30,180],fN:180,lF:[165,180],fF:180,aN:{ik:[20,40]}}, b:{t:14,h:-30,lN:[22,180],fN:180,lF:[172,180],fF:180,aN:[8,3]}},
+ fold:{hot:['legN','shinN','torso'],steps:['Sit with legs long, feet flexed.','Sit tall, then hinge forward from the hips.','Reach for shins or feet and let your back round at the end.'],
+  a:yx('sit',{aN:[60,30]}), b:{t:-12,h:30,lN:[0,0],fN:-90,aN:[10,8],bend:-8}},
+ butterfly:{view:'front',hot:['legN','legF'],steps:['Sit, bring the soles of your feet together.','Let your knees fall out to the sides.','Hold your feet and fold forward gently.'],
+  a:{t:-90,lN:[-5,150],lF:[185,30],fN:90,fF:90,aN:{ik:[8,50]},aF:{ik:[-8,50]}}, b:{t:-90,h:35,lN:[12,165],lF:[168,15],fN:90,fF:90,aN:{ik:[6,48]},aF:{ik:[-6,48]}}},
+ sphinx:{hot:['torso'],steps:['Lie on your belly.','Set elbows under shoulders, forearms flat.','Lift your chest, shoulders away from your ears. Hips stay down.'],
+  a:yx('belly',{aN:[180,180]}), b:{t:-20,h:-10,lN:[180,180],fN:180,aN:[90,0]}},
+ chestopen:{view:'top',hot:['armN'],steps:['Lie on your belly, one arm straight out to the side at shoulder height.','Push the floor with the other hand and roll onto the outstretched arm’s shoulder.','Bend the top knee and step that foot behind you for balance.'],
+  a:{t:-90,lN:[90,90],lF:[90,90],aN:[0,0],aF:[180,180]}, b:{t:-90,h:-25,lN:[90,90],lF:[150,60],aN:[0,0],aF:[120,30]}},
+ twist:{view:'top',hot:['torso','legN'],steps:['Lie on your back, arms out wide.','Hug one knee in, then let it drop across your body to the floor.','Turn your head the other way. Both shoulders stay down.'],
+  a:{t:-90,lN:[90,90],lF:[90,90],aN:[0,0],aF:[180,180]}, b:{t:-90,h:20,lN:[160,95],lF:[90,90],aN:[0,0],aF:[180,180]}},
+ babyhappy:{hot:['legN','legF'],steps:['Lie on your back and hug your knees in.','Grab the outside of your feet, soles to the ceiling.','Pull the knees toward your armpits and rock side to side.'],
+  a:yx('back',{lN:[-45,45],fN:-45,aN:[-20,10]}), b:{t:180,lN:[-115,-90],fN:0,aN:{ik:[44,-46],b:1}}},
+ figure4:{hot:['legN'],steps:['Lie on your back, knees bent, feet flat.','Cross one ankle over the other knee.','Hold behind the bottom thigh and pull it toward your chest.'],
+  a:yx('backknees'), b:{t:180,lF:[-100,0],fF:-90,lN:{ik:[-6,-38],b:-1},fN:-90,aN:{ik:[43,-18],b:1}}},
+ legsup:{hot:['legN','shinN'],props:['wall'],steps:['Sit sideways next to a wall.','Swing your legs up the wall as you lie back.','Arms out, palms up, eyes closed.'],
+  a:{t:180,lN:{ik:[46,0],ft:0},aN:[160,170]}, b:{t:180,lN:[-90,-90],fN:0,aN:[200,190]}},
+ savasana:{steps:['Lie flat on your back.','Feet fall open, arms slightly away, palms up.','Breathe in for 4, out for 6. Nothing to do.'],
+  a:yx('back',{aN:[10,10]}), b:yx('back',{aN:[15,15]})},
+ puppy:{hot:['armN','torso'],steps:['Start on hands and knees.','Walk your hands forward; hips stay right over the knees.','Melt your chest toward the floor, forehead down.'],
+  a:yx('all4'), b:{t:30,h:-20,lN:[90,180],fN:180,aN:[5,0],bend:6}},
+ eagle:{hot:['armN','armF'],steps:['Sit or stand tall.','Cross one elbow under the other and wrap the forearms, palms together if you can.','Lift the elbows to shoulder height and push them forward. Breathe into your upper back.'],
+  a:{t:-90,lN:[90,90],lF:[90,90],aN:[90,90]}, b:{t:-90,h:10,lN:[90,90],lF:[90,90],aN:[5,-95],aF:[10,-90]}},
+ cowface:{hot:['armN','armF'],steps:['Sit or stand tall.','Reach one arm up, then bend it so the hand drops behind your neck.','Bring the other hand up your back from below. Grab a shirt if they don’t meet.'],
+  a:{t:-90,lN:[90,90],lF:[90,90],aN:[-90,-90],aF:[90,90]}, b:{t:-90,lN:[90,90],lF:[90,90],aN:[-100,95],aF:[100,-80]}},
+ neckside:{view:'front',hot:['neck'],steps:['Sit tall, shoulders relaxed.','Tip one ear toward that shoulder; rest the same hand on your head.','Let the other shoulder drop. No pulling — just the weight of your hand.'],
+  a:{t:-90,lN:[80,95],lF:[100,85],aN:[80,95],aF:[100,85]}, b:{t:-90,h:-35,lN:[80,95],lF:[100,85],aN:[80,95],aF:[-130,-20]}},
+ doorway:{hot:['armN'],props:['wall'],steps:['Stand next to a wall or doorframe.','Put your forearm on it, elbow at shoulder height.','Step through and turn your chest away until it opens.'],
+  a:{t:-90,lN:[90,90],lF:[90,90],aN:[0,-90],aF:[90,90]}, b:{t:-88,lN:[80,95],lF:[105,85],aN:[0,-90],aF:[95,90]}},
+ gate:{view:'front',hot:['torso'],steps:['Kneel tall.','Stretch one leg straight out to the side, foot flat.','Reach the opposite arm up and over toward that leg.'],
+  a:{t:-90,lN:[31,31],fN:0,lF:[90,'x'],aN:[60,60],aF:[120,120]}, b:{t:-62,h:20,lN:[31,31],fN:0,lF:[90,'x'],aN:[45,60],aF:[-40,-10],bend:-10}},
+ lizard:{hot:['legF','legN'],steps:['From a low lunge, step the front foot to the outside of your hand.','Lower the back knee down.','Sink your hips; drop to your forearms if you can.'],
+  a:{t:-82,lN:{ik:[36,35.5],b:1},lF:[100,180],fF:180,aN:{ik:[34,26]}}, b:{t:14,h:-10,lN:{ik:[44,35.5],b:1},lF:[100,180],fF:180,aN:[90,0]}},
+ frog:{hot:['legN','legF'],steps:['Start on hands and knees.','Slide the knees wide, ankles in line with the knees, feet flexed.','Lower to your forearms and ease your hips back slowly.'],
+  a:yx('all4'), b:{t:6,lN:[90,180],fN:180,aN:[100,0]}},
+ squat:{view:'front',hot:['legN','legF'],steps:['Feet wider than your hips, toes turned out.','Sink as low as you can, heels down.','Palms together, elbows press the knees open, chest tall.'],
+  a:{t:-90,lN:[60,110],lF:[120,70],aN:[100,80],aF:[80,100]}, b:{t:-90,lN:[-15,80],lF:[195,100],fN:20,fF:160,aN:[60,-60],aF:[120,-120]}},
+ quadside:{hot:['legN'],steps:['Lie on your side, head on your arm.','Bend the top knee and hold that ankle.','Keep the knees together and push the hip forward.'],
+  a:{t:180,lN:[0,0],fN:-90,lF:[10,0],aN:[200,220]}, b:{t:180,lN:[10,180],fN:180,lF:[10,0],aN:{ik:[40,8],b:1}}},
+ pyramid:{hot:['legN','shinN'],steps:['Step one foot back about a leg’s length, back toes angled out.','Both legs straight, hips facing forward.','Fold over the front leg with a long back, hands on shins or blocks.'],
+  a:{t:-90,lN:[75,90],lF:[110,105],fN:0,aN:[90,90]}, b:{t:-15,h:15,lN:[75,90],lF:[110,105],fN:0,aN:{ik:[10,60]}}},
+ widefold:{hot:['legN','legF'],steps:['Stand with feet wide, toes forward.','Hands on hips, hinge forward with a flat back.','Let your hands reach the floor or a block. Head hangs.'],
+  a:{t:-90,lN:[75,75],lF:[105,105],fN:0,fF:0,aN:[90,90]}, b:{t:95,h:0,lN:[75,75],lF:[105,105],fN:0,fF:0,aN:[90,90]}},
+ cobra:{hot:['torso'],steps:['Lie on your belly, hands under your shoulders.','Press up gently, elbows bent and close to your ribs.','Hips stay down, shoulders away from ears, look forward.'],
+  a:yx('belly',{aN:{ik:[0,10]}}), b:{t:-30,h:-10,lN:[180,180],fN:180,aN:{ik:[6,26]},bend:6}},
+ bridge:{hot:['legN','torso'],steps:['Lie on your back, knees bent, feet flat, arms by your sides.','Press through your feet and lift your hips.','Squeeze your glutes and open the front of your hips.'],
+  a:yx('backknees'), b:{t:160,lN:{ik:[40,16],ft:0},aN:[25,0]}},
+ banana:{view:'top',hot:['torso'],steps:['Lie on your back, arms overhead.','Walk your feet over to one side, then your hands to the same side.','Your body makes a banana curve. Breathe into the long side.'],
+  a:{t:-90,lN:[90,90],lF:[90,90],aN:[-80,-80],aF:[-100,-100]}, b:{t:-110,bend:12,lN:[70,60],lF:[80,70],aN:[-60,-50],aF:[-80,-70]}},
+ reclinedhs:{hot:['legN','shinN'],props:['strap'],steps:['Lie on your back, both knees bent.','Loop a towel or strap around one foot.','Straighten that leg up toward the ceiling. Other leg can stay bent or go long.'],
+  a:yx('backknees'), b:{t:180,lN:[-80,-80],fN:0,lF:[0,0],fF:-90,aN:{ik:[40,-36],b:1}}},
+ saddle:{hot:['legN'],steps:['Sit with one leg straight and the other bent back beside your hip.','Lean back onto your hands.','Lower to your elbows only if the knee feels fine.'],
+  a:{t:-90,lN:[0,180],fN:180,lF:[0,0],fF:-90,aN:{ik:[-10,46]}}, b:{t:-145,lN:[5,180],fN:180,lF:[0,0],fF:-90,aN:{ik:[-12,28]}}},
+ calfwall:{hot:['shinF'],props:['wall'],steps:['Face a wall, hands on it.','Step one foot back, heel down, back knee straight.','Bend the front knee and lean in until the back calf stretches.'],
+  a:{t:-90,lN:[90,90],lF:[100,100],fF:0,aN:[0,0]}, b:{t:-70,lN:[60,100],lF:[118,118],fF:0,aN:[-10,-10]}},
+ recbutterfly:{view:'top',hot:['legN','legF'],steps:['Lie on your back.','Bring the soles of your feet together, knees falling open.','Arms out wide. Let gravity do the work.'],
+  a:{t:-90,lN:[90,90],lF:[90,90],aN:[60,90],aF:[120,90]}, b:{t:-90,lN:[30,150],lF:[150,30],fN:90,fF:90,aN:[0,10],aF:[180,170]}},
+ sidebend:{view:'front',hot:['torso'],steps:['Stand tall, feet hip-width.','Reach both arms up and hold one wrist.','Lean toward the hand that’s holding. Hips stay still, ribs lift.'],
+  a:{t:-90,lN:[85,90],lF:[95,90],aN:[-80,-90],aF:[-100,-90]}, b:{t:-72,h:15,bend:-10,lN:[85,90],lF:[95,90],aN:[-40,-20],aF:[-60,-30]}},
+ wrist:{hot:['foreN'],steps:['Stand tall, one arm straight out in front, palm up.','Gently pull those fingers back with the other hand.','Then flip the palm down and do the same. Half the time each.'],
+  a:{t:-90,lN:[90,90],lF:[90,90],aN:[0,0],aF:[90,90]}, b:{t:-90,lN:[90,90],lF:[90,90],aN:[0,0],aF:[30,-20]}},
+ // new
+ seatedtwist:{hot:['torso'],steps:['Sit tall with legs long.','Bend one knee and plant that foot on the floor.','Hug the knee with the opposite arm, other hand behind you, and twist toward the bent leg.'],
+  a:yx('sit'), b:{t:-92,h:-30,lN:{ik:[40,0],ft:0},lF:[0,0],fF:-90,aN:{ik:[34,4]},aF:{ik:[-24,44]}}},
+ kneehug:{hot:['torso','legN'],steps:['Lie on your back.','Hug both knees into your chest.','Rock gently side to side, letting your low back relax.'],
+  a:yx('backknees'), b:{t:180,lN:[-120,0],fN:-90,aN:{ik:[34,-10],b:1}}},
+ skandasana:{view:'front',hot:['legF'],steps:['Stand with feet wide, toes slightly out.','Bend one knee and shift your weight over it.','Keep the other leg straight, toes pointing up. Hands to the floor or together.'],
+  a:{t:-90,lN:[60,60],lF:[120,120],aN:[80,90],aF:[100,90]}, b:{t:-80,lN:[-20,95],lF:[160,175],fF:-90,aN:[80,60],aF:[100,80]}},
+ headtoknee:{hot:['legN','shinN','torso'],steps:['Sit with one leg long, the other foot against that inner thigh.','Turn your chest toward the long leg.','Hinge forward over it and reach for your shin or foot.'],
+  a:{t:-90,lN:[0,0],fN:-90,lF:[20,170],aN:[70,60]}, b:{t:-15,h:25,bend:-8,lN:[0,0],fN:-90,lF:[20,170],aN:[8,6]}},
+ crescent:{hot:['legF'],steps:['Stand tall, then take a big step back with one foot.','Bend the front knee over the ankle; back leg straight, back heel lifted.','Sink your hips and reach both arms up.'],
+  a:yx('stand'), b:{t:-90,lN:{ik:[34,52],b:1},lF:[120,120],fF:-30,aN:[-95,-95]}},
+ seatedside:{view:'front',hot:['torso'],steps:['Sit cross-legged.','Put one hand on the floor beside you.','Reach the other arm up and over to that side.'],
+  a:{t:-90,lN:[-10,150],lF:[190,30],fN:180,fF:0,aN:[80,90],aF:[100,90]}, b:{t:-110,h:-10,bend:10,lN:[-10,150],lF:[190,30],fN:180,fF:0,aN:[-50,-30],aF:[110,95]}},
+ twistlunge:{hot:['legF','torso'],steps:['Come into a low lunge, back knee down.','Put the opposite hand on the floor inside your front foot.','Open the other arm to the ceiling and turn your chest toward it.'],
+  a:{t:-80,lN:{ik:[36,34],b:1},lF:{ik:[-6,34],b:1},fF:180,aN:{ik:[30,30]}}, b:{t:-40,h:-30,lN:{ik:[40,34],b:1},lF:{ik:[-14,32],b:1},fF:180,aN:[-90,-90],aF:{ik:[22,44]}}},
+ standquad:{hot:['legN'],steps:['Stand tall; hold a wall or chair if you need balance.','Bend one knee and hold that ankle behind you.','Knees side by side, tuck your hips under until the front of the thigh stretches.'],
+  a:yx('stand'), b:{t:-90,lN:[100,-100],fN:-100,lF:[90,90],aN:{ik:[-12,46]},aF:[60,80]}},
+};
+
+const YIMG=new Set(Object.keys(YPOSE));
+function yImg(id,f){ return YPOSE[id]?`<span class="y-fig">${yfSVG(YPOSE[id], f?'b':'a')}</span>`:""; }
+// ▶ a real person doing the pose: clips found by a cloud job (Claude searches, YouTube confirms each one exists); a YouTube search until then
+let YVID=null, yvidAt=0;
+async function yvidLoad(){ if (YVID||!dbHandle||!dbHandle.doc||Date.now()-yvidAt<6e5) return; yvidAt=Date.now(); try { const sn=await dbHandle.doc('yoga/videos').get(); if (sn&&sn.exists){ YVID=sn.data()||{}; } } catch(e){} }
+function yVidBtn(id,cls){ yvidLoad(); const v=YVID&&YVID[id]; return v&&v.v?`<button class="${cls||'btn ghost sm'}" onclick="yVidPlay('${id}')">▶ Watch a real demo</button>`:`<a class="${cls||'btn ghost sm'}" href="https://www.youtube.com/results?search_query=${encodeURIComponent(YP[id].n+' stretch how to')}" target="_blank" rel="noopener">▶ Watch a real demo</a>`; }
+function yVidPlay(id){ const v=YVID&&YVID[id]; if (!v) return; const sh=!!v.short;
+  gSheet(`<span class="tag">${esc(v.ch||'YouTube')}</span><h2 class="g-sh-t">${esc(YP[id].n)}</h2><div class="yv-wrap ${sh?'sh':''}"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.v)}?playsinline=1&rel=0&modestbranding=1${v.start?'&start='+(+v.start||0):''}" title="${esc(YP[id].n)} demo" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
+    <div class="row" style="gap:6px;margin-top:10px"><a class="btn ghost sm" href="https://www.youtube.com/watch?v=${encodeURIComponent(v.v)}" target="_blank" rel="noopener">Open in YouTube</a><button class="btn ghost sm" onclick="yPoseSheet('${id}')">‹ Steps</button></div>`); }
+const ySteps=(id,cls)=>YPOSE[id]?`<ol class="${cls||'y-steps'}">${YPOSE[id].steps.map(t=>`<li>${esc(t)}</li>`).join('')}</ol>`:'';
+
 function gImg(x,f){ return 'ex/'+x+'_'+(f||0)+'.webp'; }
 function gThumb(x){ const X=GX[x], m=X.p[0], ic=X.k==='cardio'?'🫀':isWarmX(x)?'🔥':X.k==='stretch'?'🧘':GEQI[X.eq.find(e=>e!=='bench'&&e!=='rack')||X.eq[0]]||'💪'; return `<span class="g-th${GXIMG.has(x)?' g-ph':''}" style="--c:${GMC[m]||'#8d8d8d'}">${ic}${GXIMG.has(x)?`<img src="${gImg(x)}" alt="" loading="lazy" decoding="async" onerror="this.remove()"><i class="g-play">▶</i>`:''}</span>`; }
 function gSetsTxt(e){ const X=GX[e.x], w=e.sets.filter(z=>z.t!=='w'), z=w[0]||e.sets[0]; if (X.k==='cardio') return `${z.r} min`; if (X.k==='stretch'||X.k==='t') return `${w.length} × ${z.r}s${X.side?' each side':''}`;
@@ -9919,7 +10143,9 @@ const YOGA=[
  ['calfwall','Wall Calf Stretch',30,1,'Hands on a wall, one leg back, heel down, back knee straight. Lean in.','🧱','calves'],
  ['recbutterfly','Reclined Butterfly',60,0,'On your back, soles together, knees fall open, arms wide. Let gravity do it.','🦋','hips chest'],
  ['sidebend','Standing Side Bend',30,1,'Stand tall, arms up, grab one wrist and lean that way. Ribs lift, hips stay still.','🌙','abs back'],
- ['wrist','Wrist & Forearm Stretch',30,0,'Arm straight, palm up, pull the fingers back. Then palm down. Half the time each.','✋','arms']];
+ ['wrist','Wrist & Forearm Stretch',30,0,'Arm straight, palm up, pull the fingers back. Then palm down. Half the time each.','✋','arms'],
+ ['seatedtwist','Seated Twist',40,1,'','🌀','back'],['kneehug','Knees to Chest',45,0,'','🤗','back hips'],['skandasana','Side Lunge',40,1,'','🦵','hips hamstrings'],['headtoknee','Head-to-Knee Fold',45,1,'','🙇','hamstrings back'],
+ ['crescent','Crescent Lunge',30,1,'','🌙','quads hips'],['seatedside','Seated Side Bend',30,1,'','🌾','abs back'],['twistlunge','Twisted Lunge',30,1,'','🌀','hips back'],['standquad','Standing Quad Stretch',30,1,'','🦩','quads']];
 // exactly what each pose stretches: 'primary|secondary' regions (drawn on the body map below the pose)
 const YM={child:'lats lowback|glutes shoulders', catcow:'lowback abs|neck traps', thread:'traps shoulders|neck lats', dog:'hamstrings calves|lats shoulders',
   lowlunge:'hipflex quads|abs', halfsplit:'hamstrings|calves lowback', pigeon:'glutes hipflex|lowback', fold:'hamstrings lowback|calves', butterfly:'adductors|lowback glutes',
@@ -9928,7 +10154,8 @@ const YM={child:'lats lowback|glutes shoulders', catcow:'lowback abs|neck traps'
   neckside:'neck|traps', doorway:'chest shoulders|biceps', gate:'obliques lats|adductors hamstrings', lizard:'hipflex adductors|glutes hamstrings', frog:'adductors|hipflex lowback',
   squat:'adductors glutes|calves lowback', quadside:'quads hipflex|', pyramid:'hamstrings|calves glutes', widefold:'hamstrings adductors|lowback calves', cobra:'abs hipflex|chest shoulders',
   bridge:'hipflex quads|chest abs', banana:'obliques lats|lowback', reclinedhs:'hamstrings|calves', saddle:'quads hipflex|abs', calfwall:'calves|hamstrings',
-  recbutterfly:'adductors chest|hipflex', sidebend:'obliques lats|shoulders', wrist:'forearms|biceps'};
+  recbutterfly:'adductors chest|hipflex', sidebend:'obliques lats|shoulders', wrist:'forearms|biceps',
+  seatedtwist:'lowback obliques|glutes', kneehug:'lowback glutes|', skandasana:'adductors hamstrings|glutes', headtoknee:'hamstrings lowback|calves', crescent:'hipflex quads|abs', seatedside:'obliques lats|', twistlunge:'hipflex obliques|lowback', standquad:'quads hipflex|'};
 // region → [plain name, the actual muscles, body-map pieces]
 const YRN={neck:['Neck','upper trapezius, levator scapulae, scalenes','f10 f11'], traps:['Upper back','trapezius, rhomboids','b1 b2'], chest:['Chest','pectoralis major & minor','f0 f1'],
   shoulders:['Shoulders','deltoids, rotator cuff','f12 f13 b3 b4'], lats:['Lats','latissimus dorsi, teres major','b5 b6'], lowback:['Lower back','erector spinae, quadratus lumborum','b11 b12'],
@@ -9948,8 +10175,8 @@ function yMusList(id){ const M=yMus(id); if (!M.p.length) return `<div class="he
   const row=(r,k)=>`<div class="ym-row ${k}"><i></i><span><b>${YRN[r][0]}</b><small>${YRN[r][1]}</small></span></div>`;
   return `<div class="ym-list">${M.p.map(r=>row(r,'p')).join('')}${M.s.map(r=>row(r,'s')).join('')}</div><div class="ym-key"><span class="p">main stretch</span><span class="s">also feel it</span></div>`; }
 function yPoseSheet(id, back){ const p=YP[id]; gSheet(`<span class="tag">${p.side?'Both sides · ':''}${p.s}s</span><h2 class="g-sh-t">${p.ic} ${esc(p.n)}</h2>
-  ${YIMG.has(id)?`<div class="ym-ph">${yImg(id,0)}</div>`:''}${yMap(id,'ym-big')}${yMusList(id)}<div class="help keep ym-cue">${esc(p.cue)}</div>
-  <div class="row" style="gap:6px;margin-top:10px;flex-wrap:wrap"><a class="btn ghost sm" href="https://www.youtube.com/results?search_query=${encodeURIComponent(p.n+' yoga pose how to')}" target="_blank" rel="noopener">▶ Demo</a>${back?`<button class="btn ghost sm" onclick="yLibSheet()">‹ All poses</button>`:''}</div>`); }
+  ${YPOSE[id]?`<div class="yf-pair"><div>${yfSVG(YPOSE[id],'a')}<small>1 · Get set</small></div><div>${yfSVG(YPOSE[id],'b')}<small>2 · Hold</small></div></div>${ySteps(id)}`:`<div class="help keep ym-cue">${esc(p.cue)}</div>`}${yMap(id,'ym-big')}${yMusList(id)}
+  <div class="row" style="gap:6px;margin-top:10px;flex-wrap:wrap">${yVidBtn(id)}${back?`<button class="btn ghost sm" onclick="yLibSheet()">‹ All poses</button>`:''}</div>`); }
 let yLibF='all';
 function yLibSheet(){ const groups=[['all','All'],['upper','Neck & shoulders'],['chest','Chest & arms'],['back','Back & sides'],['hips','Hips & glutes'],['legs','Legs']],
     G={upper:['neck','traps','shoulders'],chest:['chest','biceps','triceps','forearms'],back:['lats','lowback','obliques','abs'],hips:['hipflex','adductors','glutes'],legs:['quads','hamstrings','calves']};
@@ -9957,13 +10184,13 @@ function yLibSheet(){ const groups=[['all','All'],['upper','Neck & shoulders'],[
   gSheet(`<span class="tag">${YOGA.length} poses</span><h2 class="g-sh-t">What each pose stretches</h2>
   <div class="ym-tabs">${groups.map(([k,l])=>`<button class="${yLibF===k?'on':''}" onclick="yLibF='${k}';yLibSheet()">${l}</button>`).join('')}</div>
   <div class="stack" style="gap:6px">${list.map(id=>`<button class="ym-li" onclick="yPoseSheet('${id}',1)">${yMap(id,'ym-mini')}<span><b>${YP[id].ic} ${esc(YP[id].n)}</b><small>${yMusLine(id)}</small></span><i>›</i></button>`).join('')}</div>`); }
-const YP=Object.fromEntries(YOGA.map(([id,n,s,side,cue,ic,a])=>[id,{id,n,s,side,cue,ic,a:a.split(' ')}]));
+const YP=Object.fromEntries(YOGA.map(([id,n,s,side,cue,ic,a])=>[id,{id,n,s,side,cue:YPOSE[id]?YPOSE[id].steps.join(' '):cue,ic,a:a.split(' ')}]));
 // each flow is a list of slots; 'a|b|c' rotates night to night so the same flow never repeats exactly
-const YFLOWS={wind:['🌙 Wind-down','10 min · every night',['child|puppy','catcow','thread|eagle|cowface','dog|reclinedhs','pigeon|lizard|figure4','fold|widefold|pyramid','twist|banana','babyhappy|recbutterfly','savasana']],
-  hips:['🍑 Hips & back','12 min · after legs or a long day sitting',['catcow','lowlunge|lizard|saddle','halfsplit|pyramid','pigeon|frog','butterfly|squat|recbutterfly','figure4|gate','twist|banana','legsup|reclinedhs','savasana']],
-  upper:['💺 Neck & shoulders','9 min · after upper body or a desk day',['neckside','eagle|cowface','puppy|child','thread','chestopen|doorway','sphinx|cobra','sidebend|gate','wrist|catcow','savasana']],
-  legs:['🦵 Legs','10 min · after leg day or a long walk',['calfwall|dog','quadside|saddle','reclinedhs|halfsplit','pyramid|widefold','frog|squat','figure4|pigeon','bridge|lowlunge','legsup','savasana']],
-  quick:['⚡ Quick 5','5 min · when you’re wiped',['child|puppy','thread|eagle','twist|banana','legsup']]};
+const YFLOWS={wind:['🌙 Wind-down','10 min · every night',['child|puppy','catcow','thread|eagle|cowface','dog|reclinedhs','pigeon|lizard|figure4','fold|widefold|pyramid','twist|banana|seatedtwist','babyhappy|recbutterfly|kneehug','savasana']],
+  hips:['🍑 Hips & back','12 min · after legs or a long day sitting',['catcow','lowlunge|lizard|saddle|twistlunge','halfsplit|pyramid|headtoknee','pigeon|frog','butterfly|squat|recbutterfly|skandasana','figure4|gate','twist|banana','legsup|reclinedhs','savasana']],
+  upper:['💺 Neck & shoulders','9 min · after upper body or a desk day',['neckside','eagle|cowface','puppy|child','thread','chestopen|doorway','sphinx|cobra','sidebend|gate|seatedside','wrist|catcow','savasana']],
+  legs:['🦵 Legs','10 min · after leg day or a long walk',['calfwall|dog','quadside|saddle|standquad|crescent','reclinedhs|halfsplit|headtoknee','pyramid|widefold','frog|squat','figure4|pigeon','bridge|lowlunge','legsup','savasana']],
+  quick:['⚡ Quick 5','5 min · when you’re wiped',['child|puppy','thread|eagle','twist|banana|seatedtwist','legsup|kneehug']]};
 const yDayN=()=>Math.floor(parseD(TODAY).getTime()/864e5);
 function yFlow(f){ const n=yDayN(); return YFLOWS[f][2].map((slot,i)=>{ const o=slot.split('|'); return o[(n+i)%o.length]; }); }
 function Y_(){ return (S.yoga ||= {log:[]}); }
@@ -10010,12 +10237,12 @@ function yogaRender(){ if (!YG) return; let o=document.getElementById('yg-ov'); 
     o.addEventListener('touchend',e=>{ if (x0==null||!YG) return; const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0; x0=null; if (Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*1.5){ if (dx<0){ YG.i<YG.steps.length-1?yogaGo(1):yogaFinish(); } else yogaGo(-1); } },{passive:true}); }
   const s=YG.steps[YG.i], p=YP[s.id], nx=YG.steps[YG.i+1], R=54, C=2*Math.PI*R, cue=p.cue.split(/(?<=[.!])\s/)[0];
   o.innerHTML=`<div class="yg-top"><button onclick="yogaStop(${YG.i>2})" aria-label="Stop">✕</button><div class="yg-prog">${YG.steps.map((_,k)=>`<i class="${k<YG.i?'d':k===YG.i?'c':''}"></i>`).join('')}</div><span class="yg-combo">${YG.combo>1?`🔥${YG.combo}`:''}</span></div>
-    <div class="yg-pose"><div class="yg-ring" id="yg-ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="${R}" class="yg-bg"/><circle id="yg-fg" cx="60" cy="60" r="${R}" class="yg-fg" style="stroke-dasharray:${C};stroke-dashoffset:${C}"/></svg><span class="yg-ic">${YIMG.has(s.id)?`<img src="ex/y_${s.id}_0.webp" alt="" onerror="this.replaceWith(document.createTextNode('${p.ic}'))"><img class="yg-f2" src="ex/y_${s.id}_1.webp" alt="" onerror="this.remove()">`:p.ic}</span></div>
+    <div class="yg-pose"><div class="yg-ring" id="yg-ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="${R}" class="yg-bg"/><circle id="yg-fg" cx="60" cy="60" r="${R}" class="yg-fg" style="stroke-dasharray:${C};stroke-dashoffset:${C}"/></svg><span class="yg-ic">${YPOSE[s.id]?yfAnim(YPOSE[s.id],'yg-fig'):p.ic}</span></div>
       <b class="yg-t num" id="yg-t"></b><div class="yg-bl" id="yg-bl"></div>
-      <h1 onclick="yPoseSheet('${s.id}')">${esc(p.n)}${s.side?` <em>${s.side}</em>`:''}</h1><p>${esc(cue)}</p>
-      <div class="yg-chips"><button class="yg-chip" onclick="yPoseSheet('${s.id}')">${yMap(s.id,'ym-chip')}<span>${yMusLine(s.id)}</span></button><a class="yg-chip" href="https://www.youtube.com/results?search_query=${encodeURIComponent(p.n+' yoga pose how to')}" target="_blank" rel="noopener">▶ Demo</a></div></div>
+      <h1 onclick="yPoseSheet('${s.id}')">${esc(p.n)}${s.side?` <em>${s.side}</em>`:''}</h1>${YPOSE[s.id]?ySteps(s.id,'yg-steps'):`<p>${esc(cue)}</p>`}
+      <div class="yg-chips"><button class="yg-chip" onclick="yPoseSheet('${s.id}')">${yMap(s.id,'ym-chip')}<span>${yMusLine(s.id)}</span></button>${yVidBtn(s.id,'yg-chip')}</div></div>
     <div class="yg-next">${nx?`${nx.id===s.id?'Next · other side':`Next · ${esc(YP[nx.id].n)}`}`:'Last one 🌙'}</div>
-    <div class="yg-ctl"><button onclick="yogaGo(-1)" aria-label="Back">‹</button><button class="yg-pp" id="yg-pp" onclick="yogaPause()">⏸</button><button onclick="${nx?'yogaGo(1)':'yogaFinish()'}" aria-label="${nx?'Skip':'Finish'}">${nx?'›':'✓'}</button></div><div class="yg-hint">swipe to skip</div>`;  YG.ph=null; yogaUpd(); }
+    <div class="yg-ctl"><button onclick="yogaGo(-1)" aria-label="Back">‹</button><button class="yg-pp" id="yg-pp" onclick="yogaPause()">⏸</button><button onclick="${nx?'yogaGo(1)':'yogaFinish()'}" aria-label="${nx?'Skip':'Finish'}">${nx?'›':'✓'}</button></div><div class="yg-hint">swipe to skip</div>`;  YG.ph=null; yogaUpd(); yfStart(); }
 
 function yogaUpd(){ if (!YG) return; const p=YP[YG.steps[YG.i].id], left=yLeft(), $=id=>document.getElementById(id); if (!$('yg-t')) return;
   $('yg-t').textContent=`${Math.floor(left/60)}:${String(left%60).padStart(2,'0')}`;
