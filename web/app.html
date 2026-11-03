@@ -1847,7 +1847,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b287';
+const BUILD='b289';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2108,7 +2108,9 @@ function applyDeposit(id, dep){ sprPlay('money');
 let lastProg = null; // progress as of the last commit/load — the baseline celebrateDiff compares against
 // every derived link between sections, in one place: runs on every change and when another device's copy arrives
 function deriveAll(){
+  try { if (S.money?.s && S.money.s.sepFrom===undefined) S.money.s.sepFrom='2026-11-03'; } catch(e){}
   try { syncDatumDeductibles(S); } catch(e){}
+  try { syncAgencyDeductibles(S); } catch(e){}
   try { wk7Migrate(); } catch(e){ console.warn('wk7',e); }
   try { runAutos(); } catch(e){ console.warn('autos',e); }
   try { twinSync(); } catch(e){ console.warn('twins',e); }
@@ -2375,6 +2377,9 @@ function billsFor(d, nd){ const s=S.money.s; let t=0; const names=[];
   t += (+s.grocW||0)*Math.max(1,daysBetween(d,nd))/7; try { const R=rbIn(d,nd); t+=R.amt; names.push(...R.names); } catch(e){} return {amt:t, names}; }
 const fixedMo = () => { const s=S.money.s; if (s.minCap1==null) s.minCap1=25; if (s.minDisc==null) s.minDisc=35; return (+s.minCap1||0) + (+s.minDisc||0) + s.rent + s.car + s.grocW*52/12 + s.elec + s.gas + (s.ins||0) + (s.net||0) + (()=>{ try { return rbMonthly(); } catch(e){ return 0; } })(); };
 const efTarget = () => fixedMo() * S.money.s.efMonths;
+// b289: where investing money goes — the SEP-IRA from the day you opened it (Business checking → SEP), the Roth before that
+function retAcctFor(d){ const f=S.money?.s?.sepFrom; return (f&&String(d)>=f)||+String(d).slice(0,4)>=2027?'SEP':'Roth'; }
+function sepToggle(){ const s=S.money.s; s.sepFrom=s.sepFrom?null:TODAY; commit({skipXp:true}); }
 function waterfall(amt, ctx, dateKey){
   // ctx: {ef, buf, cush, house, cards}; returns row and mutates ctx.
   const s=S.money.s, PER=perMo(), BF=billsFor(dateKey, ctx.nextD||addDays(dateKey, s.payEvery===14?14:15)), fixedCk=BF.amt, efCk=s.efMonthly/PER, retCk=fiRetMonthly(dateKey)/PER, cushCk=s.cushionMonthly/PER, yr=+dateKey.slice(0,4);
@@ -2390,7 +2395,7 @@ function waterfall(amt, ctx, dateKey){
   let house = 0; if (efRoom <= 0.5) { house = Math.min(efCk, left); ctx.house += house; left -= house; }
   const ret = Math.min(retCk, left); left -= ret;
   const sweep = Math.min(left, Math.max(0, efTarget()-ctx.ef)); ctx.ef += sweep; left -= sweep; efAdd += sweep;
-  return {billNames: BF.names, amt, tax: tax+cu, taxBase: tax, catchup: cu, bills:fixedCk, flex: flex+left, efAdd, draw, house, ret, cu: 0, cards, cardsLeft:ctx.cards, extra:left, efBal:ctx.ef, retLabel: yr<=2026?'Roth':'SEP'};
+  return {billNames: BF.names, amt, tax: tax+cu, taxBase: tax, catchup: cu, bills:fixedCk, flex: flex+left, efAdd, draw, house, ret, cu: 0, cards, cardsLeft:ctx.cards, extra:left, efBal:ctx.ef, retLabel: retAcctFor(dateKey)};
 }
 function projection(){
   const s=S.money.s; const ctx={ef:bal('ef'), buf:bal('tax'), cush:0, house:0, cards:cardDebt(), behind:taxBehind(), nLeft:S.money.checks.filter(c=>!c.got&&c.d<TAX_CATCHUP_BY).length};
@@ -4499,8 +4504,8 @@ function spendingBreakdown(month){
   return {tx, rows, total, arcs, colorOf, segs};
 }
 const BCATS = {income:'Income', flex:'Spending money', fixed:'Fixed / bills', transfer:'Transfer / card pmt', deduct:'Deductible', ignore:'Ignore'};
-const DCATS = {airport:'🛫 Ride home → ORD', nyride:'🚕 NYC ride → LGA / hotel', eats:'🍜 Uber Eats (NY)', transit:'🚇 NY transit fare', lodging:'🏨 NY hotel / motel', ride:'🚗 Uber / Lyft (other)', datum:'◆ Datum — tools & supplies', other:'📎 Other'};
-const DCAT_BIZ = {airport:'Modeling', nyride:'Modeling', eats:'Modeling', transit:'Modeling', lodging:'Modeling', ride:'Modeling', datum:'Datum', other:'Other'};
+const DCATS = {agency:'🧾 Agency fees · taken from checks', airport:'🛫 Ride home → ORD', nyride:'🚕 NYC ride → LGA / hotel', eats:'🍜 Uber Eats (NY)', transit:'🚇 NY transit fare', lodging:'🏨 NY hotel / motel', ride:'🚗 Uber / Lyft (other)', datum:'◆ Datum — tools & supplies', other:'📎 Other'};
+const DCAT_BIZ = {agency:'Modeling', airport:'Modeling', nyride:'Modeling', eats:'Modeling', transit:'Modeling', lodging:'Modeling', ride:'Modeling', datum:'Datum', other:'Other'};
 function classifyTxn(t){
   const d = t.desc.toUpperCase(), a = t.amt;
   if (a > 0) return /REFUND|REBATE|TRANSFER|VENMO|ZELLE FROM|PAYMENT|THANK YOU|AUTOPAY|OVERDRAFT PROTECTION|STATEMENT CREDIT|CASHBACK|CASH BACK/.test(d) ? 'transfer' : 'income';
@@ -4549,6 +4554,13 @@ function syncDatumDeductibles(st=S){
       const v = (e.vendor||'').split(/[\s\/]+/)[0]; return v.length>=3 && x.desc.toUpperCase().includes(v.toUpperCase()); }); // same vendor, same week → the tracker row already has it
   });
 }
+
+// b289: fees and chargebacks the agency takes out before it pays you (airfare, marketing fees, comp cards) — every statement, old and new, feeds the write-offs.
+// Your income here is what actually landed, so these are already left out of what you're taxed on in the app; they're listed because ONE's 1099 can include them.
+function syncAgencyDeductibles(st=S){ const B=st.money?.budget; if (!B) return; const M=st.model||{}, all=[typeof ONE_STMT!=='undefined'?ONE_STMT:null, ...(M.stmts||[])].filter(Boolean), live=new Set();
+  for (const x of all) for (const c of x.chg||[]){ const amt=Math.abs(+c.amt||0); if (!c.d||amt<0.5) continue; const key='one:'+c.d+'|'+Math.round(amt*100)+'|'+String(c.desc||'').slice(0,24).toUpperCase(); if (live.has(key)) continue; live.add(key);
+    let row=B.deductibles.find(r=>r.txn===key); if (!row) B.deductibles.push({id:uid(), txn:key, d:c.d, desc:String(c.desc||'Agency fee').slice(0,80), amt, acct:'ONE · out of a check', cat:'agency', ok:true, netted:true, note:''}); else { row.amt=amt; row.netted=true; } }
+  B.deductibles=B.deductibles.filter(r=>!(typeof r.txn==='string'&&r.txn.startsWith('one:'))||live.has(r.txn)); }
 function addDeductible(t, st=S){
   const B = st.money.budget; if (B.deductibles.some(x=>x.txn===t.id)) return;
   const kind = deductKind(t) || 'other';
@@ -9379,7 +9391,7 @@ function schedCard(){ try { const R=sbRows(); if (!R.length) return ''; const B=
 
 /* ---- b280: the bottom line — the order your money goes, where each step stands, and the three answers that matter ---- */
 function bottomLine(){ try { const P=projection(), s=S.money.s, R=P.rows, mon=d=>d?MON3[+d.slice(5,7)-1]+' '+d.slice(0,4):null, last=R.length?R[R.length-1].d:TODAY;
-  const short=taxShortApril(), cardsOff=cardDebt()<1?'DONE':(R.find(r=>r.cardsLeft<=0.5)||{}).d, efT=efTarget(), efNow=sbActual('ef').v, efFull=efNow>=efT-1?TODAY:(R.find(r=>r.efBal>=efT-1)||{}).d, fi=fiFundedFrom(), fiRow=fi&&R.find(r=>r.d===fi), acct=fiRow?(fiRow.retLabel==='SEP'?'SEP-IRA':'Roth IRA'):(+(fi||last).slice(0,4)>=2027?'SEP-IRA':'Roth IRA');
+  const short=taxShortApril(), cardsOff=cardDebt()<1?'DONE':(R.find(r=>r.cardsLeft<=0.5)||{}).d, efT=efTarget(), efNow=sbActual('ef').v, efFull=efNow>=efT-1?TODAY:(R.find(r=>r.efBal>=efT-1)||{}).d, fi=fiFundedFrom(), fiRow=fi&&R.find(r=>r.d===fi), acct=fiRow?(fiRow.retLabel==='SEP'?'SEP-IRA':'Roth IRA'):(retAcctFor(fi||last)==='SEP'?'SEP-IRA':'Roth IRA');
   const steps=[['📊','Tax · 32.2% of every check','always','on','tax'],['🏠','Bills due before the next check','always','on'],['🛍️',`Spending · ${money0(s.flexPerCheck)}/check`,'always','on'],
     ['💳',`Credit cards → $0 · ${money0(cardDebt())} left`,cardsOff==='DONE'?'done':cardsOff?'paid off '+nice(cardsOff):'not on this plan',cardsOff==='DONE'?'done':'now','cards'],
     ['🧾','2026 tax catch-up',taxBehind()<1?'done':short>1?`${money0(short)} short by Apr 15`:'covered by Apr 15',taxBehind()<1?'done':short>1?'warn':'now','tax'],
@@ -10058,12 +10070,12 @@ function bizLine(){ const B=bizS(); if (!B.on) return ''; const b=bizBal(); if (
 function bizToggle(k){ const B=bizS(); B[k]=!B[k]; if (k==='on'&&!B.on) B.dep=false; commit({skipXp:true}); }
 function bizCard(){ const B=bizS(), b=bizBal(), V=bizSim(), net=V.withSavings-V.fees-V.interest;
   return `<div class="card sec" id="bizAll"><div class="hdr"><h2>🏢 Business checking</h2><span class="sub">Capital One · Basic</span></div>
-    <div class="biz-steps">${[['on','Opened it',B.on],['dep','ONE pays into it',B.dep]].map(([k,l,on])=>`<button class="check ${on?'on':''}" onclick="bizToggle('${k}')" ${k==='dep'&&!B.on?'disabled':''}><div class="box">${on?'✓':''}</div><div class="txt">${l}</div></button>`).join('')}</div>
+    <div class="biz-steps">${[['on','Opened it',B.on],['dep','ONE pays into it',B.dep],['sep','SEP-IRA opened',!!S.money.s.sepFrom]].map(([k,l,on])=>`<button class="check ${on?'on':''}" onclick="${k==='sep'?'sepToggle()':`bizToggle('${k}')`}" ${k==='dep'&&!B.on?'disabled':''}><div class="box">${on?'✓':''}</div><div class="txt">${l}</div></button>`).join('')}</div>
     ${B.on?`<div class="biz-bal"><b class="num">${b==null?'—':money0(b)}</b><span>${b==null?'link it in Era so the app can see it':b>=B.floor?'above the $2,000 minimum · no fee':`${money0(B.floor-b)} under the minimum · $15 fee this month`}</span></div><div class="lo-bar" style="margin:6px 0 10px"><i style="width:${b==null?0:Math.min(100,b/B.floor*100)}%;background:${b!=null&&b>=B.floor?'var(--good)':'var(--warn)'}"></i></div>`:''}
     <div class="tag" style="margin:4px 0 6px">Is it worth it? · next 12 months</div>
     <div class="lo-sum" style="border:0;padding:0;margin:0"><div><small>Fee months</small><b class="num">${V.feeMonths}</b><em>${money0(V.fees)} in fees</em></div><div><small>Interest given up</small><b class="num">${money0(V.interest)}</b><em>$2,000 not earning ${B.apy}%</em></div><div class="lo-safe"><small>vs paying the fee</small><b class="num" style="color:${net>=0?'var(--good)':'var(--bad)'}">${net>=0?'+':'−'}${money0(Math.abs(net))}</b><em>${net>=0?'cheaper':'costs more'}</em></div></div>
     <div class="biz-mo">${V.months.map(([k,v])=>`<i title="${k}: ${money0(v)}" style="height:${Math.max(6,v/B.floor*44)}px;background:${v>=B.floor-0.5?'var(--good)':'var(--warn)'}"></i>`).join('')}</div><div class="biz-ml"><span>${nice(V.months[0][0]+'-01').replace(/ \d+$/,'')}</span><span>green = above $2,000 · fee uses the 30/90-day average</span><span>${nice(V.months[11][0]+'-01').replace(/ \d+$/,'')}</span></div>
-    <div class="help keep" style="margin-top:8px">How it works: ONE pays into Business. Tax money tops Business up to $2,000 (it has to sit until the IRS anyway); the rest of the tax goes to Tax Buffer savings so it keeps earning. Bills + spending get drawn to BofA. Cards, Roth/SEP and savings are paid straight from Business.</div></div>`; }
+    <div class="help keep" style="margin-top:8px">How it works: ONE pays into Business. Tax money tops Business up to $2,000 (it has to sit until the IRS anyway); the rest of the tax goes to Tax Buffer savings so it keeps earning. Bills + spending get drawn to BofA. Cards, savings and the SEP-IRA are paid straight from Business — the SEP pulls from Business at Fidelity, so mark the tax year each time.</div></div>`; }
 
 let moneyTab = 'now';
 function setMoneyTab(t){ moneyTab=MONEY_ALIAS[t]||t; render(); }
@@ -10157,7 +10169,7 @@ let dedOpen=null, dedN=20;
 function vDeduct(){
   const D = S.money.budget.deductibles.slice().sort((a,b)=>b.d.localeCompare(a.d));
   const ok = D.filter(x=>x.ok), review = D.filter(x=>!x.ok);
-  const tot = ok.reduce((a,x)=>a+x.amt,0), totAll = D.reduce((a,x)=>a+x.amt,0);
+  const tot = ok.reduce((a,x)=>a+x.amt,0), totAll = D.reduce((a,x)=>a+x.amt,0), ag = ok.filter(x=>x.netted).reduce((a,x)=>a+x.amt,0);
   const byCat = Object.keys(DCATS).map(k=>[k, ok.filter(x=>x.cat===k).reduce((a,x)=>a+x.amt,0)]).filter(([,v])=>v>0);
   const byQ = {}; for (const x of ok) byQ[quarterOf(x.d)] = (byQ[quarterOf(x.d)]||0)+x.amt;
   const accts = ['BofA','Capital One Savor','Discover','Cash'];
@@ -10167,7 +10179,8 @@ function vDeduct(){
   return `
   <div class="card sec">
     <div class="row between" style="align-items:flex-start;gap:10px"><div><div class="tag">Confirmed deductible</div><h2 class="num" style="font-size:34px;font-weight:800;letter-spacing:-.04em;color:var(--good)">${money0(tot)}</h2></div><button class="btn sm" onclick="copyDeductibles()">Copy CSV for CPA</button></div>
-    <div class="home3" style="margin-top:12px"><div><b class="num">${money0(tot*S.money.s.taxRate)}</b><small>off your tax</small></div><div><b class="num" style="${review.length?'color:var(--warn)':''}">${review.length}</b><small>to review</small></div><div><b class="num">${money0(totAll-tot)}</b><small>unconfirmed</small></div></div>
+    <div class="home3" style="margin-top:12px"><div><b class="num">${money0((tot-ag)*S.money.s.taxRate)}</b><small>off your tax</small></div><div><b class="num" style="${review.length?'color:var(--warn)':''}">${review.length}</b><small>to review</small></div><div><b class="num">${money0(totAll-tot)}</b><small>unconfirmed</small></div></div>
+    ${ag>0.5?`<div class="help keep" style="margin-top:10px">🧾 ${money0(ag)} of this is agency fees ONE took out before paying you (flights, marketing). They're already left out of your tax math here — they're listed so your CPA can subtract them if ONE's 1099 includes them.</div>`:''}
     ${infold('dcat','By category',`${byCat.length}`,`<div class="stack" style="gap:6px">${byCat.map(([k,v])=>`<div class="row between" style="font-size:14px"><span>${DCATS[k]}</span><b class="num">${money0(v)}</b></div>`).join('')||'<div class="empty">Nothing confirmed yet.</div>'}</div>`)}
     ${infold('dq','By quarter','for estimated payments',`<div class="stack" style="gap:6px">${Object.entries(byQ).sort().map(([q,v])=>`<div class="row between" style="font-size:14px"><span>${q}</span><b class="num">${money0(v)}</b></div>`).join('')||'<div class="empty">—</div>'}</div>`)}
     ${infold('dadd','Add one by hand','cash fares, receipts',`<form onsubmit="return addDedManual(event)" class="row" style="gap:6px;flex-wrap:wrap"><input id="ddD" type="date" class="inp" value="${TODAY}"><input id="ddDesc" class="inp" style="flex:1;min-width:140px" placeholder="e.g. Uber home → ORD"><input id="ddAmt" class="inp num" style="width:90px" placeholder="$"><select id="ddCat" class="inp">${Object.entries(DCATS).map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select><select id="ddAcct" class="inp">${accts.map(a=>`<option>${a}</option>`).join('')}</select><button class="btn" type="submit">+ Add</button></form>`)}
@@ -10177,7 +10190,7 @@ function vDeduct(){
     ${vis.length?`<div class="row between" style="gap:8px;margin-bottom:8px;flex-wrap:nowrap"><span class="help" style="min-width:0">Tap a circle to confirm, or press and drag down to do a run. Tap a row to edit.</span><button class="btn ghost sm" style="white-space:nowrap" onclick="dedBulk(${dedFilter!=='ok'})">${dedFilter==='ok'?'Unconfirm all':'Confirm all'}</button></div>`:''}
     <div onpointermove="dedMove(event)" onpointerup="dedUp()" onpointercancel="dedUp()">${show.map(x=>{ const m=x.d.slice(0,7), hdr = m!==cur ? `<div class="row between" style="margin:12px 2px 6px"><span class="tag">${parseD(m+'-01').toLocaleDateString('en-US',{month:'long',year:'numeric'})}</span><span class="tag num">${money0(msum[m])}</span></div>` : ''; cur=m; const open=dedOpen===x.id, datum=String(x.txn||'').startsWith('datum:');
       return hdr+`<div class="txr ${open?'open':''}"><div class="dedh"><div class="check ${x.ok?'on':''}" data-ded="${x.id}" style="padding:6px;background:none;border:0;touch-action:none" onpointerdown="dedDown(event,'${x.id}')" role="checkbox" aria-checked="${!!x.ok}" aria-label="Confirm"><div class="box">${x.ok?'✓':''}</div></div><button class="txh" onclick="dedOpen=dedOpen==='${x.id}'?null:'${x.id}';render()"><span class="txd"><b>${esc(x.desc)}</b><small>${nice(x.d)} · ${esc(x.acct||'')} · ${DCATS[x.cat]||x.cat}${x.note?' · '+esc(x.note):''}</small></span><b class="num">$${x.amt.toFixed(2)}</b></button></div>
-        ${open?`<div class="txe"><label>Category<select class="inp" onchange="setDed('${x.id}','cat',this.value)">${Object.entries(DCATS).map(([k,l])=>`<option value="${k}" ${x.cat===k?'selected':''}>${l}</option>`).join('')}</select></label><label>Note<input class="inp" value="${esc(x.note||'')}" placeholder="trip / job" onchange="setDed('${x.id}','note',this.value)"></label>${datum?'<span class="sub">◆ Mirrors Datum → Money; change it there.</span>':`<button class="btn danger sm" onclick="delDed('${x.id}')">Delete</button>`}</div>`:''}</div>`; }).join('') || `<div class="empty">${dedFilter==='review'?'Nothing to review. Everything is confirmed.':'Nothing here yet.'}</div>`}</div>
+        ${open?`<div class="txe"><label>Category<select class="inp" onchange="setDed('${x.id}','cat',this.value)">${Object.entries(DCATS).map(([k,l])=>`<option value="${k}" ${x.cat===k?'selected':''}>${l}</option>`).join('')}</select></label><label>Note<input class="inp" value="${esc(x.note||'')}" placeholder="trip / job" onchange="setDed('${x.id}','note',this.value)"></label>${String(x.txn||'').startsWith('one:')?'<span class="sub">From your ONE statement — upload a new statement to update it.</span>':datum?'<span class="sub">◆ Mirrors Datum → Money; change it there.</span>':`<button class="btn danger sm" onclick="delDed('${x.id}')">Delete</button>`}</div>`:''}</div>`; }).join('') || `<div class="empty">${dedFilter==='review'?'Nothing to review. Everything is confirmed.':'Nothing here yet.'}</div>`}</div>
     ${vis.length>dedN?`<button class="btn ghost sm" style="margin-top:10px;width:100%;justify-content:center" onclick="dedN+=20;render()">Show more · ${vis.length-dedN} left</button>`:''}
     <div class="help" style="margin-top:10px">Only confirmed rows lower your tax gap. Rides default to "Uber / Lyft (other)" — switch them to the ORD or LGA category so the CPA sees the trip pattern.</div>
   </div>`;
@@ -10190,7 +10203,7 @@ function splitFor(c){ const s=S.money.s, r=waterfall(c.amt,{ef:bal('ef'),buf:0,c
 function cardList(){ return (S.money.budget?.accounts||[]).filter(a=>a.bal!=null && a.bal<0 && !/auto|loan|mortgage/i.test(a.name+' '+a.type)).map(a=>({name:a.name.replace(/ Card$/,'').replace(/^Discover it$/,'Discover'), bal:-a.bal, minDue:a.minDue, dueDate:a.dueDate, limit:a.limit})).sort((a,b)=>a.bal-b.bal); }
 const TAX_CATCHUP_BY='2027-04-15';
 function taxReceived(){ return fact('income','2026-01-01','2099-12-31'); }
-function dedTotal(from){ return ((S.money.budget||{}).deductibles||[]).filter(x=>x.ok&&(x.d||'')>=from).reduce((a,x)=>a+(+x.amt||0),0); }
+function dedTotal(from){ return ((S.money.budget||{}).deductibles||[]).filter(x=>x.ok&&!x.netted&&(x.d||'')>=from).reduce((a,x)=>a+(+x.amt||0),0); }
 function datumInc(from){ try { return incomeBy(from, TODAY).datum||0; } catch(e){ return 0; } }
 function datumOrdersIn(from,to){ try { return ensureDatum().orders.filter(o=>(o.status==='delivered'||o.status==='closed') && (o.delivered||o.opened||'')>=from && (o.delivered||o.opened||'')<=to); } catch(e){ return []; } }
 function taxOwedSoFar(){ return taxState().need; }
@@ -10213,7 +10226,7 @@ function wfTodo(){
   return list.map(c=>{ const sp=c.split, mv=MOVES.filter(([k])=>sp[k]>0), left=openMoves(c).length;
     return `<div class="card sec" style="background:linear-gradient(135deg,rgba(0,214,50,.14),transparent 70%),var(--card)"><div class="hdr" style="margin-bottom:6px"><h2>💵 ${money0(c.amt)} landed</h2><span class="sub">${nice(c.gotOn||c.d)}${c.verified?' · <span style="color:var(--good)">✓ bank</span>':''}</span></div>
       <div class="sub" style="margin-bottom:10px">${left} move${left===1?'':'s'} left · tick after each transfer</div>${comboLine(c)}
-      <div class="stack">${mv.map(([k,l,f,ic])=>{ const on=!!(c.done||{})[k]; if (k==='cards' && cardAlloc(c).length) return cardAlloc(c).map(([nm,amt,zero,bal],i)=>{ const o=!!(c.done||{})['card'+i]||on; return `<div class="check ${o?'on':''}" onclick="tickCard('${c.id}',${i})"><div class="box">${o?'✓':''}</div><div class="txt">💳 Pay <b>${esc(nm)}</b> <span class="sub">${zero?'· pays it off':`· ${money0(bal-amt)} left after`}</span></div><b class="num" style="white-space:nowrap">${money0(amt)}</b></div>`; }).join(''); return `<div class="check ${on?'on':''}" onclick="tickMove('${c.id}','${k}')"><div class="box">${on?'✓':''}</div><div class="txt">${ic} ${k==='cards'?`Pay <b>${esc(cardList().map(c=>c.name).join(' → ')||'credit cards')}</b>`:k==='own'?`Draw to <b>BofA</b> <span class="sub">· bills + spending</span>`:k==='tax'&&sp.own!=null?(sp.taxKeep>=sp.tax-0.5?`Keep in <b>Business</b> <span class="sub">· tax money, fills the ${money0(bizS().floor)} minimum</span>`:`Tax: move <b>${money0(sp.tax-(sp.taxKeep||0))}</b> to <b>Tax Buffer</b> <span class="sub">· ${sp.taxKeep>0.5?`keep ${money0(sp.taxKeep)} in Business for the minimum`:'Business already has its '+money0(bizS().floor)}</span>`):`Move to <b>${k==='ret'?(sp.retLabel==='Roth'?'Roth IRA':'SEP IRA'):l}</b>`}</div><b class="num" style="white-space:nowrap">${money0(sp[k])}</b></div>`; }).join('')}</div>
+      <div class="stack">${mv.map(([k,l,f,ic])=>{ const on=!!(c.done||{})[k]; if (k==='cards' && cardAlloc(c).length) return cardAlloc(c).map(([nm,amt,zero,bal],i)=>{ const o=!!(c.done||{})['card'+i]||on; return `<div class="check ${o?'on':''}" onclick="tickCard('${c.id}',${i})"><div class="box">${o?'✓':''}</div><div class="txt">💳 Pay <b>${esc(nm)}</b> <span class="sub">${zero?'· pays it off':`· ${money0(bal-amt)} left after`}</span></div><b class="num" style="white-space:nowrap">${money0(amt)}</b></div>`; }).join(''); return `<div class="check ${on?'on':''}" onclick="tickMove('${c.id}','${k}')"><div class="box">${on?'✓':''}</div><div class="txt">${ic} ${k==='cards'?`Pay <b>${esc(cardList().map(c=>c.name).join(' → ')||'credit cards')}</b>`:k==='own'?`Draw to <b>BofA</b> <span class="sub">· bills + spending</span>`:k==='tax'&&sp.own!=null?(sp.taxKeep>=sp.tax-0.5?`Keep in <b>Business</b> <span class="sub">· tax money, fills the ${money0(bizS().floor)} minimum</span>`:`Tax: move <b>${money0(sp.tax-(sp.taxKeep||0))}</b> to <b>Tax Buffer</b> <span class="sub">· ${sp.taxKeep>0.5?`keep ${money0(sp.taxKeep)} in Business for the minimum`:'Business already has its '+money0(bizS().floor)}</span>`):k==='ret'&&sp.retLabel!=='Roth'?`Move to <b>SEP IRA</b> <span class="sub">· from Business · mark it as a ${(c.gotOn||c.d).slice(0,4)} contribution, then invest it</span>`:`Move to <b>${k==='ret'?(sp.retLabel==='Roth'?'Roth IRA':'SEP IRA'):l}</b>`}</div><b class="num" style="white-space:nowrap">${money0(sp[k])}</b></div>`; }).join('')}</div>
       ${sp.draw>0?`<div class="help keep" style="margin-top:8px;color:var(--warn)">This check doesn't cover its share of bills — ${money0(sp.draw)} short.</div>`:''}
       <div class="row" style="margin-top:10px;justify-content:flex-end"><button class="btn ghost sm" onclick="dismissMoves('${c.id}')">Already handled</button></div></div>`; }).join('');
 }
