@@ -1,0 +1,22 @@
+name: Daily news + things to learn
+on:
+  workflow_dispatch:
+  schedule: [{ cron: '13 10 * * *' }]
+  push:
+    branches: [main]
+    paths: ['ci/run-news', 'scripts/news.py']
+concurrency: { group: news, cancel-in-progress: false }
+permissions: { contents: read }
+jobs:
+  news:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install -q requests
+      - name: Search, write, save
+        env:
+          SUPA_SERVICE: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPA_URL: https://rlgoetbrlrsdijtlwnsb.supabase.co
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/news.py
