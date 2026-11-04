@@ -72,16 +72,21 @@ for (const v of ['life', 'social', 'hustle', 'learn']) {
 }
 if (SHOTS) fs.mkdirSync(SHOTS, { recursive: true });
 
-// swipe on each tabbed page: sample every frame — never blank, never two #view
+// swipe on each tabbed page: sample every frame — never blank, never two #view, only the changing part moves
 const swipe = async (v, dir) => {
   await page.evaluate(async v => { location.hash = v; await new Promise(r => setTimeout(r, 300)); scrollTo(0, 0); }, v);
   const has = await page.evaluate(() => !!(typeof swInfo === 'function' && swInfo())); if (!has) return null;
   return page.evaluate(async dir => {
-    const S0 = { minOp: 1, maxViews: 0, blank: 0, frames: 0, stuckTransform: '' };
+    const S0 = { minOp: 1, maxViews: 0, blank: 0, frames: 0, stuckTransform: '', fixedShift: 0, contentShift: 0 };
+    // what stays the same between tabs (everything up to the tab bar) must hold still; what comes after it slides
+    const pos = () => { const v = document.getElementById('view'), bar = swBar(); if (!v || !bar) return null; const after = swParts(v, bar)[0];
+      return { bar: bar.getBoundingClientRect().left, top: v.firstElementChild.getBoundingClientRect().left, after: after ? after.getBoundingClientRect().left : null }; };
+    const p0 = pos();
     let on = true; const tick = () => { if (!on) return; const vs = document.querySelectorAll('#view'); S0.maxViews = Math.max(S0.maxViews, vs.length);
       // what the user sees: the most opaque visible page layer
       let best = 0; for (const el of document.querySelectorAll('#view, .sw-ghost')) { let o = 1; for (let e = el; e && e !== document.documentElement; e = e.parentElement) { const cs = getComputedStyle(e); if (cs.visibility === 'hidden' || cs.display === 'none') { o = 0; break; } o *= +cs.opacity; }
         const r = el.getBoundingClientRect(); if (r.right <= 0 || r.left >= innerWidth || !el.textContent.trim()) o = 0; best = Math.max(best, o); }
+      const p = pos(); if (p && p0) { S0.fixedShift = Math.max(S0.fixedShift, Math.abs(p.bar - p0.bar), Math.abs(p.top - p0.top)); if (p.after != null) S0.contentShift = Math.max(S0.contentShift, Math.abs(p.after - p0.top)); }
       S0.minOp = Math.min(S0.minOp, best); if (best < 0.5) S0.blank++; S0.frames++; requestAnimationFrame(tick); };
     requestAnimationFrame(tick);
     const before = swInfo().i; swipeTab(dir); await new Promise(r => setTimeout(r, 900)); on = false;
@@ -95,6 +100,8 @@ for (const v of ['social', 'hustle', 'today', 'money', 'gym']) {
   ok(`swipe ${v}: one #view`, r.maxViews === 1, String(r.maxViews));
   ok(`swipe ${v}: no transform left on #view`, !r.stuckTransform, r.stuckTransform);
   ok(`swipe ${v}: moved to next tab`, r.moved);
+  ok(`swipe ${v}: header and tab bar hold still`, r.fixedShift < 1, Math.round(r.fixedShift) + ' px');
+  ok(`swipe ${v}: the tab's content slides`, r.contentShift > 20, Math.round(r.contentShift) + ' px');
 }
 
 if (SHOTS) { // one frame in the middle of a swipe: old page leaving, new page arriving, nothing blank

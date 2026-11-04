@@ -399,9 +399,9 @@ html[data-look="street"] body .nav[data-hl="study"] button.on{background:#ff6a13
 [data-look="street"] .hz-hero{box-shadow:none!important}[data-look="street"] .hz-hero .tag{color:#ff6a13!important}
 [data-look="street"] .hz-st>div,[data-look="street"] .res{background:#262626;border-radius:12px}
 [data-look="street"]{--hustle:#ff6a13}[data-look="street"] .hz-o{border-radius:14px}
-/* b298: swipe — the old page snapshot slides out under the new one; nothing scrolls sideways meanwhile */
+/* b298/b299: swipe — the old content snapshot slides out as the new slides in (header and tabs hold still); nothing scrolls sideways meanwhile */
 html.sw-run,html.sw-run body{overflow-x:clip}
-.sw-ghost{contain:layout paint}
+.sw-ghost{contain:layout}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -1986,7 +1986,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b298';
+const BUILD='b299';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -9435,49 +9435,57 @@ function swInfo(){ const bar=swBar(); if (!bar) return null; const B=[...bar.que
 // b298: page change by swipe or tab tap — the old page never leaves the screen until the new one has rendered.
 // The old #view is kept as an inert snapshot (.sw-ghost, no ids, so there is only ever one #view), both slide once,
 // then the snapshot is dropped and #view is left with no transform (a transform on #view breaks position:fixed inside it).
-let _swOld=null;
-function swGrab(dx){ const v=document.getElementById('view'); if (!v) return; _swOld={el:v, r:v.getBoundingClientRect(), dx:dx||0, t:Date.now()}; }
+let _swOld=null, _swLive=new Set();
+// b299: only what changes slides. Everything up to and including the tab bar (header, Life hero, the tabs themselves) stays put;
+// what comes after the bar, at every level up to #view, moves. Works for any page with a tab bar, nothing hard-coded.
+const SW_BARS='.seg, [role=tablist]';
+function swParts(root, bar){ if (!root||!bar) return []; const out=[]; for (let e=bar; e&&e!==root; e=e.parentElement) for (let s=e.nextElementSibling; s; s=s.nextElementSibling) out.push(s); return out; }
+function swMove(L, x, tr){ for (const e of L){ e.style.transition=tr||'none'; e.style.transform=x==null?'':`translate3d(${x}px,0,0)`; if (x!=null) _swLive.add(e); } }
+function swGrab(dx){ const v=document.getElementById('view'); if (!v) return; const bar=swBar(); _swOld={el:v, r:v.getBoundingClientRect(), dx:dx||0, t:Date.now(), bi:bar?[...v.querySelectorAll(SW_BARS)].indexOf(bar):-1}; }
 function swipeTab(dir, dx){ const I=swInfo(); if (!I||_swBusy) return false; const j=I.i+dir, v=document.getElementById('view');
   if (j<0||j>=I.B.length){ swSnap(v); return false; }
   _swBusy=true; nat('haptic','light'); swGrab(dx); _swAnim=dir; const y=I.bar.getBoundingClientRect().top+scrollY-70; _swScroll=y;
-  I.B[j].click();   // renders now (or on the next hashchange); the dragged page stays where your finger left it until then
+  I.B[j].click();   // renders now (or on the next hashchange); the dragged content stays where your finger left it until then
   setTimeout(()=>{ if (_swAnim){ _swAnim=0; _swOld=null; swSnap(v); } _swBusy=false; }, 1500); return true; }
 let _swScroll=null;
-function swClear(v){ if (!v) return; v.style.transition=''; v.style.transform=''; v.style.opacity=''; v.style.willChange=''; }
-function swSnap(v){ if (!v) return; v.style.transition=`transform .3s ${SW_EASE}`; v.style.transform='translate3d(0,0,0)'; v.style.opacity=''; setTimeout(()=>swClear(v),320); }
-// called at the end of render(): slide the snapshot out and the new page in, together, once
+function swClear(v){ for (const e of _swLive){ e.style.transition=''; e.style.transform=''; } _swLive.clear(); if (v){ v.style.transition=''; v.style.transform=''; v.style.opacity=''; v.style.willChange=''; } }
+function swSnap(v){ const L=[..._swLive]; swMove(L, 0, `transform .3s ${SW_EASE}`); setTimeout(()=>swClear(v),320); }
+// called at the end of render(): the old content slides out and the new content slides in, together, once
 function swAnimApply(){ if (!_swAnim) return; const v=document.getElementById('view'), d=_swAnim, O=_swOld; _swAnim=0; _swOld=null; _swBusy=false; if (!v) return;
+  for (const e of _swLive) if (!e.isConnected) _swLive.delete(e);
   if (_swScroll!=null){ if (scrollY>_swScroll) scrollTo(0,Math.max(0,_swScroll)); _swScroll=null; }
   const W=innerWidth, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let g=null;
+  let P=swParts(v, swBar()); if (!P.length) P=[v];
+  let g=null, G=[];
   if (O && O.el && O.el!==v && !O.el.isConnected && Date.now()-O.t<2000 && !reduce){
-    g=O.el; g.removeAttribute('id'); g.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id')); g.classList.remove('pg-in'); g.className+=' sw-ghost'; g.setAttribute('inert',''); g.setAttribute('aria-hidden','true');
-    g.style.cssText=`position:fixed;left:${O.r.left}px;top:${O.r.top}px;width:${O.r.width}px;margin:0;pointer-events:none;z-index:1;transition:none;transform:translate3d(${O.dx}px,0,0)`;
+    g=O.el; G=O.bi>=0 ? swParts(g, g.querySelectorAll(SW_BARS)[O.bi]) : []; const whole=!G.length;
+    g.removeAttribute('id'); g.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id')); g.classList.remove('pg-in'); g.className+=' sw-ghost'; g.setAttribute('inert',''); g.setAttribute('aria-hidden','true');
+    g.style.cssText=`position:fixed;left:${O.r.left}px;top:${O.r.top}px;width:${O.r.width}px;margin:0;pointer-events:none;z-index:1;transition:none;${whole?`transform:translate3d(${O.dx}px,0,0)`:'visibility:hidden'}`;
+    if (whole) G=[g]; else for (const e of G){ e.style.visibility='visible'; e.style.transition='none'; e.style.transform=`translate3d(${O.dx}px,0,0)`; }   // the snapshot shows only the part that leaves
     (document.getElementById('app')||document.body).appendChild(g); }
   if (reduce){ swClear(v); return; }
-  const from=g?O.dx+d*W:d*W*0.3;
-  v.style.transition='none'; v.style.transform=`translate3d(${from}px,0,0)`; void v.offsetWidth;
+  swMove(P, g?O.dx+d*W:d*W*0.3); void v.offsetWidth;
   document.documentElement.classList.add('sw-run');
-  requestAnimationFrame(()=>{ v.style.transition=`transform .28s ${SW_EASE}`; v.style.transform='translate3d(0,0,0)';
-    if (g){ g.style.transition=`transform .28s ${SW_EASE}`; g.style.transform=`translate3d(${-d*W}px,0,0)`; } });
+  const tr=`transform .28s ${SW_EASE}`;
+  requestAnimationFrame(()=>{ swMove(P, 0, tr); for (const e of G){ e.style.transition=tr; e.style.transform=`translate3d(${-d*W}px,0,0)`; } });
   let done=false; const fin=()=>{ if (done) return; done=true; if (g) g.remove(); swClear(v); document.documentElement.classList.remove('sw-run'); };
-  v.addEventListener('transitionend', e=>{ if (e.target===v) fin(); }, {once:true}); setTimeout(fin, 360); }
+  setTimeout(fin, 340); }
 // tapping a tab slides the same way a swipe would
 document.addEventListener('click', e=>{ const btn=e.target.closest&&e.target.closest('#view .seg button, #view [role=tablist] button'); if (!btn||btn.classList.contains('on')) return;
   const oc=btn.getAttribute('onclick')||''; if (!/\bS\s*[.[]|commit|save|Set\(/.test(oc)){ _navR=true; setTimeout(()=>{ _navR=false; },0); }   // a pure tab change reuses cached numbers
   if (_swAnim) return; const bar=btn.parentElement, B=[...bar.querySelectorAll('button')], i=B.findIndex(b=>b.classList.contains('on')), j=B.indexOf(btn); if (i<0||j<0) return; swGrab(0); _swAnim=j>i?1:-1; }, true);
-(function(){ let sx=null, sy=0, t0=0, lock=null, I=null, v=null, lastX=0, lastT=0, vel=0, lastD=0;
+(function(){ let sx=null, sy=0, t0=0, lock=null, I=null, v=null, lastX=0, lastT=0, vel=0, lastD=0, parts=null;
   const blocked=el=>{ for (let e=el; e && e!==document.body; e=e.parentElement){ if (e.matches&&e.matches('input,textarea,select,[contenteditable],canvas,[data-noswipe],.nav')) return true;
       const cs=getComputedStyle(e); if (cs.touchAction==='none'||cs.touchAction==='pan-x') return true; if (/(auto|scroll)/.test(cs.overflowX) && e.scrollWidth>e.clientWidth+2) return true; } return false; };
   const overlay=()=>[...document.querySelectorAll('#g-sheet,.modal,#navqa,#ci,#lvs.show,#g-live,#lockscr,#yg-ov')].some(x=>x.offsetWidth>0&&getComputedStyle(x).visibility!=='hidden'&&getComputedStyle(x).display!=='none');
   document.addEventListener('touchstart', e=>{ sx=null; lock=null; if (e.touches.length>1||_swBusy) return; const t=e.touches[0]; if (t.clientX<24) return;
     if (!e.target.closest||!e.target.closest('#view')||overlay()||blocked(e.target)) return; I=swInfo(); if (!I) return;
-    v=document.getElementById('view'); sx=lastX=t.clientX; sy=t.clientY; t0=lastT=performance.now(); vel=0; }, {passive:true});
+    v=document.getElementById('view'); parts=null; sx=lastX=t.clientX; sy=t.clientY; t0=lastT=performance.now(); vel=0; }, {passive:true});
   document.addEventListener('touchmove', e=>{ if (sx==null) return; const t=e.touches[0], dx=t.clientX-sx, dy=t.clientY-sy;
     if (lock==null){ if (Math.hypot(dx,dy)<9) return; lock=Math.abs(dx)>Math.abs(dy)*1.15?'x':'y'; if (lock==='y'){ sx=null; return; } }
     e.preventDefault(); const now=performance.now(); vel=(t.clientX-lastX)/Math.max(1,now-lastT); lastX=t.clientX; lastT=now;
     const edge=(dx<0&&I.i>=I.B.length-1)||(dx>0&&I.i<=0), d=edge?dx*0.28:dx;
-    v.style.transition='none'; v.style.transform=`translate3d(${d}px,0,0)`; lastD=d; }, {passive:false});
+    if (!parts) { parts=swParts(v, I.bar); if (!parts.length) parts=[v]; } swMove(parts, d); lastD=d; }, {passive:false});
   const end=()=>{ if (sx==null||lock!=='x'){ sx=null; return; } const dx=lastX-sx; sx=null; const dir=dx<0?1:-1, fling=Math.abs(vel)>0.45&&Math.sign(vel)===Math.sign(dx);
     if ((Math.abs(dx)>innerWidth*0.25||fling) && !(getSelection&&String(getSelection()).length)) { if (!swipeTab(dir, lastD)) swSnap(v); } else swSnap(v); lastD=0; };
   document.addEventListener('touchend', end, {passive:true}); document.addEventListener('touchcancel', end, {passive:true}); })();
