@@ -1,12 +1,8 @@
-# iPhone build #154 — success
+# iPhone build #155 — success
 
-Wed Nov  4 02:18:15 UTC 2026
+Wed Nov  4 03:33:09 UTC 2026
 
 ```
-✓ quest log has Daily, Weekly, Season, Side
-✓ no duplicate quest card on Today
-✓ gold earned and whole
-✓ shop: shield costs 150 and adds a shield
 ✓ shields cap at 3, gold never negative
 ✓ spend log kept
 ✓ season tier within 1–13
@@ -58,6 +54,10 @@ Wed Nov  4 02:18:15 UTC 2026
 ✓ Datum: logged purchases become write-offs — {"sug":true,"rows":1,"logged":true,"ret":true}
 ✓ money plan invests the FI plan amount once it starts — {"sug":true,"rows":1,"logged":true,"ret":true}
 ✓ Datum shopping suggestions add to the list and disappear once added — {"n":6,"added":true,"gone":true}
+✓ every KR source returns a number
+✓ a lesson done earns XP and moves the Lessons KR — {"bad":[],"lesson":true,"inspo":true,"kr":true,"area":true,"back":true}
+✓ saving inspo earns XP — {"bad":[],"lesson":true,"inspo":true,"kr":true,"area":true,"back":true}
+✓ undoing a lesson takes today’s XP back — {"bad":[],"lesson":true,"inspo":true,"kr":true,"area":true,"back":true}
 ✓ no errors anywhere
 
 all checks passed
@@ -66,13 +66,13 @@ all checks passed
 > node scripts/build-www.mjs
 
 www built with Supabase config
-✔ Adding native Xcode project in ios in 14.73ms
-✔ add in 14.98ms
-✔ Copying web assets from www to ios/App/App/public in 40.24ms
-✔ Creating capacitor.config.json in ios/App/App in 1.03ms
-✔ copy ios in 89.45ms
-✔ Updating iOS plugins in 1.37ms
-✔ Updating iOS native dependencies with pod install in 18.28s
+✔ Adding native Xcode project in ios in 28.15ms
+✔ add in 28.86ms
+✔ Copying web assets from www to ios/App/App/public in 77.44ms
+✔ Creating capacitor.config.json in ios/App/App in 718.75μs
+✔ copy ios in 155.26ms
+✔ Updating iOS plugins in 2.71ms
+✔ Updating iOS native dependencies with pod install in 26.11s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -84,15 +84,15 @@ www built with Supabase config
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 18.33s
+✔ update ios in 26.41s
 [success] ios platform added!
 Follow the Developer Workflow guide to get building:
 https://capacitorjs.com/docs/basics/workflow
-✔ Copying web assets from www to ios/App/App/public in 116.35ms
-✔ Creating capacitor.config.json in ios/App/App in 1.41ms
-✔ copy ios in 154.08ms
-✔ Updating iOS plugins in 1.24ms
-✔ Updating iOS native dependencies with pod install in 7.66s
+✔ Copying web assets from www to ios/App/App/public in 166.08ms
+✔ Creating capacitor.config.json in ios/App/App in 3.85ms
+✔ copy ios in 215.66ms
+✔ Updating iOS plugins in 2.09ms
+✔ Updating iOS native dependencies with pod install in 12.06s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -104,8 +104,8 @@ https://capacitorjs.com/docs/basics/workflow
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 7.71s
-[info] Sync finished in 8.004s
+✔ update ios in 12.12s
+[info] Sync finished in 12.45s
 app capabilities: ['IN_APP_PURCHASE', 'HEALTHKIT', 'IN_APP_PURCHASE', 'IN_APP_PURCHASE']
 com.ewheridot.tegaexe.widgets ok
 com.ewheridot.tegaexe.share ok
@@ -116,11 +116,11 @@ entitlements: healthkit keychain-access-groups
 TIER=full
 Running altool at path '/Applications/Xcode_26.3.app/Contents/SharedFrameworks/ContentDelivery.framework/Resources/altool'...
 
-2026-11-04 02:18:15.531  INFO: [ContentDelivery.Uploader.60000109C4C0] 
+2026-11-04 03:33:08.595  INFO: [ContentDelivery.Uploader.6000028444C0] 
 ==========================================
 UPLOAD SUCCEEDED with no errors
-Delivery UUID: 3f1d9374-b9bd-4cc4-ac9c-b2fbec34b118
-Transferred 8068619 bytes in 0.625 seconds (12.9MB/s, 103.318Mbps)
+Delivery UUID: 4953ba7d-3330-4b49-a85f-e56d0928ca2c
+Transferred 8073260 bytes in 0.853 seconds (9.5MB/s, 75.743Mbps)
 ==========================================
 No errors uploading archive at '/Users/runner/work/_temp/out/App.ipa'.
 ```
