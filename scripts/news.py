@@ -37,14 +37,23 @@ Return ONLY JSON, no prose, in this shape:
  "learn":[{{"t":"a skill or topic to learn, 2-6 words","why":"one line tying it to their goals or what they're doing","first":"the first concrete step (a specific free video, article or exercise)","url":"https://... link to that first step","mins":15}}]}}
 
 Rules: top = the 5 most important general news stories today (US and world), from reputable outlets, published in the last 24-36 hours. yours = 6 stories from the last few days in this person's worlds (fashion/modeling industry, jewelry/grillz/dental, self-employed money and taxes, creator economy, Chicago, music/art), each with a real why. learn = 5 things they'd likely enjoy or benefit from learning that are NOT in already_suggested and not already covered by recently_learned; mix practical (business, money, craft) with curiosity. Every url must be a real page you found. No duplicates across sections."""
-r = requests.post('https://api.anthropic.com/v1/messages', headers={'x-api-key': AK, 'anthropic-version': '2023-06-01', 'content-type': 'application/json'},
-    json={'model': MODEL, 'max_tokens': 6000, 'tools': [{'type': 'web_search_20250305', 'name': 'web_search', 'max_uses': 12}], 'messages': [{'role': 'user', 'content': prompt}]}, timeout=600)
-if r.status_code != 200: print('claude error', r.status_code); sys.exit(1)
-txt = ''.join(b.get('text', '') for b in r.json().get('content', []) if b.get('type') == 'text')
-m = re.search(r'\{.*\}', txt, re.S)
-try: out = json.loads(m.group(0)) if m else None
-except Exception: out = None
-if not out: print('no json in reply'); sys.exit(1)
+msgs = [{'role': 'user', 'content': prompt}]; content = []; stop = ''
+for _ in range(6):   # web search can pause a long turn; hand it back until it finishes
+    r = requests.post('https://api.anthropic.com/v1/messages', headers={'x-api-key': AK, 'anthropic-version': '2023-06-01', 'content-type': 'application/json'},
+        json={'model': MODEL, 'max_tokens': 16000, 'tools': [{'type': 'web_search_20250305', 'name': 'web_search', 'max_uses': 12}], 'messages': msgs}, timeout=900)
+    if r.status_code != 200: print('claude error', r.status_code); sys.exit(1)
+    j = r.json(); content = j.get('content', []); stop = j.get('stop_reason', '')
+    if stop != 'pause_turn': break
+    msgs = [msgs[0], {'role': 'assistant', 'content': content}]
+txt = ''.join(b.get('text', '') for b in content if b.get('type') == 'text')
+out = None
+for i in [k for k, ch in enumerate(txt) if ch == '{']:
+    try:
+        o, _ = json.JSONDecoder().raw_decode(txt[i:])
+        if isinstance(o, dict) and ('top' in o or 'learn' in o): out = o; break
+    except Exception: continue
+if not out: print('no json in reply · stop:', stop, '· text chars:', len(txt)); sys.exit(1)
+
 ok = lambda u: isinstance(u, str) and u.startswith('http')
 data = {'at': datetime.datetime.utcnow().isoformat(timespec='seconds') + 'Z', 'day': today,
         'top': [x for x in out.get('top', []) if x.get('h') and ok(x.get('url'))][:6],
