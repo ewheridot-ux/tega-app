@@ -399,8 +399,8 @@ html[data-look="street"] body .nav[data-hl="study"] button.on{background:#ff6a13
 [data-look="street"] .hz-hero{box-shadow:none!important}[data-look="street"] .hz-hero .tag{color:#ff6a13!important}
 [data-look="street"] .hz-st>div,[data-look="street"] .res{background:#262626;border-radius:12px}
 [data-look="street"]{--hustle:#ff6a13}[data-look="street"] .hz-o{border-radius:14px}
-/* b298/b299: swipe — the old content snapshot slides out as the new slides in (header and tabs hold still); nothing scrolls sideways meanwhile */
-html.sw-run,html.sw-run body{overflow-x:clip}
+/* b298/b299: swipe — the old content snapshot slides out as the new slides in (header and tabs hold still); nothing scrolls sideways meanwhile (clip on #app, never html/body — that resets the page scroll) */
+html.sw-run #app{overflow-x:clip}
 .sw-ghost{contain:layout}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
@@ -1986,7 +1986,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b299';
+const BUILD='b300';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -3205,7 +3205,7 @@ function dDelLearn(id){ const D=ensureDatum(); D.learning=D.learning.filter(l=>l
 const VIEWS = ['life','learn','hustle','city','today','goals','week','quarter','year','vision','model','datum','money','deadlines','content','gym','trophies','evolve','social','bosses'];
 let view = (location.hash||'#today').slice(1); if(!VIEWS.includes(view)) view='today';
 let curDay = TODAY, curWeek = THIS_WEEK, curQ = S.quarters[THIS_Q] ? THIS_Q : Object.keys(S.quarters).sort().pop(), curY = S.years[THIS_Y] ? THIS_Y : Object.keys(S.years).sort().pop();
-window.addEventListener('hashchange', () => { const v=location.hash.slice(1); if(VIEWS.includes(v)){ view=v; _navR=true; render(); window.scrollTo(0,0);} });
+window.addEventListener('hashchange', () => { const v=location.hash.slice(1); if(VIEWS.includes(v)){ view=v; _navR=true; render(); const ky=_swY!=null&&Date.now()-_swYt<1500; if (ky) scrollTo(0,_swY); else window.scrollTo(0,0); _swY=null; } });   // b300: a tab change keeps your scroll; a new section starts at the top
 const GOALS = [['week','Week'],['quarter','OKRs'],['year','Year'],['vision','5-Year']];
 // b290: Life = the real categories that aren't work: your people, the side hustle, and what you're learning
 const LIFE = [['social','Circle'],['hustle','Hustle'],['learn','Learning']];
@@ -5120,7 +5120,8 @@ function mNow(E, P){
       <div class="mm-day"><div class="tag">${sel===TODAY?'Today':niceLong(sel)}</div>${selE.length?selE.map(mRow).join(''):`<div class="sub" style="padding:6px 2px">Free — nothing booked.</div>`}</div></div>
     <div class="card sec mm-list"><div class="tag mm-lab">Scheduled</div>${up.length?up.map(mRow).join(''):'<div class="sub" style="padding:6px 10px 10px">Nothing on the books.</div>'}</div>`;
 }
-function mHistory(E, P){
+function mHistory(E, P){ return rpgC('mHistory|'+mHist+'|'+(mClient||''), ()=>mHistory0(E,P)); }   // b300: built once per data version and filter (the biggest part of Model)
+function mHistory0(E, P){
   const notes=mState().notes||{}, needNote=E.filter(e=>e.t==='job'&&e.s!=='cancelled'&&e.end<TODAY&&daysBetween(e.end,TODAY)<=30&&!notes[e.id]&&!(mState().hide||{})[e.id]).sort((a,b)=>b.end.localeCompare(a.end))[0];
   const wait=E.filter(e=>e.end<TODAY && daysBetween(e.end,TODAY)<=60 && ['option','casting','selftape','test'].includes(e.t) && !['booked','nobook','declined','released','cancelled'].includes(e.s) && !(mState().hide||{})['w'+e.id]).sort((a,b)=>b.end.localeCompare(a.end));
   const jobs=E.filter(e=>e.t==='job'&&e.s!=='cancelled');
@@ -9441,19 +9442,19 @@ let _swOld=null, _swLive=new Set();
 const SW_BARS='.seg, [role=tablist]';
 function swParts(root, bar){ if (!root||!bar) return []; const out=[]; for (let e=bar; e&&e!==root; e=e.parentElement) for (let s=e.nextElementSibling; s; s=s.nextElementSibling) out.push(s); return out; }
 function swMove(L, x, tr){ for (const e of L){ e.style.transition=tr||'none'; e.style.transform=x==null?'':`translate3d(${x}px,0,0)`; if (x!=null) _swLive.add(e); } }
-function swGrab(dx){ const v=document.getElementById('view'); if (!v) return; const bar=swBar(); _swOld={el:v, r:v.getBoundingClientRect(), dx:dx||0, t:Date.now(), bi:bar?[...v.querySelectorAll(SW_BARS)].indexOf(bar):-1}; }
+function swGrab(dx){ const v=document.getElementById('view'); if (!v) return; const bar=swBar(); _swY=scrollY; _swYt=Date.now(); _swOld={el:v, r:v.getBoundingClientRect(), dx:dx||0, t:Date.now(), bi:bar?[...v.querySelectorAll(SW_BARS)].indexOf(bar):-1}; }
 function swipeTab(dir, dx){ const I=swInfo(); if (!I||_swBusy) return false; const j=I.i+dir, v=document.getElementById('view');
   if (j<0||j>=I.B.length){ swSnap(v); return false; }
-  _swBusy=true; nat('haptic','light'); swGrab(dx); _swAnim=dir; const y=I.bar.getBoundingClientRect().top+scrollY-70; _swScroll=y;
+  _swBusy=true; nat('haptic','light'); swGrab(dx); _swAnim=dir;
   I.B[j].click();   // renders now (or on the next hashchange); the dragged content stays where your finger left it until then
   setTimeout(()=>{ if (_swAnim){ _swAnim=0; _swOld=null; swSnap(v); } _swBusy=false; }, 1500); return true; }
-let _swScroll=null;
+let _swY=null, _swYt=0;   // b300: where you were scrolled when the tab changed — the next tab opens at the same height
 function swClear(v){ for (const e of _swLive){ e.style.transition=''; e.style.transform=''; } _swLive.clear(); if (v){ v.style.transition=''; v.style.transform=''; v.style.opacity=''; v.style.willChange=''; } }
 function swSnap(v){ const L=[..._swLive]; swMove(L, 0, `transform .3s ${SW_EASE}`); setTimeout(()=>swClear(v),320); }
 // called at the end of render(): the old content slides out and the new content slides in, together, once
 function swAnimApply(){ if (!_swAnim) return; const v=document.getElementById('view'), d=_swAnim, O=_swOld; _swAnim=0; _swOld=null; _swBusy=false; if (!v) return;
   for (const e of _swLive) if (!e.isConnected) _swLive.delete(e);
-  if (_swScroll!=null){ if (scrollY>_swScroll) scrollTo(0,Math.max(0,_swScroll)); _swScroll=null; }
+  if (_swY!=null && Date.now()-_swYt<1500){ scrollTo(0,_swY); setTimeout(()=>{ _swY=null; },0); }
   const W=innerWidth, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   let P=swParts(v, swBar()); if (!P.length) P=[v];
   let g=null, G=[];
