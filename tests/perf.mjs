@@ -41,6 +41,9 @@ const size = await page.evaluate(() => tegaFixture());
 console.log('fixture', JSON.stringify(size));
 
 // avatar: reload with the fixture in storage (cloud copy still on its way); the picture must be in the very first render
+// on the phone the picture was baked in an earlier session; here, wait for this session's bake (WebKit bakes slower than Chromium)
+const baked = await page.waitForFunction(() => { try { return !!(JSON.parse(localStorage.getItem('tega-pfp')) || {}).url; } catch (e) { return false; } }, null, { timeout: 15000 }).then(() => true, () => false);
+ok('avatar gets baked and saved on the phone', baked);
 await page.reload(); await boot();
 const av = await page.evaluate(() => { const f1 = __frames.find(t => t >= (window.__r0 ?? 0));   // the first frame that shows the app
   return { img: window.__avFirst === true, d: window.__avPaint != null && f1 != null ? window.__avPaint - f1 : null }; });
@@ -118,9 +121,52 @@ for (const v of ['social', 'today', 'money']) {
   ok(`swipe ${v}: next tab keeps your scroll`, r.y0 > 50 && Math.abs(r.y - r.want) < 4, `was ${Math.round(r.y0)} → ${Math.round(r.y)}`);
 }
 
+// a real finger drag (Chromium; WebKit's test build has no Touch constructor): mid-scroll, the next tab is right there beside the finger —
+// no empty gap where a page should be; letting go early springs back to the same tab; a long drag lands on the next one
+const canTouch = await page.evaluate(() => typeof Touch === 'function');
+if (canTouch) for (const v of ['social', 'today', 'money']) {
+  const r = await page.evaluate(async v => {
+    const raf = () => new Promise(r => requestAnimationFrame(r)), wait = ms => new Promise(r => setTimeout(r, ms));
+    try { evoSnooze = true; closeEvo(); } catch (e) { } document.getElementById('lvs')?.remove();   // celebrations the fixture's XP triggers
+    location.hash = 'gym'; await wait(200); location.hash = v; await wait(450); if (!swInfo()) return null;
+    const y0 = Math.min(300, document.documentElement.scrollHeight - innerHeight); scrollTo(0, y0); await wait(120);
+    const I = swInfo(), oi = I.i, dir = oi < I.B.length - 1 ? 1 : -1, W = innerWidth, yy = Math.max(I.bar.getBoundingClientRect().bottom + 60, innerHeight * 0.6);
+    let tgt = null, yT = yy; const pick = () => { tgt = null; yT = yy; for (let k = 0; k < 8 && !tgt; k++) { const el = document.elementFromPoint(W * 0.5, yT); if (el && el.closest('#view') && !el.closest('input,textarea,select,button,[data-noswipe],.seg') && !(swBar() || {}).contains?.(el)) tgt = el; else yT += 40; } return tgt; };   // a finger lands on whatever is there now
+    if (!pick()) return { skip: 'no plain spot to drag' };
+    const T = (type, x) => { const t = new Touch({ identifier: 1, target: tgt, clientX: x, clientY: yT }); tgt.dispatchEvent(new TouchEvent(type, { touches: type === 'touchend' ? [] : [t], targetTouches: type === 'touchend' ? [] : [t], changedTouches: [t], bubbles: true, cancelable: true })); };
+    const x0 = W * 0.5; let cur = 0; const drag = async (to, steps = 6) => { const from = cur; for (let k = 1; k <= steps; k++) { cur = from + ((to - from) * k) / steps; T('touchmove', x0 + cur); await raf(); } };   // moves from where the finger is
+    const out = { y0 };
+    // 1) drag 120 px and hold
+    cur = 0; T('touchstart', x0); await drag(-dir * 120); await wait(250); await drag(-dir * 122, 1); await raf();
+    const probeX = dir > 0 ? W - 50 : 50, at = document.elementFromPoint(probeX, yT);
+    out.peek = !!document.querySelector('.sw-ghost') && !!at && !!at.closest('#view') && !at.closest('.sw-ghost');   // what fills the gap is the next tab, live
+    out.scrollHeld = Math.abs(scrollY - y0) < 2;
+    // 2) back to 30 px and let go: springs back to the same tab
+    await drag(-dir * 30, 8); await wait(120); T('touchend', x0 - dir * 30); await wait(700);
+    out.backSame = swInfo() && swInfo().i === oi && !document.querySelector('.sw-ghost') && Math.abs(scrollY - y0) < 2;
+    // 3) a long drag lands on the next tab, at the same height, with nothing left transformed
+    if (!pick()) return { skip: 'no plain spot to drag' }; cur = 0; T('touchstart', x0); await drag(-dir * 220, 5); await wait(250); T('touchend', x0 - dir * 220); await wait(800);
+    out.landed = swInfo() && swInfo().i === oi + dir && !document.querySelector('.sw-ghost') && Math.abs(scrollY - y0) < 2;
+    out.clean = ![...document.querySelectorAll('#view, #view *')].some(e => e.style && e.style.transform);
+    return out; }, v);
+  if (!r) continue; if (r.skip) { console.log(`· drag ${v}: ${r.skip}`); continue; }
+  ok(`drag ${v} (scrolled ${Math.round(r.y0)}): next tab shows beside your finger, no gap`, r.peek);
+  ok(`drag ${v}: scroll holds while dragging`, r.scrollHeld);
+  ok(`drag ${v}: let go early → back on the same tab`, r.backSame);
+  ok(`drag ${v}: long drag → next tab, same height`, r.landed);
+  ok(`drag ${v}: nothing left transformed`, r.clean);
+}
+
 if (SHOTS) { // one frame in the middle of a swipe: old page leaving, new page arriving, nothing blank
   await page.evaluate(async () => { try { evoSnooze = true; closeEvo(); } catch (e) { } location.hash = 'social'; await new Promise(r => setTimeout(r, 400)); scrollTo(0, 0); swipeTab(1); await new Promise(r => setTimeout(r, 110)); });
   await page.screenshot({ path: path.join(SHOTS, `${ENGINE}-swipe-mid.png`) }); await page.waitForTimeout(600); }
+if (SHOTS && canTouch) { // finger held 150 px into a drag, scrolled down: both tabs side by side
+  const held = await page.evaluate(async () => { const wait = ms => new Promise(r => setTimeout(r, ms)), raf = () => new Promise(r => requestAnimationFrame(r));
+    document.getElementById('lvs')?.remove(); location.hash = 'today'; await wait(300); location.hash = 'social'; await wait(500); scrollTo(0, 260); await wait(150);
+    const W = innerWidth, y = innerHeight * 0.7, tgt = document.elementFromPoint(W / 2, y); if (!tgt || !tgt.closest('#view')) return false;
+    const T = (type, x) => { const t = new Touch({ identifier: 2, target: tgt, clientX: x, clientY: y }); tgt.dispatchEvent(new TouchEvent(type, { touches: type === 'touchend' ? [] : [t], targetTouches: type === 'touchend' ? [] : [t], changedTouches: [t], bubbles: true, cancelable: true })); };
+    T('touchstart', W / 2); for (let k = 1; k <= 8; k++) { T('touchmove', W / 2 - 150 * k / 8); await raf(); } await wait(300); T('touchmove', W / 2 - 151); await raf(); window.__held = () => T('touchend', W / 2 - 151); return true; });
+  if (held) { await page.screenshot({ path: path.join(SHOTS, `${ENGINE}-drag-held.png`) }); await page.evaluate(() => window.__held()); await page.waitForTimeout(700); } }
 if (SHOTS) for (const v of ['today', 'social', 'hustle', 'learn', 'gym', 'money', 'model', 'city']) {
   await page.evaluate(async v => { try { evoSnooze = true; closeEvo(); } catch (e) { } location.hash = v; await new Promise(r => setTimeout(r, 500)); scrollTo(0, 0); }, v); await page.waitForTimeout(500);
   await page.screenshot({ path: path.join(SHOTS, `${ENGINE}-${v}.png`) });

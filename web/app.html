@@ -1986,7 +1986,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b300';
+const BUILD='b301';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -3205,7 +3205,11 @@ function dDelLearn(id){ const D=ensureDatum(); D.learning=D.learning.filter(l=>l
 const VIEWS = ['life','learn','hustle','city','today','goals','week','quarter','year','vision','model','datum','money','deadlines','content','gym','trophies','evolve','social','bosses'];
 let view = (location.hash||'#today').slice(1); if(!VIEWS.includes(view)) view='today';
 let curDay = TODAY, curWeek = THIS_WEEK, curQ = S.quarters[THIS_Q] ? THIS_Q : Object.keys(S.quarters).sort().pop(), curY = S.years[THIS_Y] ? THIS_Y : Object.keys(S.years).sort().pop();
-window.addEventListener('hashchange', () => { const v=location.hash.slice(1); if(VIEWS.includes(v)){ view=v; _navR=true; render(); const ky=_swY!=null&&Date.now()-_swYt<1500; if (ky) scrollTo(0,_swY); else window.scrollTo(0,0); _swY=null; } });   // b300: a tab change keeps your scroll; a new section starts at the top
+// b301: each section remembers where you were (10 min), like a native tab bar; a tab change inside a section keeps your height
+const _secY={}, secOf=v=>LIFE.some(([k])=>k===v)||v==='life'?'life':GOALS.some(([k])=>k===v)||v==='goals'?'today':v;
+window.addEventListener('hashchange', () => { const v=location.hash.slice(1); if(VIEWS.includes(v)){ const from=secOf(view), to=secOf(v); if (from!==to) _secY[from]={y:scrollY, t:Date.now()};
+  view=v; _navR=true; render(); const ky=_swY!=null&&Date.now()-_swYt<1500, m=_secY[to];
+  if (ky) scrollTo(0,_swY); else if (from!==to && m && Date.now()-m.t<6e5) scrollTo(0,m.y); else window.scrollTo(0,0); _swY=null; } });   // b300: a tab change keeps your scroll; a new section starts at the top
 const GOALS = [['week','Week'],['quarter','OKRs'],['year','Year'],['vision','5-Year']];
 // b290: Life = the real categories that aren't work: your people, the side hustle, and what you're learning
 const LIFE = [['social','Circle'],['hustle','Hustle'],['learn','Learning']];
@@ -9451,19 +9455,26 @@ function swipeTab(dir, dx){ const I=swInfo(); if (!I||_swBusy) return false; con
 let _swY=null, _swYt=0;   // b300: where you were scrolled when the tab changed — the next tab opens at the same height
 function swClear(v){ for (const e of _swLive){ e.style.transition=''; e.style.transform=''; } _swLive.clear(); if (v){ v.style.transition=''; v.style.transform=''; v.style.opacity=''; v.style.willChange=''; } }
 function swSnap(v){ const L=[..._swLive]; swMove(L, 0, `transform .3s ${SW_EASE}`); setTimeout(()=>swClear(v),320); }
-// called at the end of render(): the old content slides out and the new content slides in, together, once
-function swAnimApply(){ if (!_swAnim) return; const v=document.getElementById('view'), d=_swAnim, O=_swOld; _swAnim=0; _swOld=null; _swBusy=false; if (!v) return;
+// called at the end of render(): the old content slides out and the new content slides in, together, once.
+// b301 modes: 'peek' = a drag just started — the neighbour tab is rendered beside the current content and both follow the finger;
+// 'quiet' = a drag was let go early — the original tab is back, the snapshot goes, nothing animates.
+let _swMode=null, _swPair=null, _swDx=0;
+function swGhost(O){ const g=O.el, G0=O.bi>=0 ? swParts(g, g.querySelectorAll(SW_BARS)[O.bi]) : [], whole=!G0.length;
+  g.removeAttribute('id'); g.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id')); g.classList.remove('pg-in'); g.className+=' sw-ghost'; g.setAttribute('inert',''); g.setAttribute('aria-hidden','true');
+  g.style.cssText=`position:fixed;left:${O.r.left}px;top:${O.r.top}px;width:${O.r.width}px;margin:0;pointer-events:none;z-index:1;transition:none;${whole?'':'visibility:hidden'}`;
+  const G=whole?[g]:G0; for (const e of G){ if (!whole) e.style.visibility='visible'; e.style.transition='none'; e.style.transform=`translate3d(${O.dx}px,0,0)`; }   // the snapshot shows only the part that leaves
+  (document.getElementById('app')||document.body).appendChild(g); return {g, G}; }
+function swAnimApply(){ if (!_swAnim) return; const v=document.getElementById('view'), d=_swAnim, O=_swOld, mode=_swMode; _swAnim=0; _swOld=null; _swMode=null; if (mode!=='peek') _swBusy=false; if (!v) return;
   for (const e of _swLive) if (!e.isConnected) _swLive.delete(e);
   if (_swY!=null && Date.now()-_swYt<1500){ scrollTo(0,_swY); setTimeout(()=>{ _swY=null; },0); }
+  if (mode==='quiet'){ if (_swPair&&_swPair.g) _swPair.g.remove(); _swPair=null; swClear(v); document.documentElement.classList.remove('sw-run'); return; }
   const W=innerWidth, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   let P=swParts(v, swBar()); if (!P.length) P=[v];
   let g=null, G=[];
-  if (O && O.el && O.el!==v && !O.el.isConnected && Date.now()-O.t<2000 && !reduce){
-    g=O.el; G=O.bi>=0 ? swParts(g, g.querySelectorAll(SW_BARS)[O.bi]) : []; const whole=!G.length;
-    g.removeAttribute('id'); g.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id')); g.classList.remove('pg-in'); g.className+=' sw-ghost'; g.setAttribute('inert',''); g.setAttribute('aria-hidden','true');
-    g.style.cssText=`position:fixed;left:${O.r.left}px;top:${O.r.top}px;width:${O.r.width}px;margin:0;pointer-events:none;z-index:1;transition:none;${whole?`transform:translate3d(${O.dx}px,0,0)`:'visibility:hidden'}`;
-    if (whole) G=[g]; else for (const e of G){ e.style.visibility='visible'; e.style.transition='none'; e.style.transform=`translate3d(${O.dx}px,0,0)`; }   // the snapshot shows only the part that leaves
-    (document.getElementById('app')||document.body).appendChild(g); }
+  if (O && O.el && O.el!==v && !O.el.isConnected && Date.now()-O.t<2000 && (!reduce||mode==='peek')) ({g, G}=swGhost(O));
+  if (mode==='peek'){   // keep the highlight on the tab you started from until the move is final
+    const I=swInfo(); if (I && O && O.oi!=null && I.B[O.oi]){ I.B[I.i].classList.remove('on'); I.B[O.oi].classList.add('on'); }
+    document.documentElement.classList.add('sw-run'); _swPair={g, G, P, side:d, v, oi:O&&O.oi, ni:O&&O.ni}; swPairAt(_swDx); swPairReady(); return; }
   if (reduce){ swClear(v); return; }
   swMove(P, g?O.dx+d*W:d*W*0.3); void v.offsetWidth;
   document.documentElement.classList.add('sw-run');
@@ -9471,25 +9482,64 @@ function swAnimApply(){ if (!_swAnim) return; const v=document.getElementById('v
   requestAnimationFrame(()=>{ swMove(P, 0, tr); for (const e of G){ e.style.transition=tr; e.style.transform=`translate3d(${-d*W}px,0,0)`; } });
   let done=false; const fin=()=>{ if (done) return; done=true; if (g) g.remove(); swClear(v); document.documentElement.classList.remove('sw-run'); };
   setTimeout(fin, 340); }
+// both pages at the finger: the leaving content at x, the arriving content one screen beside it
+function swPairAt(x){ const R=_swPair; if (!R) return; const W=innerWidth; for (const e of R.G){ e.style.transition='none'; e.style.transform=`translate3d(${x}px,0,0)`; } swMove(R.P, x+R.side*W); }
+let _swOnReady=null; function swPairReady(){ const f=_swOnReady; _swOnReady=null; if (f) f(); }
+// let go: finish the move (dir matches the side shown) or spring back; speed follows the flick
+function swPairEnd(go, vel){ const R=_swPair; if (!R) return; const W=innerWidth, x=_swDx, to=go?-R.side*W:0, rem=Math.abs(to-x), dur=Math.round(Math.max(160, Math.min(320, rem/Math.max(Math.abs(vel)||0, .9))));
+  const tr=`transform ${dur}ms cubic-bezier(.2,.75,.25,1)`; _swBusy=true;
+  for (const e of R.G){ e.style.transition=tr; e.style.transform=`translate3d(${to}px,0,0)`; } swMove(R.P, to+R.side*W, tr);
+  if (go){ nat('haptic','light'); const I=swInfo(); if (I && R.ni!=null && I.B[R.ni]){ I.B[I.i].classList.remove('on'); I.B[R.ni].classList.add('on'); } }
+  setTimeout(()=>{ if (go){ if (R.g) R.g.remove(); _swPair=null; swClear(R.v); document.documentElement.classList.remove('sw-run'); _swBusy=false; }
+    else swRevert(); }, dur+20); }
+// put the tab you started from back (the snapshot covers the swap, so nothing flickers)
+function swRevert(){ const R=_swPair; if (!R){ _swBusy=false; return; } const I=swInfo(), b=I&&R.oi!=null&&I.bar.querySelectorAll('button')[R.oi];
+  if (!b){ if (R.g) R.g.remove(); _swPair=null; swClear(R.v); document.documentElement.classList.remove('sw-run'); _swBusy=false; return; }
+  _swY=scrollY; _swYt=Date.now(); _swMode='quiet'; _swAnim=1; b.classList.remove('on'); b.click();
+  setTimeout(()=>{ if (_swMode==='quiet'){ _swMode=null; _swAnim=0; if (_swPair&&_swPair.g) _swPair.g.remove(); _swPair=null; swClear(document.getElementById('view')); document.documentElement.classList.remove('sw-run'); } _swBusy=false; }, 1200); }
 // tapping a tab slides the same way a swipe would
 document.addEventListener('click', e=>{ const btn=e.target.closest&&e.target.closest('#view .seg button, #view [role=tablist] button'); if (!btn||btn.classList.contains('on')) return;
   const oc=btn.getAttribute('onclick')||''; if (!/\bS\s*[.[]|commit|save|Set\(/.test(oc)){ _navR=true; setTimeout(()=>{ _navR=false; },0); }   // a pure tab change reuses cached numbers
   if (_swAnim) return; const bar=btn.parentElement, B=[...bar.querySelectorAll('button')], i=B.findIndex(b=>b.classList.contains('on')), j=B.indexOf(btn); if (i<0||j<0) return; swGrab(0); _swAnim=j>i?1:-1; }, true);
-(function(){ let sx=null, sy=0, t0=0, lock=null, I=null, v=null, lastX=0, lastT=0, vel=0, lastD=0, parts=null;
+let _swGesture=false;
+const swPure=b=>!/\bS\s*[.[]|commit|save|Set\(/.test(b.getAttribute('onclick')||'');   // a tab button that only changes what you see
+(function(){ let sx=null, sy=0, lock=null, I=null, v=null, lastX=0, lastT=0, vel=0, lastD=0, parts=null, oi=0, pend=0, peekOK=false;
   const blocked=el=>{ for (let e=el; e && e!==document.body; e=e.parentElement){ if (e.matches&&e.matches('input,textarea,select,[contenteditable],canvas,[data-noswipe],.nav')) return true;
       const cs=getComputedStyle(e); if (cs.touchAction==='none'||cs.touchAction==='pan-x') return true; if (/(auto|scroll)/.test(cs.overflowX) && e.scrollWidth>e.clientWidth+2) return true; } return false; };
   const overlay=()=>[...document.querySelectorAll('#g-sheet,.modal,#navqa,#ci,#lvs.show,#g-live,#lockscr,#yg-ov')].some(x=>x.offsetWidth>0&&getComputedStyle(x).visibility!=='hidden'&&getComputedStyle(x).display!=='none');
-  document.addEventListener('touchstart', e=>{ sx=null; lock=null; if (e.touches.length>1||_swBusy) return; const t=e.touches[0]; if (t.clientX<24) return;
+  const has=dir=>{ const j=oi+dir; return j>=0 && j<I.B.length; };
+  // render the neighbour beside the current content (once per side); switching sides puts the original back first
+  const peek=dir=>{ if (pend) return; const j=oi+dir, b=I.B[j]; if (!b) return;
+    if (_swPair){ if (_swPair.side===dir) return; pend=-1; const R=_swPair; swRevert(); const w=setInterval(()=>{ if (!_swPair||_swPair!==R){ clearInterval(w); pend=0; I=swInfo()||I; if (sx!=null) peek(dir); } },16); return; }
+    const cur=swInfo(); if (!cur) return; pend=dir; v=document.getElementById('view'); _swDx=lastD; swGrab(lastD); _swOld.oi=oi; _swOld.ni=j; _swMode='peek'; _swAnim=dir; _swBusy=true;
+    _swOnReady=()=>{ pend=0; if (sx==null) release(); };
+    cur.B[j].click();
+    setTimeout(()=>{ if (pend===dir && !_swPair){ pend=0; _swMode=null; _swAnim=0; _swOnReady=null; _swBusy=false; swSnap(document.getElementById('view')); } }, 1500); };   // the tab never rendered: put things back
+  document.addEventListener('touchstart', e=>{ sx=null; lock=null; if (e.touches.length>1||_swBusy||_swPair) return; const t=e.touches[0]; if (t.clientX<24) return;
     if (!e.target.closest||!e.target.closest('#view')||overlay()||blocked(e.target)) return; I=swInfo(); if (!I) return;
-    v=document.getElementById('view'); parts=null; sx=lastX=t.clientX; sy=t.clientY; t0=lastT=performance.now(); vel=0; }, {passive:true});
+    v=document.getElementById('view'); oi=I.i; parts=null; pend=0; peekOK=I.B.every(swPure); sx=lastX=t.clientX; sy=t.clientY; lastT=performance.now(); vel=0; lastD=0; }, {passive:true});
   document.addEventListener('touchmove', e=>{ if (sx==null) return; const t=e.touches[0], dx=t.clientX-sx, dy=t.clientY-sy;
     if (lock==null){ if (Math.hypot(dx,dy)<9) return; lock=Math.abs(dx)>Math.abs(dy)*1.15?'x':'y'; if (lock==='y'){ sx=null; return; } }
-    e.preventDefault(); const now=performance.now(); vel=(t.clientX-lastX)/Math.max(1,now-lastT); lastX=t.clientX; lastT=now;
-    const edge=(dx<0&&I.i>=I.B.length-1)||(dx>0&&I.i<=0), d=edge?dx*0.28:dx;
-    if (!parts) { parts=swParts(v, I.bar); if (!parts.length) parts=[v]; } swMove(parts, d); lastD=d; }, {passive:false});
-  const end=()=>{ if (sx==null||lock!=='x'){ sx=null; return; } const dx=lastX-sx; sx=null; const dir=dx<0?1:-1, fling=Math.abs(vel)>0.45&&Math.sign(vel)===Math.sign(dx);
-    if ((Math.abs(dx)>innerWidth*0.25||fling) && !(getSelection&&String(getSelection()).length)) { if (!swipeTab(dir, lastD)) swSnap(v); } else swSnap(v); lastD=0; };
+    e.preventDefault(); _swGesture=true; const now=performance.now(); vel=(t.clientX-lastX)/Math.max(1,now-lastT); lastX=t.clientX; lastT=now;
+    const want=dx<0?1:-1, d=has(want)?dx:dx*0.28; lastD=d; _swDx=d;
+    if (peekOK && has(want) && Math.abs(dx)>4) peek(want);
+    if (_swPair && _swPair.side===want) swPairAt(d);
+    else if (!_swPair){ if (!parts){ parts=swParts(v, I.bar); if (!parts.length) parts=[v]; } swMove(parts, d); }
+    else swPairAt(Math.sign(_swPair.side)===-Math.sign(d)?d:0); }, {passive:false});
+  let relArgs=null;
+  const release=()=>{ const [dx,fl]=relArgs||[0,false]; relArgs=null; const R=_swPair, side=dx<0?1:-1, go=R && R.side===side && (Math.abs(dx)>innerWidth*0.25||fl) && !(getSelection&&String(getSelection()).length);
+    if (R) swPairEnd(go, vel); else { _swBusy=false; swSnap(v); } };
+  const end=()=>{ _swGesture=false; if (sx==null||lock!=='x'){ sx=null; return; } const dx=lastX-sx; sx=null; const fling=Math.abs(vel)>0.45&&Math.sign(vel)===Math.sign(dx);
+    if (peekOK){ relArgs=[dx,fling]; if (pend>0) return; /* the neighbour is still rendering — released when it lands */ if (pend<0){ const w=setInterval(()=>{ if (!pend){ clearInterval(w); release(); } },16); return; } release(); lastD=0; return; }
+    // tabs that change data when tapped: nothing renders until you let go (the b298 path)
+    if ((Math.abs(dx)>innerWidth*0.25||fling) && !(getSelection&&String(getSelection()).length)) { if (!swipeTab(dx<0?1:-1, lastD)) swSnap(v); } else swSnap(v); lastD=0; };
   document.addEventListener('touchend', end, {passive:true}); document.addEventListener('touchcancel', end, {passive:true}); })();
+// b301: a redraw that arrives from a timer or a sync while your finger is swiping (or the swipe is still settling) waits until it's done —
+// it would swap the page under your finger. Your own taps and the swipe's own redraws never wait.
+{ let held=false, tH=0;
+  const busy=()=>!_swAnim && !_swMode && (_swGesture || !!_swPair);
+  const flush=()=>{ if (busy()){ tH=setTimeout(flush,60); return; } if (held){ held=false; render(); } };
+  const _r=render; render=function(){ if (busy()){ held=true; clearTimeout(tH); tH=setTimeout(flush,60); return; } held=false; return _r.apply(this,arguments); }; }
 // ---- swipe right from the left edge = back; swipe a sheet down = close
 function goBack(){ if (document.getElementById('g-sheet')) return gSheetClose(); const m=document.querySelector('.modal'); if (m){ const x=m.querySelector('.x,[aria-label=Close]'); if (x) x.click(); else m.remove(); return; }
   if (view==='evolve' && stMode==='settings'){ stMode='progress'; return render(); } if (history.length>1) history.back(); else go('today'); }
