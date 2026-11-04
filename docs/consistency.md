@@ -16,3 +16,8 @@ Rules that never bend:
 - Things you *read* (news, demos) don't pay XP; things you *do or make* do.
 - Anything a person can add (subjects, habits) gets its KR source generated, never hard-coded.
 - `tests/run.mjs` checks every KR source returns a number and that a learning action pays and undoes.
+
+## Look and feel
+- Circle, Hustle and Learning share the Life look; colors come from the palette picked once in Settings (`S.lifePal`). No per-page switchers.
+- New CSS goes right above the `/* @css-insert */` marker, between whole rules — never inside a selector.
+- Tab bars (`.seg` or `[role=tablist]`) get swipe + slide animation for free; new pages should use one.
