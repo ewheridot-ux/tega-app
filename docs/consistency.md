@@ -18,6 +18,6 @@ Rules that never bend:
 - `tests/run.mjs` checks every KR source returns a number and that a learning action pays and undoes.
 
 ## Look and feel
-- Circle, Hustle and Learning share the Life look; colors come from the palette picked once in Settings (`S.lifePal`). No per-page switchers.
+- Circle, Hustle and Learning share one Life look: Streetwear · Safety Orange (`data-look="street"`), with the LIFE RN. header holding the three numbers + next up. No per-page switchers, no repeated counters.
 - New CSS goes right above the `/* @css-insert */` marker, between whole rules — never inside a selector.
 - Tab bars (`.seg` or `[role=tablist]`) get swipe + slide animation for free; new pages should use one.
