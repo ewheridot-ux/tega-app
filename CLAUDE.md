@@ -18,7 +18,7 @@ The repo is public. Everything personal (modeling history, agents, ONE statement
 
 ## Checks
 `node tests/run.mjs [file]` — boots the app, renders every page, XP never drops, booking parser, yoga timer. Runs in ios.yml before every build.
-`node tests/perf.mjs [file] [--shots DIR]` — phone feel on a real-sized made-up state (tests/fixture.js), iPhone 13 profile: swipe never blank, one #view, no transform left on #view, Life pages get `data-look="street"`, avatar on the first render, render() < 100 ms per page. `PW_ENGINE=webkit` for WebKit; ios.yml runs both.
+`node tests/perf.mjs [file] [--shots DIR]` — phone feel on a real-sized made-up state (tests/fixture.js), iPhone 13 profile: swipe never blank, one #view, no transform left on #view, Life pages get `data-look="street"`, avatar on the first render, render() < 100 ms per page, finger drags (next tab beside the finger, spring-back, a seen tab drags with no redraw), tab highlight slide, section dissolve. Drag checks need Touch, so they run in Chromium only. `PW_ENGINE=webkit` for WebKit; ios.yml runs both.
 
 ## Sync
 - Gmail/Instagram: scheduled task "Tega.exe daily sync" (6:46am, 1:46pm, 7:46pm CT) seals a feed → ci/feed/feed.bin → feed.yml → Supabase `feed/latest`.

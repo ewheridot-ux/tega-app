@@ -139,7 +139,7 @@ if (canTouch) for (const v of ['social', 'today', 'money']) {
     // 1) drag 120 px and hold
     cur = 0; T('touchstart', x0); await drag(-dir * 120); await wait(250); await drag(-dir * 122, 1); await raf();
     const probeX = dir > 0 ? W - 50 : 50, at = document.elementFromPoint(probeX, yT);
-    out.peek = !!document.querySelector('.sw-ghost') && !!at && !!at.closest('#view') && !at.closest('.sw-ghost');   // what fills the gap is the next tab, live
+    out.peek = !!document.querySelector('.sw-ghost') && !!at && ((!!at.closest('#view') && !at.closest('.sw-ghost')) || !!at.closest('.sw-pre'));   // what fills the gap is the next tab (live, or its remembered copy)
     out.scrollHeld = Math.abs(scrollY - y0) < 2;
     // 2) back to 30 px and let go: springs back to the same tab
     await drag(-dir * 30, 8); await wait(120); T('touchend', x0 - dir * 30); await wait(700);
@@ -155,6 +155,48 @@ if (canTouch) for (const v of ['social', 'today', 'money']) {
   ok(`drag ${v}: let go early → back on the same tab`, r.backSame);
   ok(`drag ${v}: long drag → next tab, same height`, r.landed);
   ok(`drag ${v}: nothing left transformed`, r.clean);
+}
+
+// a tab you've already seen: its remembered copy slides in — no redraw while you drag, none if you let go early, one when it lands
+if (canTouch) for (const v of ['social', 'money']) {
+  const r = await page.evaluate(async v => {
+    const raf = () => new Promise(r => requestAnimationFrame(r)), wait = ms => new Promise(r => setTimeout(r, ms));
+    document.getElementById('lvs')?.remove(); location.hash = 'gym'; await wait(200); location.hash = v; await wait(500); if (!swInfo()) return null;
+    const I0 = swInfo(), oi = I0.i, dir = oi < I0.B.length - 1 ? 1 : -1;
+    swipeTab(dir); await wait(800); swipeTab(-dir); await wait(800);   // seen the neighbour once, back again
+    scrollTo(0, 200); await wait(150);
+    const W = innerWidth; let tgt = null, yT = innerHeight * 0.6; for (let k = 0; k < 8 && !tgt; k++) { const el = document.elementFromPoint(W / 2, yT); if (el && el.closest('#view') && !el.closest('input,textarea,select,button,.seg')) tgt = el; else yT += 40; }
+    if (!tgt) return { skip: 'no plain spot' };
+    const T = (type, x) => { const t = new Touch({ identifier: 3, target: tgt, clientX: x, clientY: yT }); tgt.dispatchEvent(new TouchEvent(type, { touches: type === 'touchend' ? [] : [t], targetTouches: type === 'touchend' ? [] : [t], changedTouches: [t], bubbles: true, cancelable: true })); };
+    let cur = 0; const x0 = W / 2, drag = async (to, n = 6) => { const f = cur; for (let k = 1; k <= n; k++) { cur = f + (to - f) * k / n; T('touchmove', x0 + cur); await raf(); } };
+    const out = {}; let r0 = __r1;
+    T('touchstart', x0); await drag(-dir * 120); await wait(100);
+    out.copy = !!(_swPair && _swPair.pre); const at = document.elementFromPoint(dir > 0 ? W - 50 : 50, yT); out.filled = !!at && !!at.closest('.sw-pre, #view');
+    out.dragRenders = __r1 - r0;
+    await drag(-dir * 30, 8); await wait(120); T('touchend', x0 - dir * 30); await wait(600);
+    out.cancelRenders = __r1 - r0; out.back = swInfo().i === oi && !document.querySelector('.sw-ghost');
+    if (!(tgt = document.elementFromPoint(W / 2, yT)) || !tgt.closest('#view')) return out;
+    r0 = __r1; cur = 0; T('touchstart', x0); await drag(-dir * 220, 5); await wait(60); T('touchend', x0 - dir * 220); await wait(900);
+    out.landRenders = __r1 - r0; out.landed = swInfo().i === oi + dir && !document.querySelector('.sw-ghost') && Math.abs(scrollY - 200) < 3;
+    return out; }, v);
+  if (!r) continue; if (r.skip) { console.log(`· copy ${v}: ${r.skip}`); continue; }
+  ok(`swipe to a seen tab (${v}): its copy is right beside your finger`, r.copy && r.filled);
+  ok(`swipe to a seen tab (${v}): no redraw while dragging`, r.dragRenders === 0, r.dragRenders + ' redraws');
+  ok(`swipe to a seen tab (${v}): let go early → nothing redrawn, same tab`, r.cancelRenders === 0 && r.back, r.cancelRenders + ' redraws');
+  ok(`swipe to a seen tab (${v}): lands with one redraw, same height`, r.landed && r.landRenders === 1, r.landRenders + ' redraws');
+}
+
+// the tab highlight slides; changing section dissolves the old page over the new one; the avatar-style library isn't loaded at start
+{ const r = await page.evaluate(async () => { const wait = ms => new Promise(r => setTimeout(r, ms)), out = {};
+    location.hash = 'gym'; await wait(200); location.hash = 'social'; await wait(500); const I = swInfo(); swipeTab(I.i < I.B.length - 1 ? 1 : -1); await wait(90);
+    const pill = swBar() && swBar().querySelector('.seg-pill'); out.pill = !!pill; out.pillMoving = pill ? getComputedStyle(pill).transitionDuration !== '0s' : false;
+    await wait(500); const on = swBar().querySelector('button.on'); out.pillGone = !swBar().querySelector('.seg-pill') && !on.style.background;
+    location.hash = 'today'; await wait(400); location.hash = 'money'; await wait(50); out.dissolve = !!document.querySelector('.pg-out'); out.newShown = getComputedStyle(document.getElementById('view')).opacity === '1';
+    await wait(450); out.dissolveGone = !document.querySelector('.pg-out') && document.querySelectorAll('#view').length === 1;
+    out.noDiceBear = typeof dbLoadState === 'undefined' || dbLoadState === 'idle' || !PXA.me; return out; });
+  ok('tab highlight slides to the new tab', r.pill && r.pillMoving); ok('tab highlight cleans up after the slide', r.pillGone);
+  ok('changing section: the old page dissolves over the new one', r.dissolve && r.newShown); ok('changing section: nothing left behind', r.dissolveGone);
+  ok('start: the avatar-style library is not loaded (your pixel avatar doesn\'t need it)', r.noDiceBear);
 }
 
 if (SHOTS) { // one frame in the middle of a swipe: old page leaving, new page arriving, nothing blank

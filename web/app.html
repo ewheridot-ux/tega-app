@@ -1986,7 +1986,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b301';
+const BUILD='b302';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2733,7 +2733,7 @@ function avatarDB(level, mood, size, eq, picksRef={}, extraRef=null, o={}){
 }
 async function loadDiceBear(){
   if (dbLib || dbLoadState==='loading') return;
-  dbLoadState = 'loading'; render();
+  dbLoadState = 'loading'; if (!PXA.me) render();
   const sources = [
     ['https://cdn.jsdelivr.net/npm/@dicebear/core@9/+esm', 'https://cdn.jsdelivr.net/npm/@dicebear/adventurer@9/+esm'],
     ['https://unpkg.com/@dicebear/core@9?module', 'https://unpkg.com/@dicebear/adventurer@9?module'],
@@ -2750,6 +2750,7 @@ async function loadDiceBear(){
   dbLoadState = 'error'; render();
 }
 function avatarStyleToggle(){
+  if (dbLoadState==='idle') setTimeout(loadDiceBear, 0);   // b302: the style library loads when this picker is on screen, not at every start
   const look = dbLook();
   const status = dbLoadState==='loading' ? '<span class="sub">loading art…</span>' : dbLoadState==='error' ? '<span class="sub" style="color:#ef4444">art couldn\'t load — <a href="#" onclick="dbLoadState=\'idle\';loadDiceBear();return false">retry</a></span>' : '';
   if (!dbLib) return `<div class="row" style="gap:6px;align-items:center"><span class="tag">Look</span>${status}</div>`;
@@ -3255,6 +3256,7 @@ function render(){
   if (view==='deadlines'){ view='today'; setTimeout(()=>dlSheetOpen(),0); }
   if (view==='trophies'){ view='evolve'; stMode='settings'; setTab='trophies'; }
   const stg = stageOf(lvl);
+  const _oldV=document.getElementById('view'), _oldR=(_oldV && _pgLast && _pgLast!==view && !_swAnim && secOf(_pgLast)!==secOf(view)) ? _oldV.getBoundingClientRect() : null;   // b302: for the section dissolve
   app.innerHTML = `
     <div class="topbar">
       <div class="brand"><button class="pfp-sm ${view==='city'||view==='evolve'?'on':''}" style="--ringc:${ringCss(lvl)}" onclick="go('city')" aria-label="Your city · character and settings">${pfpMini(stg)}</button><button class="iconbtn tg-ask" onclick="coachOpen()" title="Ask Tega" aria-label="Ask Tega"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h.01M12 10h.01M16 10h.01" stroke-linecap="round" stroke-width="3"/></svg></button></div>
@@ -3271,7 +3273,8 @@ function render(){
     <div class="nav" data-hl="${LIFE.some(([k])=>k===view)?'study':({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab'})[view]||'crt'}">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='today'&&GOALS.some(([k])=>k===view))||(v==='life'&&LIFE.some(([k])=>k===view))?'on':''}" data-tab="${v}" onclick="if(!navHeld())go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
     <div id="view">${view==='today'?goalsTabs():GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):LIFE.some(([k])=>k===view)?lifeHero()+lifeTabs():''}${AREA_VIEW[view]?areaChip(AREA_VIEW[view]):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve,social:vSocial,bosses:vBosses,city:vCity,hustle:vHustle,learn:vLearning})[view]()}</div>`;
   if (window.__avPaint==null) try { const p=document.querySelector('.pfp-sm img, .pfp-sm svg'); if (p){ const first=(window.__r1||0)===1, t=()=>{ if (window.__avPaint==null){ window.__avPaint=performance.now(); window.__avFirst=first; } }; if (p.tagName!=='IMG'||p.complete) t(); else p.addEventListener('load',t,{once:true}); } } catch(e){}
-  dlSheetRefresh(); try { if (_swAnim) swAnimApply(); else if (_pgLast!==view){ const v=document.getElementById('view'); if (v&&_pgLast){ v.classList.remove('pg-in'); void v.offsetWidth; v.classList.add('pg-in'); } } _pgLast=view; } catch(e){}
+  dlSheetRefresh(); try { if (_swAnim) swAnimApply(); else if (_pgLast!==view){ const v=document.getElementById('view'); if (v&&_pgLast&&!pgDissolve(_oldR&&_oldV, _oldR)){ v.classList.remove('pg-in'); void v.offsetWidth; v.classList.add('pg-in'); } } _pgLast=view; } catch(e){}
+  try { swRememberSoon(); } catch(e){}
   checkEvo();
   if (_dbSettled && richness(S)>0 && !document.getElementById('lvs')?.classList.contains('show')) { if (S.lvlSeen===undefined) S.lvlSeen=Math.max(1,lvl-1); if (lvl<S.lvlSeen) S.lvlSeen=lvl; if (lvl>S.lvlSeen) { S.lvlSeen=lvl; setTimeout(()=>{ levelScene(lvl); saveLocal(); scheduleDbWrite(); },400); } }
 }
@@ -9446,7 +9449,7 @@ let _swOld=null, _swLive=new Set();
 const SW_BARS='.seg, [role=tablist]';
 function swParts(root, bar){ if (!root||!bar) return []; const out=[]; for (let e=bar; e&&e!==root; e=e.parentElement) for (let s=e.nextElementSibling; s; s=s.nextElementSibling) out.push(s); return out; }
 function swMove(L, x, tr){ for (const e of L){ e.style.transition=tr||'none'; e.style.transform=x==null?'':`translate3d(${x}px,0,0)`; if (x!=null) _swLive.add(e); } }
-function swGrab(dx){ const v=document.getElementById('view'); if (!v) return; const bar=swBar(); _swY=scrollY; _swYt=Date.now(); _swOld={el:v, r:v.getBoundingClientRect(), dx:dx||0, t:Date.now(), bi:bar?[...v.querySelectorAll(SW_BARS)].indexOf(bar):-1}; }
+function swGrab(dx){ const v=document.getElementById('view'); if (!v) return; const bar=swBar(); _swY=scrollY; _swYt=Date.now(); _swOld={el:v, r:v.getBoundingClientRect(), dx:dx||0, t:Date.now(), bi:bar?[...v.querySelectorAll(SW_BARS)].indexOf(bar):-1, oi:(swInfo()||{}).i}; }
 function swipeTab(dir, dx){ const I=swInfo(); if (!I||_swBusy) return false; const j=I.i+dir, v=document.getElementById('view');
   if (j<0||j>=I.B.length){ swSnap(v); return false; }
   _swBusy=true; nat('haptic','light'); swGrab(dx); _swAnim=dir;
@@ -9476,6 +9479,7 @@ function swAnimApply(){ if (!_swAnim) return; const v=document.getElementById('v
     const I=swInfo(); if (I && O && O.oi!=null && I.B[O.oi]){ I.B[I.i].classList.remove('on'); I.B[O.oi].classList.add('on'); }
     document.documentElement.classList.add('sw-run'); _swPair={g, G, P, side:d, v, oi:O&&O.oi, ni:O&&O.ni}; swPairAt(_swDx); swPairReady(); return; }
   if (reduce){ swClear(v); return; }
+  { const I=swInfo(); if (I && O && O.oi!=null && O.oi!==I.i) segGlide(I.bar, I.B[O.oi], I.B[I.i]); }
   swMove(P, g?O.dx+d*W:d*W*0.3); void v.offsetWidth;
   document.documentElement.classList.add('sw-run');
   const tr=`transform .28s ${SW_EASE}`;
@@ -9489,9 +9493,15 @@ let _swOnReady=null; function swPairReady(){ const f=_swOnReady; _swOnReady=null
 function swPairEnd(go, vel){ const R=_swPair; if (!R) return; const W=innerWidth, x=_swDx, to=go?-R.side*W:0, rem=Math.abs(to-x), dur=Math.round(Math.max(160, Math.min(320, rem/Math.max(Math.abs(vel)||0, .9))));
   const tr=`transform ${dur}ms cubic-bezier(.2,.75,.25,1)`; _swBusy=true;
   for (const e of R.G){ e.style.transition=tr; e.style.transform=`translate3d(${to}px,0,0)`; } swMove(R.P, to+R.side*W, tr);
-  if (go){ nat('haptic','light'); const I=swInfo(); if (I && R.ni!=null && I.B[R.ni]){ I.B[I.i].classList.remove('on'); I.B[R.ni].classList.add('on'); } }
-  setTimeout(()=>{ if (go){ if (R.g) R.g.remove(); _swPair=null; swClear(R.v); document.documentElement.classList.remove('sw-run'); _swBusy=false; }
+  if (go){ nat('haptic','light'); const I=swInfo(); if (I && R.ni!=null && I.B[R.ni]){ const from=I.B[I.i]; from.classList.remove('on'); I.B[R.ni].classList.add('on'); segGlide(I.bar, from, I.B[R.ni], dur); } }
+  setTimeout(()=>{ if (go && R.pre) swFinishPre(R);
+    else if (go || R.pre){ if (R.g) R.g.remove(); _swPair=null; swClear(R.v); document.documentElement.classList.remove('sw-run'); _swBusy=false; }   // a remembered copy let go early: nothing was redrawn, nothing to undo
     else swRevert(); }, dur+20); }
+// b302: the copy you swiped to is on screen; now switch the tab for real underneath it (same content, so nothing visibly changes)
+function swFinishPre(R){ const I=swInfo(), b=I && R.ni!=null && I.B[R.ni];
+  if (!b){ if (R.g) R.g.remove(); _swPair=null; swClear(R.v); document.documentElement.classList.remove('sw-run'); _swBusy=false; return; }
+  _swY=scrollY; _swYt=Date.now(); _swMode='quiet'; _swAnim=1; b.classList.remove('on'); b.click();
+  setTimeout(()=>{ if (_swMode==='quiet'){ _swMode=null; _swAnim=0; if (_swPair&&_swPair.g) _swPair.g.remove(); _swPair=null; swClear(document.getElementById('view')); document.documentElement.classList.remove('sw-run'); } _swBusy=false; }, 1200); }
 // put the tab you started from back (the snapshot covers the swap, so nothing flickers)
 function swRevert(){ const R=_swPair; if (!R){ _swBusy=false; return; } const I=swInfo(), b=I&&R.oi!=null&&I.bar.querySelectorAll('button')[R.oi];
   if (!b){ if (R.g) R.g.remove(); _swPair=null; swClear(R.v); document.documentElement.classList.remove('sw-run'); _swBusy=false; return; }
@@ -9501,6 +9511,43 @@ function swRevert(){ const R=_swPair; if (!R){ _swBusy=false; return; } const I=
 document.addEventListener('click', e=>{ const btn=e.target.closest&&e.target.closest('#view .seg button, #view [role=tablist] button'); if (!btn||btn.classList.contains('on')) return;
   const oc=btn.getAttribute('onclick')||''; if (!/\bS\s*[.[]|commit|save|Set\(/.test(oc)){ _navR=true; setTimeout(()=>{ _navR=false; },0); }   // a pure tab change reuses cached numbers
   if (_swAnim) return; const bar=btn.parentElement, B=[...bar.querySelectorAll('button')], i=B.findIndex(b=>b.classList.contains('on')), j=B.indexOf(btn); if (i<0||j<0) return; swGrab(0); _swAnim=j>i?1:-1; }, true);
+// b302: the tab highlight slides to the new tab (a pill under the labels, styled from the active tab, so every skin gets it)
+function segGlide(bar, a, b, ms){ try { if (!bar||!a||!b||a===b||matchMedia('(prefers-reduced-motion: reduce)').matches) return; ms=ms||260;
+  const br=bar.getBoundingClientRect(), ra=a.getBoundingClientRect(), rb=b.getBoundingClientRect(); if (!ra.width||!rb.width) return;
+  const cs=getComputedStyle(b); if (cs.backgroundColor==='rgba(0, 0, 0, 0)' && cs.backgroundImage==='none') return;
+  bar.querySelectorAll(':scope > .seg-pill').forEach(x=>x.remove());
+  const ox=br.left+bar.clientLeft-bar.scrollLeft, oy=br.top+bar.clientTop, pill=document.createElement('i'); pill.className='seg-pill'; pill.setAttribute('aria-hidden','true');
+  pill.style.cssText=`position:absolute;left:0;top:0;pointer-events:none;z-index:0;width:${ra.width}px;height:${ra.height}px;transform:translate3d(${ra.left-ox}px,${ra.top-oy}px,0);background-color:${cs.backgroundColor};background-image:${cs.backgroundImage};border-radius:${cs.borderRadius};box-shadow:${cs.boxShadow};transition:none`;
+  const pos=bar.style.position, iso=bar.style.isolation; if (getComputedStyle(bar).position==='static') bar.style.position='relative'; bar.style.isolation='isolate';
+  const Bs=[...bar.querySelectorAll('button')], keep=Bs.map(x=>[x.style.position,x.style.zIndex]); Bs.forEach(x=>{ if (getComputedStyle(x).position==='static') x.style.position='relative'; x.style.zIndex='1'; });
+  for (const [k,v] of [['background','transparent'],['box-shadow','none'],['border-color','transparent'],['transition','color .2s']]) b.style.setProperty(k,v,'important');
+  bar.appendChild(pill); void pill.offsetWidth;
+  const ez='cubic-bezier(.22,.8,.22,1)'; pill.style.transition=`transform ${ms}ms ${ez}, width ${ms}ms ${ez}, height ${ms}ms ${ez}`;
+  pill.style.transform=`translate3d(${rb.left-ox}px,${rb.top-oy}px,0)`; pill.style.width=rb.width+'px'; pill.style.height=rb.height+'px';
+  setTimeout(()=>{ if (b.isConnected){ b.style.setProperty('transition','none','important'); for (const k of ['background','box-shadow','border-color']) b.style.removeProperty(k); void b.offsetWidth; b.style.removeProperty('transition'); }
+    pill.remove(); if (bar.isConnected){ bar.style.position=pos; bar.style.isolation=iso; Bs.forEach((x,i)=>{ x.style.position=keep[i][0]; x.style.zIndex=keep[i][1]; }); } }, ms+30); } catch(e){} }
+// b302: a copy of each tab you've seen (kept until your data changes), so a swipe to it shows instantly with nothing to redraw while you drag
+const _swCache=new Map();
+function swCopyCanvases(from, to){ try { const A=from.querySelectorAll('canvas'), B=to.querySelectorAll('canvas'); A.forEach((c,i)=>{ const d=B[i]; if (d && c.width && c.height){ d.width=c.width; d.height=c.height; d.getContext('2d').drawImage(c,0,0); } }); } catch(e){} }
+function swRemember(){ try { if (_swPair||_swGesture||_swAnim) return; const v=document.getElementById('view'), I=swInfo(); if (!v||!I) return;
+  const bi=[...v.querySelectorAll(SW_BARS)].indexOf(I.bar), el=v.cloneNode(true); swCopyCanvases(v, el);
+  _swCache.delete(secOf(view)+'|'+bi+'|'+I.i); _swCache.set(secOf(view)+'|'+bi+'|'+I.i, {el, ver:_mVer, day:TODAY, bi, w:Math.round(v.getBoundingClientRect().width), n:I.B.length});
+  while (_swCache.size>24) _swCache.delete(_swCache.keys().next().value); } catch(e){} }
+let _swRemT=0; function swRememberSoon(){ clearTimeout(_swRemT); _swRemT=setTimeout(swRemember, 400); }
+function swPeekCopy(dir, oi, dx){ try { const v=document.getElementById('view'), I=swInfo(); if (!v||!I) return false;
+  const bi=[...v.querySelectorAll(SW_BARS)].indexOf(I.bar), c=_swCache.get(secOf(view)+'|'+bi+'|'+(oi+dir)), r=v.getBoundingClientRect();
+  if (!c || c.ver!==_mVer || c.day!==TODAY || c.bi!==bi || c.n!==I.B.length || Math.abs(c.w-Math.round(r.width))>1) return false;
+  const g=c.el.cloneNode(true); swCopyCanvases(c.el, g); g.removeAttribute('id'); g.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id')); g.classList.remove('pg-in'); g.className+=' sw-ghost sw-pre'; g.setAttribute('inert',''); g.setAttribute('aria-hidden','true');
+  g.style.cssText=`position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;margin:0;pointer-events:none;z-index:1;transition:none;visibility:hidden`;
+  const In=swParts(g, g.querySelectorAll(SW_BARS)[bi]); if (!In.length) return false; for (const e of In) e.style.visibility='visible';
+  let Out=swParts(v, I.bar); if (!Out.length) return false;
+  (document.getElementById('app')||document.body).appendChild(g); document.documentElement.classList.add('sw-run');
+  _swPair={g, G:Out, P:In, side:dir, v, oi, ni:oi+dir, pre:true}; _swDx=dx; swPairAt(dx); return true; } catch(e){ return false; } }
+// b302: changing section (bottom bar) — the old page dissolves over the new one instead of the new one fading up from dim
+function pgDissolve(o, r){ try { if (!o||!r||matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  o.removeAttribute('id'); o.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id')); o.classList.remove('pg-in'); o.classList.add('sw-ghost','pg-out'); o.setAttribute('inert',''); o.setAttribute('aria-hidden','true');
+  o.style.cssText=`position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;margin:0;pointer-events:none;z-index:1;opacity:1;transition:opacity .17s ease-out`;
+  (document.getElementById('app')||document.body).appendChild(o); requestAnimationFrame(()=>requestAnimationFrame(()=>{ o.style.opacity='0'; })); setTimeout(()=>o.remove(),280); return true; } catch(e){ return false; } }
 let _swGesture=false;
 const swPure=b=>!/\bS\s*[.[]|commit|save|Set\(/.test(b.getAttribute('onclick')||'');   // a tab button that only changes what you see
 (function(){ let sx=null, sy=0, lock=null, I=null, v=null, lastX=0, lastT=0, vel=0, lastD=0, parts=null, oi=0, pend=0, peekOK=false;
@@ -9510,7 +9557,9 @@ const swPure=b=>!/\bS\s*[.[]|commit|save|Set\(/.test(b.getAttribute('onclick')||
   const has=dir=>{ const j=oi+dir; return j>=0 && j<I.B.length; };
   // render the neighbour beside the current content (once per side); switching sides puts the original back first
   const peek=dir=>{ if (pend) return; const j=oi+dir, b=I.B[j]; if (!b) return;
+    if (_swPair && _swPair.pre && _swPair.side!==dir){ const R=_swPair; if (R.g) R.g.remove(); _swPair=null; swClear(R.v); }   // a copy: just drop it
     if (_swPair){ if (_swPair.side===dir) return; pend=-1; const R=_swPair; swRevert(); const w=setInterval(()=>{ if (!_swPair||_swPair!==R){ clearInterval(w); pend=0; I=swInfo()||I; if (sx!=null) peek(dir); } },16); return; }
+    if (swPeekCopy(dir, oi, lastD)) return;   // b302: seen this tab since your data last changed → its copy slides in, no redraw while you drag
     const cur=swInfo(); if (!cur) return; pend=dir; v=document.getElementById('view'); _swDx=lastD; swGrab(lastD); _swOld.oi=oi; _swOld.ni=j; _swMode='peek'; _swAnim=dir; _swBusy=true;
     _swOnReady=()=>{ pend=0; if (sx==null) release(); };
     cur.B[j].click();
@@ -9703,7 +9752,8 @@ document.addEventListener('contextmenu',e=>{ const b=e.target.closest&&e.target.
   document.addEventListener('focusout', ()=>{ if (deferred) setTimeout(()=>{ if (deferred && !typing()) render(); },30); }); }
 
 function t3fit(el){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'; }
-{ const _r=render; render=function(){ const out=_r.apply(this,arguments); try { document.querySelectorAll('.top3 textarea.t3in').forEach(t3fit); } catch(e){} return out; }; }
+// b302: all boxes in one pass — set, then measure, then size (was a forced layout per box, every render)
+{ const _r=render; render=function(){ const out=_r.apply(this,arguments); try { const L=[...document.querySelectorAll('.top3 textarea.t3in')]; for (const el of L) el.style.height='auto'; const h=L.map(el=>el.scrollHeight); L.forEach((el,i)=>el.style.height=h[i]+'px'); } catch(e){} return out; }; }
 
 /* ===================== b205: Money = all your money · Overview · Income · Spending · Plan · Taxes ===================== */
 const STREAMS=[['model','Modeling','📸','#ff7ad9'],['datum','Datum','💎','#ffd166'],['cad','Side hustle','🚀','#c6ff4d'],['other','Other','➕','#a8b3c7']];
@@ -11451,7 +11501,7 @@ evalBadges();
 lastProg = snapshotProgress(); lastGame=gameBase();
 (function recapWhenReady(n){ setTimeout(()=>{ if (!dbReady && dbStatus!=='local' && n<20) return recapWhenReady(n+1); try { seasonRecapCheck(); } catch(e){} }, n?1500:3500); })(0);
 render();
-loadDiceBear();
+if (!PXA.me) loadDiceBear();   // b302: your pixel avatar doesn't need it; it was an extra full redraw + a CDN fetch on every start
 try { screen.orientation?.lock?.('portrait').catch(()=>{}); } catch(e){} // honored on Android in fullscreen/PWA; silently ignored elsewhere
 var _dbSettled=false; const _settle=()=>{ if(_dbSettled) return; _dbSettled=true; render(); };
 if (window.claude && typeof claude.use === 'function') initDb().finally(_settle); else _dbSettled=true;
