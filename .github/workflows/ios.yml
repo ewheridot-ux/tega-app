@@ -41,6 +41,11 @@ jobs:
           set -o pipefail
           npm i --no-save --no-audit --no-fund playwright@1.48.2 >/dev/null 2>&1 && npx playwright install chromium >/dev/null 2>&1
           CI=1 node tests/run.mjs 2>&1 | tee -a "$RUNNER_TEMP/log.txt"
+      - name: Phone-feel checks (swipe never blank, one page, Life look, avatar on first paint, render time) — Chromium + WebKit
+        run: |
+          set -o pipefail
+          CPU_RATE=2 node tests/perf.mjs 2>&1 | tee -a "$RUNNER_TEMP/log.txt"
+          npx playwright install webkit >/dev/null 2>&1 && PW_ENGINE=webkit node tests/perf.mjs 2>&1 | tee -a "$RUNNER_TEMP/log.txt"
       - name: Build the app page
         run: npm run build 2>&1 | tee -a "$RUNNER_TEMP/log.txt"
       - name: Create the iPhone project

@@ -341,9 +341,8 @@ html[data-look="gallery"] body .nav[data-hl="study"] button.on{background:#fff!i
 .lr-in.link{width:150px;background:var(--lr-tile,#222)}.lr-lk{display:grid;gap:4px;padding:10px;font-size:13px;line-height:1.3;font-weight:600}.lr-lk small{font:700 10px 'Space Mono',monospace;letter-spacing:.04em;color:var(--lr-mark,#f55);text-transform:uppercase}
 /* b296: motion — mainstream-app feel */
 html{-webkit-tap-highlight-color:transparent}
-#view{will-change:transform}
-#view.pg-in{animation:pgIn .28s cubic-bezier(.22,.8,.22,1)}
-@keyframes pgIn{from{opacity:0;transform:translate3d(0,10px,0)}to{opacity:1;transform:none}}
+#view.pg-in{animation:pgIn .22s cubic-bezier(.22,.8,.22,1)}
+@keyframes pgIn{from{opacity:.6}to{opacity:1}}
 :where(button,.btn,.chip,.check,a.btn,.nextup,.hz-o,.res,.lr-in,.lr-tiles button,.ag-r):not(:disabled){transition:transform .14s cubic-bezier(.22,.8,.22,1),background-color .2s,box-shadow .2s,opacity .2s}
 :where(button,.btn,.chip,.check,a.btn,.nextup,.hz-o,.lr-in,.lr-tiles button):not(:disabled):active{transform:scale(.965)}
 html .nav button:active{transform:scale(.9)!important}
@@ -400,6 +399,9 @@ html[data-look="street"] body .nav[data-hl="study"] button.on{background:#ff6a13
 [data-look="street"] .hz-hero{box-shadow:none!important}[data-look="street"] .hz-hero .tag{color:#ff6a13!important}
 [data-look="street"] .hz-st>div,[data-look="street"] .res{background:#262626;border-radius:12px}
 [data-look="street"]{--hustle:#ff6a13}[data-look="street"] .hz-o{border-radius:14px}
+/* b298: swipe — the old page snapshot slides out under the new one; nothing scrolls sideways meanwhile */
+html.sw-run,html.sw-run body{overflow-x:clip}
+.sw-ghost{contain:layout paint}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -1984,7 +1986,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b297';
+const BUILD='b298';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2263,6 +2265,7 @@ function deriveAll(){
   try { recordBuckets(); } catch(e){}
   try { recordMem(); recordSeason(); } catch(e){}
   try { sbossSync(); } catch(e){}
+  _mVer++;   // b298: deriveAll changes data, so numbers cached while it ran start fresh
 }
 // the season boss falls once 70% of the quarter's key results are hit — checked after every goal sync, recorded for good
 function sbossSync(){ if (!richness(S)) return; const R=R_(); for (const q of seasonsSeen()){ const SB=seasonBoss(q); if (SB.hp>0 && SB.hits>=SB.need){ R.sboss ||= {}; if (!R.sboss[q]){ R.sboss[q]=TODAY; setTimeout(()=>{ confetti(); toast(`💀 ${SB.n} defeated — season trophy + 300 XP`); },500); } chestGive('sb:'+q, `${SB.n} defeated`, 3); } } }
@@ -2307,7 +2310,8 @@ const streaks = () => ({ daily:dailyStreak(), review:weekStreak(reviewDone), gym
 function allKRs(){ const out=[]; for(const q of Object.values(S.quarters)) for(const o of q.objectives) for(const k of o.krs) out.push(k); for(const y of Object.values(S.years)) for(const o of y.objectives) for(const k of o.krs) out.push(k); return out; }
 // HISTORY IS PERMANENT: XP earned on days already finished can never go down because the app changed.
 // (Today can still move both ways — undoing a mistake today works.)
-function computeXP(){ const raw=computeXP0(); try { if (typeof S==='undefined'||!S) return raw; const F=S.xpFloor||null;
+function computeXP(){ const raw=rpgC('xp0', computeXP0);   // b298: the total is worked out once per data version (was several times per render)
+  try { if (typeof S==='undefined'||!S) return raw; const F=S.xpFloor||null;
     if (!F || F.d!==TODAY){ const base=F?Math.max(F.v, F.raw??F.v):raw; S.xpFloor={d:TODAY, v:F?base:raw, raw}; } else S.xpFloor.raw=raw;
     return Math.max(raw, S.xpFloor.v); } catch(e){ return raw; } }
 function computeXP0(){
@@ -2547,7 +2551,8 @@ function waterfall(amt, ctx, dateKey){
   const sweep = Math.min(left, Math.max(0, efTarget()-ctx.ef)); ctx.ef += sweep; left -= sweep; efAdd += sweep;
   return {billNames: BF.names, amt, tax: tax+cu, taxBase: tax, catchup: cu, bills:fixedCk, flex: flex+left, efAdd, draw, house, ret, cu: 0, cards, cardsLeft:ctx.cards, extra:left, efBal:ctx.ef, retLabel: retAcctFor(dateKey)};
 }
-function projection(){
+function projection(){ return rpgC('projection', projection0); }
+function projection0(){
   const s=S.money.s; const ctx={ef:bal('ef'), buf:bal('tax'), cush:0, house:0, cards:cardDebt(), behind:taxBehind(), nLeft:S.money.checks.filter(c=>!c.got&&c.d<TAX_CATCHUP_BY).length};
   const future = S.money.checks.filter(c=>!c.got).sort((a,b)=>a.d.localeCompare(b.d));
   try { const pre=future.filter(c=>c.d<TAX_CATCHUP_BY), caps=pre.map((c,i)=>{ const nd=future[future.indexOf(c)+1]?.d||addDays(c.d,14); const bl=billsFor(c.d,nd).amt, after=c.amt-c.amt*s.taxRate-bl; return Math.max(0, after-Math.min(s.flexPerCheck, Math.max(0,after))); });
@@ -3200,7 +3205,7 @@ function dDelLearn(id){ const D=ensureDatum(); D.learning=D.learning.filter(l=>l
 const VIEWS = ['life','learn','hustle','city','today','goals','week','quarter','year','vision','model','datum','money','deadlines','content','gym','trophies','evolve','social','bosses'];
 let view = (location.hash||'#today').slice(1); if(!VIEWS.includes(view)) view='today';
 let curDay = TODAY, curWeek = THIS_WEEK, curQ = S.quarters[THIS_Q] ? THIS_Q : Object.keys(S.quarters).sort().pop(), curY = S.years[THIS_Y] ? THIS_Y : Object.keys(S.years).sort().pop();
-window.addEventListener('hashchange', () => { const v=location.hash.slice(1); if(VIEWS.includes(v)){ view=v; render(); window.scrollTo(0,0);} });
+window.addEventListener('hashchange', () => { const v=location.hash.slice(1); if(VIEWS.includes(v)){ view=v; _navR=true; render(); window.scrollTo(0,0);} });
 const GOALS = [['week','Week'],['quarter','OKRs'],['year','Year'],['vision','5-Year']];
 // b290: Life = the real categories that aren't work: your people, the side hustle, and what you're learning
 const LIFE = [['social','Circle'],['hustle','Hustle'],['learn','Learning']];
@@ -3225,20 +3230,24 @@ const trackChip = k => `<span class="chip t" style="background:${tColor(k)}">${t
 const trackSelect = (val, onchange) => `<select onchange="${onchange}"><option value="">track…</option>${TRACKS.map(t=>`<option value="${t.key}" ${t.key===val?'selected':''}>${t.icon} ${t.name}</option>`).join('')}</select>`;
 
 let _derived=null; let _nsKick=false; let _pgLast=null;
+// b298: a render that only changes page or tab reuses this version's cached numbers; anything that changes data (commit, sync, feed, a new day) still starts fresh
+let _navR=false, _navDay=null;
 function render(){
+  if (window.__r0==null) window.__r0=performance.now(); window.__r1=(window.__r1||0)+1;   // numbers for tests/perf.mjs
   if (typeof S!=='undefined' && S && _derived!==S){ _derived=S; try { deriveAll(); saveLocal(); } catch(e){} }
   if (typeof S!=='undefined' && S && S.money && !S.money.m221 && (typeof _dbSettled==='undefined' || _dbSettled)) setTimeout(()=>{ try { if (!S.money.m221) m221(); } catch(e){} }, 0);
   if (!_nsKick && typeof _dbSettled!=='undefined' && _dbSettled){ _nsKick=true; setTimeout(()=>liveRefresh('open'), 1200); }
-  _mVer++;
-  try { const want = view==='gym' ? 'arise' : view==='model' ? 'holo' : view==='datum' ? 'chrome' : view==='money' ? 'lab' : view==='content' ? 'vf' : ['learn','social','hustle'].includes(view) ? 'study' : (()=>{ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(S&&S.skin)||'crt'; })(); if (document.documentElement.getAttribute('data-skin')!==want) document.documentElement.setAttribute('data-skin', want); if (want==='study'){ document.documentElement.setAttribute('data-look','street'); document.documentElement.removeAttribute('data-pal'); } else { document.documentElement.removeAttribute('data-look'); document.documentElement.removeAttribute('data-pal'); } } catch(e){}
-  refreshToday(); releaseEvo(); try { travelTick(); } catch(e){}
-  const xp=computeXP(), lvl=levelFor(xp), st=streaks();
-  const app=document.getElementById('app');
-  const nav = [['today','Today'],['life','Life'],['model','Model'],['content','Content'],['datum','Datum'],['gym','Gym'],['money','Money']];
+  if (!_navR || _navDay!==TODAY) _mVer++; _navR=false; _navDay=TODAY;
+  // b298: resolve Life / Goals to the real page first — the skin below was picked from 'life' and fell back to Night CRT
   if (view==='life') view = LIFE.some(([k])=>k===lLast) ? lLast : 'social';
   if (LIFE.some(([k])=>k===view)) lLast = view;
   if (view==='goals') view = GOALS.some(([k])=>k===gLast) ? gLast : 'week';
   if (GOALS.some(([k])=>k===view)) gLast = view;
+  try { const want = view==='gym' ? 'arise' : view==='model' ? 'holo' : view==='datum' ? 'chrome' : view==='money' ? 'lab' : view==='content' ? 'vf' : LIFE.some(([k])=>k===view) ? 'study' : (()=>{ let k=null; try{ k=localStorage.getItem('okrquest-skin'); }catch(e){} return k||(S&&S.skin)||'crt'; })(); if (document.documentElement.getAttribute('data-skin')!==want) document.documentElement.setAttribute('data-skin', want); if (want==='study'){ document.documentElement.setAttribute('data-look','street'); document.documentElement.removeAttribute('data-pal'); } else { document.documentElement.removeAttribute('data-look'); document.documentElement.removeAttribute('data-pal'); } } catch(e){}
+  refreshToday(); releaseEvo(); try { travelTick(); } catch(e){}
+  const xp=computeXP(), lvl=levelFor(xp), st=streaks();
+  const app=document.getElementById('app');
+  const nav = [['today','Today'],['life','Life'],['model','Model'],['content','Content'],['datum','Datum'],['gym','Gym'],['money','Money']];
   if (view==='deadlines'){ view='today'; setTimeout(()=>dlSheetOpen(),0); }
   if (view==='trophies'){ view='evolve'; stMode='settings'; setTab='trophies'; }
   const stg = stageOf(lvl);
@@ -3255,8 +3264,9 @@ function render(){
       <span class="pill gold-pill" style="cursor:pointer" onclick="shopOpen()" title="Gold — tap for the shop">💰 <span class="num">${(()=>{ try { return goldNow().toLocaleString(); } catch(e){ return 0; } })()}</span></span>
       ${(()=>{ const se=season(); let t=0, sd=false; try { t=seasonTrack().tier; sd=seasonBoss().showdown&&!seasonBoss().dead; } catch(e){} return `<span class="pill" style="cursor:pointer;box-shadow:inset 0 0 0 1.5px ${se.c}" onclick="seasonOpen()" title="Season ${se.no} · ${se.name}">${sd?'⚔️':se.ic} ${t}/13</span>`; })()}
     </div>
-    <div class="nav" data-hl="${({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab',learn:'study',social:'study',hustle:'study'})[view]||'crt'}">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='today'&&GOALS.some(([k])=>k===view))||(v==='life'&&LIFE.some(([k])=>k===view))?'on':''}" data-tab="${v}" onclick="if(!navHeld())go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
+    <div class="nav" data-hl="${LIFE.some(([k])=>k===view)?'study':({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab'})[view]||'crt'}">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='today'&&GOALS.some(([k])=>k===view))||(v==='life'&&LIFE.some(([k])=>k===view))?'on':''}" data-tab="${v}" onclick="if(!navHeld())go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
     <div id="view">${view==='today'?goalsTabs():GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):LIFE.some(([k])=>k===view)?lifeHero()+lifeTabs():''}${AREA_VIEW[view]?areaChip(AREA_VIEW[view]):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve,social:vSocial,bosses:vBosses,city:vCity,hustle:vHustle,learn:vLearning})[view]()}</div>`;
+  if (window.__avPaint==null) try { const p=document.querySelector('.pfp-sm img, .pfp-sm svg'); if (p){ const first=(window.__r1||0)===1, t=()=>{ if (window.__avPaint==null){ window.__avPaint=performance.now(); window.__avFirst=first; } }; if (p.tagName!=='IMG'||p.complete) t(); else p.addEventListener('load',t,{once:true}); } } catch(e){}
   dlSheetRefresh(); try { if (_swAnim) swAnimApply(); else if (_pgLast!==view){ const v=document.getElementById('view'); if (v&&_pgLast){ v.classList.remove('pg-in'); void v.offsetWidth; v.classList.add('pg-in'); } } _pgLast=view; } catch(e){}
   checkEvo();
   if (_dbSettled && richness(S)>0 && !document.getElementById('lvs')?.classList.contains('show')) { if (S.lvlSeen===undefined) S.lvlSeen=Math.max(1,lvl-1); if (lvl<S.lvlSeen) S.lvlSeen=lvl; if (lvl>S.lvlSeen) { S.lvlSeen=lvl; setTimeout(()=>{ levelScene(lvl); saveLocal(); scheduleDbWrite(); },400); } }
@@ -4310,7 +4320,8 @@ let voiceIdx=0, voiceBusy=false, sampleLib=null;
 (async()=>{ try { if (window.claude && typeof claude.use==='function') sampleLib = await claude.use('sample'); if (sampleLib && typeof view!=='undefined' && view==='evolve') render(); } catch(e){} })();
 function voiceBucket(){ const hr=new Date().getHours(), d=S.days[TODAY]; if (hr>=22||hr<5) return 'night'; if (d && d.top3.some(t=>t.text.trim()) && d.top3.every(t=>t.done)) return 'done'; if (hr<12 && !d?.checkin) return 'morning'; return 'day'; }
 function voiceAI(){ const v=S.voice; if (!v || v.d!==TODAY || !v.lines) return []; const b=voiceBucket(), L=v.lines; return [...(L[b]||[]), ...(b==='day'?[]:(L.day||[]))]; }
-function voicePool(mood,k){
+function voicePool(mood,k){ return rpgC('voice:'+mood+':'+k+':'+new Date().getHours(), ()=>voicePool0(mood,k)).slice(); }   // b298: once per data version and hour
+function voicePool0(mood,k){
   const hr=new Date().getHours(), no=new Set(S.voiceNo||[]), Q=QUOTES[mood]||QUOTES.neutral, sh=(parseInt(TODAY.replace(/-/g,''),10)+hr)%Q.length;
   const q=[...Q.slice(sh),...Q.slice(0,sh)];
   if (k!==TODAY) return q.slice(0,4);
@@ -7039,8 +7050,22 @@ function avWait(size){ if (!AV_CLIPS) return _dbSettled ? '' : `<div class="av-p
   return c.src && c.poster ? `<span class="av-stack" style="${st}"><img class="av-still" src="${c.poster}" alt=""><video class="anim av-v" src="${c.src}" ${avPoster(c.src)} preload="auto" autoplay muted loop playsinline style="${st}"></video></span>` : `<div class="av-ph" style="${st}"></div>`; }
 function pfpMini(stg){ const k=AV_CLIPS&&clipFor('char_idle'), r=k&&A_()[k], still=AV_CLIPS&&((r&&r.poster) || (avCache().poster));
   if (still && (r || !_dbSettled)) return `<img class="pfp-v" src="${still}" alt="">`;
-  if (!_dbSettled) return `<div class="av-ph pfp-ph"></div>`;
-  return `<svg viewBox="${PXA.me?'15 31 64 64':'34 58 132 132'}" preserveAspectRatio="xMidYMid slice">${avatarSVG(stg,'smile',36,S.evo||{}).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')}</svg>`; }
+  const c=pfpCache();
+  if (!_dbSettled) return c&&c.url ? `<img class="pfp-v pfp-b" src="${c.url}" alt="">` : `<div class="av-ph pfp-ph"></div>`;
+  const pk=pfpKey(stg); if (c && c.k===pk && c.url) return `<img class="pfp-v pfp-b" src="${c.url}" alt="">`;
+  const vb=PXA.me?'15 31 64 64':'34 58 132 132', inner=avatarSVG(stg,'smile',36,S.evo||{}).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');
+  pfpBake(pk, vb, inner);
+  return `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid slice">${inner}</svg>`; }
+// b298: the topbar avatar paints instantly — the layered pixel avatar is baked once into a small PNG kept on this phone,
+// shown on first paint (even before the cloud copy arrives) and re-baked in the background whenever your look changes.
+let _pfpC, _pfpBusy=null;
+function pfpCache(){ if (_pfpC===undefined){ try { _pfpC=JSON.parse(localStorage.getItem('tega-pfp'))||null; } catch(e){ _pfpC=null; } } return _pfpC; }
+function pfpKey(stg){ let bg=0; try { bg=pxBg()?1:0; } catch(e){} return [BUILD, stg, JSON.stringify(S.evo||{}), S.bg??'', PXA.me?1:0, bg].join('|'); }
+function pfpBake(k, vb, inner){ if (_pfpBusy===k) return; _pfpBusy=k;
+  setTimeout(()=>{ try { const N=144, img=new Image();
+    img.onload=()=>{ try { const cv=document.createElement('canvas'); cv.width=cv.height=N; cv.getContext('2d').drawImage(img,0,0,N,N); const url=cv.toDataURL('image/png');
+      _pfpC={k, url}; localStorage.setItem('tega-pfp', JSON.stringify(_pfpC)); } catch(e){} };
+    img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="${vb}" width="${N}" height="${N}" preserveAspectRatio="xMidYMid slice">${inner}</svg>`); } catch(e){} }, 600); }
 // keep the playing videos across re-renders so they never restart or blank out
 (function(){ const kk=el=>el.dataset.keep||(el.matches('video,img.pfp-v,img.av-still')?['av-v','pfp-v','room-v','av-still'].find(c=>el.classList.contains(c))+'|'+el.getAttribute('src'):null);
   const SEL='video.av-v,video.pfp-v,video.room-v,canvas.room-me,.pfp-sm img.pfp-v,.av-stack img.av-still';
@@ -8415,7 +8440,7 @@ function aLoot(s){ try { const B=aBoss(), h=B.hits.find(x=>x.sid===s.id), st=aSt
 
 
 /* ===================== pixel character: redraws the avatar / room media at low resolution, scaled up with hard pixels ===================== */
-const PX_SEL='.av-stack .av-still, .av-stack video, .pfp-v, video.anim, .room-art';
+const PX_SEL='.av-stack .av-still, .av-stack video, .pfp-v:not(.pfp-b), video.anim, .room-art';   // .pfp-b: the baked avatar is already pixel art
 function pxOn(){ try { const sk=document.documentElement.getAttribute('data-skin'); return (sk==='crt' || (['holo','chrome','lab','arise','vf'].includes(sk) && baseSkin()==='crt')) && (S ? S.pxChar!==false : true); } catch(e){ return false; } }
 const pxItems=new Set(); let pxT=0, pxLast=0;
 function pxAttach(m){ if (m.controls) return; if (m._px){ if (!m._px.isConnected || m.nextElementSibling!==m._px) m.insertAdjacentElement('afterend', m._px); pxItems.add(m); return; } const c=document.createElement('canvas'); c.className='px-c'; c.setAttribute('aria-hidden','true'); m._px=c; m.classList.add('px-src'); m.insertAdjacentElement('afterend', c); pxItems.add(m); }
@@ -8431,7 +8456,7 @@ function pxDraw(m){ const c=m._px; if(!c) return; const op=m.offsetParent; if(!o
   if (sprOn() && m.closest('.av-stack')){ if (m.tagName==='VIDEO'){ c.style.display='none'; return; } if (m.classList.contains('av-still') && sprDraw(m)) return; }
   const W=m.offsetWidth, H=m.offsetHeight; if (!W||!H){ c.style.display='none'; return; }
   const isV=m.tagName==='VIDEO', ready=isV ? (m.readyState>=2 && (!m.classList.contains('av-v') || m.classList.contains('on'))) : (m.complete && m.naturalWidth>0);
-  c.style.display=ready?'block':'none'; if(!ready) return;
+  c.style.display=ready?'block':'none'; c._ok=0; if(!ready) return;
   Object.assign(c.style,{left:m.offsetLeft+'px', top:m.offsetTop+'px', width:W+'px', height:H+'px', borderRadius:getComputedStyle(m).borderRadius});
   const cols = Math.max(24, Math.min(96, Math.round(W/2.2))), rows=Math.max(1,Math.round(cols*H/W));
   const o=pxDraw.o ||= document.createElement('canvas'); if (o.width!==cols) o.width=cols; if (o.height!==rows) o.height=rows; devFit(c, W, H);
@@ -8440,8 +8465,11 @@ function pxDraw(m){ const c=m._px; if(!c) return; const op=m.offsetParent; if(!o
   if (fit==='cover'){ if (nar>ar){ sw=nh*ar; sx=(nw-sw)/2; } else { sh=nw/ar; const pos=parseFloat((getComputedStyle(m).objectPosition.split(' ')[1])||'50')/100; sy=(nh-sh)*(isNaN(pos)?.5:pos); } }
   const ox=o.getContext('2d'); ox.imageSmoothingEnabled=true; ox.clearRect(0,0,cols,rows); try { ox.filter='contrast(1.12) saturate(1.25)'; } catch(e){}
   try { ox.drawImage(m,sx,sy,sw,sh,0,0,cols,rows); } catch(e){}
-  const x=c.getContext('2d'); x.imageSmoothingEnabled=false; x.clearRect(0,0,c.width,c.height); x.drawImage(o,0,0,c.width,c.height); }
-function pxLoop(t){ requestAnimationFrame(pxLoop); if (!pxItems.size) return; if (t-pxLast<30) return; pxLast=t; for (const m of pxItems) pxDraw(m); }
+  const x=c.getContext('2d'); x.imageSmoothingEnabled=false; x.clearRect(0,0,c.width,c.height); x.drawImage(o,0,0,c.width,c.height); c._ok=1; }
+// b298: only moving pictures redraw every frame; a still is drawn once (re-checked each second in case the page moved) — was every still, 33×/s, forever
+let pxFull=0;
+function pxLoop(t){ requestAnimationFrame(pxLoop); if (!pxItems.size) return; if (t-pxLast<30) return; pxLast=t; const all=t-pxFull>1000; if (all) pxFull=t;
+  for (const m of pxItems) if (all || m.tagName==='VIDEO' || !m._px || !m._px._ok) pxDraw(m); }
 requestAnimationFrame(pxLoop);
 new MutationObserver(()=>{ clearTimeout(pxT); pxT=setTimeout(pxScan,60); }).observe(document.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['data-skin']});
 // everything else that animates (raid bosses, the room, level-up art) goes through one SVG pixel filter
@@ -9404,22 +9432,41 @@ let _swAnim=0, _swBusy=false;
 const SW_EASE='cubic-bezier(.22,.8,.22,1)';
 function swBar(){ return [...document.querySelectorAll('#view .seg, #view [role=tablist]')].find(b=>b.offsetParent&&b.querySelector('button.on')); }
 function swInfo(){ const bar=swBar(); if (!bar) return null; const B=[...bar.querySelectorAll('button')].filter(b=>!b.disabled), i=B.findIndex(b=>b.classList.contains('on')); return i<0?null:{bar,B,i}; }
-// move to the neighbouring tab: the current page slides away, the next one slides in from the same side
-function swipeTab(dir, fromX){ const I=swInfo(); if (!I||_swBusy) return false; const j=I.i+dir, v=document.getElementById('view');
+// b298: page change by swipe or tab tap — the old page never leaves the screen until the new one has rendered.
+// The old #view is kept as an inert snapshot (.sw-ghost, no ids, so there is only ever one #view), both slide once,
+// then the snapshot is dropped and #view is left with no transform (a transform on #view breaks position:fixed inside it).
+let _swOld=null;
+function swGrab(dx){ const v=document.getElementById('view'); if (!v) return; _swOld={el:v, r:v.getBoundingClientRect(), dx:dx||0, t:Date.now()}; }
+function swipeTab(dir, dx){ const I=swInfo(); if (!I||_swBusy) return false; const j=I.i+dir, v=document.getElementById('view');
   if (j<0||j>=I.B.length){ swSnap(v); return false; }
-  _swBusy=true; nat('haptic','light'); const W=innerWidth, y=I.bar.getBoundingClientRect().top+scrollY-70;
-  v.style.transition=`transform .2s ${SW_EASE}, opacity .2s`; v.style.transform=`translate3d(${-dir*W*0.9}px,0,0)`; v.style.opacity='0.2';
-  setTimeout(()=>{ _swAnim=dir; I.B[j].click(); if (scrollY>y) scrollTo(0,Math.max(0,y)); swAnimApply(); _swBusy=false; }, 170); return true; }
-function swSnap(v){ if (!v) return; v.style.transition=`transform .35s ${SW_EASE}, opacity .25s`; v.style.transform='translate3d(0,0,0)'; v.style.opacity='1'; setTimeout(()=>{ v.style.transition=''; v.style.transform=''; v.style.opacity=''; },360); }
-// the new page arrives from the side you swiped (or the side of the tab you tapped)
-function swAnimApply(){ if (!_swAnim) return; const v=document.getElementById('view'), d=_swAnim; _swAnim=0; if (!v) return;
-  v.style.transition='none'; v.style.transform=`translate3d(${d*innerWidth*0.35}px,0,0)`; v.style.opacity='0.35'; void v.offsetWidth;
-  v.style.transition=`transform .32s ${SW_EASE}, opacity .26s ease-out`; v.style.transform='translate3d(0,0,0)'; v.style.opacity='1';
-  setTimeout(()=>{ if (v.isConnected){ v.style.transition=''; v.style.transform=''; v.style.opacity=''; } },360); }
+  _swBusy=true; nat('haptic','light'); swGrab(dx); _swAnim=dir; const y=I.bar.getBoundingClientRect().top+scrollY-70; _swScroll=y;
+  I.B[j].click();   // renders now (or on the next hashchange); the dragged page stays where your finger left it until then
+  setTimeout(()=>{ if (_swAnim){ _swAnim=0; _swOld=null; swSnap(v); } _swBusy=false; }, 1500); return true; }
+let _swScroll=null;
+function swClear(v){ if (!v) return; v.style.transition=''; v.style.transform=''; v.style.opacity=''; v.style.willChange=''; }
+function swSnap(v){ if (!v) return; v.style.transition=`transform .3s ${SW_EASE}`; v.style.transform='translate3d(0,0,0)'; v.style.opacity=''; setTimeout(()=>swClear(v),320); }
+// called at the end of render(): slide the snapshot out and the new page in, together, once
+function swAnimApply(){ if (!_swAnim) return; const v=document.getElementById('view'), d=_swAnim, O=_swOld; _swAnim=0; _swOld=null; _swBusy=false; if (!v) return;
+  if (_swScroll!=null){ if (scrollY>_swScroll) scrollTo(0,Math.max(0,_swScroll)); _swScroll=null; }
+  const W=innerWidth, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let g=null;
+  if (O && O.el && O.el!==v && !O.el.isConnected && Date.now()-O.t<2000 && !reduce){
+    g=O.el; g.removeAttribute('id'); g.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id')); g.classList.remove('pg-in'); g.className+=' sw-ghost'; g.setAttribute('inert',''); g.setAttribute('aria-hidden','true');
+    g.style.cssText=`position:fixed;left:${O.r.left}px;top:${O.r.top}px;width:${O.r.width}px;margin:0;pointer-events:none;z-index:1;transition:none;transform:translate3d(${O.dx}px,0,0)`;
+    (document.getElementById('app')||document.body).appendChild(g); }
+  if (reduce){ swClear(v); return; }
+  const from=g?O.dx+d*W:d*W*0.3;
+  v.style.transition='none'; v.style.transform=`translate3d(${from}px,0,0)`; void v.offsetWidth;
+  document.documentElement.classList.add('sw-run');
+  requestAnimationFrame(()=>{ v.style.transition=`transform .28s ${SW_EASE}`; v.style.transform='translate3d(0,0,0)';
+    if (g){ g.style.transition=`transform .28s ${SW_EASE}`; g.style.transform=`translate3d(${-d*W}px,0,0)`; } });
+  let done=false; const fin=()=>{ if (done) return; done=true; if (g) g.remove(); swClear(v); document.documentElement.classList.remove('sw-run'); };
+  v.addEventListener('transitionend', e=>{ if (e.target===v) fin(); }, {once:true}); setTimeout(fin, 360); }
 // tapping a tab slides the same way a swipe would
-document.addEventListener('click', e=>{ const btn=e.target.closest&&e.target.closest('#view .seg button, #view [role=tablist] button'); if (!btn||btn.classList.contains('on')||_swAnim) return;
-  const bar=btn.parentElement, B=[...bar.querySelectorAll('button')], i=B.findIndex(b=>b.classList.contains('on')), j=B.indexOf(btn); if (i<0||j<0) return; _swAnim=j>i?1:-1; }, true);
-(function(){ let sx=null, sy=0, t0=0, lock=null, I=null, v=null, lastX=0, lastT=0, vel=0;
+document.addEventListener('click', e=>{ const btn=e.target.closest&&e.target.closest('#view .seg button, #view [role=tablist] button'); if (!btn||btn.classList.contains('on')) return;
+  const oc=btn.getAttribute('onclick')||''; if (!/\bS\s*[.[]|commit|save|Set\(/.test(oc)){ _navR=true; setTimeout(()=>{ _navR=false; },0); }   // a pure tab change reuses cached numbers
+  if (_swAnim) return; const bar=btn.parentElement, B=[...bar.querySelectorAll('button')], i=B.findIndex(b=>b.classList.contains('on')), j=B.indexOf(btn); if (i<0||j<0) return; swGrab(0); _swAnim=j>i?1:-1; }, true);
+(function(){ let sx=null, sy=0, t0=0, lock=null, I=null, v=null, lastX=0, lastT=0, vel=0, lastD=0;
   const blocked=el=>{ for (let e=el; e && e!==document.body; e=e.parentElement){ if (e.matches&&e.matches('input,textarea,select,[contenteditable],canvas,[data-noswipe],.nav')) return true;
       const cs=getComputedStyle(e); if (cs.touchAction==='none'||cs.touchAction==='pan-x') return true; if (/(auto|scroll)/.test(cs.overflowX) && e.scrollWidth>e.clientWidth+2) return true; } return false; };
   const overlay=()=>[...document.querySelectorAll('#g-sheet,.modal,#navqa,#ci,#lvs.show,#g-live,#lockscr,#yg-ov')].some(x=>x.offsetWidth>0&&getComputedStyle(x).visibility!=='hidden'&&getComputedStyle(x).display!=='none');
@@ -9430,9 +9477,9 @@ document.addEventListener('click', e=>{ const btn=e.target.closest&&e.target.clo
     if (lock==null){ if (Math.hypot(dx,dy)<9) return; lock=Math.abs(dx)>Math.abs(dy)*1.15?'x':'y'; if (lock==='y'){ sx=null; return; } }
     e.preventDefault(); const now=performance.now(); vel=(t.clientX-lastX)/Math.max(1,now-lastT); lastX=t.clientX; lastT=now;
     const edge=(dx<0&&I.i>=I.B.length-1)||(dx>0&&I.i<=0), d=edge?dx*0.28:dx;
-    v.style.transition='none'; v.style.transform=`translate3d(${d}px,0,0)`; v.style.opacity=String(1-Math.min(.45,Math.abs(d)/innerWidth*.6)); }, {passive:false});
+    v.style.transition='none'; v.style.transform=`translate3d(${d}px,0,0)`; lastD=d; }, {passive:false});
   const end=()=>{ if (sx==null||lock!=='x'){ sx=null; return; } const dx=lastX-sx; sx=null; const dir=dx<0?1:-1, fling=Math.abs(vel)>0.45&&Math.sign(vel)===Math.sign(dx);
-    if ((Math.abs(dx)>innerWidth*0.25||fling) && !(getSelection&&String(getSelection()).length)) { if (!swipeTab(dir)) swSnap(v); } else swSnap(v); };
+    if ((Math.abs(dx)>innerWidth*0.25||fling) && !(getSelection&&String(getSelection()).length)) { if (!swipeTab(dir, lastD)) swSnap(v); } else swSnap(v); lastD=0; };
   document.addEventListener('touchend', end, {passive:true}); document.addEventListener('touchcancel', end, {passive:true}); })();
 // ---- swipe right from the left edge = back; swipe a sheet down = close
 function goBack(){ if (document.getElementById('g-sheet')) return gSheetClose(); const m=document.querySelector('.modal'); if (m){ const x=m.querySelector('.x,[aria-label=Close]'); if (x) x.click(); else m.remove(); return; }
@@ -9571,19 +9618,23 @@ document.addEventListener('contextmenu',e=>{ const b=e.target.closest&&e.target.
 { const _r=render; render=function(){ const out=_r.apply(this,arguments); try { pxScan(); for (const m of pxItems) pxDraw(m); } catch(e){} return out; }; }
 // …and every sideways strip / inner scroller stays where you left it (tapping a date no longer snaps the strip back)
 { const ck=el=>el.tagName+'.'+(typeof el.className==='string'?el.className.split(' ')[0]:'');
-  const _r=render; render=function(){ let pos=null; try { const cnt={}; for (const el of document.querySelectorAll('#app *')){ const k=ck(el), i=cnt[k]=(cnt[k]||0)+1; if (el.scrollLeft>0||el.scrollTop>0) (pos ||= new Map()).set(k+'#'+i,[el.scrollLeft,el.scrollTop]); } } catch(e){}
+  // b298: only elements you actually scrolled are remembered (was: read scroll on every element of the page each render — ~30% of render time)
+  const seen=new Set(), sel=el=>el.tagName.toLowerCase()+(ck(el).split('.')[1]?'.'+CSS.escape(ck(el).split('.')[1]):''), nth=el=>{ const k=ck(el); return [...document.querySelectorAll('#app '+sel(el))].filter(e=>ck(e)===k).indexOf(el); };
+  document.addEventListener('scroll', e=>{ const t=e.target; if (t && t.nodeType===1 && t.closest && t.closest('#app')) seen.add(t); }, {capture:true, passive:true});
+  const _r=render; render=function(){ const pos=[]; try { for (const el of seen){ if (!el.isConnected){ seen.delete(el); continue; } if (el.scrollLeft>0||el.scrollTop>0) pos.push([sel(el), ck(el), nth(el), el.scrollLeft, el.scrollTop]); } } catch(e){}
     const out=_r.apply(this,arguments);
-    if (pos) try { const cnt={}; for (const el of document.querySelectorAll('#app *')){ const k=ck(el), i=cnt[k]=(cnt[k]||0)+1, x=pos.get(k+'#'+i); if (x){ if (x[0]) el.scrollLeft=x[0]; if (x[1]) el.scrollTop=x[1]; } } } catch(e){}
+    for (const [s,k,i,x,y] of pos) try { const el=[...document.querySelectorAll('#app '+s)].filter(e=>ck(e)===k)[i]; if (el){ if (x) el.scrollLeft=x; if (y) el.scrollTop=y; seen.add(el); } } catch(e){}
     return out; }; }
 // a sheet left open never sits on top of a different page
 { const stamp=new MutationObserver(l=>{ for (const m of l) for (const n of m.addedNodes) if (n.nodeType===1 && (n.id==='g-sheet'||n.classList.contains('modal'))) n.dataset.at=Date.now(); }); stamp.observe(document.body,{childList:true});
   window.addEventListener('hashchange',()=>{ const old=el=>el && Date.now()-(+el.dataset.at||0)>300; const g=document.getElementById('g-sheet'); if (old(g)) try { gSheetClose(); } catch(e){ g.remove(); } for (const m of document.querySelectorAll('.modal')) if (old(m) && !['lvs','ci'].includes(m.id)) { const x=m.querySelector('.x,[aria-label=Close]'); if (x) x.click(); else m.remove(); } navMenuClose(); }); }
 { const akey=(a,cnt)=>{ const t=a.effect&&a.effect.target; if(!t||!a.animationName) return null; const k=a.animationName+'|'+(a.effect.pseudoElement||'')+'|'+t.tagName+'.'+(typeof t.className==='string'?t.className.replace(/\b(on|show|vis|holding|nq-press)\b/g,'').trim():''); const i=cnt[k]=(cnt[k]||0)+1; return k+'#'+i; };
-  const _r=render; render=function(){ let saved=null;
-    try { const cnt={}; saved=new Map(); for (const a of document.getAnimations()){ if (!a.effect||!a.effect.target||!a.effect.target.closest||!a.effect.target.closest('#app')) continue; const k=akey(a,cnt); if (k&&a.currentTime!=null) saved.set(k,a.currentTime); } } catch(e){ saved=null; }
+  // b298: only when the same page re-renders — a page change starts its animations fresh anyway, and reading them costs a full style pass
+  let lastV=null; const _r=render; render=function(){ let saved=null; const same=lastV===view;
+    if (same) try { const cnt={}; saved=new Map(); for (const a of document.getAnimations()){ if (!a.effect||!a.effect.target||!a.effect.target.closest||!a.effect.target.closest('#app')) continue; const k=akey(a,cnt); if (k&&a.currentTime!=null) saved.set(k,a.currentTime); } } catch(e){ saved=null; }
     const out=_r.apply(this,arguments);
     if (saved&&saved.size) try { const cnt={}; for (const a of document.getAnimations()){ if (!a.effect||!a.effect.target||!a.effect.target.closest||!a.effect.target.closest('#app')) continue; const k=akey(a,cnt), v=k&&saved.get(k); if (v!=null && a.currentTime!=null && a.currentTime<v) a.currentTime=v; } } catch(e){}
-    return out; }; }
+    lastV=view; return out; }; }
 
 // background updates (sync, refresh, timers) never wipe what you're typing: they wait until you leave the field
 { const typing=()=>{ const a=document.activeElement; return !!(a && a.matches && a.matches('#app input:not([type=checkbox]):not([type=radio]):not([type=range]), #app textarea, #app select')); };
@@ -10538,7 +10589,12 @@ function txFilter(v){ bCatF=v; txN=30; render(); }
 // 2) subscriptions & recurring bills, found from the bank feed
 const merchKey = d => { let x=String(d||'').toUpperCase().replace(/^(SQ|TST|SP|PP|DD|IC|UEP)\s*\*\s*/,'').replace(/^(PAYPAL|POS|ACH|DEBIT|PURCHASE|RECURRING|CHECKCARD|CKCD)\b\s*\*?\s*/,'').replace(/APPLE\.COM\/BILL|APPLE\.COM BILL|ITUNES\.COM/,'APPLE').replace(/[*#0-9.\/\\_:,;'&()-]+/g,' ').replace(/\b(WWW|COM|INC|LLC|CO|USA|US|ONLINE|PAYMENT|PMT|BILL|MEMBERSHIP|MONTHLY|AUTOPAY|RECURRING|SUBSCRIPTION|DES|ID|INDN|WEB|PPD|CA|NY|IL|CHICAGO|P)\b/g,' ').replace(/\s+/g,' ').trim(); const w=x.split(' '); return (w[0]&&w[0].length>=4&&!/^(THE|AMZN|AMAZON|GOOGLE|CASH|CITY|VILLAGE|BANK|CAPITAL|DISCOVER|NORTH|SOUTH|EAST|WEST|SAINT|PARK|STATE|FIRST)$/.test(w[0])) ? w[0] : (w.slice(0,2).join(' ')||'?'); };
 const subName = d => { let x=String(d||'').split(/\s+DES:|\s+ID:/)[0].replace(/\(?recurring\)?|\bmonthly\b|\bP[A-Z0-9]{6,}\b|\b\d{3,}\b|\s[A-Z]{2}$/gi,'').replace(/\s{2,}/g,' ').trim(); x=x.toLowerCase().replace(/\b[a-z]/g,c=>c.toUpperCase()); return x.slice(0,30)||String(d).slice(0,30); };
-function subsList(){ return rpgC('subs:'+(S.money.budget.txns.length)+':'+JSON.stringify(S.money.subHide||{}),()=>{ const hide=S.money.subHide||{}, ref=(()=>{ try { return bankThrough()||TODAY; } catch(e){ return TODAY; } })(), since=addDays(ref,-400), G={};
+let _subsK=null, _subsV=null;
+function subsList(){ const T=S.money.budget.txns; let h=T.length; for (const t of T) h=(Math.imul(h,31)+(t.amt*100|0)+(t.cat?t.cat.length*13+t.cat.charCodeAt(0):0)+(t.sc?t.sc.length*7+t.sc.charCodeAt(0):0)+(t.desc?t.desc.length:0)+(t.d?t.d.charCodeAt(8)*10+t.d.charCodeAt(9):0))|0;
+  let ref=TODAY; try { ref=bankThrough()||TODAY; } catch(e){}
+  const k=h+'|'+TODAY+'|'+ref+'|'+JSON.stringify(S.money.subHide||{}); if (k===_subsK && _subsV) return _subsV;
+  _subsK=k; return (_subsV=subsList0()); }
+function subsList0(){ return (()=>{ const hide=S.money.subHide||{}, ref=(()=>{ try { return bankThrough()||TODAY; } catch(e){ return TODAY; } })(), since=addDays(ref,-400), G={};
   for (const t of S.money.budget.txns){ if (t.amt>=0 || t.d<since || txDead(t) || t.cat==='income' || /LATE FEE|INTEREST CHARGE|FINANCE CHARGE|OVERDRAFT/i.test(t.desc)) continue; const sc=t.sc||spendCat(t); if (['food','groc','ride','people','cash','fun','travel','work'].includes(sc) && sc!=='subs') continue; (G[merchKey(t.desc)] ||= []).push(t); }
   const out=[];
   for (const [k,L] of Object.entries(G)){ if (hide[k]) continue; L.sort((a,b)=>a.d.localeCompare(b.d)); const sc=L.map(t=>t.sc||spendCat(t)).sort((a,b)=>L.filter(t=>(t.sc||spendCat(t))===b).length-L.filter(t=>(t.sc||spendCat(t))===a).length)[0];
@@ -10549,7 +10605,7 @@ function subsList(){ return rpgC('subs:'+(S.money.budget.txns.length)+':'+JSON.s
     if (!(active && steady>=.6 && L.length>=2) && !((sc==='subs'||rec) && daysBetween(last.d,ref)<=45)) continue;
     const per=cad==='weekly'?52/12:cad==='every 2 weeks'?26/12:cad==='quarterly'?1/3:cad==='yearly'?1/12:1, amt=-last.amt;
     out.push({k, name:subName(last.desc), amt, cad:cad||'new', last:last.d, next:cad?addDays(last.d,gap):'', mo:amt*per, sc, n:L.length, bill:sc==='bills'||(!rec&&(sc==='car'||(last.cat==='fixed'&&sc!=='subs')))}); }
-  return out.sort((a,b)=>b.mo-a.mo); }); }
+  return out.sort((a,b)=>b.mo-a.mo); })(); }
 function subHide(k){ (S.money.subHide ||= {})[k]=TODAY; commit({skipXp:true}); toastAct('Removed from the list','Undo',()=>{ delete S.money.subHide[k]; commit({skipXp:true}); }); }
 let subShowBills=false;
 function subsCard(){ try { const all=subsList(), L=all.filter(x=>subShowBills||!x.bill), mo=L.reduce((a,x)=>a+x.mo,0);
@@ -10879,7 +10935,8 @@ function seedDeadlines(st){ if (Array.isArray(st.dl)) return; st.dl = DEADLINES.
 const dlWords = t => (t||'').toLowerCase().match(/[a-z]{4,}/g) || [];
 // a stored deadline on the same date as a key result, sharing a word, is the same thing: link them so one tick does both
 function dlKr(x){ const q=quarterOf(x.d), Q=S.quarters[q]; if(!Q) return null; const w=new Set(dlWords(x.text)); for (const o of Q.objectives) for (const k of o.krs) if (krDue(k,q)===x.d && dlWords(k.text).some(v=>w.has(v))) return {o,k,q}; return null; }
-function dlAll(){
+function dlAll(){ return rpgC('dlAll', dlAll0).map(x=>({...x})); }
+function dlAll0(){
   const out=(S.dl||[]).map(x=>({...x, src:'own'})), linked=new Set();
   for (const x of out){ const m=dlKr(x); if(m){ linked.add(m.k.id); x.kr=m; } }
   const P=projection(); for (const x of out) if (x.type==='tax'){ const pay=P.payouts.find(p=>p.d===x.d); if (pay) x.amt=pay.pay; }
