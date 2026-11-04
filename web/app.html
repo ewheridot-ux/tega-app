@@ -335,6 +335,17 @@ html[data-look="gallery"] body .nav[data-hl="study"] button.on{background:#fff!i
 .yf-pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 2px}.yf-pair>div{background:#141923;border-radius:12px;padding:4px 4px 6px;text-align:center}.yf-pair svg{width:100%;height:auto;display:block}.yf-pair small{font:700 11px 'Space Mono',monospace;letter-spacing:.06em;color:#8a93a6}
 .yv-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000}.yv-wrap.sh{aspect-ratio:9/16;max-height:62vh;width:auto;margin:0 auto}.yv-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .yg-poses .y-fig{width:64px;height:auto;border-radius:10px;background:#141923}
+.yg-vid{position:relative;display:block;width:80%;aspect-ratio:1;border-radius:50%;overflow:hidden;pointer-events:none;background:#000;box-shadow:0 0 0 4px rgba(0,0,0,.35)}
+.yg-vid iframe{position:absolute;border:0;height:100%;width:178%;left:-39%;top:0}.yg-vid.sh iframe{width:100%;height:178%;left:0;top:-39%}
+.yv-loop{position:relative;display:block;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000;margin:8px 0 4px;pointer-events:none}.yv-loop.sh{aspect-ratio:4/5}
+.yv-loop iframe{position:absolute;inset:0;width:100%;height:100%;border:0}.yv-loop.sh iframe{height:140%;top:-20%}
+.lr-strip{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -4px;padding:2px 4px 6px;-webkit-overflow-scrolling:touch}
+.lr-in{position:relative;flex:none;width:118px;height:148px;scroll-snap-align:start;border:0;border-radius:var(--lr-rad,10px);background:var(--lr-tile,#222) center/cover no-repeat;color:var(--lr-ink,#fff);font:inherit;cursor:pointer;overflow:hidden;text-align:left;padding:0}
+[data-look="zine"] .lr-in{border:2px solid #111}
+.lr-in.add{display:grid;place-content:center;justify-items:center;gap:4px;width:84px;background:transparent;border:1.5px dashed color-mix(in srgb,var(--lr-ink,#fff) 35%,transparent);color:var(--lr-mute,#aaa);font-size:12px}.lr-in.add i{font-style:normal;font-size:22px;color:var(--lr-mark,#f55)}
+.lr-in.yt{width:200px}.lr-play{position:absolute;top:8px;left:8px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;display:grid;place-items:center;font-size:12px}
+.lr-cap{position:absolute;left:0;right:0;bottom:0;padding:18px 8px 6px;font-size:11.5px;line-height:1.25;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.7))}
+.lr-in.link{width:150px;background:var(--lr-tile,#222)}.lr-lk{display:grid;gap:4px;padding:10px;font-size:13px;line-height:1.3;font-weight:600}.lr-lk small{font:700 10px 'Space Mono',monospace;letter-spacing:.04em;color:var(--lr-mark,#f55);text-transform:uppercase}
 .ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
 .pxb{width:1.6em;height:1.6em;image-rendering:pixelated;vertical-align:middle;display:inline-block}
@@ -1918,7 +1929,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b293';
+const BUILD='b294';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -4037,6 +4048,33 @@ function lrCustom(x){ const ls=x.lessons||[], todo=ls.filter(l=>!l.done), done=l
   <div class="card sec lr-log"><div class="hdr"><h2>Log</h2><span class="sub">what each one gave you</span></div>
     <div class="stack">${log.map(g=>`<div class="check ${g.out?'on':''}" style="cursor:default"><div class="box" style="${g.out?'':'border-color:var(--warn)'}">${g.out?'✓':'!'}</div><div class="txt" style="text-decoration:none;color:var(--fg);min-width:0"><b>${esc(g.t)}</b> <span class="sub">· ${nice(g.d)}</span>${g.out?`<div style="font-size:13px">${esc(g.out)}</div>`:`<input class="inp" style="margin-top:6px;width:100%" placeholder="What can you do now? (e.g. clean D→A change)" onchange="lrLogOut('${x.id}','${g.id}',this.value)">`}</div></div>`).join('')||'<div class="empty">Finish a lesson and it lands here.</div>'}</div>
     ${infold('lrl_'+x.id,'Log something else','',`<form class="inline" onsubmit="return lrLogAdd(event,'${x.id}')"><input class="inp" name="t" placeholder="what you learned" required><input class="inp" name="o" placeholder="what you can do now"><button class="btn sm">+ Log</button></form>`)}</div>`; }
+
+/* b294: Inspo — every subject opens with the same strip: photos, videos, links that pull you toward it. Save from Photos, a link, or Share → Tega.exe */
+const LR_INSP_HINT={datum:'grillz & jewelry references',draw:'artists & references to study',guitar:'songs, players & riffs'};
+const ytId=u=>{ const m=/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/))([A-Za-z0-9_-]{11})/.exec(u||''); return m?m[1]:null; };
+function inspoItem(u,t){ u=(u||'').trim(); if (u&&!/^https?:/i.test(u)) u='https://'+u; const y=ytId(u); if (y) return {id:uid(), kind:'yt', v:y, url:u, t:t||'', d:TODAY, short:/\/shorts\//.test(u)};
+  if (/\.(png|jpe?g|webp|gif|avif)(\?|$)/i.test(u)) return {id:uid(), kind:'imgurl', url:u, t:t||'', d:TODAY}; return {id:uid(), kind:'link', url:u, t:t||'', d:TODAY}; }
+function inspoTile(x,it){ const host=(()=>{ try { return new URL(it.url).hostname.replace(/^www\./,''); } catch(e){ return ''; } })();
+  const bg=it.kind==='img'?`${BLOBURL}${it.blob}`:it.kind==='imgurl'?it.url:it.kind==='yt'?`https://i.ytimg.com/vi/${it.v}/hqdefault.jpg`:'';
+  return `<button class="lr-in ${it.kind}" onclick="inspoOpen('${x.id}','${it.id}')" ${bg?`style="background-image:url('${esc(bg)}')"`:''} aria-label="${esc(it.t||host||'Inspo')}">${it.kind==='yt'?'<b class="lr-play">▶</b>':''}${it.kind==='link'?`<span class="lr-lk"><small>${esc(host)}</small>${esc((it.t||it.url).slice(0,60))}</span>`:it.t?`<span class="lr-cap">${esc(it.t.slice(0,40))}</span>`:''}</button>`; }
+function lrInspo(x){ const L=(x.inspo||[]).slice().reverse(), key=x.kind==='custom'?(x.link||''):x.kind;
+  return `<div class="card sec lr-insp"><div class="hdr"><h2>Inspo</h2><span class="sub">${esc(LR_INSP_HINT[key]||'anything that pulls you toward it')}</span></div>
+    <div class="lr-strip" data-noswipe><button class="lr-in add" onclick="inspoAdd('${x.id}')"><i>＋</i><span>Save</span></button>${x.kind==='datum'?`<button class="lr-in add" onclick="openLook()"><i>◆</i><span>Lookbook</span></button>`:''}${L.map(it=>inspoTile(x,it)).join('')}</div>
+    ${L.length?'':`<div class="help" style="margin-top:6px">Save photos, videos or links here — or share one from any app with Share → Tega.exe → Inspo.</div>`}</div>`; }
+let inspoBusy=false;
+function inspoAdd(sid){ const x=lrSub(sid); gSheet(`<span class="tag">${esc(x.name)}</span><h2 class="g-sh-t">Save inspo</h2>
+  <label class="btn" style="width:100%;justify-content:center;cursor:pointer;margin-top:8px">📷 From Photos<input type="file" accept="image/*" multiple hidden onchange="inspoPhotos('${sid}',this)"></label>
+  <form onsubmit="return inspoLink(event,'${sid}')" class="stack" style="gap:6px;margin-top:12px"><input class="inp" name="u" placeholder="Paste a link — YouTube, Instagram, Pinterest, a site" required><input class="inp" name="t" placeholder="What you like about it (optional)"><button class="btn ghost" style="justify-content:center">Save link</button></form>`); }
+async function inspoPhotos(sid,inp){ const F=[...(inp.files||[])]; if (!F.length||inspoBusy) return; inspoBusy=true; toast('Saving…'); let n=0;
+  for (const f of F.slice(0,12)){ try { const id=await artUpload(f); (lrSub(sid).inspo ||= []).push({id:uid(), kind:'img', blob:id, t:'', d:TODAY}); n++; } catch(e){} }
+  inspoBusy=false; if (n){ commit({skipXp:true}); gSheetClose(); toast(`Saved ${n} to Inspo`); } else toast('Couldn’t save that photo here'); }
+function inspoLink(ev,sid){ ev.preventDefault(); const f=ev.target; (lrSub(sid).inspo ||= []).push(inspoItem(f.u.value,f.t.value.trim().slice(0,120))); commit({skipXp:true}); gSheetClose(); toast('Saved to Inspo'); return false; }
+function inspoOpen(sid,iid){ const x=lrSub(sid), it=(x.inspo||[]).find(z=>z.id===iid); if (!it) return;
+  const media=it.kind==='img'?`<img src="${BLOBURL}${it.blob}" alt="" style="width:100%;border-radius:12px;display:block">`:it.kind==='imgurl'?`<img src="${esc(it.url)}" alt="" style="width:100%;border-radius:12px;display:block">`:it.kind==='yt'?`<div class="yv-wrap ${it.short?'sh':''}"><iframe src="https://www.youtube-nocookie.com/embed/${it.v}?playsinline=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`:'';
+  gSheet(`<span class="tag">${esc(x.name)} · inspo · ${nice(it.d)}</span>${media}<input class="inp" style="margin-top:10px;width:100%" value="${esc(it.t||'')}" placeholder="What you like about it" onchange="inspoNote('${sid}','${iid}',this.value)">
+    <div class="row" style="gap:6px;margin-top:10px;flex-wrap:wrap">${it.url?`<a class="btn ghost sm" href="${esc(it.url)}" target="_blank" rel="noopener">Open ↗</a>`:''}<button class="btn ghost sm" onclick="inspoDel('${sid}','${iid}')">Remove</button></div>`); }
+function inspoNote(sid,iid,v){ const it=(lrSub(sid).inspo||[]).find(z=>z.id===iid); if (it){ it.t=v.trim().slice(0,120); commit({skipXp:true}); } }
+function inspoDel(sid,iid){ const x=lrSub(sid), it=(x.inspo||[]).find(z=>z.id===iid); if (!it) return; x.inspo=x.inspo.filter(z=>z.id!==iid); (x.inspoGone ||= []).push({...it, gone:TODAY}); commit({skipXp:true}); gSheetClose(); toast('Removed'); }
 // today's news + things to learn come from a daily cloud job (Claude searches the web each morning)
 let lrNews=null, lrNewsAt=0;
 async function lrNewsLoad(force){ if (!dbHandle||!dbHandle.doc) return; if (!force && Date.now()-lrNewsAt<10*60e3) return; lrNewsAt=Date.now();
@@ -4062,7 +4100,7 @@ function vLearning(){ lrNewsLoad(); const SUB=lrSubs(), live=SUB.filter(x=>!x.ar
   const subT=live.map(x=>{ const [n,t]=lrProg(x); return tile(x.id,x.icon||'✦',x.name,`${n}<small>/${t}</small>`,t?n/t:0); }).join('');
   const goals=`<div class="card sec"><div class="hdr"><h2>Learning goals · ${THIS_Q}</h2><button class="btn ghost sm" onclick="curQ=THIS_Q;qAdd=true;qAddTrack='learning';go('quarter')">＋ Goal</button></div>${objs.length?objs.map(o=>`<button class="hz-o" onclick="curQ='${THIS_Q}';qOpen='${o.id}';go('quarter')"><span><b>${esc(o.title)}</b><small>${(o.krs||[]).map(k=>`${esc(k.text)} ${k.target===1?(krHit(k)?'✓':'—'):`${k.current||0}/${k.target}`}`).join(' · ')}</small></span><em class="num">${Math.round(objPct(o)*100)}%</em></button>`).join(''):'<div class="empty">No Learning goals this quarter. Add one and every lesson you finish moves it.</div>'}</div>`;
   const cur=live.find(x=>x.id===lrTab);
-  const body=lrTab==='goals'?goals:lrTab==='news'?lrNewsHtml():lrTab==='foryou'?lrForYouHtml():!cur?'':cur.kind==='datum'?dLearn():cur.kind==='draw'?vLearn():lrCustom(cur);
+  const body=lrTab==='goals'?goals:lrTab==='news'?lrNewsHtml():lrTab==='foryou'?lrForYouHtml():!cur?'':lrInspo(cur)+(cur.kind==='datum'?dLearn():cur.kind==='draw'?vLearn():lrCustom(cur));
   const edit=lrEdit?`<div class="lr-edit">${SUB.map(x=>`<div class="row" style="gap:6px;flex-wrap:nowrap"><span style="width:22px;text-align:center">${esc(x.icon||'✦')}</span><input class="inp" style="flex:1;min-width:0" value="${esc(x.name)}" onchange="lrRename('${x.id}',this.value)"><button class="btn ghost sm" onclick="lrArchive('${x.id}')">${x.archived?'Restore':'Archive'}</button></div>`).join('')}</div>`:'';
   return `<div class="card sec lr-hero"><div class="lr-top"><div class="lr-k">Learning · ${new Date(TODAY+'T12:00').toLocaleDateString('en-US',{month:'long'})}</div><button class="lr-look" onclick="lrLook()" aria-label="Change the look">Look: ${look} ↻</button></div><h2 class="lr-h">${month?`${month} thing${month===1?'':'s'} learned this month`:'Nothing logged this month yet'}</h2>
     <div class="lr-tiles lr-subs" role="tablist">${subT}</div>
@@ -7294,62 +7332,6 @@ function vGym(){ const g=G_();
   return seg + (gTab==='recovery'?gRecoveryView():gTab==='log'?gLogView():gTab==='results'?gResultsView():gTab==='plan'?gSetupView():gWorkoutView()); }
 const GXIMG=new Set(["abductor", "arnold", "band_apart", "band_curl", "band_row", "bb_bench", "bb_curl", "bb_row", "bench_dip", "bicycle", "bike", "bridge", "bulgarian", "bw_squat", "c_lat_raise", "cable_crunch", "cable_curl", "cable_fly", "cable_row", "calf_bw", "calf_db", "calf_m", "cg_bench", "chinup", "cs_row", "db_bench", "db_curl", "db_fly", "db_rdl", "db_row", "db_sp", "db_thrust", "dead_bug", "deadlift", "diamond", "dips", "face_pull", "goblet", "hammer", "hip_thrust", "hlr", "incl_bb", "incl_curl", "incl_db", "inv_row", "kb_swing", "kickback", "lat_raise", "leg_curl", "leg_ext", "leg_press", "lunge", "m_chest", "m_sp", "oh_ext", "ohp", "pec_deck", "pike_pu", "plank", "pulldown", "pullup", "pushdown", "pushup", "rdl", "rear_fly", "rope", "russian", "sa_pulldown", "side_plank", "skull", "sl_rdl", "squat", "st_abs", "st_chest", "st_glute", "st_ham", "st_lat", "st_quad", "st_shoulder", "st_tri", "stairs", "step_up", "treadmill", "st_bicep", "st_calf", "st_child", "st_hipflex", "st_neck", "st_pigeon", "wu_armcirc", "wu_bandpa", "wu_bwsquat", "wu_catcow", "wu_glutebr", "wu_inchworm", "wu_jacks", "wu_legswing", "wu_scappu", "wu_tspine", "wu_wgs", "wu_wristcirc"]);
 // yoga pose photos live at ex/y_<id>_0.webp (free-exercise-db + hand-drawn)
-// b292: stretch figures — a mannequin built from joint angles so proportions are always right.
-// Angles in degrees: 0 = toward the face side (right), 90 = down, -90 = up, 180 = back (left).
-// Each pose: a = how you get set, b = the hold. view: 'side' (default) | 'front' | 'top' (lying, seen from above).
-const YFL={T:46,NK:9,HR:11,UA:24,FA:22,TH:36,SH:34,FT:10};
-const YFRAD=a=>a*Math.PI/180, yfp=(p,a,l)=>[p[0]+Math.cos(YFRAD(a))*l, p[1]+Math.sin(YFRAD(a))*l];
-function yfJoints(f){ const L=YFL, hp=[0,0], t=f.t??-90, sh=yfp(hp,t,L.T), hd=yfp(sh,t+(f.h||0),L.NK+L.HR);
-  const arm=(a)=>{ a=a||[90,90]; const e=yfp(sh,a[0],L.UA); return [e, yfp(e,a[1],L.FA)]; };
-  const leg=(l,ft)=>{ l=l||[90,90]; const k=yfp(hp,l[0],L.TH), an=l[1]==='x'?k:yfp(k,l[1],L.SH); if (l[1]==='x') return [k,an,k]; return [k, an, yfp(an, ft??(l[1]-90), L.FT)]; };
-  const [eN,wN]=arm(f.aN), [eF,wF]=arm(f.aF||f.aN), [kN,aN,tN]=leg(f.lN,f.fN), [kF,aF,tF]=leg(f.lF||f.lN,f.fF??f.fN);
-  // in front view the two sides mirror around the body line unless given separately
-  return {hp,sh,hd,eN,wN,eF,wF,kN,aN,tN,kF,aF,tF}; }
-function yfPlace(J,view,props){ const pts=Object.values(J), ground=view==='top'?null:150; let dx, dy;
-  const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]); const minx=Math.min(...xs), maxx=Math.max(...xs), maxy=Math.max(...ys), miny=Math.min(...ys);
-  dx=120-(minx+maxx)/2; dy=ground==null?(80-(miny+maxy)/2):(ground-5-Math.max(maxy, J.hd[1]+YFL.HR-5));
-  const sc=view==='top'?.8:1, cx=(minx+maxx)/2, cy=(miny+maxy)/2; const o={}; for (const k in J) o[k]=view==='top'?[120+(J[k][0]-cx)*sc, 79+(J[k][1]-cy)*sc]:[J[k][0]+dx, J[k][1]+dy]; return o; }
-function yfDraw(P,o){ o=o||{}; const view=o.view||'side', hot=o.hot||[], C={near:'#ffd6b3',far:o.flat?'#ffd6b3':'#a5826a',torso:'#5ec8ff',skin:'#f2c9a6',hot:'#ff5d7a'};
-  const L=(a,b,w,c,op)=>`<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"${op?` opacity="${op}"`:''}/>`;
-  const H=(k,c)=>hot.includes(k)?C.hot:c, far=view==='side'&&!o.flat;
-  let s='';
-  s+=L(P.hp,P.kF,12,H('legF',C.far))+L(P.kF,P.aF,10,H('shinF',C.far))+L(P.aF,P.tF,7,C.far);
-  s+=L(P.sh,P.eF,10,H('armF',C.far))+L(P.eF,P.wF,8,H('foreF',C.far));
-  const mid=[(P.sh[0]+P.hp[0])/2,(P.sh[1]+P.hp[1])/2], bend=o.bend||0, dx=P.sh[0]-P.hp[0], dy=P.sh[1]-P.hp[1], len=Math.hypot(dx,dy)||1, cp=[mid[0]+(-dy/len)*bend, mid[1]+(dx/len)*bend];
-  s+=`<path d="M${P.hp[0].toFixed(1)} ${P.hp[1].toFixed(1)} Q${cp[0].toFixed(1)} ${cp[1].toFixed(1)} ${P.sh[0].toFixed(1)} ${P.sh[1].toFixed(1)}" stroke="${H('torso',C.torso)}" stroke-width="21" stroke-linecap="round" fill="none"/>`;
-  s+=L(P.sh,P.hd,8,H('neck',C.skin))+`<circle cx="${P.hd[0].toFixed(1)}" cy="${P.hd[1].toFixed(1)}" r="${YFL.HR}" fill="${C.skin}"/>`;
-  s+=L(P.hp,P.kN,13,H('legN',C.near))+L(P.kN,P.aN,11,H('shinN',C.near))+L(P.aN,P.tN,8,C.near);
-  s+=L(P.sh,P.eN,11,H('armN',C.near))+L(P.eN,P.wN,9,H('foreN',C.near));
-  return s; }
-function yfProps(props,P){ let s=''; for (const pr of props||[]){
-    if (pr==='wall') s+=`<rect x="${(Math.max(P.tN[0],P.tF[0],P.wN[0],P.wF[0])+4).toFixed(0)}" y="0" width="60" height="150" fill="#2a3242"/>`;
-    if (pr==='wallL') s+=`<rect x="${(Math.min(P.tN[0],P.tF[0],P.wN[0],P.wF[0])-64).toFixed(0)}" y="0" width="60" height="150" fill="#2a3242"/>`;
-    if (pr==='strap') s+=`<line x1="${P.wN[0].toFixed(1)}" y1="${P.wN[1].toFixed(1)}" x2="${P.tN[0].toFixed(1)}" y2="${P.tN[1].toFixed(1)}" stroke="#ffcf5a" stroke-width="3" stroke-dasharray="5 3"/>`;
-  } return s; }
-function yfSVG(pose, fr, cls){ const F=pose[fr], view=pose.view||'side', J=yfPlace(yfJoints(F),view);
-  const bg=view==='top'?`<rect x="26" y="22" width="188" height="114" rx="12" fill="#1d2431"/><rect x="30" y="59" width="16" height="40" rx="6" fill="#273043"/>`:`<line x1="0" y1="150" x2="240" y2="150" stroke="#2a3242" stroke-width="2"/>`;
-  return `<svg viewBox="20 -14 200 172" class="${cls||'yf'}" role="img" aria-label="${fr==='a'?'Get set':'Hold'}">${bg}${yfProps(F.props||pose.props,J)}${view==='top'?'<g transform="rotate(-90 120 79)">':''}${yfDraw(J,{view,hot:fr==='b'?(pose.hot||[]):[],bend:F.bend,flat:view!=='side'})}${view==='top'?'</g>':''}</svg>`; }
-// moving version: eases from set-up to hold and back, so you see the motion
-function yfAnim(pose, cls){ const view=pose.view||'side', A=yfPlace(yfJoints(pose.a),view), B=yfPlace(yfJoints(pose.b),view), id='yf'+Math.random().toString(36).slice(2,8);
-  return `<svg viewBox="20 -14 200 172" class="${cls||'yf'}" id="${id}" data-yf="${encodeURIComponent(JSON.stringify({A,B,view,hot:pose.hot||[],ba:pose.a.bend||0,bb:pose.b.bend||0,props:pose.b.props||pose.props||[]}))}"></svg>`; }
-let yfRaf=null;
-function yfTick(){ const els=document.querySelectorAll('svg[data-yf]'); if (!els.length){ yfRaf=null; return; }
-  const t=(performance.now()/1000)%5, k=t<1.2?0:t<2.4?(t-1.2)/1.2:t<4.4?1:1-(t-4.4)/0.6, e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
-  for (const el of els){ let D=el._yf; if (!D){ D=el._yf=JSON.parse(decodeURIComponent(el.dataset.yf)); }
-    const P={}; for (const j in D.A) P[j]=[D.A[j][0]+(D.B[j][0]-D.A[j][0])*e, D.A[j][1]+(D.B[j][1]-D.A[j][1])*e];
-    const bg=D.view==='top'?`<rect x="26" y="22" width="188" height="114" rx="12" fill="#1d2431"/><rect x="30" y="59" width="16" height="40" rx="6" fill="#273043"/>`:`<line x1="0" y1="150" x2="240" y2="150" stroke="#2a3242" stroke-width="2"/>`;
-    const fig=yfDraw(P,{view:D.view,hot:e>.6?D.hot:[],bend:D.ba+(D.bb-D.ba)*e,flat:D.view!=='side'}); el.innerHTML=bg+yfProps(D.props,P)+(D.view==='top'?`<g transform="rotate(-90 120 79)">${fig}</g>`:fig); }
-  yfRaf=requestAnimationFrame(yfTick); }
-function yfStart(){ if (!yfRaf) yfRaf=requestAnimationFrame(yfTick); }
-// two-bone reach: limb from its root toward a target point (relative to the root), elbow/knee bending forward (+1) or back (-1)
-function yfIK(root,tgt,a,b,bend){ const dx=tgt[0],dy=tgt[1]; let d=Math.hypot(dx,dy); d=Math.min(d,a+b-0.01); const th=Math.atan2(dy,dx)*180/Math.PI, al=Math.acos(Math.max(-1,Math.min(1,(a*a+d*d-b*b)/(2*a*d))))*180/Math.PI;
-  const j=yfp(root,th-al*(bend||1),a), end=[root[0]+dx*(d/Math.hypot(dx,dy)||1), root[1]+dy*(d/Math.hypot(dx,dy)||1)]; return [j,end]; }
-const _yfJ=yfJoints;
-yfJoints=function(f){ const J=_yfJ(f), L=YFL;
-  const leg=(spec,ft,kk,ak,tk)=>{ if (!spec||!spec.ik) return; const [k,an]=yfIK(J.hp,spec.ik,L.TH,L.SH,spec.b??1); J[kk]=k; J[ak]=an; const sa=Math.atan2(an[1]-k[1],an[0]-k[0])*180/Math.PI; J[tk]=yfp(an, ft??(spec.ft??(sa-90)), L.FT); };
-  const arm=(spec,ek,wk)=>{ if (!spec||!spec.ik) return; const [e,w]=yfIK(J.sh,spec.ik,L.UA,L.FA,spec.b??-1); J[ek]=e; J[wk]=w; };
-  leg(f.lN,f.fN,'kN','aN','tN'); leg(f.lF||f.lN,f.fF??f.fN,'kF','aF','tF'); arm(f.aN,'eN','wN'); arm(f.aF||f.aN,'eF','wF'); return J; };
-
 // b292: how to get into each pose (a → b), what to look for, in three plain steps. Facing right; see yfig.js for the angle rules.
 const YB={
   stand:{t:-90,lN:[90,90],lF:[90,90],aN:[90,90]},
@@ -7456,11 +7438,14 @@ const YPOSE={
   a:yx('stand'), b:{t:-90,lN:[100,-100],fN:-100,lF:[90,90],aN:{ik:[-12,46]},aF:[60,80]}},
 };
 
-const YIMG=new Set(Object.keys(YPOSE));
-function yImg(id,f){ return YPOSE[id]?`<span class="y-fig">${yfSVG(YPOSE[id], f?'b':'a')}</span>`:""; }
+const YIMG=new Set();
+function yImg(){ return ''; }
 // ▶ a real person doing the pose: clips found by a cloud job (Claude searches, YouTube confirms each one exists); a YouTube search until then
 let YVID=null, yvidAt=0;
-async function yvidLoad(){ if (YVID||!dbHandle||!dbHandle.doc||Date.now()-yvidAt<6e5) return; yvidAt=Date.now(); try { const sn=await dbHandle.doc('yoga/videos').get(); if (sn&&sn.exists){ YVID=sn.data()||{}; } } catch(e){} }
+async function yvidLoad(){ if (YVID||!dbHandle||!dbHandle.doc||Date.now()-yvidAt<6e5) return; yvidAt=Date.now(); try { const sn=await dbHandle.doc('yoga/videos').get(); if (sn&&sn.exists){ YVID=sn.data()||{}; if (typeof YG!=='undefined'&&YG) yogaRender(); } } catch(e){} }
+// b294: the demo clip plays muted on a loop — in the timer ring during a session, wide on a pose's card
+function yLoop(id,wide){ yvidLoad(); const v=YVID&&YVID[id]; if (!v||!v.v) return ''; const src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.v)}?autoplay=1&mute=1&loop=1&playlist=${encodeURIComponent(v.v)}&controls=0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3${v.start?'&start='+(+v.start||0):''}`;
+  return `<span class="${wide?'yv-loop':'yg-vid'} ${v.short?'sh':''}"><iframe src="${src}" title="${esc(YP[id].n)} demo" allow="autoplay; encrypted-media" tabindex="-1"></iframe></span>`; }
 function yVidBtn(id,cls){ yvidLoad(); const v=YVID&&YVID[id]; return v&&v.v?`<button class="${cls||'btn ghost sm'}" onclick="yVidPlay('${id}')">▶ Watch a real demo</button>`:`<a class="${cls||'btn ghost sm'}" href="https://www.youtube.com/results?search_query=${encodeURIComponent(YP[id].n+' stretch how to')}" target="_blank" rel="noopener">▶ Watch a real demo</a>`; }
 function yVidPlay(id){ const v=YVID&&YVID[id]; if (!v) return; const sh=!!v.short;
   gSheet(`<span class="tag">${esc(v.ch||'YouTube')}</span><h2 class="g-sh-t">${esc(YP[id].n)}</h2><div class="yv-wrap ${sh?'sh':''}"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.v)}?playsinline=1&rel=0&modestbranding=1${v.start?'&start='+(+v.start||0):''}" title="${esc(YP[id].n)} demo" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
@@ -9430,7 +9415,9 @@ window.tegaInbox = L => { _inbox=_inbox.concat(L||[]).slice(-20); if (_inbox.len
 function inboxOpen(){ if (!_inbox.length) return gSheetClose&&gSheetClose(); const x=_inbox[0], u=x.url||'', t=(x.text||'').trim(), host=(()=>{ try { return new URL(u).hostname.replace(/^www\./,''); } catch(e){ return ''; } })();
   const label=(t&&t!==u?t:host||u).slice(0,120);
   gSheet(`<span class="tag">Shared into Tega${_inbox.length>1?` · 1 of ${_inbox.length}`:''}</span><h2 class="g-sh-t">${esc(label||'Shared item')}</h2>${u?`<div class="sub" style="word-break:break-all">${esc(u.slice(0,140))}</div>`:''}
-    <div class="g-opts" style="margin-top:12px"><button onclick="inboxFile('hang')" style="${/partiful|opentable|resy|posh|eventbrite|dice\.fm|axs|tock/i.test(u)||SOC_RE.test(t)?'order:-1;outline:2px solid var(--good)':''}">🤝 Hangout</button><button onclick="inboxFile('idea')">Content idea</button><button onclick="inboxFile('dl')">Deadline</button><button onclick="inboxFile('note')">Note for today</button><button onclick="inboxFile('skip')">Skip</button></div>`); }
+    <div class="g-opts" style="margin-top:12px"><button onclick="inboxFile('hang')" style="${/partiful|opentable|resy|posh|eventbrite|dice\.fm|axs|tock/i.test(u)||SOC_RE.test(t)?'order:-1;outline:2px solid var(--good)':''}">🤝 Hangout</button><button onclick="inboxInspo()">✦ Inspo</button><button onclick="inboxFile('idea')">Content idea</button><button onclick="inboxFile('dl')">Deadline</button><button onclick="inboxFile('note')">Note for today</button><button onclick="inboxFile('skip')">Skip</button></div>`); }
+function inboxInspo(){ const x=_inbox[0]; if (!x) return; const live=lrSubs().filter(z=>!z.archived); gSheet(`<span class="tag">Save as inspo for…</span><h2 class="g-sh-t">Which subject?</h2><div class="g-opts" style="margin-top:12px">${live.map(z=>`<button onclick="inboxInspoTo('${z.id}')">${esc(z.icon||'✦')} ${esc(z.name)}</button>`).join('')}<button onclick="inboxOpen()">‹ Back</button></div>`); }
+function inboxInspoTo(sid){ const x=_inbox.shift(); if (!x) return; const u=x.url||((x.text||'').match(/https?:\/\/\S+/)||[''])[0]; const t=(x.text||'').replace(u,'').trim().slice(0,120); (lrSub(sid).inspo ||= []).push(inspoItem(u||x.text,t)); commit({skipXp:true}); toast(`Saved to ${lrSub(sid).name} inspo`); if (_inbox.length) inboxOpen(); else gSheetClose(); }
 function inboxFile(kind){ const x=_inbox.shift(); if (!x) return; const u=x.url||'', t=((x.text||'').trim()||u).slice(0,140);
   if (kind==='hang'){ socFromText([x.text,x.url].filter(Boolean).join('\n')); }
   else if (kind==='idea'){ (S.ideas ||= []).push({id:uid(), text:t, url:u||undefined, d:TODAY, done:'', stage:'idea', pillar:pillarOf(t)}); commit({skipXp:true}); toast('Added to Content ideas'); }
@@ -10175,7 +10162,7 @@ function yMusList(id){ const M=yMus(id); if (!M.p.length) return `<div class="he
   const row=(r,k)=>`<div class="ym-row ${k}"><i></i><span><b>${YRN[r][0]}</b><small>${YRN[r][1]}</small></span></div>`;
   return `<div class="ym-list">${M.p.map(r=>row(r,'p')).join('')}${M.s.map(r=>row(r,'s')).join('')}</div><div class="ym-key"><span class="p">main stretch</span><span class="s">also feel it</span></div>`; }
 function yPoseSheet(id, back){ const p=YP[id]; gSheet(`<span class="tag">${p.side?'Both sides · ':''}${p.s}s</span><h2 class="g-sh-t">${p.ic} ${esc(p.n)}</h2>
-  ${YPOSE[id]?`<div class="yf-pair"><div>${yfSVG(YPOSE[id],'a')}<small>1 · Get set</small></div><div>${yfSVG(YPOSE[id],'b')}<small>2 · Hold</small></div></div>${ySteps(id)}`:`<div class="help keep ym-cue">${esc(p.cue)}</div>`}${yMap(id,'ym-big')}${yMusList(id)}
+  ${yLoop(id,1)}${YPOSE[id]?ySteps(id):`<div class="help keep ym-cue">${esc(p.cue)}</div>`}${yMap(id,'ym-big')}${yMusList(id)}
   <div class="row" style="gap:6px;margin-top:10px;flex-wrap:wrap">${yVidBtn(id)}${back?`<button class="btn ghost sm" onclick="yLibSheet()">‹ All poses</button>`:''}</div>`); }
 let yLibF='all';
 function yLibSheet(){ const groups=[['all','All'],['upper','Neck & shoulders'],['chest','Chest & arms'],['back','Back & sides'],['hips','Hips & glutes'],['legs','Legs']],
@@ -10237,12 +10224,12 @@ function yogaRender(){ if (!YG) return; let o=document.getElementById('yg-ov'); 
     o.addEventListener('touchend',e=>{ if (x0==null||!YG) return; const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0; x0=null; if (Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*1.5){ if (dx<0){ YG.i<YG.steps.length-1?yogaGo(1):yogaFinish(); } else yogaGo(-1); } },{passive:true}); }
   const s=YG.steps[YG.i], p=YP[s.id], nx=YG.steps[YG.i+1], R=54, C=2*Math.PI*R, cue=p.cue.split(/(?<=[.!])\s/)[0];
   o.innerHTML=`<div class="yg-top"><button onclick="yogaStop(${YG.i>2})" aria-label="Stop">✕</button><div class="yg-prog">${YG.steps.map((_,k)=>`<i class="${k<YG.i?'d':k===YG.i?'c':''}"></i>`).join('')}</div><span class="yg-combo">${YG.combo>1?`🔥${YG.combo}`:''}</span></div>
-    <div class="yg-pose"><div class="yg-ring" id="yg-ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="${R}" class="yg-bg"/><circle id="yg-fg" cx="60" cy="60" r="${R}" class="yg-fg" style="stroke-dasharray:${C};stroke-dashoffset:${C}"/></svg><span class="yg-ic">${YPOSE[s.id]?yfAnim(YPOSE[s.id],'yg-fig'):p.ic}</span></div>
+    <div class="yg-pose"><div class="yg-ring" id="yg-ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="${R}" class="yg-bg"/><circle id="yg-fg" cx="60" cy="60" r="${R}" class="yg-fg" style="stroke-dasharray:${C};stroke-dashoffset:${C}"/></svg><span class="yg-ic">${yLoop(s.id)||p.ic}</span></div>
       <b class="yg-t num" id="yg-t"></b><div class="yg-bl" id="yg-bl"></div>
       <h1 onclick="yPoseSheet('${s.id}')">${esc(p.n)}${s.side?` <em>${s.side}</em>`:''}</h1>${YPOSE[s.id]?ySteps(s.id,'yg-steps'):`<p>${esc(cue)}</p>`}
       <div class="yg-chips"><button class="yg-chip" onclick="yPoseSheet('${s.id}')">${yMap(s.id,'ym-chip')}<span>${yMusLine(s.id)}</span></button>${yVidBtn(s.id,'yg-chip')}</div></div>
     <div class="yg-next">${nx?`${nx.id===s.id?'Next · other side':`Next · ${esc(YP[nx.id].n)}`}`:'Last one 🌙'}</div>
-    <div class="yg-ctl"><button onclick="yogaGo(-1)" aria-label="Back">‹</button><button class="yg-pp" id="yg-pp" onclick="yogaPause()">⏸</button><button onclick="${nx?'yogaGo(1)':'yogaFinish()'}" aria-label="${nx?'Skip':'Finish'}">${nx?'›':'✓'}</button></div><div class="yg-hint">swipe to skip</div>`;  YG.ph=null; yogaUpd(); yfStart(); }
+    <div class="yg-ctl"><button onclick="yogaGo(-1)" aria-label="Back">‹</button><button class="yg-pp" id="yg-pp" onclick="yogaPause()">⏸</button><button onclick="${nx?'yogaGo(1)':'yogaFinish()'}" aria-label="${nx?'Skip':'Finish'}">${nx?'›':'✓'}</button></div><div class="yg-hint">swipe to skip</div>`;  YG.ph=null; yogaUpd(); }
 
 function yogaUpd(){ if (!YG) return; const p=YP[YG.steps[YG.i].id], left=yLeft(), $=id=>document.getElementById(id); if (!$('yg-t')) return;
   $('yg-t').textContent=`${Math.floor(left/60)}:${String(left%60).padStart(2,'0')}`;
