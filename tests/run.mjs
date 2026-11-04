@@ -261,6 +261,16 @@ ok('money plan invests the FI plan amount once it starts', dw.ret, JSON.stringif
 const shp = await page.evaluate(() => { const D=ensureDatum(), n0=D.expenses.length, L=dShopSugg(); const first=L[0]&&L[0].n; dShopAdd(0); const added=D.expenses.some(e=>e.name===first&&e.status==='planned'); const gone=!dShopSugg().some(x=>x.n===first);
   D.expenses=D.expenses.filter(e=>!(e.name===first&&e.note==='suggested')); commit({skipXp:true}); return {n:L.length, added, gone}; });
 ok('Datum shopping suggestions add to the list and disappear once added', shp.n>0 && shp.added && shp.gone, JSON.stringify(shp));
+// Consistency: everything you do counts somewhere. Every KR source returns a number; learning, inspo and hangouts earn XP and feed KRs/areas; undoing returns it.
+const cons = await page.evaluate(() => { const bad=ksrcAll().filter(k=>{ try { const v=fact(k[1]); return typeof v!=='number'||isNaN(v); } catch(e){ return true; } }).map(k=>k[1]);
+  ensureDay(TODAY); const g=lrSub('guitar'), keepG=JSON.parse(JSON.stringify(g)), keepDL=JSON.parse(JSON.stringify(S.drawLearn||{})), x0=computeXP0(), m0=areaInfo('MIND').on, k0=fact('lessons');
+  lrDone('guitar',g.lessons[0].id); const x1=computeXP0(); (g.inspo ||= []).push(inspoItem('https://example.com/x','')); const x2=computeXP0();
+  const r={bad, lesson:x1>x0, inspo:x2>x1, kr:fact('lessons')===k0+1&&fact('learn:guitar')>=1, area:areaInfo('MIND').on>=m0};
+  for (const k of Object.keys(g)) if (!(k in keepG)) delete g[k]; Object.assign(g, keepG); S.drawLearn=keepDL; autoHabits(); commit({skipXp:true}); r.back=computeXP0()===x0; return r; });
+ok('every KR source returns a number', cons.bad.length===0, cons.bad.join(','));
+ok('a lesson done earns XP and moves the Lessons KR', cons.lesson && cons.kr, JSON.stringify(cons));
+ok('saving inspo earns XP', cons.inspo, JSON.stringify(cons));
+ok('undoing a lesson takes today’s XP back', cons.back, JSON.stringify(cons));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

@@ -1929,7 +1929,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b294';
+const BUILD='b295';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2274,8 +2274,21 @@ function computeXP0(){
   xp += bossXP();
   try { xp += sbossXP(); } catch(e){}
   try { xp += yogaXP() + dungeonXP(); } catch(e){}
+  try { xp += learnXP() + socialXP(); } catch(e){}
   return xp;
 }
+// b295: learning pays like everything else — a lesson done 15, what it gave you written down 10, a drawing stage 25, inspo 3 (5 a day)
+const LXP={lesson:15, out:10, stage:25, inspo:3, inspoDay:5, hang:20};
+function learnXP(){ let x=0; const D=ensureDatum();
+  x+=Object.values(D.learnDone||{}).filter(d=>String(d)>=GAME_START).length*LXP.lesson + (D.learning||[]).filter(l=>l.output&&(l.d||'')>=GAME_START).length*LXP.out;
+  x+=Object.values(S.drawLearn||{}).filter(d=>String(d)>=GAME_START).length*LXP.stage;
+  const byDay={}; for (const sb of ((S.learn||{}).subjects||[])){ x+=(sb.lessons||[]).filter(l=>l.done).length*LXP.lesson + (sb.log||[]).filter(g=>g.out).length*LXP.out; for (const it of sb.inspo||[]) byDay[it.d]=(byDay[it.d]||0)+1; }
+  for (const n of Object.values(byDay)) x+=Math.min(LXP.inspoDay,n)*LXP.inspo; return x; }
+// a hangout that happened (logged, pasted, shared or from the calendar once its day passes) is worth 20
+function socialXP(){ try { return socAll().filter(e=>e.d>=GAME_START&&e.d<=TODAY).length*LXP.hang; } catch(e){ return 0; } }
+function lrLessonsDone(a,b){ const D=ensureDatum(), inr=d=>{ d=String(d||''); return d>=a&&d<=b; }; let n=Object.values(D.learnDone||{}).filter(inr).length+Object.values(S.drawLearn||{}).filter(inr).length;
+  for (const sb of ((S.learn||{}).subjects||[])) n+=(sb.lessons||[]).filter(l=>inr(l.done)).length; return n; }
+function lrOutputs(a,b){ const D=ensureDatum(), inr=d=>{ d=String(d||''); return d>=a&&d<=b; }; let n=(D.learning||[]).filter(l=>l.output&&inr(l.d)).length; for (const sb of ((S.learn||{}).subjects||[])) n+=(sb.log||[]).filter(g=>g.out&&inr(g.d)).length; return n; }
 function questXP(){
   const qs = S.quests||[]; let xp = 0; const smallByDay = {};
   for (const q of qs){ if (!q.done) continue; xp += QSIZE[q.size]?.xp||0; if (q.size==='S') smallByDay[q.done] = (smallByDay[q.done]||0)+1; }
@@ -3125,7 +3138,7 @@ function dLearn(){
 }
 let learnN = 3;
 function dAddLearn(e){ e.preventDefault(); const [s,r,o]=e.target.querySelectorAll('input'); ensureDatum().learning.push({id:uid(),d:TODAY,skill:s.value.trim(),resource:r.value.trim(),output:o.value.trim()}); commit(); return false; }
-function dSetLearn(id,v){ const l=ensureDatum().learning.find(l=>l.id===id); l.output=v; commit({skipXp:true}); }
+function dSetLearn(id,v){ const l=ensureDatum().learning.find(l=>l.id===id); l.output=v; commit(); }
 function dDelLearn(id){ const D=ensureDatum(); D.learning=D.learning.filter(l=>l.id!==id); commit({skipXp:true}); }
 
 /* ===================== rendering ===================== */
@@ -3693,7 +3706,7 @@ function skMetrics(){
   const pw={}; for (const l of L) if (l.kind==='post') pw[isoWeek(l.d)]=(pw[isoWeek(l.d)]||0)+1;
   const ig=igData(), tk=tkData();
   return {
-    benchH:fact('benchhrs'), benchLong:Math.max(0,...sess.map(l=>+l.mins||0)), sketches:A.filter(a=>a.proto).length, pins:(D.mood||[]).length,
+    benchH:fact('benchhrs'), benchLong:Math.max(0,...sess.map(l=>+l.mins||0)), sketches:A.filter(a=>a.proto).length, pins:(D.mood||[]).length+((((S.learn||{}).subjects||[]).find(x=>x.kind==='datum')||{}).inspo||[]).length,
     learned:(D.learning||[]).filter(l=>l.output).length, pieces:ps.length, photos:dlogs.filter(l=>l.photo).length, cast:atLeast('cast'), done:atLeast('complete'), shot:ps.filter(p=>(p.log||[]).some(l=>l.photo)).length,
     sold:(D.orders||[]).filter(o=>o.status==='delivered'||o.status==='closed').length, revenue:fact('revenue'),
     art:A.length, paper:A.filter(a=>a.kind==='paper').length, digi:A.filter(a=>a.kind==='procreate').length, process:A.filter(a=>a.imgs.length>1).length, artWeeks:wkOf(A.map(a=>a.d)), artBest:Math.max(0,...Object.values(byWk)),
@@ -3711,7 +3724,7 @@ function skMetrics(){
       return { setDays:fact('setdays'), castings:fact('castings'), mIncome:Math.round(fact('booked')), gymWeeks:Object.values(gw).filter(n=>n>=3).length,
         prs:((S.gym||{}).sessions||[]).reduce((a,x)=>a+((x.prs||[]).length),0), hang:fact('events'), people:fact('people',''), nights:fact('spots') }; })(),
     hustleH:fact('hustlehrs'), hustleN:fact('hustlen'), hustleShip:fact('hustleship'), hustleInc:fact('hustleinc'),
-    gym:fact('gym'), read:fact('habit:read'), journal:fact('habit:journal'), morning:fact('habit:morning'),
+    gym:fact('gym'), read:fact('habit:read'), journal:fact('habit:journal'), morning:fact('habit:morning'), learn:fact('habit:read')+lrLessonsDone('0000-01-01',TODAY), learnOut:fact('habit:morning')+lrOutputs('0000-01-01',TODAY),
   };
 }
 // Each tree has three lanes of twelve steps and a capstone. A step: [icon, name, metric, target]. Rows are paced as five years.
@@ -3721,7 +3734,7 @@ const SK_UNIT={hustleH:'side hustle hours',hustleN:'side hustle sessions',hustle
   posts:'posts logged',weeks2:'weeks with 2+ posts',ideas:'ideas banked',ideasShot:'ideas shot',outreach:'outreach logged',pitches:'proposals sent',igF:'Instagram followers',igPeak:'Instagram views in one day',tkF:'TikTok followers',
   active:'active days',streak:'day best streak',early:'check-ins before 9am',perfect:'days at 3/3',resets:'weekly resets',pWeeks:'perfect weeks',quests:'quests done',dls:'deadlines met',wins:'wins logged',
   landed:'checks landed',income:'dollars landed',split:'checks fully split',tax:'dollars in the Tax Buffer',ef:'dollars in the emergency fund',roth:'dollars into the Roth',house:'dollars in the house fund',net:'dollars across your accounts',
-  gym:'gym days',read:'reading days',journal:'journal days',morning:'morning routines'};
+  gym:'gym days',read:'reading days',journal:'journal days',morning:'morning routines',learn:'lessons done',learnOut:'takeaways written'};
 const SK_ACTS=[[0,'Year 1'],[3,'Year 2'],[6,'Year 3'],[9,'Year 4'],[11,'Year 5']];
 const SK_TREES={
   hustle:{name:'Side Hustle',ic:'🚀',c:'#c6ff4d',ranks:['Dreamer','Tinkerer','Builder','Operator','Founder','Mogul'],cap:['👑','Mogul','hustleInc',10000],lanes:[
@@ -3756,10 +3769,10 @@ const SK_TREES={
     [['🏋️','First Lift','gym',1],['💪','','gym',5],['🔩','','gym',15],['🧱','Thirty Sessions','gym',30],['⚙️','','gym',60],['💯','Hundred Sessions','gym',100],['🦾','','gym',150],['🐂','','gym',250],['🏔️','','gym',400],['🦍','','gym',600],['🗿','','gym',800],['🏛️','Thousand','gym',1000]],
     [['📆','Three In A Week','gymWeeks',1],['🔁','','gymWeeks',2],['🗓️','A Month Of Threes','gymWeeks',4],['📈','','gymWeeks',8],['🧭','','gymWeeks',12],['⛓️','','gymWeeks',16],['🌗','Half A Year','gymWeeks',26],['🏃','','gymWeeks',40],['🎂','A Year Of Threes','gymWeeks',52],['🔥','','gymWeeks',78],['💎','','gymWeeks',104],['👑','','gymWeeks',156]],
     [['🥇','First PR','prs',1],['🎯','','prs',3],['📊','','prs',5],['🚀','Ten PRs','prs',10],['⚡','','prs',15],['🏆','','prs',25],['💥','','prs',40],['🦁','','prs',60],['🌋','','prs',80],['💯','Hundred PRs','prs',100],['🛡️','','prs',150],['🗡️','','prs',200]]]},
-  mind:{name:'Mind',ic:'🧠',c:'#ff9ad5',ranks:['Foggy','Curious','Steady','Sharp','Clear','Sage'],cap:['👑','Sage','read',500],lanes:[
-    [['📖','First Chapter','read',1],['📗','','read',5],['📘','','read',15],['📙','Thirty Days Read','read',30],['📚','','read',60],['🧠','Hundred Days Read','read',100],['🔭','','read',150],['🗝️','','read',200],['🧩','','read',250],['🎓','','read',300],['📜','','read',365],['🏛️','','read',450]],
+  mind:{name:'Mind',ic:'🧠',c:'#ff9ad5',ranks:['Foggy','Curious','Steady','Sharp','Clear','Sage'],cap:['👑','Sage','learn',500],lanes:[
+    [['📖','First Lesson','learn',1],['📗','','learn',5],['📘','','learn',15],['📙','Thirty Lessons','learn',30],['📚','','learn',60],['🧠','Hundred Lessons','learn',100],['🔭','','learn',150],['🗝️','','learn',200],['🧩','','learn',250],['🎓','','learn',300],['📜','','learn',365],['🏛️','','learn',450]],
     [['✍️','First Entry','journal',1],['📓','','journal',5],['🗒️','','journal',15],['🖊️','Thirty Entries','journal',30],['📔','','journal',60],['💭','Hundred Entries','journal',100],['🪶','','journal',150],['🧾','','journal',200],['📚','','journal',250],['🗃️','','journal',300],['📜','','journal',365],['🏛️','','journal',450]],
-    [['🌅','First Morning','morning',1],['☀️','','morning',5],['🌄','','morning',15],['🌞','Thirty Mornings','morning',30],['⏰','','morning',60],['🌤️','Hundred Mornings','morning',100],['🐓','','morning',150],['🌻','','morning',200],['🔆','','morning',250],['🌈','','morning',300],['🌍','','morning',365],['👑','','morning',450]]]},
+    [['🌅','First Takeaway','learnOut',1],['☀️','','learnOut',5],['🌄','','learnOut',15],['🌞','Thirty Takeaways','learnOut',30],['⏰','','learnOut',60],['🌤️','Hundred Takeaways','learnOut',100],['🐓','','learnOut',150],['🌻','','learnOut',200],['🔆','','learnOut',250],['🌈','','learnOut',300],['🌍','','learnOut',365],['👑','','learnOut',450]]]},
   model:{name:'Modeling',ic:'📸',c:'#ff3df2',ranks:['Fresh Face','Working','Booked','Regular','In Demand','Face'],cap:['👑','Face','mIncome',500000],lanes:[
     [['🎬','First Day On Set','setDays',1],['📸','','setDays',3],['🎞️','','setDays',5],['🎥','Ten Days','setDays',10],['💡','','setDays',15],['🌟','','setDays',25],['🏙️','','setDays',35],['💯','Fifty Days','setDays',50],['🛫','','setDays',75],['🎖️','Hundred Days','setDays',100],['👔','','setDays',150],['🏛️','','setDays',200]],
     [['🎭','First Casting','castings',1],['🚪','','castings',3],['📋','','castings',5],['🗂️','Ten Castings','castings',10],['🎯','','castings',15],['🧾','','castings',25],['🔑','','castings',40],['📈','','castings',60],['🧠','','castings',80],['💯','Hundred Castings','castings',100],['🪪','','castings',150],['🌐','','castings',200]],
@@ -4003,7 +4016,7 @@ const DRAW_PATH=[
    links:[['Procreate · Beginners Series (official, free)','https://procreate.com/beginners-series'],['Ctrl+Paint · free digital painting library','https://www.ctrlpaint.com/library']]},
 ];
 const DRAW_TIPS=DRAW_PATH.flatMap(st=>st.tips.map(t=>[st.n,t]));
-function drawDone(k){ const L=(S.drawLearn ||= {}); if (L[k]) delete L[k]; else L[k]=TODAY; commit({skipXp:true}); if (L[k]){ toast('Stage done. Next one’s open.'); } }
+function drawDone(k){ const L=(S.drawLearn ||= {}); if (L[k]) delete L[k]; else L[k]=TODAY; commit(); if (L[k]){ toast('Stage done. Next one’s open.'); } }
 function drawDrill(k){ const st=DRAW_PATH.find(x=>x.k===k); if(!st) return; openArtAdd(); if (artDraft){ artDraft.title='Drill · '+st.n; artDraft.kind=k==='procreate'?'procreate':'paper'; renderArtAdd(); } }
 
 /* ---- b290: Learning — its own page and its own look (a study notebook). Datum craft lessons, the drawing path, and your Learning goals in one place ---- */
@@ -4028,7 +4041,7 @@ function lrAddLesson(ev,id){ ev.preventDefault(); const f=ev.target, t=f.t.value
   (lrSub(id).lessons ||= []).push({id:uid(), t:t.slice(0,90), url:u||'https://www.youtube.com/results?search_query='+encodeURIComponent(t+' '+lrSub(id).name), src:u?'':'YouTube search', mins:+f.m.value||0}); commit({skipXp:true}); return false; }
 function lrDone(id,lid){ const x=lrSub(id), l=(x.lessons||[]).find(z=>z.id===lid); if (!l) return; l.done=l.done?null:TODAY; if (l.done) (x.log ||= []).push({id:uid(), d:TODAY, t:l.t, out:''}); else x.log=(x.log||[]).filter(g=>!(g.t===l.t&&g.d===TODAY&&!g.out)); commit(); if (l.done) toast('Nice — add what you got out of it below'); }
 function lrDelLesson(id,lid){ const x=lrSub(id); x.lessons=(x.lessons||[]).filter(z=>z.id!==lid); commit({skipXp:true}); }
-function lrLogOut(id,gid,v){ const g=(lrSub(id).log||[]).find(z=>z.id===gid); if (g){ g.out=v.trim(); commit({skipXp:true}); } }
+function lrLogOut(id,gid,v){ const g=(lrSub(id).log||[]).find(z=>z.id===gid); if (g){ g.out=v.trim(); commit(); } }
 function lrLogAdd(ev,id){ ev.preventDefault(); const f=ev.target; if (!f.t.value.trim()) return false; (lrSub(id).log ||= []).push({id:uid(), d:TODAY, t:f.t.value.trim().slice(0,90), out:f.o.value.trim()}); commit(); return false; }
 async function lrSuggest(id){ const x=lrSub(id); if (lrBusy) return; if (typeof sampleLib==='undefined'||!sampleLib||!sampleLib.json) return toast('Tega can’t suggest right now — add lessons by hand');
   lrBusy=true; render(); try { const have=(x.lessons||[]).map(l=>l.t), done=(x.log||[]).map(g=>g.t);
@@ -4041,7 +4054,7 @@ function lrLinked(x){ if (x.link!=='guitar'||!S.gtr) return ''; const G=S.gtr, w
   return `<button class="card sec lr-link" onclick="crMode='guitar';ctTab='create';go('content')"><span><b>🎸 Practice</b><small>${mins} min this week${lrn.length?` · learning ${lrn.slice(0,2).map(z=>esc(z.t||z.name||'')).join(', ')}`:''}</small></span><i>›</i></button>`; }
 function lrCustom(x){ const ls=x.lessons||[], todo=ls.filter(l=>!l.done), done=ls.filter(l=>l.done), log=(x.log||[]).slice().reverse();
   return `${lrLinked(x)}<div class="card sec"><div class="hdr"><h2>Up next</h2><span class="sub">${done.length}/${ls.length} done</span></div>
-    <div class="stack">${todo.map(l=>`<div class="res"><div class="res-ic">▶</div><div style="min-width:0"><a class="res-t" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.t)}</a><div class="sub">${esc(l.src||'')}${l.mins?` · ~${l.mins} min`:''}${lrEdit?` · <button class="linkbtn" onclick="lrDelLesson('${x.id}','${l.id}')">remove</button>`:''}</div></div><button class="btn ghost sm" style="align-self:center" onclick="lrDone('${x.id}','${l.id}')">Done</button></div>`).join('')||'<div class="empty">Nothing queued. Add a lesson or let Tega line some up.</div>'}</div>
+    <div class="stack">${todo.map(l=>`<div class="res"><div class="res-ic">▶</div><div style="min-width:0"><a class="res-t" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.t)}</a><div class="sub">${esc(l.src||'')}${l.mins?` · ~${l.mins} min`:''}${lrEdit?` · <button class="linkbtn" onclick="lrDelLesson('${x.id}','${l.id}')">remove</button>`:''}</div></div><button class="btn ghost sm" style="align-self:center" onclick="lrDone('${x.id}','${l.id}')">Done · +${LXP.lesson}</button></div>`).join('')||'<div class="empty">Nothing queued. Add a lesson or let Tega line some up.</div>'}</div>
     <button class="btn sm" style="width:100%;justify-content:center;margin-top:10px" onclick="lrSuggest('${x.id}')">${lrBusy?'Thinking…':'✦ Suggest what’s next'}</button>
     ${infold('lra_'+x.id,'Add a lesson','a video, article, or a song to learn',`<form onsubmit="return lrAddLesson(event,'${x.id}')" class="stack" style="gap:6px"><input class="inp" name="t" placeholder="What to learn (e.g. F barre chord)" required><input class="inp" name="u" placeholder="Link (optional — leave blank to search YouTube)"><div class="row" style="gap:6px;flex-wrap:nowrap"><input class="inp num" name="m" type="number" min="0" placeholder="min" style="width:80px"><button class="btn sm" style="flex:1;justify-content:center">Add</button></div></form>`)}
     ${done.length?infold('lrd_'+x.id,'Done',`${done.length}`,`<div class="stack" style="gap:6px">${done.map(l=>`<div class="row between" style="flex-wrap:nowrap;gap:8px;font-size:14px"><span style="min-width:0">✓ ${esc(l.t)} <span class="sub">· ${nice(l.done)}</span></span><button class="linkbtn" onclick="lrDone('${x.id}','${l.id}')">undo</button></div>`).join('')}</div>`):''}</div>
@@ -4067,8 +4080,8 @@ function inspoAdd(sid){ const x=lrSub(sid); gSheet(`<span class="tag">${esc(x.na
   <form onsubmit="return inspoLink(event,'${sid}')" class="stack" style="gap:6px;margin-top:12px"><input class="inp" name="u" placeholder="Paste a link — YouTube, Instagram, Pinterest, a site" required><input class="inp" name="t" placeholder="What you like about it (optional)"><button class="btn ghost" style="justify-content:center">Save link</button></form>`); }
 async function inspoPhotos(sid,inp){ const F=[...(inp.files||[])]; if (!F.length||inspoBusy) return; inspoBusy=true; toast('Saving…'); let n=0;
   for (const f of F.slice(0,12)){ try { const id=await artUpload(f); (lrSub(sid).inspo ||= []).push({id:uid(), kind:'img', blob:id, t:'', d:TODAY}); n++; } catch(e){} }
-  inspoBusy=false; if (n){ commit({skipXp:true}); gSheetClose(); toast(`Saved ${n} to Inspo`); } else toast('Couldn’t save that photo here'); }
-function inspoLink(ev,sid){ ev.preventDefault(); const f=ev.target; (lrSub(sid).inspo ||= []).push(inspoItem(f.u.value,f.t.value.trim().slice(0,120))); commit({skipXp:true}); gSheetClose(); toast('Saved to Inspo'); return false; }
+  inspoBusy=false; if (n){ commit(); gSheetClose(); toast(`Saved ${n} to Inspo`); } else toast('Couldn’t save that photo here'); }
+function inspoLink(ev,sid){ ev.preventDefault(); const f=ev.target; (lrSub(sid).inspo ||= []).push(inspoItem(f.u.value,f.t.value.trim().slice(0,120))); commit(); gSheetClose(); toast('Saved to Inspo'); return false; }
 function inspoOpen(sid,iid){ const x=lrSub(sid), it=(x.inspo||[]).find(z=>z.id===iid); if (!it) return;
   const media=it.kind==='img'?`<img src="${BLOBURL}${it.blob}" alt="" style="width:100%;border-radius:12px;display:block">`:it.kind==='imgurl'?`<img src="${esc(it.url)}" alt="" style="width:100%;border-radius:12px;display:block">`:it.kind==='yt'?`<div class="yv-wrap ${it.short?'sh':''}"><iframe src="https://www.youtube-nocookie.com/embed/${it.v}?playsinline=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`:'';
   gSheet(`<span class="tag">${esc(x.name)} · inspo · ${nice(it.d)}</span>${media}<input class="inp" style="margin-top:10px;width:100%" value="${esc(it.t||'')}" placeholder="What you like about it" onchange="inspoNote('${sid}','${iid}',this.value)">
@@ -8169,6 +8182,15 @@ const KSRC = [
   ['People','events','Hangouts / events','🎉','',(a,b)=>{ try { return socAll().filter(e=>e.d>=a&&e.d<=b).length; } catch(e){ return null; } }],
   ['People','people','New people met','🙋','',(a,b)=>((S.circle||{}).people||[]).filter(p=>(p.first||'')>=a&&(p.first||'')<=b).length],
   ['People','spots','New places eaten','🍽','',(a,b)=>newSpots(a,b).length],
+  ['Learning','lessons','Lessons done (all subjects)','📚','',(a,b)=>lrLessonsDone(a,b)],
+  ['Learning','learnout','Lessons with what you got out of them','✍️','',(a,b)=>lrOutputs(a,b)],
+  ['Learning','datumlessons','Datum craft lessons','◆','',(a,b)=>Object.values(ensureDatum().learnDone||{}).filter(d=>d>=a&&d<=b).length],
+  ['Learning','drawstages','Drawing stages done','✏️','',(a,b)=>Object.values(S.drawLearn||{}).filter(d=>d>=a&&d<=b).length],
+  ['Learning','inspo','Inspo saved','✦','',(a,b)=>((S.learn||{}).subjects||[]).reduce((n,x)=>n+(x.inspo||[]).filter(i=>i.d>=a&&i.d<=b).length,0)],
+  ['Days','yoga','Night stretches','🌙','',(a,b)=>Y_().log.filter(x=>x.d>=a&&x.d<=b).length],
+  ['Days','art','Art pieces','🎨','',(a,b)=>(S.art||[]).filter(x=>x.d>=a&&x.d<=b).length],
+  ['Money','sep','SEP-IRA this year ($)','🌱','$',()=>Math.round(+S.money.s.sepYtd||0),1],
+  ['Money','retire','Retirement this year ($) · Roth + SEP','🌳','$',()=>Math.round((+S.money.s.rothYtd||0)+(+S.money.s.sepYtd||0)),1],
 ];
 // b179: bench sessions as a count, overall and per weekday ("Bench day Monday")
 const DAYN=['sun','mon','tue','wed','thu','fri','sat'], DAYL={sun:'Sundays',mon:'Mondays',tue:'Tuesdays',wed:'Wednesdays',thu:'Thursdays',fri:'Fridays',sat:'Saturdays'};
@@ -8181,7 +8203,9 @@ function wkAutoLink2(){ const R=[[/bench day (mon|tue|wed|thu|fri|sat|sun)/i,m=>
 // ONE SOURCE OF TRUTH: every count in the app (skill trees, goals, recaps, week view, bosses, stats) asks fact() — never re-derives it
 function fact(key, a='0000-01-01', b=TODAY){ return rpgC('f:'+key+a+b,()=>{ const F=ksrcAll().find(x=>x[1]===key); if(!F) return 0; try { return +F[5](a,b)||0; } catch(e){ return 0; } }); }
 const isPastDay = k => k<=TODAY;
-function ksrcAll(){ const hab=(S.habits||[]).filter(h=>h.id!=='gym').map(h=>['Habits','habit:'+h.id,`${h.name} (days)`,h.icon,'',(a,b)=>dCount(a,b,d=>d.habits?.[h.id])]); return KSRC.concat(hab); }
+function ksrcAll(){ const hab=(S.habits||[]).filter(h=>h.id!=='gym').map(h=>['Habits','habit:'+h.id,`${h.name} (days)`,h.icon,'',(a,b)=>dCount(a,b,d=>d.habits?.[h.id])]);
+  const subs=((S.learn||{}).subjects||[]).filter(x=>x.kind==='custom').map(x=>['Learning','learn:'+x.id,`${x.name} lessons done`,x.icon||'✦','',(a,b)=>(x.lessons||[]).filter(l=>l.done&&l.done>=a&&l.done<=b).length]);
+  return KSRC.concat(hab, subs); }
 const ksrc = key => ksrcAll().find(s=>s[1]===key);
 function srcVal(key,a,b){ const s=ksrc(key); if(!s) return null; if (s[6] && b<TODAY) return null; try { const v=s[5](a,b); return v===null||v===undefined||isNaN(v)?null:+v; } catch(e){ return null; } }
 const srcLab = key => { const s=ksrc(key); return s?`${s[3]} ${s[2]}`:''; };
@@ -9093,7 +9117,7 @@ const AREAS=[
   {k:'BODY',n:'Body',track:'fitness',c:'#ff5a5a',trees:['body'],go:"go('gym')"},
   {k:'MONEY',n:'Money',track:'financial',c:'#39ff9f',trees:['money'],go:"go('money')"},
   {k:'SOCIAL',n:'Social',track:'relationships',c:'#b98cff',trees:['social'],go:"go('social')"},
-  {k:'MIND',n:'Mind',track:'personal',c:'#ff9ad5',trees:['mind','disc'],go:"go('today')"},
+  {k:'MIND',n:'Mind & Learning',track:'personal',c:'#ff9ad5',trees:['mind','disc'],go:"go('today')"},
   {k:'HUSTLE', get n(){ return T.hustle.name; }, track:'hustle',c:'#c6ff4d',trees:['hustle'],go:"go('hustle')"}];
 const AREA_STEPS=[1,4,10,18,28];   // skill nodes unlocked across the area's trees → level 1..5
 function areaInfo(k){ return rpgC('area:'+k,()=>{ const a=AREAS.find(x=>x.k===k); if(!a) return null; const T=a.trees.map(skBuild), on=T.reduce((s,t)=>s+t.on,0), tot=T.reduce((s,t)=>s+t.nodes.length,0), lvl=AREA_STEPS.filter(x=>on>=x).length;
@@ -9123,7 +9147,10 @@ function autoTop3(){ const d=ensureDay(TODAY); if (d.t3auto) return; const free=
 function autoHabits(){ for (const k of [TODAY, addDays(TODAY,-1)]){ const d=S.days?.[k]; if (!d) continue; d.habits ||= {};
     if (S.habits.some(h=>h.id==='morning') && d.checkin && d.checkin.at && d.checkin.at<'09:30' && !d.habits.morning && !(d.hAuto||{}).morningOff){ d.habits.morning=true; (d.hAuto ||= {}).morning=1; }
     if (S.habits.some(h=>h.id==='journal') && d.close && d.close.at && (S.wins||[]).some(w=>w.d===k) && !d.habits.journal && !(d.hAuto||{}).journalOff){ d.habits.journal=true; (d.hAuto ||= {}).journal=1; }
-    if (S.habits.some(h=>h.id==='content') && (S.logs||[]).some(l=>l.kind==='post'&&l.d===k) && !d.habits.content){ d.habits.content=true; (d.hAuto ||= {}).content=1; } } }
+    if (S.habits.some(h=>h.id==='content') && (S.logs||[]).some(l=>l.kind==='post'&&l.d===k) && !d.habits.content){ d.habits.content=true; (d.hAuto ||= {}).content=1; }
+    { const q=Object.values(S.drawLearn||{}).includes(k) || ((S.learn||{}).subjects||[]).some(x=>x.link==='guitar'&&(x.lessons||[]).some(l=>l.done===k));
+      if (S.habits.some(h=>h.id==='guitar') && q && !d.habits.guitar && !(d.hAuto||{}).guitarOff){ d.habits.guitar=true; (d.hAuto ||= {}).guitar=1; }
+      else if (!q && (d.hAuto||{}).guitar===1 && d.habits.guitar && !(S.gtr?.log||[]).some(l=>l.d===k) && !(S.art||[]).some(a=>a.d===k)){ d.habits.guitar=false; delete d.hAuto.guitar; } } } }
 // 3) write-offs you always confirm the same way confirm themselves
 const dedKey = x => String(x.desc||'').toUpperCase().replace(/[^A-Z ]+/g,' ').trim().split(/\s+/).slice(0,2).join(' ');
 function autoDeduct(){ const D=S.money?.budget?.deductibles; if (!D) return; const seen={}; for (const x of D) if (x.ok && !x.auto){ const k=dedKey(x)+'|'+x.cat; seen[k]=(seen[k]||0)+1; }
@@ -9180,7 +9207,7 @@ window.tegaNativeSync = ()=>liveRefresh('resume');
 
 /* ===================== b186: one place for everything ===================== */
 // every section belongs to one of the 7 areas; its chip opens that area's level + skill trees
-const AREA_VIEW={hustle:'HUSTLE',model:'MODEL',datum:'DATUM',content:'CONTENT',gym:'BODY',money:'MONEY',social:'SOCIAL'};
+const AREA_VIEW={learn:'MIND',hustle:'HUSTLE',model:'MODEL',datum:'DATUM',content:'CONTENT',gym:'BODY',money:'MONEY',social:'SOCIAL'};
 function areaChip(k){ try { const A=areaInfo(k); if(!A) return ''; const span=A.toNext>0?(AREA_STEPS[A.lvl]-(AREA_STEPS[A.lvl-1]||0)):1, got=A.toNext>0?span-A.toNext:1;
   return `<button class="ar-chip sec" style="--c:${A.c}" onclick="areaOpen('${k}')" aria-label="${esc(A.n)} level ${A.lvl}, open skill trees"><b>${A.k}</b><span class="num">LV ${A.lvl}</span><small>${esc(k==='money'?(()=>{ try { const R=moneyRank(); return R.r[1]; } catch(e){ return A.rank||''; } })():(A.rank||''))}</small><i><u style="width:${Math.round(got/span*100)}%"></u></i><em>›</em></button>`; } catch(e){ return ''; } }
 function statPick(html, titles){ const t=document.createElement('template'); t.innerHTML=html; return [...t.content.children].filter(e=>titles.includes((e.querySelector('h2')?.textContent||'').trim())).map(e=>e.outerHTML).join(''); }
@@ -9417,7 +9444,7 @@ function inboxOpen(){ if (!_inbox.length) return gSheetClose&&gSheetClose(); con
   gSheet(`<span class="tag">Shared into Tega${_inbox.length>1?` · 1 of ${_inbox.length}`:''}</span><h2 class="g-sh-t">${esc(label||'Shared item')}</h2>${u?`<div class="sub" style="word-break:break-all">${esc(u.slice(0,140))}</div>`:''}
     <div class="g-opts" style="margin-top:12px"><button onclick="inboxFile('hang')" style="${/partiful|opentable|resy|posh|eventbrite|dice\.fm|axs|tock/i.test(u)||SOC_RE.test(t)?'order:-1;outline:2px solid var(--good)':''}">🤝 Hangout</button><button onclick="inboxInspo()">✦ Inspo</button><button onclick="inboxFile('idea')">Content idea</button><button onclick="inboxFile('dl')">Deadline</button><button onclick="inboxFile('note')">Note for today</button><button onclick="inboxFile('skip')">Skip</button></div>`); }
 function inboxInspo(){ const x=_inbox[0]; if (!x) return; const live=lrSubs().filter(z=>!z.archived); gSheet(`<span class="tag">Save as inspo for…</span><h2 class="g-sh-t">Which subject?</h2><div class="g-opts" style="margin-top:12px">${live.map(z=>`<button onclick="inboxInspoTo('${z.id}')">${esc(z.icon||'✦')} ${esc(z.name)}</button>`).join('')}<button onclick="inboxOpen()">‹ Back</button></div>`); }
-function inboxInspoTo(sid){ const x=_inbox.shift(); if (!x) return; const u=x.url||((x.text||'').match(/https?:\/\/\S+/)||[''])[0]; const t=(x.text||'').replace(u,'').trim().slice(0,120); (lrSub(sid).inspo ||= []).push(inspoItem(u||x.text,t)); commit({skipXp:true}); toast(`Saved to ${lrSub(sid).name} inspo`); if (_inbox.length) inboxOpen(); else gSheetClose(); }
+function inboxInspoTo(sid){ const x=_inbox.shift(); if (!x) return; const u=x.url||((x.text||'').match(/https?:\/\/\S+/)||[''])[0]; const t=(x.text||'').replace(u,'').trim().slice(0,120); (lrSub(sid).inspo ||= []).push(inspoItem(u||x.text,t)); commit(); toast(`Saved to ${lrSub(sid).name} inspo`); if (_inbox.length) inboxOpen(); else gSheetClose(); }
 function inboxFile(kind){ const x=_inbox.shift(); if (!x) return; const u=x.url||'', t=((x.text||'').trim()||u).slice(0,140);
   if (kind==='hang'){ socFromText([x.text,x.url].filter(Boolean).join('\n')); }
   else if (kind==='idea'){ (S.ideas ||= []).push({id:uid(), text:t, url:u||undefined, d:TODAY, done:'', stage:'idea', pillar:pillarOf(t)}); commit({skipXp:true}); toast('Added to Content ideas'); }
