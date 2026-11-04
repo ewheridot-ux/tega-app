@@ -1982,6 +1982,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 <div class="toast" id="toast"></div>
 <div class="confetti" id="confetti"></div>
 
+<script>/* b302: start decoding your saved avatar before the big script is even read, so it's ready for the first frame */try{var _pc=JSON.parse(localStorage.getItem('tega-pfp'));if(_pc&&_pc.url){window.__pfpPre=new Image();__pfpPre.decoding='sync';__pfpPre.src=_pc.url;}}catch(e){}</script>
 <script>
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
@@ -7059,8 +7060,8 @@ function avWait(size){ if (!AV_CLIPS) return _dbSettled ? '' : `<div class="av-p
 function pfpMini(stg){ const k=AV_CLIPS&&clipFor('char_idle'), r=k&&A_()[k], still=AV_CLIPS&&((r&&r.poster) || (avCache().poster));
   if (still && (r || !_dbSettled)) return `<img class="pfp-v" src="${still}" alt="">`;
   const c=pfpCache();
-  if (!_dbSettled) return c&&c.url ? `<img class="pfp-v pfp-b" src="${c.url}" alt="">` : `<div class="av-ph pfp-ph"></div>`;
-  const pk=pfpKey(stg); if (c && c.k===pk && c.url) return `<img class="pfp-v pfp-b" src="${c.url}" alt="">`;
+  if (!_dbSettled) return c&&c.url ? `<img class="pfp-v pfp-b" src="${c.url}" decoding="sync" alt="">` : `<div class="av-ph pfp-ph"></div>`;
+  const pk=pfpKey(stg); if (c && c.k===pk && c.url) return `<img class="pfp-v pfp-b" src="${c.url}" decoding="sync" alt="">`;
   const vb=PXA.me?'15 31 64 64':'34 58 132 132', inner=avatarSVG(stg,'smile',36,S.evo||{}).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');
   pfpBake(pk, vb, inner);
   return `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid slice">${inner}</svg>`; }

@@ -121,9 +121,9 @@ for (const v of ['social', 'today', 'money']) {
   ok(`swipe ${v}: next tab keeps your scroll`, r.y0 > 50 && Math.abs(r.y - r.want) < 4, `was ${Math.round(r.y0)} → ${Math.round(r.y)}`);
 }
 
-// a real finger drag (Chromium; WebKit's test build has no Touch constructor): mid-scroll, the next tab is right there beside the finger —
+// a real finger drag (Chromium; WebKit's test build refuses to build a Touch): mid-scroll, the next tab is right there beside the finger —
 // no empty gap where a page should be; letting go early springs back to the same tab; a long drag lands on the next one
-const canTouch = await page.evaluate(() => typeof Touch === 'function');
+const canTouch = await page.evaluate(() => { try { new Touch({ identifier: 0, target: document.body, clientX: 0, clientY: 0 }); return true; } catch (e) { return false; } });   // WebKit has Touch but won't build one
 if (canTouch) for (const v of ['social', 'today', 'money']) {
   const r = await page.evaluate(async v => {
     const raf = () => new Promise(r => requestAnimationFrame(r)), wait = ms => new Promise(r => setTimeout(r, ms));
