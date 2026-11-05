@@ -1987,7 +1987,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b302';
+const BUILD='b303';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -3635,7 +3635,7 @@ function levelScene(lvl){ sprPlay('levelup');
 /* ---------- idle: small movements so he feels alive ---------- */
 let idleIv=null;
 function idleEmote(mood,isToday,d){ const hr=new Date().getHours(); if(!isToday) return ''; if (hr>=23||hr<5) return `<span class="emote zz" aria-hidden="true"><b>z</b><b>z</b><b>z</b></span>`; if (d&&d.checkin&&!d.top3.some(t=>t.text.trim())) return `<span class="emote dots" aria-hidden="true"><b></b><b></b><b></b></span>`; if (mood==='hype') return `<span class="emote spark" aria-hidden="true"><b>✦</b><b>✦</b><b>✦</b></span>`; return ''; }
-function idleTick(){ if (document.hidden || view!=='today') return; const el=document.querySelector('.hero .avatar>svg'); if(!el) return; const a=['i-tilt','i-hop','i-look','i-nod','i-tilt2'][Math.floor(Math.random()*5)]; el.classList.remove('i-tilt','i-hop','i-look','i-nod','i-tilt2'); void el.getBoundingClientRect(); el.classList.add(a); }
+function idleTick(){ if (document.hidden || view!=='today' || _swGesture || _swPair || _swBusy) return; /* b303: never mid-swipe (it forces a layout) */ const el=document.querySelector('.hero .avatar>svg'); if(!el) return; const a=['i-tilt','i-hop','i-look','i-nod','i-tilt2'][Math.floor(Math.random()*5)]; el.classList.remove('i-tilt','i-hop','i-look','i-nod','i-tilt2'); void el.getBoundingClientRect(); el.classList.add(a); }
 function idleStart(){ if (idleIv || (window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)) return; idleIv=setInterval(idleTick,5200); }
 /* ---------- the room: fills with what you've actually earned ---------- */
 function roomItems(){
@@ -9565,12 +9565,12 @@ const swPure=b=>!/\bS\s*[.[]|commit|save|Set\(/.test(b.getAttribute('onclick')||
     _swOnReady=()=>{ pend=0; if (sx==null) release(); };
     cur.B[j].click();
     setTimeout(()=>{ if (pend===dir && !_swPair){ pend=0; _swMode=null; _swAnim=0; _swOnReady=null; _swBusy=false; swSnap(document.getElementById('view')); } }, 1500); };   // the tab never rendered: put things back
-  document.addEventListener('touchstart', e=>{ sx=null; lock=null; if (e.touches.length>1||_swBusy||_swPair) return; const t=e.touches[0]; if (t.clientX<24) return;
+  document.addEventListener('touchstart', e=>{ if (sx!=null || _swGesture) lostEnd(); sx=null; lock=null; if (e.touches.length>1||_swBusy||_swPair) return; const t=e.touches[0]; if (t.clientX<24) return;
     if (!e.target.closest||!e.target.closest('#view')||overlay()||blocked(e.target)) return; I=swInfo(); if (!I) return;
     v=document.getElementById('view'); oi=I.i; parts=null; pend=0; peekOK=I.B.every(swPure); sx=lastX=t.clientX; sy=t.clientY; lastT=performance.now(); vel=0; lastD=0; }, {passive:true});
   document.addEventListener('touchmove', e=>{ if (sx==null) return; const t=e.touches[0], dx=t.clientX-sx, dy=t.clientY-sy;
     if (lock==null){ if (Math.hypot(dx,dy)<9) return; lock=Math.abs(dx)>Math.abs(dy)*1.15?'x':'y'; if (lock==='y'){ sx=null; return; } }
-    e.preventDefault(); _swGesture=true; const now=performance.now(); vel=(t.clientX-lastX)/Math.max(1,now-lastT); lastX=t.clientX; lastT=now;
+    e.preventDefault(); _swGesture=true; _swMoveT=Date.now(); clearTimeout(wd); wd=setTimeout(()=>{ if (_swGesture && Date.now()-_swMoveT>=2400) lostEnd(); }, 2500); const now=performance.now(); vel=(t.clientX-lastX)/Math.max(1,now-lastT); lastX=t.clientX; lastT=now;
     const want=dx<0?1:-1, d=has(want)?dx:dx*0.28; lastD=d; _swDx=d;
     if (peekOK && has(want) && Math.abs(dx)>4) peek(want);
     if (_swPair && _swPair.side===want) swPairAt(d);
@@ -9583,11 +9583,18 @@ const swPure=b=>!/\bS\s*[.[]|commit|save|Set\(/.test(b.getAttribute('onclick')||
     if (peekOK){ relArgs=[dx,fling]; if (pend>0) return; /* the neighbour is still rendering — released when it lands */ if (pend<0){ const w=setInterval(()=>{ if (!pend){ clearInterval(w); release(); } },16); return; } release(); lastD=0; return; }
     // tabs that change data when tapped: nothing renders until you let go (the b298 path)
     if ((Math.abs(dx)>innerWidth*0.25||fling) && !(getSelection&&String(getSelection()).length)) { if (!swipeTab(dx<0?1:-1, lastD)) swSnap(v); } else swSnap(v); lastD=0; };
-  document.addEventListener('touchend', end, {passive:true}); document.addEventListener('touchcancel', end, {passive:true}); })();
+  document.addEventListener('touchend', end, {passive:true}); document.addEventListener('touchcancel', end, {passive:true});
+  // b303: inside the Claude app the page can miss the finger lifting — a swipe then sat half-way and held every redraw.
+  // Any of these ends it the way the finger left it: a new touch, no movement for 2.5 s, pointer up/cancel, the page losing focus or going to the background.
+  let wd=0; function lostEnd(){ clearTimeout(wd); if (sx==null && !_swGesture) return; if (sx!=null && lock==='x'){ vel=0; end(); } else { sx=null; _swGesture=false; } }   // we don't know when the finger lifted, so its last speed means nothing: decide by distance
+  for (const ev of ['pointerup','pointercancel']) document.addEventListener(ev, e=>{ if (e.pointerType==='touch' && _swGesture) setTimeout(()=>{ if (_swGesture) lostEnd(); }, 120); }, {passive:true});
+  addEventListener('blur', lostEnd); addEventListener('pagehide', lostEnd); document.addEventListener('visibilitychange', ()=>{ if (document.hidden) lostEnd(); });
+  window.swLostEnd=lostEnd; })();
+let _swMoveT=0;
 // b301: a redraw that arrives from a timer or a sync while your finger is swiping (or the swipe is still settling) waits until it's done —
 // it would swap the page under your finger. Your own taps and the swipe's own redraws never wait.
 { let held=false, tH=0;
-  const busy=()=>!_swAnim && !_swMode && (_swGesture || !!_swPair);
+  const busy=()=>!_swAnim && !_swMode && (_swGesture || !!_swPair) && Date.now()-_swMoveT<3000;   // b303: never held for more than 3 s after the last finger movement
   const flush=()=>{ if (busy()){ tH=setTimeout(flush,60); return; } if (held){ held=false; render(); } };
   const _r=render; render=function(){ if (busy()){ held=true; clearTimeout(tH); tH=setTimeout(flush,60); return; } held=false; return _r.apply(this,arguments); }; }
 // ---- swipe right from the left edge = back; swipe a sheet down = close
@@ -9729,10 +9736,11 @@ document.addEventListener('contextmenu',e=>{ const b=e.target.closest&&e.target.
 { const ck=el=>el.tagName+'.'+(typeof el.className==='string'?el.className.split(' ')[0]:'');
   // b298: only elements you actually scrolled are remembered (was: read scroll on every element of the page each render — ~30% of render time)
   const seen=new Set(), sel=el=>el.tagName.toLowerCase()+(ck(el).split('.')[1]?'.'+CSS.escape(ck(el).split('.')[1]):''), nth=el=>{ const k=ck(el); return [...document.querySelectorAll('#app '+sel(el))].filter(e=>ck(e)===k).indexOf(el); };
-  document.addEventListener('scroll', e=>{ const t=e.target; if (t && t.nodeType===1 && t.closest && t.closest('#app')) seen.add(t); }, {capture:true, passive:true});
-  const _r=render; render=function(){ const pos=[]; try { for (const el of seen){ if (!el.isConnected){ seen.delete(el); continue; } if (el.scrollLeft>0||el.scrollTop>0) pos.push([sel(el), ck(el), nth(el), el.scrollLeft, el.scrollTop]); } } catch(e){}
+  // b303: positions are noted as you scroll, so a redraw never has to lay out the old page just to read them (~19 ms a tap on Today)
+  const at=new WeakMap(); document.addEventListener('scroll', e=>{ const t=e.target; if (t && t.nodeType===1 && t.closest && t.closest('#app')){ seen.add(t); at.set(t,[t.scrollLeft,t.scrollTop]); } }, {capture:true, passive:true});
+  const _r=render; render=function(){ const pos=[]; try { for (const el of seen){ if (!el.isConnected){ seen.delete(el); continue; } const p=at.get(el); if (p && (p[0]>0||p[1]>0)) pos.push([sel(el), ck(el), nth(el), p[0], p[1]]); } } catch(e){}
     const out=_r.apply(this,arguments);
-    for (const [s,k,i,x,y] of pos) try { const el=[...document.querySelectorAll('#app '+s)].filter(e=>ck(e)===k)[i]; if (el){ if (x) el.scrollLeft=x; if (y) el.scrollTop=y; seen.add(el); } } catch(e){}
+    for (const [s,k,i,x,y] of pos) try { const el=[...document.querySelectorAll('#app '+s)].filter(e=>ck(e)===k)[i]; if (el){ if (x) el.scrollLeft=x; if (y) el.scrollTop=y; seen.add(el); at.set(el,[x,y]); } } catch(e){}
     return out; }; }
 // a sheet left open never sits on top of a different page
 { const stamp=new MutationObserver(l=>{ for (const m of l) for (const n of m.addedNodes) if (n.nodeType===1 && (n.id==='g-sheet'||n.classList.contains('modal'))) n.dataset.at=Date.now(); }); stamp.observe(document.body,{childList:true});

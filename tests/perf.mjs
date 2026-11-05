@@ -186,6 +186,30 @@ if (canTouch) for (const v of ['social', 'money']) {
   ok(`swipe to a seen tab (${v}): lands with one redraw, same height`, r.landed && r.landRenders === 1, r.landRenders + ' redraws');
 }
 
+// the finger lifts but the page never hears it (happens inside the Claude app): the swipe must not stay half-way or hold redraws
+if (canTouch) { const r = await page.evaluate(async () => {
+    const raf = () => new Promise(r => requestAnimationFrame(r)), wait = ms => new Promise(r => setTimeout(r, ms)), out = {};
+    document.getElementById('lvs')?.remove(); location.hash = 'gym'; await wait(200); location.hash = 'today'; await wait(600); if (!swInfo()) return null; scrollTo(0, 150); await wait(150);
+    const W = innerWidth, pick = () => { let y = innerHeight * 0.6; for (let k = 0; k < 10; k++, y += 30) { const el = document.elementFromPoint(W / 2, y); if (el && el.closest('#view') && !el.closest('input,textarea,select,button,.seg')) return [el, y]; } return [null, 0]; };
+    const go = async (id, to) => { const [tgt, y] = pick(); if (!tgt) return false; const T = (type, x) => { const t = new Touch({ identifier: id, target: tgt, clientX: x, clientY: y }); tgt.dispatchEvent(new TouchEvent(type, { touches: [t], targetTouches: [t], changedTouches: [t], bubbles: true, cancelable: true })); };
+      T('touchstart', W / 2); for (let k = 1; k <= 6; k++) { T('touchmove', W / 2 + to * k / 6); await raf(); } return true; };
+    const oi = swInfo().i; if (!(await go(11, -70))) return { skip: 'no spot' }; await wait(200);
+    out.halfway = !!(_swPair || document.querySelector('.sw-ghost'));
+    // a new touch arrives: the old swipe settles the way the finger left it (70 px, under a quarter screen → springs back)
+    const [t2, y2] = pick(); t2.dispatchEvent(new TouchEvent('touchstart', { touches: [new Touch({ identifier: 12, target: t2, clientX: 50, clientY: y2 })], changedTouches: [new Touch({ identifier: 12, target: t2, clientX: 50, clientY: y2 })], bubbles: true, cancelable: true }));
+    t2.dispatchEvent(new TouchEvent('touchend', { touches: [], changedTouches: [new Touch({ identifier: 12, target: t2, clientX: 50, clientY: y2 })], bubbles: true, cancelable: true }));
+    await wait(900); out.settledByTouch = !_swPair && !document.querySelector('.sw-ghost') && !_swGesture && swInfo().i === oi;
+    const r0 = __r1; render(); out.redrawsWork = __r1 === r0 + 1;
+    // nobody touches again: the watchdog settles it
+    if (!(await go(13, -120))) return out; await wait(3200);
+    out.settledByWatchdog = !_swPair && !document.querySelector('.sw-ghost') && !_swGesture && swInfo().i === oi + 1;   // 120 px is past a quarter screen → it lands on the next tab
+    const r1 = __r1; render(); out.redrawsWork2 = __r1 === r1 + 1; return out; });
+  if (r && !r.skip) {
+    ok('lost finger-lift: a new touch settles the half-way swipe', r.halfway && r.settledByTouch);
+    ok('lost finger-lift: redraws are not held afterwards', r.redrawsWork && r.redrawsWork2);
+    ok('lost finger-lift: with no new touch, it settles by itself (past a quarter → next tab)', r.settledByWatchdog);
+  } }
+
 // the tab highlight slides; changing section dissolves the old page over the new one; the avatar-style library isn't loaded at start
 { const r = await page.evaluate(async () => { const wait = ms => new Promise(r => setTimeout(r, ms)), out = {};
     location.hash = 'gym'; await wait(200); location.hash = 'social'; await wait(500); const I = swInfo(); swipeTab(I.i < I.B.length - 1 ? 1 : -1); await wait(90);
