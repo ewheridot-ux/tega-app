@@ -16,6 +16,7 @@ Rules that never bend:
 - Things you *read* (news, demos) don't pay XP; things you *do or make* do.
 - Anything a person can add (subjects, habits) gets its KR source generated, never hard-coded.
 - `tests/run.mjs` checks every KR source returns a number and that a learning action pays and undoes.
+- Money: anything owed (cards, old tax bills) gets a step in the waterfall, a KR source, XP per $100 paid, and a calendar date — entered by you in the app, never written into code.
 
 ## Look and feel
 - Circle, Hustle and Learning share one Life look: Streetwear · Safety Orange (`data-look="street"`), with the LIFE RN. header holding the three numbers + next up. No per-page switchers, no repeated counters.
