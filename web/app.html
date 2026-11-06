@@ -407,6 +407,23 @@ html.sw-run #app{overflow-x:clip}
 .td-r small{display:block;color:var(--muted);font-size:12px;margin-top:2px}.td-r.done{opacity:.55}
 .td-add{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}.td-add .btn{grid-column:1/-1}
 .td-f{display:grid;grid-template-columns:1fr 1fr;gap:8px}.td-f label{display:grid;gap:4px;font-size:12px;color:var(--muted)}
+/* b305: piece board */
+#pb .pb-card{max-height:92vh;overflow-y:auto;overscroll-behavior:contain}
+.pb-mode{display:flex;margin:10px 0}.pb-mode button{flex:1}
+.pb-side{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.pb-pane{margin:0;position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;background:var(--card2)}
+.pb-pane img,.pb-slide img{width:100%;height:100%;object-fit:contain;display:block}
+.pb-pane figcaption{position:absolute;left:6px;bottom:6px;font-size:11px;padding:2px 7px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff}
+.pb-empty{height:100%;display:grid;place-items:center;font-size:12px;color:var(--muted);text-align:center;padding:8px}
+.pb-slide{position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;background:var(--card2)}
+.pb-slide img{position:absolute;inset:0}.pb-hand{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
+.pb-l,.pb-r{position:absolute;bottom:6px;font-size:11px;padding:2px 7px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff}.pb-l{left:6px}.pb-r{right:6px}
+.pb-range{width:100%;margin:8px 0 0}
+.pb-h{margin:14px 0 6px;align-items:center}
+.pb-strip{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.pb-strip>button,.pb-add{flex:none;width:58px;height:58px;border-radius:10px;overflow:hidden;padding:0;border:2px solid transparent;background:var(--card2);display:grid;place-items:center;cursor:pointer;color:var(--ink);font-size:20px}
+.pb-strip>button img{width:100%;height:100%;object-fit:cover}.pb-strip>button.on{border-color:var(--accent)}
+.pb-mood{margin-top:6px;padding:6px;border-radius:12px;background:var(--card2)}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -1992,7 +2009,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b304';
+const BUILD='b305';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -3977,7 +3994,7 @@ function moodCopy(c){ const done=()=>toast(c+' copied'); try { navigator.clipboa
 function openMood(id){ moodOpenId=id; moodDel=false; renderMood(); }
 function closeMood(){ const m=document.getElementById('md'); if(m) m.remove(); moodOpenId=null; }
 function moodSet(v){ const x=(ensureDatum().mood||[]).find(x=>x.id===moodOpenId); if(x){ x.note=v.trim().slice(0,200); commit({skipXp:true}); } }
-function moodRemove(){ const D=ensureDatum(), x=(D.mood||[]).find(x=>x.id===moodOpenId); if(!x) return; if(!moodDel){ moodDel=true; renderMood(); return; } D.mood=D.mood.filter(m=>m.id!==x.id); if (x.img&&benchAssets) Promise.resolve().then(()=>benchAssets.delete(x.img)).catch(()=>{}); closeMood(); commit({skipXp:true}); toast('Unpinned'); }
+function moodRemove(){ const D=ensureDatum(), x=(D.mood||[]).find(x=>x.id===moodOpenId); if(!x) return; if(!moodDel){ moodDel=true; renderMood(); return; } D.mood=D.mood.filter(m=>m.id!==x.id); if (x.img&&benchAssets&&!D.prototypes.some(p=>(p.refs||[]).some(r=>r.img===x.img))) Promise.resolve().then(()=>benchAssets.delete(x.img)).catch(()=>{}); closeMood(); commit({skipXp:true}); toast('Unpinned'); }
 function renderMood(){ const x=(ensureDatum().mood||[]).find(x=>x.id===moodOpenId); if(!x){ closeMood(); return; } let m=document.getElementById('md'); if(!m){ m=document.createElement('div'); m.id='md'; document.body.appendChild(m); }
   m.className='modal'; m.innerHTML=`<div class="card ci-card"><div class="row between" style="margin-bottom:10px"><span class="tag" style="color:var(--accent2)">Pinned ${nice(x.d)}</span><button class="x" onclick="closeMood()" aria-label="Close">✕</button></div>
     ${x.img?`<img src="${BLOBURL}${x.img}" alt="" style="width:100%;border-radius:14px;display:block;background:var(--card2)">`:`<div style="height:140px;border-radius:14px;background:${x.cols[0]}"></div>`}
@@ -3991,6 +4008,41 @@ function dMood(){ const D=ensureDatum(), M=(D.mood||[]).slice().reverse(), P=moo
     <form class="inline" style="margin-top:8px" onsubmit="return moodAddColor(event)"><input class="inp" id="moodHex" placeholder="or pin a colour · #c9a54a" required><button class="btn ghost sm">Pin</button></form>
     <div class="help" style="margin-top:8px">Screenshots, textures, other people’s work, a colour you saw. Save to Photos, then pin. Private to you.</div></div>
   ${M.length?`<div class="mdgrid sec">${M.map(x=>`<button onclick="openMood('${x.id}')" aria-label="Open pin">${x.img?`<img src="${BLOBURL}${x.img}" alt="" loading="lazy">`:`<div style="aspect-ratio:1;background:${x.cols[0]}"></div>`}<span class="mdc">${(x.cols||[]).slice(0,5).map(c=>`<i style="background:${c}"></i>`).join('')}</span>${x.note?`<small>${esc(x.note)}</small>`:''}</button>`).join('')}</div>`:''}`; }
+/* ---------- b305: piece board — references for one piece next to your own photos of it ---------- */
+let pbId=null, pbR=0, pbW=-1, pbMode='side', pbCut=50, pbPick=false, pbBusy=false, pbDel=false;
+const pbP = () => ensureDatum().prototypes.find(p=>p.id===pbId);
+const pbWork = p => (p.log||[]).filter(l=>l.photo);
+function pbOpen(id){ pbId=id; pbR=0; pbW=-1; pbPick=false; pbDel=false; pbRender(); }
+function pbClose(){ document.getElementById('pb')?.remove(); pbId=null; }
+async function pbAdd(input){ const fs=[...(input.files||[])].filter(f=>!f.type||f.type.startsWith('image/')).slice(0,12), p=pbP(); if (!fs.length||!p) return;
+  if (!benchAssets){ toast('Adding pictures needs the app signed in with edit access'); return; }
+  pbBusy=true; pbRender(); let ok=0; for (const f of fs){ try { const img=await artUpload(f); (p.refs ||= []).push({id:uid(), img, d:TODAY, from:'upload'}); ok++; } catch(e){} }
+  pbBusy=false; pbR=(p.refs||[]).length-1; commit({skipXp:true}); pbRender(); toast(ok?`Added ${ok}`:'Upload failed. Try again.'); }
+function pbFromMood(mid){ const p=pbP(), m=(ensureDatum().mood||[]).find(x=>x.id===mid); if (!p||!m||!m.img) return;
+  if ((p.refs ||= []).some(r=>r.img===m.img)){ toast('Already on this board'); return; } p.refs.push({id:uid(), img:m.img, d:TODAY, from:'mood'}); pbR=p.refs.length-1; pbPick=false; commit({skipXp:true}); pbRender(); }
+// taking a reference off keeps the picture itself (it may be pinned elsewhere); a second tap confirms
+function pbRemove(){ const p=pbP(), r=(p?.refs||[])[pbR]; if (!r) return; if (!pbDel){ pbDel=true; pbRender(); return; }
+  (ensureDatum().refsTrash ||= []).push({...r, piece:p.id, deletedAt:TODAY}); p.refs.splice(pbR,1); pbR=Math.max(0,pbR-1); pbDel=false; commit({skipXp:true}); pbRender(); }
+function pbSel(k,i){ if (k==='r') pbR=i; else pbW=i; pbDel=false; pbRender(); }
+function pbSetCut(v){ pbCut=+v; const t=document.querySelector('#pb .pb-top'), h=document.querySelector('#pb .pb-hand'); if (t) t.style.clipPath=`inset(0 0 0 ${pbCut}%)`; if (h) h.style.left=pbCut+'%'; }
+function pbRender(){ const p=pbP(); if (!p){ pbClose(); return; } let m=document.getElementById('pb');
+  if (!m){ m=document.createElement('div'); m.id='pb'; m.addEventListener('click',e=>{ if (e.target===m) pbClose(); }); document.body.appendChild(m); }
+  const R=p.refs||[], W=pbWork(p), r=R[Math.min(pbR,R.length-1)], wi=pbW<0?W.length-1:Math.min(pbW,W.length-1), w=W[wi], M=(ensureDatum().mood||[]).filter(x=>x.img);
+  const pane=(src,label,empty)=>`<figure class="pb-pane">${src?`<img src="${BLOBURL}${src}" alt="">`:`<div class="pb-empty">${empty}</div>`}<figcaption>${label}</figcaption></figure>`;
+  const cmp = pbMode==='slide' && r && w
+    ? `<div class="pb-slide"><img src="${BLOBURL}${r.img}" alt=""><img class="pb-top" src="${BLOBURL}${w.photo}" alt="" style="clip-path:inset(0 0 0 ${pbCut}%)"><i class="pb-hand" style="left:${pbCut}%"></i><span class="pb-l">Reference</span><span class="pb-r">Yours</span></div>
+       <input class="pb-range" type="range" min="0" max="100" value="${pbCut}" oninput="pbSetCut(this.value)" aria-label="Slide between reference and yours">`
+    : `<div class="pb-side">${pane(r&&r.img,'Reference','Add a reference ↓')}${pane(w&&w.photo,'Yours'+(w?` · ${nice(w.d)}`:''),'Add a photo ↓')}</div>`;
+  const thumbs=(L,k,cur,img)=>L.map((x,i)=>`<button class="${i===cur?'on':''}" onclick="pbSel('${k}',${i})" aria-label="${k==='r'?'Reference':'Photo'} ${i+1}"><img src="${BLOBURL}${img(x)}" alt="" loading="lazy"></button>`).join('');
+  m.className='modal'; m.innerHTML=`<div class="card pb-card">
+    <div class="row between"><span class="tag">${esc(p.id)} · ${esc(p.name)}</span><button class="x" onclick="pbClose()" aria-label="Close">✕</button></div>
+    <div class="seg pb-mode"><button class="${pbMode==='side'?'on':''}" onclick="pbMode='side';pbRender()">Side by side</button><button class="${pbMode==='slide'?'on':''}" onclick="pbMode='slide';pbRender()" ${r&&w?'':'disabled'}>Slide</button></div>
+    ${cmp}
+    <div class="row between pb-h"><b>References <span class="sub">${R.length}</span></b>${r?`<button class="btn ghost sm" style="${pbDel?'color:var(--bad)':''}" onclick="pbRemove()">${pbDel?'Tap again':'Remove'}</button>`:''}</div>
+    <div class="pb-strip">${thumbs(R,'r',Math.min(pbR,R.length-1),x=>x.img)}<label class="pb-add">${pbBusy?'…':'＋'}<input type="file" accept="image/*" multiple hidden ${pbBusy?'disabled':''} onchange="pbAdd(this)"></label>${M.length?`<button class="pb-add" onclick="pbPick=!pbPick;pbRender()" aria-label="From the moodboard">📌</button>`:''}</div>
+    ${pbPick?`<div class="pb-strip pb-mood">${M.slice().reverse().map(x=>`<button onclick="pbFromMood('${x.id}')" aria-label="Add this pin"><img src="${BLOBURL}${x.img}" alt="" loading="lazy"></button>`).join('')}</div>`:''}
+    <div class="row between pb-h"><b>Yours <span class="sub">${W.length}</span></b></div>
+    <div class="pb-strip">${thumbs(W,'w',wi,x=>x.photo)}<label class="pb-add">📷<input type="file" accept="image/*" capture="environment" hidden onchange="benchPhoto('${p.id}',this).then(()=>{ pbW=-1; pbRender(); })"></label></div></div>`; }
 /* ---------- riff vault: short clips of you playing, kept in order ---------- */
 let riffBusy=false, riffPlay=null, riffDel=null;
 async function riffAdd(input){ const f=(input.files||[])[0]; if(!f) return; if(!benchAssets){ toast('Adding clips needs the app signed in with edit access'); return; }
@@ -7031,7 +7083,7 @@ function pcCard(D,p){ const open=dSelProto===p.id, st=PSTAGES.find(x=>x[0]===p.s
         <span class="pc-meta"><span class="pc-st">${st[2]||''} ${esc(st[1]||p.status)}</span><span>${p.hours}h</span>${ph.length?`<span>📷 ${ph.length}</span>`:''}</span>
         ${at!=null?`<span class="pc-at">at ${esc(p.caster||'the caster')} · ${at===0?'sent today':at===1?'1 day':at+' days'}</span>`:''}</div>
       <button class="pc-del" onclick="event.stopPropagation();pcDel('${p.id}')" aria-label="Delete ${p.id}">🗑</button></div>
-    <div class="pc-q">${!['cast','complete','failed'].includes(p.status)?`<button class="btn sm" onclick="benchStart('${p.id}')">▶ Session</button>`:''}${nx?`<button class="btn ghost sm" onclick="${nx[1]}">${nx[0]}</button>`:''}<label class="btn ghost sm" style="cursor:pointer">📷<input type="file" accept="image/*" capture="environment" style="display:none" onchange="benchPhoto('${p.id}',this)"></label><button class="btn ghost sm pc-more" onclick="pcToggle('${p.id}')">${open?'Less ▴':'Details ▾'}</button></div>
+    <div class="pc-q">${!['cast','complete','failed'].includes(p.status)?`<button class="btn sm" onclick="benchStart('${p.id}')">▶ Session</button>`:''}${nx?`<button class="btn ghost sm" onclick="${nx[1]}">${nx[0]}</button>`:''}<label class="btn ghost sm" style="cursor:pointer">📷<input type="file" accept="image/*" capture="environment" style="display:none" onchange="benchPhoto('${p.id}',this)"></label><button class="btn ghost sm" onclick="pbOpen('${p.id}')" aria-label="Board for ${p.id}">🖼${(p.refs||[]).length?' '+p.refs.length:''}</button><button class="btn ghost sm pc-more" onclick="pcToggle('${p.id}')">${open?'Less ▴':'Details ▾'}</button></div>
     ${open?pieceCard(D,p,'bare'):''}</div>`; }
 function pcDel(id){ const D=ensureDatum(), p=D.prototypes.find(x=>x.id===id); if (!p) return; let m=document.getElementById('pc-delm'); if(!m){ m=document.createElement('div'); m.id='pc-delm'; m.addEventListener('click',e=>{ if(e.target===m) m.remove(); }); document.body.appendChild(m); }
   const n=(p.log||[]).length, ph=(p.log||[]).filter(l=>l.photo).length;
@@ -8296,6 +8348,7 @@ const KSRC = [
   ['Datum','orders','Paid orders','🧾','',(a,b)=>ensureDatum().orders.filter(o=>['deposit','in-production','delivered','closed'].includes(o.status)&&(!o.opened||(o.opened>=a&&o.opened<=b))).length],
   ['Datum','revenue','Datum revenue ($)','💎','$',(a,b)=>Math.round(incomeBy(a,b).datum)],
   ['Datum','sets','Sets finished','🦷','',()=>ensureDatum().prototypes.filter(p=>p.status==='complete').length,1],
+  ['Datum','refs','References pinned','📌','',(a,b)=>{ const D=ensureDatum(), inR=x=>(x.d||'')>=a&&(x.d||'')<=b; return (D.mood||[]).filter(inR).length + D.prototypes.reduce((t,p)=>t+(p.refs||[]).filter(r=>inR(r)&&r.from!=='mood').length,0); }],
   ['Days','gym','Gym workouts','💪','',(a,b)=>gymDays(a,b).size],
   ['Days','checkins','Check-ins','☀️','',(a,b)=>dCount(a,b,d=>d.checkin)],
   ['Days','top3','Top 3 items done','✅','',(a,b)=>Object.entries(S.days||{}).filter(([k])=>k>=a&&k<=b).reduce((s,[,d])=>s+(d.top3||[]).filter(t=>t.done).length,0)],

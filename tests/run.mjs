@@ -289,6 +289,20 @@ ok('old tax bills: a payment plan counts as a bill', td.planIsBill, JSON.stringi
 ok('old tax bills: filing + plan dates show on the calendar', td.calendar, JSON.stringify(td));
 ok('old tax bills: paid oldest first, earn XP, count for KRs, undo cleanly', td.oldestFirst && td.xp && td.kr && td.undo, JSON.stringify(td));
 ok('old tax bills: card shows on Money → Taxes', td.card, JSON.stringify(td));
+// Piece board: references next to your own photos, side by side or sliding; removing keeps a copy; references count
+const pb = await page.evaluate(() => { const D = ensureDatum(), keepP = JSON.parse(JSON.stringify(D.prototypes)), keepT = JSON.parse(JSON.stringify(D.refsTrash || [])), r = {};
+  D.prototypes.push({ id: 'PT-TEST', name: 'Board test', status: 'carving', hours: 0, log: [{ d: TODAY, kind: 'photo', photo: 'w1' }], refs: [{ id: 'r1', img: 'a1', d: TODAY, from: 'upload' }, { id: 'r2', img: 'a2', d: TODAY, from: 'upload' }] });
+  const k0 = fact('refs', TODAY, TODAY); r.kr = k0 >= 2;
+  pbOpen('PT-TEST'); const m = document.getElementById('pb'); r.side = !!m && m.querySelectorAll('.pb-side .pb-pane img').length === 2;
+  pbMode = 'slide'; pbRender(); r.slide = !!m.querySelector('.pb-slide .pb-top') && !!m.querySelector('.pb-range');
+  pbSetCut(30); r.cut = m.querySelector('.pb-top').style.clipPath.includes('30%');
+  pbSel('r', 1); pbRemove(); r.armed = D.prototypes.find(p => p.id === 'PT-TEST').refs.length === 2; pbRemove();
+  r.removed = D.prototypes.find(p => p.id === 'PT-TEST').refs.length === 1 && (D.refsTrash || []).some(x => x.id === 'r2');
+  pbClose(); pbMode = 'side'; D.prototypes = keepP; D.refsTrash = keepT; commit({ skipXp: true }); return r; });
+ok('piece board: reference and your photo side by side', pb.side, JSON.stringify(pb));
+ok('piece board: slide mode compares on one picture', pb.slide && pb.cut, JSON.stringify(pb));
+ok('piece board: remove takes two taps and keeps a copy', pb.armed && pb.removed, JSON.stringify(pb));
+ok('piece board: references count for the "References pinned" KR', pb.kr, JSON.stringify(pb));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
