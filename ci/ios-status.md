@@ -1,50 +1,50 @@
-# iPhone build #161 — success
+# iPhone build #162 — success
 
-Thu Nov  5 00:23:34 UTC 2026
+Fri Nov  6 19:24:58 UTC 2026
 
 ```
 ✓ avatar gets baked and saved on the phone
 ✓ avatar is a real picture on the first render (not a placeholder), cloud still loading
-✓ avatar painted within 300 ms of the app's first frame — 205 ms
-page-change render ms today:28 week:17 quests:11 model:23 content:9 datum:12 gym:8 money:21 social:7 hustle:7 learn:6 city:10 evolve:14
-after-data-change render ms today:27 week:20 quests:19 model:24 content:17 datum:22 gym:14 money:26 social:13 hustle:10 learn:10 city:19 evolve:27
-✓ render today < 100 ms — 28 ms
-✓ render week < 100 ms — 17 ms
-✓ render quests < 100 ms — 11 ms
-✓ render model < 100 ms — 23 ms
-✓ render content < 100 ms — 9 ms
-✓ render datum < 100 ms — 12 ms
+✓ avatar painted within 300 ms of the app's first frame — 208 ms
+page-change render ms today:40 week:20 quests:16 model:36 content:13 datum:13 gym:8 money:27 social:9 hustle:10 learn:13 city:15 evolve:33
+after-data-change render ms today:62 week:24 quests:28 model:48 content:23 datum:24 gym:19 money:40 social:23 hustle:17 learn:19 city:38 evolve:36
+✓ render today < 100 ms — 40 ms
+✓ render week < 100 ms — 20 ms
+✓ render quests < 100 ms — 16 ms
+✓ render model < 100 ms — 36 ms
+✓ render content < 100 ms — 13 ms
+✓ render datum < 100 ms — 13 ms
 ✓ render gym < 100 ms — 8 ms
-✓ render money < 100 ms — 21 ms
-✓ render social < 100 ms — 7 ms
-✓ render hustle < 100 ms — 7 ms
-✓ render learn < 100 ms — 6 ms
-✓ render city < 100 ms — 10 ms
-✓ render evolve < 100 ms — 14 ms
-✓ a tap that saves data (commit) on Today < 200 ms — 43 ms
+✓ render money < 100 ms — 27 ms
+✓ render social < 100 ms — 9 ms
+✓ render hustle < 100 ms — 10 ms
+✓ render learn < 100 ms — 13 ms
+✓ render city < 100 ms — 15 ms
+✓ render evolve < 100 ms — 33 ms
+✓ a tap that saves data (commit) on Today < 200 ms — 60 ms
 ✓ Life look via #life — study/street
 ✓ Life look via #social — study/street
 ✓ Life look via #hustle — study/street
 ✓ Life look via #learn — study/street
-✓ swipe social: page never blank — min opacity 1.00 over 53 frames
+✓ swipe social: page never blank — min opacity 1.00 over 51 frames
 ✓ swipe social: one #view — 1
 ✓ swipe social: no transform left on #view
 ✓ swipe social: moved to next tab
 ✓ swipe social: header and tab bar hold still — 0 px
 ✓ swipe social: the tab's content slides — 390 px
-✓ swipe hustle: page never blank — min opacity 1.00 over 52 frames
+✓ swipe hustle: page never blank — min opacity 1.00 over 51 frames
 ✓ swipe hustle: one #view — 1
 ✓ swipe hustle: no transform left on #view
 ✓ swipe hustle: moved to next tab
 ✓ swipe hustle: header and tab bar hold still — 0 px
 ✓ swipe hustle: the tab's content slides — 390 px
-✓ swipe today: page never blank — min opacity 1.00 over 45 frames
+✓ swipe today: page never blank — min opacity 1.00 over 47 frames
 ✓ swipe today: one #view — 1
 ✓ swipe today: no transform left on #view
 ✓ swipe today: moved to next tab
 ✓ swipe today: header and tab bar hold still — 0 px
 ✓ swipe today: the tab's content slides — 390 px
-✓ swipe money: page never blank — min opacity 1.00 over 45 frames
+✓ swipe money: page never blank — min opacity 1.00 over 44 frames
 ✓ swipe money: one #view — 1
 ✓ swipe money: no transform left on #view
 ✓ swipe money: moved to next tab
@@ -66,13 +66,13 @@ all perf checks passed
 > node scripts/build-www.mjs
 
 www built with Supabase config
-✔ Adding native Xcode project in ios in 22.03ms
-✔ add in 22.29ms
-✔ Copying web assets from www to ios/App/App/public in 102.84ms
-✔ Creating capacitor.config.json in ios/App/App in 609.12μs
-✔ copy ios in 183.61ms
-✔ Updating iOS plugins in 1.15ms
-✔ Updating iOS native dependencies with pod install in 11.97s
+✔ Adding native Xcode project in ios in 20.34ms
+✔ add in 20.63ms
+✔ Copying web assets from www to ios/App/App/public in 89.14ms
+✔ Creating capacitor.config.json in ios/App/App in 549.96μs
+✔ copy ios in 142.19ms
+✔ Updating iOS plugins in 3.56ms
+✔ Updating iOS native dependencies with pod install in 13.20s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -84,15 +84,15 @@ www built with Supabase config
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 12.01s
+✔ update ios in 13.23s
 [success] ios platform added!
 Follow the Developer Workflow guide to get building:
 https://capacitorjs.com/docs/basics/workflow
-✔ Copying web assets from www to ios/App/App/public in 93.34ms
-✔ Creating capacitor.config.json in ios/App/App in 1.05ms
-✔ copy ios in 112.17ms
-✔ Updating iOS plugins in 901.67μs
-✔ Updating iOS native dependencies with pod install in 5.81s
+✔ Copying web assets from www to ios/App/App/public in 127.97ms
+✔ Creating capacitor.config.json in ios/App/App in 1.95ms
+✔ copy ios in 170.63ms
+✔ Updating iOS plugins in 984.50μs
+✔ Updating iOS native dependencies with pod install in 10.54s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -104,8 +104,8 @@ https://capacitorjs.com/docs/basics/workflow
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 5.89s
-[info] Sync finished in 6.085s
+✔ update ios in 10.60s
+[info] Sync finished in 10.826s
 app capabilities: ['IN_APP_PURCHASE', 'HEALTHKIT', 'IN_APP_PURCHASE', 'IN_APP_PURCHASE']
 com.ewheridot.tegaexe.widgets ok
 com.ewheridot.tegaexe.share ok
@@ -116,11 +116,11 @@ entitlements: healthkit keychain-access-groups
 TIER=full
 Running altool at path '/Applications/Xcode_26.3.app/Contents/SharedFrameworks/ContentDelivery.framework/Resources/altool'...
 
-2026-11-05 00:23:34.152  INFO: [ContentDelivery.Uploader.600001BD84C0] 
+2026-11-06 19:24:58.264  INFO: [ContentDelivery.Uploader.6000008B04C0] 
 ==========================================
 UPLOAD SUCCEEDED with no errors
-Delivery UUID: 6bc59cd0-9da6-4835-969c-08cd9acf0aa3
-Transferred 8080748 bytes in 0.693 seconds (11.7MB/s, 93.323Mbps)
+Delivery UUID: 88c632f3-9542-44c8-8d0b-91eae845f0a6
+Transferred 8084863 bytes in 0.676 seconds (12.0MB/s, 95.744Mbps)
 ==========================================
 No errors uploading archive at '/Users/runner/work/_temp/out/App.ipa'.
 ```
