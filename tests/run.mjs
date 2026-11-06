@@ -303,6 +303,21 @@ ok('piece board: reference and your photo side by side', pb.side, JSON.stringify
 ok('piece board: slide mode compares on one picture', pb.slide && pb.cut, JSON.stringify(pb));
 ok('piece board: remove takes two taps and keeps a copy', pb.armed && pb.removed, JSON.stringify(pb));
 ok('piece board: references count for the "References pinned" KR', pb.kr, JSON.stringify(pb));
+// Piece design: change or clear the library design; attach / detach sketches; loose sketches don't repeat on every card
+const ds = await page.evaluate(() => { const D = ensureDatum(), keepP = JSON.parse(JSON.stringify(D.prototypes)), keepA = JSON.parse(JSON.stringify(S.art || [])), r = {};
+  D.prototypes.push({ id: 'PT-D1', name: 'One', status: 'carving', hours: 0, design: D.designs[0]?.id || '', log: [] }, { id: 'PT-D2', name: 'Two', status: 'carving', hours: 0, design: '', log: [] });
+  (S.art ||= []).push({ id: 'ART-L', d: TODAY, kind: 'sketch', title: 'loose', imgs: ['x1'], proto: 'datum' });
+  commit({ skipXp: true }); const two = D.prototypes.find(p => p.id === 'PT-D2');
+  r.noRepeat = !pieceCard(D, two, 'bare').includes('x1');
+  dSetDesign('PT-D2', D.designs[0]?.id || ''); r.design = two.design === (D.designs[0]?.id || '');
+  dSetDesign('PT-D2', ''); r.clear = two.design === '';
+  artAttach('ART-L', 'PT-D2'); r.attach = S.art.find(a => a.id === 'ART-L').proto === 'PT-D2' && pieceCard(D, two, 'bare').includes('x1');
+  artDetach('ART-L'); r.detach = S.art.find(a => a.id === 'ART-L').proto === 'datum';
+  artPick('PT-D1'); r.picker = !!document.querySelector('#g-sheet .ds-pick button'); gSheetClose();
+  D.prototypes = keepP; S.art = keepA; commit({ skipXp: true }); return r; });
+ok('piece design: unattached sketches no longer repeat on every piece', ds.noRepeat, JSON.stringify(ds));
+ok('piece design: change or clear the design after creating a piece', ds.design && ds.clear, JSON.stringify(ds));
+ok('piece design: attach and detach a sketch', ds.attach && ds.detach && ds.picker, JSON.stringify(ds));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

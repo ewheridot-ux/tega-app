@@ -424,6 +424,11 @@ html.sw-run #app{overflow-x:clip}
 .pb-strip>button,.pb-add{flex:none;width:58px;height:58px;border-radius:10px;overflow:hidden;padding:0;border:2px solid transparent;background:var(--card2);display:grid;place-items:center;cursor:pointer;color:var(--ink);font-size:20px}
 .pb-strip>button img{width:100%;height:100%;object-fit:cover}.pb-strip>button.on{border-color:var(--accent)}
 .pb-mood{margin-top:6px;padding:6px;border-radius:12px;background:var(--card2)}
+/* b306: piece design + sketches */
+.ds-strip{margin-top:8px}.ds-th{position:relative;flex:none;display:inline-block}.ds-th img{cursor:pointer}
+.ds-th button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:var(--bad);color:#fff;font-size:11px;line-height:22px;padding:0;cursor:pointer}
+.ds-pick{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.ds-pick button{position:relative;aspect-ratio:1;border:0;padding:0;border-radius:10px;overflow:hidden;background:var(--card2);cursor:pointer}
+.ds-pick img{width:100%;height:100%;object-fit:cover}.ds-pick i{position:absolute;left:4px;bottom:4px;font-style:normal;font-size:10px;padding:1px 6px;border-radius:999px;background:rgba(0,0,0,.6);color:#fff}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -2009,7 +2014,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b305';
+const BUILD='b306';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -3545,8 +3550,19 @@ function renderArtOne(){
 function artProtoSel(cur, onch){ const ps=ensureDatum().prototypes; return `<select class="inp" style="width:100%;box-sizing:border-box;margin-top:8px" onchange="${onch}" aria-label="Datum design link"><option value="">Not a Datum design</option><option value="datum" ${cur==='datum'?'selected':''}>◆ Datum design · no piece yet</option>${ps.map(p=>`<option value="${p.id}" ${cur===p.id?'selected':''}>◆ ${p.id} · ${esc(p.name)}</option>`).join('')}</select>`; }
 function artFor(pid){ return (S.art||[]).filter(a=>a.proto===pid).sort((a,b)=>a.d<b.d?-1:1); }
 function artThumbs(list){ return `<div class="strip">${list.map(a=>`<img src="${BLOBURL}${a.imgs[a.imgs.length-1]}" alt="${esc(a.title||'sketch')}" title="${esc(a.title||'')} · ${nice(a.d)}" style="cursor:pointer" onclick="openArt('${a.id}')">`).join('')}</div>`; }
-function artDatumBlock(p){ const mine=artFor(p.id), loose=artFor('datum'); if (!mine.length && !loose.length) return `<div class="help" style="margin:8px 0">✏️ No design sketches linked. Post one in Content → Create and pick this piece.</div>`;
-  return `${mine.length?`<div class="tag" style="margin:10px 0 6px">Design sketches · ${mine.length}</div>${artThumbs(mine)}`:''}${loose.length?`<div class="tag" style="margin:10px 0 6px">Datum designs with no piece yet · tap to link</div>${artThumbs(loose)}`:''}`; }
+// b306: a piece's design — change or clear its library design any time, attach / detach sketches from the art wall.
+// Sketches not on a piece show only in the attach picker (they used to repeat on every piece card).
+function artDatumBlock(p){ const D=ensureDatum(), mine=artFor(p.id);
+  return `<div class="tag" style="margin:12px 0 6px">Design</div>
+    <select class="inp" style="width:100%" onchange="dSetDesign('${p.id}',this.value)" aria-label="Design for ${p.id}">${D.designs.map(d=>`<option value="${d.id}" ${p.design===d.id?'selected':''}>${d.id} · ${esc(d.name)}</option>`).join('')}<option value="" ${p.design?'':'selected'}>no design</option></select>
+    ${mine.length?`<div class="strip ds-strip">${mine.map(a=>`<span class="ds-th"><img src="${BLOBURL}${a.imgs[a.imgs.length-1]}" alt="${esc(a.title||'sketch')}" onclick="openArt('${a.id}')"><button onclick="artDetach('${a.id}')" aria-label="Take this sketch off ${p.id}">✕</button></span>`).join('')}</div>`:''}
+    <button class="btn ghost sm" style="margin-top:8px" onclick="artPick('${p.id}')">＋ Attach sketch</button>`; }
+function dSetDesign(pid, v){ const D=ensureDatum(), p=D.prototypes.find(x=>x.id===pid); if (!p) return; p.design=v; const d=D.designs.find(x=>x.id===v); if (d && d.collection) p.collection=d.collection; commit({skipXp:true}); toast(v?`${pid} → ${v}`:`${pid} has no design`); }
+function artDetach(aid){ const a=(S.art||[]).find(x=>x.id===aid); if (!a) return; const was=a.proto; a.proto='datum'; commit({skipXp:true}); toast(`Off ${was} — attach it again any time`); }
+function artAttach(aid, pid){ const a=(S.art||[]).find(x=>x.id===aid); if (!a) return; a.proto=pid; gSheetClose(); commit({skipXp:true}); toast(`Sketch attached to ${pid}`); }
+function artPick(pid){ const A=(S.art||[]).filter(a=>a.proto!==pid && (a.imgs||[]).length).sort((a,b)=>a.d<b.d?1:-1), free=A.filter(a=>a.proto==='datum'), other=A.filter(a=>a.proto&&a.proto!=='datum'), rest=A.filter(a=>!a.proto);
+  const grid=(L,lab)=>L.length?`<div class="tag" style="margin:12px 0 6px">${lab} · ${L.length}</div><div class="ds-pick">${L.map(a=>`<button onclick="artAttach('${a.id}','${pid}')" aria-label="Attach ${esc(a.title||'sketch')}"><img src="${BLOBURL}${a.imgs[a.imgs.length-1]}" alt="" loading="lazy">${a.proto&&a.proto!=='datum'?`<i>${esc(a.proto)}</i>`:''}</button>`).join('')}</div>`:'';
+  gSheet(`<span class="tag">Attach a sketch to ${esc(pid)}</span>${A.length?grid(free,'Not on a piece yet')+grid(other,'On another piece (moves here)')+grid(rest,'Other art'):`<div class="help" style="margin-top:8px">No sketches yet. Add one in Content → Art.</div>`}`); }
 function artStats(){ const A=S.art||[], wk=A.filter(a=>isoWeek(a.d)===THIS_WEEK).length, last=A.map(a=>a.d).sort().pop()||''; return {n:A.length, wk, last, gap:last?daysBetween(last,TODAY):null, today:A.filter(a=>a.d===TODAY).length}; }
 function vArt(){
   const A=(S.art||[]).slice().sort((a,b)=>a.d<b.d?1:a.d>b.d?-1:0), st=artStats(), list=A.filter(a=>artFilter==='all'||(artFilter==='datum'?!!a.proto:a.kind===artFilter)), nDatum=A.filter(a=>a.proto).length;
@@ -7097,7 +7113,8 @@ function pcForever(id){ if (pcForeverArm!==id){ pcForeverArm=id; render(); setTi
 function pcNextId(D){ const n=Math.max(0,...D.prototypes.concat(D.trash||[]).map(p=>+String(p.id).replace(/\D/g,'')||0))+1; return 'P-'+String(n).padStart(3,'0'); }
 function dBenchCards(){ const D=ensureDatum(); if (D.session) return dBench();
   const open=D.prototypes.filter(p=>!['complete','failed'].includes(p.status)).sort((a,b)=>(b.id===dSelProto)-(a.id===dSelProto)||pcLast(b).localeCompare(pcLast(a))), done=D.prototypes.filter(p=>['complete','failed'].includes(p.status)), T=D.trash||[];
-  return `<div class="row between sec" style="align-items:center"><h2 style="font-size:20px;margin:0">Pieces <span class="sub" style="font-size:14px">${open.length} open</span></h2><button class="btn sm" onclick="dFold.addPiece=!dFold.addPiece;render()">＋ New piece</button></div>
+  const loose=(S.art||[]).filter(a=>a.proto==='datum').length;
+  return `<div class="row between sec" style="align-items:center"><h2 style="font-size:20px;margin:0">Pieces <span class="sub" style="font-size:14px">${open.length} open${loose?` · ✏️ ${loose} sketch${loose===1?'':'es'} not on a piece`:''}</span></h2><button class="btn sm" onclick="dFold.addPiece=!dFold.addPiece;render()">＋ New piece</button></div>
   ${dFold.addPiece?`<div class="card sec"><div class="row between" style="margin-bottom:8px"><h3>New piece · ${pcNextId(D)}</h3><button class="x" onclick="dFold.addPiece=false;render()" aria-label="Close">✕</button></div>
     <form class="inline" onsubmit="return dAddProto(event)"><input class="inp" placeholder="name (e.g. OG v2)" required><select class="inp" style="width:auto">${D.designs.map(d=>`<option value="${d.id}">${d.id} ${esc(d.name)}</option>`).join('')}<option value="">no design</option></select><button class="btn sm">Add</button></form></div>`:''}
   <div class="pcs sec">${open.map(p=>pcCard(D,p)).join('')||'<div class="card"><div class="empty">No pieces on the bench. Tap ＋ New piece.</div></div>'}</div>
