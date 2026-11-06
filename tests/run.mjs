@@ -314,10 +314,12 @@ const ds = await page.evaluate(() => { const D = ensureDatum(), keepP = JSON.par
   artAttach('ART-L', 'PT-D2'); r.attach = S.art.find(a => a.id === 'ART-L').proto === 'PT-D2' && pieceCard(D, two, 'bare').includes('x1');
   artDetach('ART-L'); r.detach = S.art.find(a => a.id === 'ART-L').proto === 'datum';
   artPick('PT-D1'); r.picker = !!document.querySelector('#g-sheet .ds-pick button'); gSheetClose();
+  const ba = benchAssets; benchAssets = benchAssets || {}; artPick('PT-D1'); const nb = [...document.querySelectorAll('#g-sheet button')].find(b => /New sketch/.test(b.textContent)); nb && nb.click(); r.fromDatum = typeof artDraft === 'object' && artDraft && artDraft.proto === 'PT-D1'; document.querySelectorAll('.modal').forEach(m => m.remove()); benchAssets = ba;
   D.prototypes = keepP; S.art = keepA; commit({ skipXp: true }); return r; });
 ok('piece design: unattached sketches no longer repeat on every piece', ds.noRepeat, JSON.stringify(ds));
 ok('piece design: change or clear the design after creating a piece', ds.design && ds.clear, JSON.stringify(ds));
 ok('piece design: attach and detach a sketch', ds.attach && ds.detach && ds.picker, JSON.stringify(ds));
+ok('piece design: add a new sketch from Datum, already on the piece', ds.fromDatum, JSON.stringify(ds));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

@@ -3504,7 +3504,7 @@ async function artShrink(file){
   } catch(e){ return file; }
 }
 async function artUpload(file){ const b=await artShrink(file); const r=await benchAssets.upload(b, /^image\/(jpeg|png|webp|gif)$/.test(b.type)?undefined:{type:'image/jpeg'}); return r.id; }
-function openArtAdd(){ if(!benchAssets){ toast('Adding art needs the app signed in with edit access'); return; } artDraft={files:[],title:'',kind:'procreate',note:'',one:false,proto:''}; renderArtAdd(); }
+function openArtAdd(proto){ if(!benchAssets){ toast('Adding art needs the app signed in with edit access'); return; } artDraft={files:[],title:'',kind:'procreate',note:'',one:false,proto:typeof proto==='string'?proto:''}; renderArtAdd(); }   // b306: Datum can open it already pointed at a piece
 function closeArt(){ const m=document.getElementById('ar'); if(m) m.remove(); artDraft=null; artOpenId=null; artDel=false; }
 function artPick(input){ if(!artDraft) return; artDraft.files=[...(input.files||[])].filter(f=>!f.type||f.type.startsWith('image/')).slice(0,12); if (artDraft.files.length<2) artDraft.one=false; renderArtAdd(); }
 function renderArtAdd(){
@@ -3562,7 +3562,7 @@ function artDetach(aid){ const a=(S.art||[]).find(x=>x.id===aid); if (!a) return
 function artAttach(aid, pid){ const a=(S.art||[]).find(x=>x.id===aid); if (!a) return; a.proto=pid; gSheetClose(); commit({skipXp:true}); toast(`Sketch attached to ${pid}`); }
 function artPick(pid){ const A=(S.art||[]).filter(a=>a.proto!==pid && (a.imgs||[]).length).sort((a,b)=>a.d<b.d?1:-1), free=A.filter(a=>a.proto==='datum'), other=A.filter(a=>a.proto&&a.proto!=='datum'), rest=A.filter(a=>!a.proto);
   const grid=(L,lab)=>L.length?`<div class="tag" style="margin:12px 0 6px">${lab} · ${L.length}</div><div class="ds-pick">${L.map(a=>`<button onclick="artAttach('${a.id}','${pid}')" aria-label="Attach ${esc(a.title||'sketch')}"><img src="${BLOBURL}${a.imgs[a.imgs.length-1]}" alt="" loading="lazy">${a.proto&&a.proto!=='datum'?`<i>${esc(a.proto)}</i>`:''}</button>`).join('')}</div>`:'';
-  gSheet(`<span class="tag">Attach a sketch to ${esc(pid)}</span>${A.length?grid(free,'Not on a piece yet')+grid(other,'On another piece (moves here)')+grid(rest,'Other art'):`<div class="help" style="margin-top:8px">No sketches yet. Add one in Content → Art.</div>`}`); }
+  gSheet(`<span class="tag">Attach a sketch to ${esc(pid)}</span><button class="btn" style="width:100%;justify-content:center;margin-top:10px" onclick="gSheetClose();openArtAdd('${pid}')">＋ New sketch</button>${A.length?grid(free,'Not on a piece yet')+grid(other,'On another piece (moves here)')+grid(rest,'Other art'):`<div class="help" style="margin-top:8px">No sketches yet. Add one in Content → Art.</div>`}`); }
 function artStats(){ const A=S.art||[], wk=A.filter(a=>isoWeek(a.d)===THIS_WEEK).length, last=A.map(a=>a.d).sort().pop()||''; return {n:A.length, wk, last, gap:last?daysBetween(last,TODAY):null, today:A.filter(a=>a.d===TODAY).length}; }
 function vArt(){
   const A=(S.art||[]).slice().sort((a,b)=>a.d<b.d?1:a.d>b.d?-1:0), st=artStats(), list=A.filter(a=>artFilter==='all'||(artFilter==='datum'?!!a.proto:a.kind===artFilter)), nDatum=A.filter(a=>a.proto).length;
@@ -7114,7 +7114,7 @@ function pcNextId(D){ const n=Math.max(0,...D.prototypes.concat(D.trash||[]).map
 function dBenchCards(){ const D=ensureDatum(); if (D.session) return dBench();
   const open=D.prototypes.filter(p=>!['complete','failed'].includes(p.status)).sort((a,b)=>(b.id===dSelProto)-(a.id===dSelProto)||pcLast(b).localeCompare(pcLast(a))), done=D.prototypes.filter(p=>['complete','failed'].includes(p.status)), T=D.trash||[];
   const loose=(S.art||[]).filter(a=>a.proto==='datum').length;
-  return `<div class="row between sec" style="align-items:center"><h2 style="font-size:20px;margin:0">Pieces <span class="sub" style="font-size:14px">${open.length} open${loose?` · ✏️ ${loose} sketch${loose===1?'':'es'} not on a piece`:''}</span></h2><button class="btn sm" onclick="dFold.addPiece=!dFold.addPiece;render()">＋ New piece</button></div>
+  return `<div class="row between sec" style="align-items:center"><h2 style="font-size:20px;margin:0">Pieces <span class="sub" style="font-size:14px">${open.length} open${loose?` · ✏️ ${loose} sketch${loose===1?'':'es'} not on a piece`:''}</span></h2><span class="row" style="gap:6px"><button class="btn ghost sm" onclick="openArtAdd('datum')">✏️ Sketch</button><button class="btn sm" onclick="dFold.addPiece=!dFold.addPiece;render()">＋ New piece</button></span></div>
   ${dFold.addPiece?`<div class="card sec"><div class="row between" style="margin-bottom:8px"><h3>New piece · ${pcNextId(D)}</h3><button class="x" onclick="dFold.addPiece=false;render()" aria-label="Close">✕</button></div>
     <form class="inline" onsubmit="return dAddProto(event)"><input class="inp" placeholder="name (e.g. OG v2)" required><select class="inp" style="width:auto">${D.designs.map(d=>`<option value="${d.id}">${d.id} ${esc(d.name)}</option>`).join('')}<option value="">no design</option></select><button class="btn sm">Add</button></form></div>`:''}
   <div class="pcs sec">${open.map(p=>pcCard(D,p)).join('')||'<div class="card"><div class="empty">No pieces on the bench. Tap ＋ New piece.</div></div>'}</div>
