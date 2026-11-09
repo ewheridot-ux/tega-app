@@ -320,6 +320,9 @@ ok('piece design: unattached sketches no longer repeat on every piece', ds.noRep
 ok('piece design: change or clear the design after creating a piece', ds.design && ds.clear, JSON.stringify(ds));
 ok('piece design: attach and detach a sketch', ds.attach && ds.detach && ds.picker, JSON.stringify(ds));
 ok('piece design: add a new sketch from Datum, already on the piece', ds.fromDatum, JSON.stringify(ds));
+// Long-press menu on the Life icon wears the Life look, not Night CRT
+const nq = await page.evaluate(() => { const b = document.querySelector('.nav button[data-tab="life"]'); if (!b) return { skip: true }; navMenu(b); const m = document.getElementById('navqa'), hl = m && m.dataset.hl; navMenuClose(); return { hl }; });
+ok('Life long-press menu uses the Life look', nq.skip || nq.hl === 'street', JSON.stringify(nq));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

@@ -429,6 +429,13 @@ html.sw-run #app{overflow-x:clip}
 .ds-th button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:var(--bad);color:#fff;font-size:11px;line-height:22px;padding:0;cursor:pointer}
 .ds-pick{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.ds-pick button{position:relative;aspect-ratio:1;border:0;padding:0;border-radius:10px;overflow:hidden;background:var(--card2);cursor:pointer}
 .ds-pick img{width:100%;height:100%;object-fit:cover}.ds-pick i{position:absolute;left:4px;bottom:4px;font-style:normal;font-size:10px;padding:1px 6px;border-radius:999px;background:rgba(0,0,0,.6);color:#fff}
+/* b307: Life's long-press menu in Streetwear · Safety Orange */
+#navqa[data-hl="street"]{--lc:#161616;--lb:#ff6a13;--lg:rgba(255,106,19,.45)}#navqa[data-hl="street"] .nq-lift{border-radius:12px}
+#navqa[data-hl="street"] .nq-pop{background:#1f1f1f;color:#f4f1ea;border:0;border-radius:18px;box-shadow:0 12px 32px rgba(0,0,0,.55);font-family:Inter,sans-serif;font-weight:700}
+#navqa[data-hl="street"] .nq-hd{font-family:Anton,Impact,sans-serif;font-weight:400;font-size:20px;letter-spacing:.02em;color:#ff6a13}
+#navqa[data-hl="street"] button{font-size:16px;border-radius:12px;text-transform:uppercase;letter-spacing:.04em}#navqa[data-hl="street"] button i{color:#ff6a13}
+#navqa[data-hl="street"] button:active{background:#ff6a13;color:#161616}#navqa[data-hl="street"] button:active i{color:#161616}
+#navqa[data-hl="street"] .nq-open{border-top:1px solid #333}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -2014,7 +2021,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b306';
+const BUILD='b307';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -9827,8 +9834,8 @@ let _navHold=null, _navHeldAt=0;
 function navHeld(){ return Date.now()-_navHeldAt<600; }
 function navMenu(btn){ const v=btn.dataset.tab, L=NAV_QA[v]; if(!L) return; navMenuClose(); _navHeldAt=Date.now(); nat('haptic','medium');
   const r=btn.getBoundingClientRect(), nav=btn.closest('.nav'), nr=nav.getBoundingClientRect(), W=Math.min(250, innerWidth-24);
-  const m=document.createElement('div'); m.id='navqa'; const pl=Math.max(12,Math.min(innerWidth-W-12, r.left+r.width/2-W/2)); const mat=({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab'})[v]||'crt'; m.dataset.hl=mat;
-  const name=btn.getAttribute('aria-label')||v, hd=({crt:`&gt; ${name}`,holo:name,vf:`<u></u>REC · ${name}`,chrome:name,arise:`◆ SYSTEM · ${name}`,lab:name})[mat];
+  const m=document.createElement('div'); m.id='navqa'; const pl=Math.max(12,Math.min(innerWidth-W-12, r.left+r.width/2-W/2)); const mat=(v==='life'||LIFE.some(([k])=>k===v))?'street':({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab'})[v]||'crt'; m.dataset.hl=mat;   // b307: Life's menu wears the Life look
+  const name=btn.getAttribute('aria-label')||v, hd=({crt:`&gt; ${name}`,holo:name,vf:`<u></u>REC · ${name}`,chrome:name,arise:`◆ SYSTEM · ${name}`,lab:name,street:name})[mat];
   m.innerHTML=`<div class="nq-dim"></div><div class="nq-pop" role="menu" style="left:${pl}px;bottom:${innerHeight-nr.top+14}px;width:${W}px;transform-origin:${Math.round(r.left+r.width/2-pl)}px 100%"><div class="nq-hd">${hd}</div>${L.map((x,i)=>`<button role="menuitem" data-i="${i}"><i>${x[0]}</i><span>${esc(x[1])}</span></button>`).join('')}<button class="nq-open" data-i="go"><i>›</i><span>Open ${esc(btn.getAttribute('aria-label')||v)}</span></button></div><div class="nq-lift" style="left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px">${btn.querySelector('svg')?.outerHTML||''}</div>`;
   document.body.appendChild(m); requestAnimationFrame(()=>m.classList.add('on'));
   m.addEventListener('click',e=>{ if (!m.classList.contains('on')&&m.classList.contains('off')) return; const b=e.target.closest('button'); if (!b && navHeld()) return; navMenuClose(); if (!b && e.target.closest('.nq-lift')) return go(v); if(!b) return; if (b.dataset.i==='go') return go(v); try { L[+b.dataset.i][2](); } catch(err){ console.warn(err); go(v); } }); }
