@@ -309,12 +309,12 @@ const ds = await page.evaluate(() => { const D = ensureDatum(), keepP = JSON.par
   (S.art ||= []).push({ id: 'ART-L', d: TODAY, kind: 'sketch', title: 'loose', imgs: ['x1'], proto: 'datum' });
   commit({ skipXp: true }); const two = D.prototypes.find(p => p.id === 'PT-D2');
   r.noRepeat = !pieceCard(D, two, 'bare').includes('x1');
-  dSetDesign('PT-D2', D.designs[0]?.id || ''); r.design = two.design === (D.designs[0]?.id || '');
-  dSetDesign('PT-D2', ''); r.clear = two.design === '';
+  pSetDesign('PT-D2', D.designs[0]?.id || ''); r.design = two.design === (D.designs[0]?.id || '');
+  pSetDesign('PT-D2', ''); r.clear = two.design === '';
   artAttach('ART-L', 'PT-D2'); r.attach = S.art.find(a => a.id === 'ART-L').proto === 'PT-D2' && pieceCard(D, two, 'bare').includes('x1');
   artDetach('ART-L'); r.detach = S.art.find(a => a.id === 'ART-L').proto === 'datum';
-  artPick('PT-D1'); r.picker = !!document.querySelector('#g-sheet .ds-pick button'); gSheetClose();
-  const ba = benchAssets; benchAssets = benchAssets || {}; artPick('PT-D1'); const nb = [...document.querySelectorAll('#g-sheet button')].find(b => /New sketch/.test(b.textContent)); nb && nb.click(); r.fromDatum = typeof artDraft === 'object' && artDraft && artDraft.proto === 'PT-D1'; document.querySelectorAll('.modal').forEach(m => m.remove()); benchAssets = ba;
+  artPickFor('PT-D1'); r.picker = !!document.querySelector('#g-sheet .ds-pick button'); gSheetClose();
+  const ba = benchAssets; benchAssets = benchAssets || {}; artPickFor('PT-D1'); const nb = [...document.querySelectorAll('#g-sheet button')].find(b => /New sketch/.test(b.textContent)); nb && nb.click(); r.fromDatum = typeof artDraft === 'object' && artDraft && artDraft.proto === 'PT-D1'; document.querySelectorAll('.modal').forEach(m => m.remove()); benchAssets = ba;
   D.prototypes = keepP; S.art = keepA; commit({ skipXp: true }); return r; });
 ok('piece design: unattached sketches no longer repeat on every piece', ds.noRepeat, JSON.stringify(ds));
 ok('piece design: change or clear the design after creating a piece', ds.design && ds.clear, JSON.stringify(ds));
@@ -323,6 +323,58 @@ ok('piece design: add a new sketch from Datum, already on the piece', ds.fromDat
 // Long-press menu on the Life icon wears the Life look, not Night CRT
 const nq = await page.evaluate(() => { const b = document.querySelector('.nav button[data-tab="life"]'); if (!b) return { skip: true }; navMenu(b); const m = document.getElementById('navqa'), hl = m && m.dataset.hl; navMenuClose(); return { hl }; });
 ok('Life long-press menu uses the Life look', nq.skip || nq.hl === 'street', JSON.stringify(nq));
+// Press and hold a picture in Art / Datum → delete; it goes to Recently deleted and comes back with Restore
+const pd = await page.evaluate(() => { const D = ensureDatum(), keep = JSON.stringify({ p: D.prototypes, a: S.art || [], m: D.mood || [], at: S.artTrash, pt: D.photoTrash, mt: D.moodTrash, rt: D.refsTrash }), r = {};
+  D.prototypes.push({ id: 'PT-H', name: 'Hold', status: 'carving', hours: 0, design: '', log: [{ kind: 'photo', d: TODAY, t: 'photo', photo: 'php1' }], refs: [{ id: 'rf1', img: 'rimg', d: TODAY }] });
+  (S.art ||= []).push({ id: 'ART-H', d: TODAY, kind: 'paper', title: 'hold me', imgs: ['aimg'] }); (D.mood ||= []).push({ id: 'MD-H', d: TODAY, img: 'mimg', cols: ['#000'] }); commit({ skipXp: true });
+  const xp0 = computeXP();
+  r.tagged = vArt().includes('data-hold="art:ART-H"') && galleryHtml().includes('data-hold="dph:php1"') && dMood().includes('data-hold="mood:MD-H"');
+  r.sheet = !!holdInfo('art', 'ART-H')?.acts.some(a => /Delete/.test(a[0])) && !!holdInfo('dph', 'php1') && !!holdInfo('mood', 'MD-H') && !!holdInfo('pbref', 'PT-H|rf1');
+  holdOpen('art:ART-H'); const btn = [...document.querySelectorAll('#hold-m button')].find(b => /Delete picture/.test(b.textContent)); btn && btn.click();
+  picDel('dph', 'php1'); picDel('mood', 'MD-H'); picDel('pbref', 'PT-H|rf1');
+  const p = D.prototypes.find(q => q.id === 'PT-H');
+  r.gone = !S.art.some(a => a.id === 'ART-H') && !p.log.some(l => l.photo) && !D.mood.some(m => m.id === 'MD-H') && !p.refs.length;
+  r.kept = S.artTrash.some(a => a.id === 'ART-H') && D.photoTrash.some(x => x.e.photo === 'php1') && D.moodTrash.some(x => x.id === 'MD-H') && D.refsTrash.some(x => x.id === 'rf1');
+  r.fold = picTrashFold('art').includes('Restore') && (picTrashFold('datum').match(/Restore/g) || []).length >= 3;
+  picUndo('art', 'ART-H'); picUndo('dph', 'php1'); picUndo('mood', 'MD-H'); picUndo('pbref', 'PT-H|rf1');
+  r.back = S.art.some(a => a.id === 'ART-H' && !a.deletedAt) && p.log.some(l => l.photo === 'php1') && D.mood.some(m => m.id === 'MD-H') && p.refs.some(x => x.id === 'rf1');
+  r.xp = computeXP() >= xp0;
+  document.querySelectorAll('.modal,#toast-act').forEach(m => m.remove());
+  const k = JSON.parse(keep); D.prototypes = k.p; S.art = k.a; D.mood = k.m; S.artTrash = k.at; D.photoTrash = k.pt; D.moodTrash = k.mt; D.refsTrash = k.rt; commit({ skipXp: true }); return r; });
+ok('pictures: Art and Datum pictures respond to press and hold', pd.tagged && pd.sheet, JSON.stringify(pd));
+ok('pictures: delete moves to Recently deleted, nothing wiped', pd.gone && pd.kept && pd.fold, JSON.stringify(pd));
+ok('pictures: Restore puts every kind back', pd.back && pd.xp, JSON.stringify(pd));
+// No two functions share a name (b306 had two artPick → picking photos in Add art silently broke)
+{ const src = fs.readFileSync(APP, 'utf8'), seen = {}, dup = [];
+  for (const m of src.matchAll(/^\s*(?:async\s+)?function\s+([A-Za-z0-9_$]+)\s*\(/gm)) { if (seen[m[1]]) dup.push(m[1]); seen[m[1]] = 1; }
+  ok('no function is defined twice', dup.length === 0, dup.join(', ')); }
+// Add art: picking photos fills the draft, Post saves one Art piece (no Procreate / Paper split)
+const aa = await page.evaluate(async () => { const keep = JSON.stringify(S.art || []), ba = benchAssets, r = {};
+  benchAssets = { upload: async () => ({ id: 'up' + Math.random().toString(36).slice(2, 7) }), delete: async () => {} };
+  openArtAdd(); r.noKinds = ![...document.querySelectorAll('#ar .seg button')].some(b => /Procreate|Paper/.test(b.textContent));
+  const f = new File([new Uint8Array([137, 80, 78, 71])], 'a.png', { type: 'image/png' });
+  artPick({ files: [f] }); r.picked = artDraft && artDraft.files.length === 1 && !document.querySelector('#ar .btn.good')?.disabled;
+  const n0 = (S.art || []).length; await artSave(); r.saved = (S.art || []).length === n0 + 1 && S.art[S.art.length - 1].kind === 'art';
+  r.wall = !/Procreate|Paper/.test(vArt());
+  benchAssets = ba; S.art = JSON.parse(keep); commit({ skipXp: true }); document.querySelectorAll('.modal').forEach(m => m.remove()); return r; });
+ok('add art: picking photos works and Post saves it', aa.picked && aa.saved, JSON.stringify(aa));
+ok('add art: one wall, no Procreate / Paper split', aa.noKinds && aa.wall, JSON.stringify(aa));
+// Press and hold rows everywhere: every kind opens a menu; Delete is soft and Undo / Restore puts it back in place
+const hk = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ w: S.wins, i: S.ideas, q: S.quests, t: S.holdTrash, tx: S.money.budget.txns.length });
+  (S.wins ||= []).push({ id: 'WH', d: TODAY, text: 'held win' }); (S.ideas ||= []).push({ id: 'IH', text: 'held idea', st: 'idea' }); (S.quests ||= []).push({ id: 'QH', text: 'held quest', size: 'S' });
+  S.money.budget.txns.push({ id: 'TH', d: TODAY, desc: 'HELD TXN', amt: -5, acct: 'X', cat: 'other' }); commit({ skipXp: true });
+  r.menus = ['win:WH', 'idea:IH', 'quest:QH', 'txn:TH'].every(sp => { const [k, id] = sp.split(':'); return !!holdInfo(k, id)?.acts.length; });
+  const ii = S.ideas.findIndex(x => x.id === 'IH'); holdGo('idea', 'IH'); r.gone = !S.ideas.some(x => x.id === 'IH') && S.holdTrash.some(e => e.id === 'IH');
+  r.card = holdTrashCard().includes('held idea'); holdBack('idea', 'IH'); r.back = S.ideas.findIndex(x => x.id === 'IH') === ii;
+  holdGo('txn', 'TH'); holdBack('txn', 'TH'); r.txn = S.money.budget.txns.some(t => t.id === 'TH');
+  const d = ensureDay(curDay), k3 = JSON.stringify(d.top3); d.top3[0] = { ...d.top3[0], text: 'move me', done: false }; r.t3 = !!holdInfo('t3', '0');
+  const nx = ensureDay(addDays(curDay, 1)), kn = JSON.stringify(nx.top3); t3Tomorrow(0); r.moved = nx.top3.some(t => t.text === 'move me') && !d.top3[0].text;
+  d.top3 = JSON.parse(k3); nx.top3 = JSON.parse(kn);
+  const k = JSON.parse(keep); S.wins = k.w; S.ideas = k.i; S.quests = k.q; S.holdTrash = k.t; S.money.budget.txns = S.money.budget.txns.filter(t => t.id !== 'TH'); commit({ skipXp: true });
+  document.querySelectorAll('#toast-act').forEach(m => m.remove()); return r; });
+ok('hold menus: wins, ideas, quests, transactions, Top 3', hk.menus && hk.t3, JSON.stringify(hk));
+ok('hold delete is soft: Recently deleted + restore in the same spot', hk.gone && hk.card && hk.back && hk.txn, JSON.stringify(hk));
+ok('hold: move a Top 3 to tomorrow', hk.moved, JSON.stringify(hk));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
