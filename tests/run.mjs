@@ -375,6 +375,23 @@ const hk = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ w: 
 ok('hold menus: wins, ideas, quests, transactions, Top 3', hk.menus && hk.t3, JSON.stringify(hk));
 ok('hold delete is soft: Recently deleted + restore in the same spot', hk.gone && hk.card && hk.back && hk.txn, JSON.stringify(hk));
 ok('hold: move a Top 3 to tomorrow', hk.moved, JSON.stringify(hk));
+// Deleted transactions stay deleted: the bank sync (Era feed) and imports never bring them back; Undo lets it back in
+const tg = await page.evaluate(async () => { const B = S.money.budget, keep = JSON.stringify({ t: B.txns, g: B.gone, h: S.holdTrash, s: B.syncedAt }), lib = mcpLib, r = {};
+  const acc = { accounts: [{ account_group_key: 'AK', institution: 'Bank of America', name: 'Checking', type: 'checking', balance: { current: 100 } }] };
+  const era = [{ transaction_id: 'ZT1', date: TODAY, description: 'ZOMBIE COFFEE', amount: -4.5, account_group_key: 'AK' }, { transaction_id: 'ZT2', date: TODAY, description: 'ZOMBIE TACO', amount: -9, account_group_key: 'AK' }];
+  mcpLib = { callTool: async (sv, tool) => ({ payload: tool === 'accounts__list_financial_accounts' ? acc : { transactions: era, total_results: era.length } }) };
+  const sync = async () => { bankBusy = false; await bankRefresh(false); };
+  await sync(); const z = () => B.txns.filter(t => /ZOMBIE/.test(t.desc)); r.in = z().length === 2;
+  delTxn(z().find(t => t.tid === 'ZT1').id); holdGo('txn', z().find(t => t.tid === 'ZT2').id);
+  await sync(); await sync(); r.stayGone = z().length === 0;
+  importTxns([{ d: TODAY, desc: 'ZOMBIE COFFEE', amt: -4.5, acct: 'BofA' }], S, true); r.importGone = z().length === 0;
+  holdBack('txn', 'x'); const e = S.holdTrash.filter(e => e.k === 'txn' && /ZOMBIE TACO/.test(e.x.desc)).pop(); holdBack('txn', e.id); await sync(); r.undo = z().length === 1 && z()[0].tid === 'ZT2';
+  // rows that came back before this fix are taken out again on start
+  const back = { ...era[0] }; const k = JSON.parse(keep); B.gone = {}; delete B.goneFix; const ex = S.holdTrash.find(e => e.k === 'txn' && /ZOMBIE COFFEE/.test(e.x.desc));
+  B.txns.push({ id: 'again', d: TODAY, desc: 'ZOMBIE COFFEE', amt: -4.5, acct: 'BofA', tid: 'ZT1', cat: 'other' }); migrate(S); r.migrated = !B.txns.some(t => t.id === 'again') && !!B.gone['tid:ZT1'] && !!ex;
+  mcpLib = lib; B.txns = k.t; B.gone = k.g; S.holdTrash = k.h; B.syncedAt = k.s; commit({ skipXp: true }); document.querySelectorAll('#toast-act').forEach(m => m.remove()); return r; });
+ok('deleted transactions stay deleted after bank syncs and imports', tg.in && tg.stayGone && tg.importGone, JSON.stringify(tg));
+ok('undo a deleted transaction lets it back in; ones that came back before the fix are removed', tg.undo && tg.migrated, JSON.stringify(tg));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

@@ -2024,7 +2024,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b308';
+const BUILD='b309';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -2190,6 +2190,9 @@ function migrate(st){ try { cadArchive(st); } catch(e){}
   st.quests ||= []; st.logs ||= []; seedDeadlines(st);
   if (!st.money.budget) st.money.budget = {txns:[], deductibles:[], pulled:''};
   if (!st.money.budget.seeded) seedBudget(st);
+  try { if (!st.money.budget.goneFix){ const B=st.money.budget; for (const e of (st.holdTrash||[])) if (e.k==='txn' && e.x){ txnForget(e.x, st);
+      const back=B.txns.filter(t=>t.id!==e.x.id && ((e.x.tid && t.tid===e.x.tid) || txnKey(t)===txnKey(e.x))); if (back.length){ const ids=new Set(back.map(t=>t.id)); B.txns=B.txns.filter(t=>!ids.has(t.id)); B.deductibles=(B.deductibles||[]).filter(d=>!ids.has(d.txn)); } }
+    B.goneFix=1; } } catch(e){}   // b309: take back out what you deleted that the bank sync re-added
   if (!st.money.budget.seeded2) seedBudget2(st);
   if (!st.money.budget.seeded3) seedBudget3(st);
   if (!st.money.budget.reclass3) { st.money.budget.reclass2 = false; }
@@ -4900,10 +4903,10 @@ function deductKind(t){
 }
 function txnKey(t){ return `${t.d}|${Math.round(t.amt*100)}|${t.desc.slice(0,24).toUpperCase().replace(/\s+/g," ")}`; }
 function importTxns(list, st=S, silent=false){
-  const B = st.money.budget; const have = new Set(B.txns.map(txnKey)); let added=0, ded=0;
+  const B = st.money.budget; const have = new Set(B.txns.map(txnKey)), G = B.gone; let added=0, ded=0;
   for (const raw of list){
     const t = {id:uid(), d:raw.d, desc:raw.desc.trim(), amt:+raw.amt, acct:raw.acct||'BofA'}; if (!t.d || isNaN(t.amt) || !t.desc) continue;
-    const k = txnKey(t); if (have.has(k)) continue; have.add(k);
+    const k = txnKey(t); if (have.has(k) || (G && G['k:'+k])) continue; have.add(k);
     t.cat = raw.cat || classifyTxn(t); t.sc = spendCat(t); B.txns.push(t); added++;
     if (t.cat==='deduct'){ addDeductible(t, st); ded++; }
   }
@@ -4968,7 +4971,12 @@ function csvToTxns(text, acctHint){
 function importCsv(){ const ta=document.getElementById('csvBox'); const acct=document.getElementById('csvAcct').value; const r=csvToTxns(ta.value, acct||null); if (r.err){ toast(r.err); return; } if(!r.txns.length){ toast('No transactions found in that paste'); return; } importTxns(r.txns); commit({skipXp:true}); }
 function addTxnManual(e){ e.preventDefault(); const d=document.getElementById('txD').value, desc=document.getElementById('txDesc').value.trim(), amt=num(document.getElementById('txAmt').value), acct=document.getElementById('txAcct').value; if(!d||!desc||isNaN(amt)) { toast('Date, description and amount needed'); return false; } importTxns([{d,desc,amt:-Math.abs(amt),acct}]); commit({skipXp:true}); return false; }
 function setTxnCat(id, cat){ const t=S.money.budget.txns.find(t=>t.id===id); if(!t) return; t.user=true; t.cat=cat; if (cat==='deduct') t.sc='work'; else if (t.sc==='work') t.sc=spendCat({...t, cat}); if (cat==='deduct') addDeductible(t); else S.money.budget.deductibles = S.money.budget.deductibles.filter(x=>x.txn!==id); commit({skipXp:true}); }
-function delTxn(id){ S.money.budget.txns = S.money.budget.txns.filter(t=>t.id!==id); S.money.budget.deductibles = S.money.budget.deductibles.filter(x=>x.txn!==id); commit({skipXp:true}); }
+function delTxn(id){ holdGo('txn', id); }   // b309: soft delete + Undo, and remembered so the bank sync never brings it back
+/* b309: deleted transactions stay deleted — every way a sync recognizes a row is remembered in budget.gone */
+function txnLk(t){ return t.d+'|'+(+t.amt).toFixed(2)+'|'+t.acct; }
+function txnSigs(t){ return [t.tid?'tid:'+t.tid:null, 'k:'+txnKey(t), t.tid?null:'lk:'+txnLk(t)].filter(Boolean); }
+function txnForget(t, st=S){ const G=(st.money.budget.gone ||= {}); for (const k of txnSigs(t)) G[k]=TODAY; }
+function txnUnforget(t, st=S){ const G=st.money.budget.gone||{}; for (const k of txnSigs(t)) delete G[k]; }
 function setDed(id, k, v){ const x=S.money.budget.deductibles.find(x=>x.id===id); if(!x) return; if (k==='ok' && x.ok) x.noAuto=1; x[k] = k==='ok' ? !x.ok : k==='amt' ? Math.abs(num(v))||x.amt : v; commit({skipXp:true}); }
 function delDed(id){ const x=S.money.budget.deductibles.find(x=>x.id===id); if (x?.txn){ const t=S.money.budget.txns.find(t=>t.id===x.txn); if (t) t.cat='flex'; } S.money.budget.deductibles = S.money.budget.deductibles.filter(x=>x.id!==id); commit({skipXp:true}); }
 function addDedManual(e){ e.preventDefault(); const d=document.getElementById('ddD').value, desc=document.getElementById('ddDesc').value.trim(), amt=Math.abs(num(document.getElementById('ddAmt').value)), cat=document.getElementById('ddCat').value, acct=document.getElementById('ddAcct').value; if(!d||!desc||!amt){ toast('Date, description and amount needed'); return false; } S.money.budget.deductibles.push({id:uid(), txn:null, d, desc, amt, acct, cat, ok:true, note:''}); commit({skipXp:true}); return false; }
@@ -7170,11 +7178,11 @@ const HOLDK={
     acts:(x,id)=>[['Change category', `txOpen='${id}';txPaint()`], txDead(x)?['↺ Count it again', `setTxnCat('${id}','${x.amt>0?'income':'other'}')`]:['⇄ Transfer — don’t count it', `setTxnCat('${id}','transfer')`]] },
 };
 function holdGo(k,id){ const H=HOLDK[k]; if (!H) return; const [L,i]=H.at(id); if (!L||i<0) return; const x=L.splice(i,1)[0];
-  if (k==='txn') S.money.budget.deductibles=(S.money.budget.deductibles||[]).filter(d=>d.txn!==id);
+  if (k==='txn'){ S.money.budget.deductibles=(S.money.budget.deductibles||[]).filter(d=>d.txn!==id); txnForget(x); }
   (S.holdTrash ||= []).push({k, id, x, i, at:TODAY}); commit({skipXp:true}); toastAct('🗑 Deleted', 'Undo', ()=>holdBack(k,id)); }
 function holdBack(k,id){ const T=S.holdTrash||[]; let j=-1; for (let n=T.length-1;n>=0;n--) if (T[n].k===k&&String(T[n].id)===String(id)){ j=n; break; } if (j<0) return;
   const e=T[j], H=HOLDK[k]; if (!H) return; const L=H.list(String(id)); if (!L) return; L.splice(Math.min(e.i,L.length),0,e.x); T.splice(j,1);
-  if (k==='txn' && e.x.cat==='deduct') try { addDeductible(e.x); } catch(_){}
+  if (k==='txn'){ txnUnforget(e.x); if (e.x.cat==='deduct') try { addDeductible(e.x); } catch(_){} }
   commit({skipXp:true}); toast('↩︎ Back'); }
 function t3Tomorrow(i){ const d=ensureDay(curDay), t=d.top3[i]; if (!t||!(t.text||'').trim()) return; const n=ensureDay(addDays(curDay,1)), j=n.top3.findIndex(x=>!(x.text||'').trim());
   if (j<0){ toast('Tomorrow’s Top 3 is full'); return; } n.top3[j]={...n.top3[j], text:t.text, track:t.track, done:false}; d.top3[i]={...t, text:'', done:false}; commit({skipXp:true}); toast('➡ Moved to tomorrow'); }
@@ -11197,6 +11205,7 @@ async function bankRefresh(manual){
       const t = {id:uid(), d:String(x.date||'').slice(0,10), desc:String(x.description||'').replace(/X{4,}\S*/g,'').replace(/\s+/g,' ').trim(), amt:+x.amount, acct, tid:x.transaction_id};
       if (!/^\d{4}-\d{2}-\d{2}$/.test(t.d) || isNaN(t.amt) || !t.desc) continue;
       haveTid.add(t.tid);
+      if (B.gone && (B.gone['tid:'+t.tid] || B.gone['k:'+txnKey(t)] || (B.gone['lk:'+lk(t)] && !loose[lk(t)]))) continue;   // you deleted this one
       if (loose[lk(t)] > 0){ loose[lk(t)]--; continue; } // already here from an earlier import or statement
       t.cat = keyInv[x.account_group_key] ? 'ignore' : classifyTxn(t); t.sc = spendCat(t); B.txns.push(t); added++;
       if (t.cat==='deduct') addDeductible(t, S);
