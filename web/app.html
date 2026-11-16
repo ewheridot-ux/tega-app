@@ -436,6 +436,8 @@ html.sw-run #app{overflow-x:clip}
 #navqa[data-hl="street"] button{font-size:16px;border-radius:12px;text-transform:uppercase;letter-spacing:.04em}#navqa[data-hl="street"] button i{color:#ff6a13}
 #navqa[data-hl="street"] button:active{background:#ff6a13;color:#161616}#navqa[data-hl="street"] button:active i{color:#161616}
 #navqa[data-hl="street"] .nq-open{border-top:1px solid #333}
+/* b310: quote under the character */
+.quip .sage-by,.sage-by{display:block;margin-top:6px;font-size:12px;opacity:.65;font-style:normal}
 /* b308: recently deleted pictures */
 .pictr-th{width:40px;height:40px;object-fit:cover;border-radius:8px;flex:none;background:var(--card2)}
 [data-hold] input,[data-hold] textarea,[data-hold] select{-webkit-user-select:text;user-select:text}
@@ -2024,7 +2026,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b309';
+const BUILD='b310';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -3345,6 +3347,67 @@ const ICONS = {
 };
 
 /* ---------- character: vibe, mood, quotes, check-in, petting ---------- */
+/* b310: the line under your character is a quote from someone who did the work. Only quotes with a solid source (book, letter, speech, interview) — no internet misattributions. */
+const SAGE = [
+  ['The impediment to action advances action. What stands in the way becomes the way.','Marcus Aurelius'],
+  ['Waste no more time arguing about what a good man should be. Be one.','Marcus Aurelius'],
+  ['We suffer more often in imagination than in reality.','Seneca'],
+  ['It is not that we have a short time to live, but that we waste a lot of it.','Seneca'],
+  ['First say to yourself what you would be; and then do what you have to do.','Epictetus'],
+  ['Men are disturbed not by things, but by the views which they take of things.','Epictetus'],
+  ['A journey of a thousand miles begins with a single step.','Laozi'],
+  ['We are what we repeatedly do. Excellence, then, is not an act, but a habit.','Will Durant'],
+  ['How we spend our days is, of course, how we spend our lives.','Annie Dillard'],
+  ['Our life is frittered away by detail. Simplify, simplify.','Henry David Thoreau'],
+  ['The best way out is always through.','Robert Frost'],
+  ['If there is no struggle, there is no progress.','Frederick Douglass'],
+  ['Not everything that is faced can be changed, but nothing can be changed until it is faced.','James Baldwin'],
+  ['If you can’t fly then run, if you can’t run then walk, if you can’t walk then crawl, but whatever you do you have to keep moving forward.','Martin Luther King Jr.'],
+  ['Success is to be measured not so much by the position that one has reached in life as by the obstacles which he has overcome.','Booker T. Washington'],
+  ['There are years that ask questions and years that answer.','Zora Neale Hurston'],
+  ['You may encounter many defeats, but you must not be defeated.','Maya Angelou'],
+  ['If there’s a book that you want to read, but it hasn’t been written yet, then you must write it.','Toni Morrison'],
+  ['First forget inspiration. Habit is more dependable.','Octavia E. Butler'],
+  ['I’ve failed over and over and over again in my life. And that is why I succeed.','Michael Jordan'],
+  ['Don’t let what you cannot do interfere with what you can do.','John Wooden'],
+  ['Be quick, but don’t hurry.','John Wooden'],
+  ['Don’t look back. Something might be gaining on you.','Satchel Paige'],
+  ['The credit belongs to the man who is actually in the arena.','Theodore Roosevelt'],
+  ['I am not a product of my circumstances. I am a product of my decisions.','Stephen R. Covey'],
+  ['Genius is one per cent inspiration and ninety-nine per cent perspiration.','Thomas Edison'],
+  ['Life is like riding a bicycle. To keep your balance you must keep moving.','Albert Einstein'],
+  ['The first principle is that you must not fool yourself — and you are the easiest person to fool.','Richard Feynman'],
+  ['Great things are not done by impulse, but by a series of small things brought together.','Vincent van Gogh'],
+  ['If you hear a voice within you say “you cannot paint,” then by all means paint, and that voice will be silenced.','Vincent van Gogh'],
+  ['Inspiration is for amateurs — the rest of us just show up and get to work.','Chuck Close'],
+  ['The most important possible thing you could do is do a lot of work.','Ira Glass'],
+  ['Don’t think about making art, just get it done.','Andy Warhol'],
+  ['The details are not the details. They make the design.','Charles Eames'],
+  ['Less, but better.','Dieter Rams'],
+  ['He who seeks beauty will find it.','Bill Cunningham'],
+  ['Everything I do is for the 17-year-old version of myself.','Virgil Abloh'],
+  ['The highest human act is to inspire.','Nipsey Hussle'],
+  ['Be so good they can’t ignore you.','Steve Martin'],
+  ['Real artists ship.','Steve Jobs'],
+  ['You can’t connect the dots looking forward; you can only connect them looking backwards.','Steve Jobs'],
+  ['If you are not embarrassed by the first version of your product, you’ve launched too late.','Reid Hoffman'],
+  ['Make something people want.','Paul Graham'],
+  ['The cowards never started and the weak died along the way. That leaves us.','Phil Knight'],
+  ['Beware of little expenses; a small leak will sink a great ship.','Benjamin Franklin'],
+  ['Price is what you pay. Value is what you get.','Warren Buffett'],
+  ['Someone’s sitting in the shade today because someone planted a tree a long time ago.','Warren Buffett'],
+];
+let sageIdx = 0;
+const sageKey = q => q[1]+': '+q[0].slice(0,40);
+function sageList(){ const no=new Set(S.sageNo||[]), L=SAGE.filter(q=>!no.has(sageKey(q))); return L.length?L:SAGE; }
+function sageNow(){ const L=sageList(), day=Math.floor(Date.parse(TODAY)/864e5); return L[((day*7+sageIdx)%L.length+L.length)%L.length]; }   // a new one each day, tap for the next
+function sageHtml(q=sageNow()){ return `“${esc(q[0])}” <span class="sage-by">— ${esc(q[1])}</span>`; }
+function sageNext(){ petLine=null; sageIdx++; const el=document.getElementById('quip'); if (!el) return; el.style.opacity=0; setTimeout(()=>{ el.innerHTML=sageHtml(); el.style.opacity=1; },120); }
+function sageSave(k){ const q=SAGE.find(x=>sageKey(x)===k); if(!q) return; const A=(S.sageSaved ||= []); if (!A.includes(k)) A.push(k); commit({skipXp:true}); toast('★ Saved — Settings → Saved quotes'); }
+function sageUnsave(k){ S.sageSaved=(S.sageSaved||[]).filter(x=>x!==k); commit({skipXp:true}); }
+function sageHide(k){ (S.sageNo ||= []).includes(k) || S.sageNo.push(k); commit({skipXp:true}); toastAct('Won’t show that one again','Undo',()=>{ S.sageNo=S.sageNo.filter(x=>x!==k); commit({skipXp:true}); }); }
+function sageCard(){ const A=(S.sageSaved||[]).map(k=>SAGE.find(q=>sageKey(q)===k)).filter(Boolean); if (!A.length) return '';
+  return `<div class="card sec" style="padding:4px 18px">${infold('sagesv','Saved quotes',`${A.length}`,`<div class="stack" style="gap:10px">${A.map(q=>`<div class="row between hid-r" style="gap:10px;flex-wrap:nowrap"><span style="min-width:0">${sageHtml(q)}</span><button class="btn ghost sm" onclick="sageUnsave('${esc(sageKey(q)).replace(/'/g,'&#39;')}')">Remove</button></div>`).join('')}</div>`)}</div>`; }
 const QUOTES = {
   morning:[
     'lock in. top 3. one has to pay.','new day. same 32% tax. go.','three lines. not a vision board.','phone down. chat is not needed rn.',
@@ -3396,7 +3459,7 @@ function vibeFor(k){
 function moodFor(k){ const v=vibeFor(k); const d=S.days[k]; const t3=d?d.top3.filter(x=>x.done).length:0; if(v>=95) return 'hype'; if(v>=75) return 'smile'; if(v>=35) return t3>0?'focused':'neutral'; if(v>=18) return 'tired'; return 'sad'; }
 function quipFor(mood,k){ const hr=new Date().getHours(); const d=S.days[k]; if(mood==='neutral' && hr<12 && !d?.checkin) return pick(QUOTES.morning); const st=streaks(); if(mood==='neutral' && st.daily>2 && TODAY===k) return `${st.daily} day streak. don’t fumble it.`; return pick(QUOTES[mood]||QUOTES.neutral, hr); }
 let petLine = null, petT=0;
-function petAvatar(){ const d=ensureDay(curDay); if(curDay===TODAY && !d.checkin){ openCheckin(); return; } d.pets=(d.pets||0)+1; const el=document.querySelector('.avatar'); if(el){ el.classList.remove('bounce'); void el.offsetWidth; el.classList.add('bounce'); } petLine = (d.pets<=5) ? QUOTES.pet[(d.pets*7+parseInt(TODAY.slice(-2)))%QUOTES.pet.length] : QUOTES.petDone[(d.pets+parseInt(TODAY.slice(-2)))%QUOTES.petDone.length]; commit({skipXp:true}); clearTimeout(petT); petT=setTimeout(()=>{petLine=null; const q=document.getElementById('quip'); if(q&&view==='today') q.textContent=voiceLine(moodFor(curDay),curDay);},2500); }
+function petAvatar(){ const d=ensureDay(curDay); if(curDay===TODAY && !d.checkin){ openCheckin(); return; } d.pets=(d.pets||0)+1; const el=document.querySelector('.avatar'); if(el){ el.classList.remove('bounce'); void el.offsetWidth; el.classList.add('bounce'); } petLine = (d.pets<=5) ? QUOTES.pet[(d.pets*7+parseInt(TODAY.slice(-2)))%QUOTES.pet.length] : QUOTES.petDone[(d.pets+parseInt(TODAY.slice(-2)))%QUOTES.petDone.length]; commit({skipXp:true}); clearTimeout(petT); petT=setTimeout(()=>{petLine=null; const q=document.getElementById('quip'); if(q&&view==='today') q.innerHTML=sageHtml();},2500); }
 /* morning check-in */
 let ciStep=0, ciFeel=null;
 function openCheckin(){ ciStep=0; ciFeel=null; ciSleep=null; renderCheckin(); }
@@ -3415,7 +3478,7 @@ function renderCheckin(){
 }
 function ciCarry(){ const d=ensureDay(TODAY); const y=S.days[addDays(TODAY,-1)]; const carry=y.top3.filter(t=>t.text.trim()&&!t.done); let i=0; for(const t of d.top3){ if(!t.text.trim() && carry[i]){ t.text=carry[i].text; t.track=carry[i].track; i++; } } commit({skipXp:true}); renderCheckin(); }
 function closeCheckin(){ const m=document.getElementById('ci'); if(m) m.remove(); }
-function finishCheckin(){ const d=ensureDay(TODAY); d.checkin={at:new Date().toTimeString().slice(0,5),feel:ciFeel}; if (ciSleep!==null) d.checkin.sleep=ciSleep; else { const h=(S.health||{}).sleep?.[TODAY]; if (h) d.checkin.sleep=h<5?0:h<6?1:h<7?2:h<8?3:4; } closeCheckin(); commit(); confetti(); toast('☀️ Checked in. +15 XP');  if (S.voiceAuto && sampleLib && !(S.voice&&S.voice.d===TODAY)) voiceGen(true); }
+function finishCheckin(){ const d=ensureDay(TODAY); d.checkin={at:new Date().toTimeString().slice(0,5),feel:ciFeel}; if (ciSleep!==null) d.checkin.sleep=ciSleep; else { const h=(S.health||{}).sleep?.[TODAY]; if (h) d.checkin.sleep=h<5?0:h<6?1:h<7?2:h<8?3:4; } closeCheckin(); commit(); confetti(); toast('☀️ Checked in. +15 XP');  if (false && S.voiceAuto && sampleLib && !(S.voice&&S.voice.d===TODAY)) voiceGen(true); }
 
 /* ---------- evolution choice ---------- */
 let evoSnooze = false;
@@ -4581,7 +4644,7 @@ function vToday(){
     <div class="lvl">
       <div class="avwrap">${isToday?shadowPeek():''}<div class="avatar ringed ${isToday&&!d.checkin?'wants':''}" style="--ringc:conic-gradient(from 0deg,transparent ${Math.round(pctLvl*100)}%,var(--card2) 0),${ringCss(lvl)}" onclick="petAvatar()" title="${isToday&&!d.checkin?'Start the day':`${Math.round(pctLvl*100)}% to Lv ${lvl+1}`}">${charAnim(120)||avWait(120)||avatarSVG(stg, mood, 120, S.evo||{})}<span class="lvlpip num" onclick="event.stopPropagation();go('evolve')">${lvl}</span>${idleEmote(mood,isToday,d)}</div></div>
       <div style="flex:1;min-width:0">
-        <div class="quip say" id="quip" role="button" tabindex="0" style="cursor:pointer;transition:opacity .12s" onclick="voiceNext('${mood}','${curDay}')" title="Tap for another line">${esc(petLine||voiceLine(mood, curDay))}</div>
+        <div class="quip say" id="quip" role="button" tabindex="0" data-hold="sage:${SAGE.indexOf(sageNow())}" style="cursor:pointer;transition:opacity .12s" onclick="sageNext()" title="Tap for another quote · hold to save">${petLine?esc(petLine):sageHtml()}</div>
         <div class="sub" style="margin-top:8px;font-weight:600">${isToday?(hr<12?'Morning':hr<17?'Afternoon':'Tonight')+', Tega':niceLong(curDay)}</div>
         <div class="row" style="margin-top:10px;gap:8px;align-items:center;flex-wrap:nowrap"><span class="tag">Vibe</span><div class="vibe" style="max-width:none"><b style="width:${vibe}%;background:${vibe>=75?'var(--good)':vibe>=35?'var(--accent2)':vibe>=18?'var(--warn)':'var(--bad)'}"></b></div><span class="sub num">${vibe}</span></div>
         <div class="wkdots" aria-label="This week">${dots.map(k=>`<button class="${dayActive(k)?'on':''} ${k===curDay?'cur':''}" ${k>TODAY?'disabled':''} onclick="curDay='${k}';render()" aria-label="${nice(k)}${dayActive(k)?', active':''}">${parseD(k).toLocaleDateString('en-US',{weekday:'narrow'})}</button>`).join('')}</div>
@@ -7153,6 +7216,8 @@ function holdInfo(kind,id){
   if (kind==='cst'){ const c=vetAll().find(c=>c.id===id); if(!c) return null; return {title:c.n, acts:[['🙈 Hide this caster', `holdHide('cst','${id}')`, c.own?'':'danger'], ...(c.own?[['🗑 Delete', `holdCstDel('${id}')`,'danger']]:[])], note:'Hidden casters stay in “Hidden” at the bottom — tap to bring one back.'}; }
   if (kind==='pc'){ const p=ensureDatum().prototypes.find(x=>x.id===id); if(!p) return null; return {title:`${p.id} · ${p.name}`, acts:[['🗑 Delete piece', `pcDel('${id}')`,'danger']]}; }
   const pic=picInfo(kind,id); if (pic) return pic;
+  if (kind==='sage'){ const q=sageNow(); if(!q) return null; const k=sageKey(q).replace(/'/g,"\\'"), saved=(S.sageSaved||[]).includes(sageKey(q));
+    return {title:'— '+q[1], acts:[[saved?'★ Saved':'★ Save this quote', saved?`sageUnsave('${k}')`:`sageSave('${k}')`], ['✕ Don’t show it again', `sageHide('${k}')`,'danger']]}; }
   const H=HOLDK[kind]; if (H){ const [L,i]=H.at(id); const x=L&&i>=0?L[i]:null; if (x==null) return null;
     return {title:H.name(x), acts:[...(H.acts?H.acts(x,id):[]), ...(H.keep?[]:[['🗑 Delete', `holdGo('${kind}','${String(id).replace(/'/g,"\\'")}')`,'danger']])], note:H.keep?'':'Undo right after, or restore it in Settings → Recently deleted.'}; }
   return null; }
@@ -11581,7 +11646,7 @@ function vSettings(){ const sk=document.documentElement.getAttribute('data-skin'
     <button class="check ${lockOn()?'on':''}" style="width:100%" onclick="lockSet(${!lockOn()})"><div class="box">${lockOn()?'✓':''}</div><div class="txt">Face ID to open the app</div></button>
     <button class="check ${hwOn()?'on':''}" style="width:100%;margin-top:8px" onclick="hwSet(${!hwOn()})"><div class="box">${hwOn()?'✓':''}</div><div class="txt">Save workouts to Apple Health</div></button>
     <button class="check ${(()=>{ try { return localStorage.getItem('tega-cal')!=='off'; } catch(e){ return true; } })()?'on':''}" style="width:100%;margin-top:8px" onclick="calSet(${(()=>{ try { return localStorage.getItem('tega-cal')==='off'; } catch(e){ return false; } })()})"><div class="box">${(()=>{ try { return localStorage.getItem('tega-cal')!=='off'; } catch(e){ return true; } })()?'✓':''}</div><div class="txt">Put bookings and deadlines in my iPhone calendar</div></button></div>` : '';
-  return `${syncCard()}${fixCard()}${holdTrashCard()}<div class="card sec"><div class="hdr"><h2>Appearance</h2></div><div class="seg" style="display:flex">${[['crt','Night CRT'],['classic','Classic'],['auto','Match iPhone']].map(([k,l])=>`<button class="${ap===k?'on':''}" style="flex:1" onclick="apprSet('${k}')">${l}</button>`).join('')}</div>
+  return `${syncCard()}${fixCard()}${holdTrashCard()}${sageCard()}<div class="card sec"><div class="hdr"><h2>Appearance</h2></div><div class="seg" style="display:flex">${[['crt','Night CRT'],['classic','Classic'],['auto','Match iPhone']].map(([k,l])=>`<button class="${ap===k?'on':''}" style="flex:1" onclick="apprSet('${k}')">${l}</button>`).join('')}</div>
     <div class="tag" style="margin:12px 0 6px">Text size</div><div class="seg" style="display:flex">${[[.9,'S'],[1,'M'],[1.1,'L'],[1.2,'XL']].map(([z,l])=>`<button class="${Math.abs(zm-z)<.01?'on':''}" style="flex:1" onclick="zoomSet(${z})">${l}</button>`).join('')}</div>${sk==='crt'?`<div class="tag" style="margin:12px 0 6px">Character</div>`:''}${sk==='crt'?`<button class="check ${S.pxChar!==false?'on':''}" style="margin-top:10px;width:100%" onclick="pxToggle()"><div class="box">${S.pxChar!==false?'✓':''}</div><div class="txt">Pixel character</div></button>${S.pxChar!==false?`<button class="check ${S.sprite!==false?'on':''}" style="margin-top:8px;width:100%" onclick="sprToggle()"><div class="box">${S.sprite!==false?'✓':''}</div><div class="txt">Animated character</div></button>`:''}`:''}</div>${phone}<div class="card sec"><div class="hdr"><h2>Habits on Today</h2><span class="sub">${S.habits.length} shown</span></div>
     <div class="stack" style="gap:6px">${[...S.habits.map(h=>[h,1]),...(S.habitsOff||[]).map(h=>[h,0])].map(([h,on])=>`<div class="check ${on?'on':''}" onclick="habitRestore('${h.id}',${on?0:1})"><div class="box">${on?'✓':''}</div><div class="txt" style="text-decoration:none;color:var(--fg)">${h.icon} ${esc(h.name)}</div></div>`).join('')}</div>
     <div class="help" style="margin-top:8px">Hidden habits keep all their history.</div></div>${vBackup()}<div class="help sec keep" style="text-align:center">Tega.exe · build ${BUILD}</div>`; }

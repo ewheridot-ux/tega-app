@@ -392,6 +392,15 @@ const tg = await page.evaluate(async () => { const B = S.money.budget, keep = JS
   mcpLib = lib; B.txns = k.t; B.gone = k.g; S.holdTrash = k.h; B.syncedAt = k.s; commit({ skipXp: true }); document.querySelectorAll('#toast-act').forEach(m => m.remove()); return r; });
 ok('deleted transactions stay deleted after bank syncs and imports', tg.in && tg.stayGone && tg.importGone, JSON.stringify(tg));
 ok('undo a deleted transaction lets it back in; ones that came back before the fix are removed', tg.undo && tg.migrated, JSON.stringify(tg));
+// The line under the character is a quote with who said it; tap → next; hold → save / never again
+const sg = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ a: S.sageSaved, n: S.sageNo }); curDay = TODAY; view = 'today'; render();
+  const el = document.getElementById('quip'); r.quote = !!el && /—/.test(el.textContent) && SAGE.some(q => el.textContent.includes(q[1]));
+  const t0 = el.textContent; sageNext(); r.next = sageHtml() !== '' && sageNow() !== SAGE[-1] && t0 !== `“${sageNow()[0]}” — ${sageNow()[1]}`;
+  const q = sageNow(), k = sageKey(q), h = holdInfo('sage', '0'); r.menu = !!h && h.acts.length === 2;
+  sageSave(k); r.saved = sageCard().includes(q[1]); sageHide(k); r.hidden = !sageList().includes(q);
+  const k2 = JSON.parse(keep); S.sageSaved = k2.a; S.sageNo = k2.n; commit({ skipXp: true }); document.querySelectorAll('#toast-act').forEach(m => m.remove()); return r; });
+ok('character line is a quote with its author; tap for the next one', sg.quote && sg.next, JSON.stringify(sg));
+ok('hold a quote: save it (Settings) or never see it again', sg.menu && sg.saved && sg.hidden, JSON.stringify(sg));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
