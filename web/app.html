@@ -2030,7 +2030,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b312';
+const BUILD='b313';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -4669,22 +4669,26 @@ function vToday(){
         ${trackSelect(t.track,`setTop3Track(${i},this.value)`)}
       </div>`).join('')}</div>
     
-    ${isToday?questLine():''}${habitsBlock}${isToday && hr>=17 ? `<button class="btn ${d.close?.at?'ghost':''}" style="width:100%;justify-content:center;margin-top:14px" onclick="closeDayOpen()">${d.close?.at?'🌙 Day closed · edit':'🌙 Close the day'}</button>` : ''}
+    ${habitsBlock}${homeWins(isToday)}${isToday && hr>=17 ? `<button class="btn ${d.close?.at?'ghost':''}" style="width:100%;justify-content:center;margin-top:14px" onclick="closeDayOpen()">${d.close?.at?'🌙 Day closed · edit':'🌙 Close the day'}</button>` : ''}
   </div>
   ${isToday?yogaToday()+rpgStrip()+homeStrips()+homeAgenda():''}
-  <details class="card sec fold more-fold" ${homeOpen.more?'open':''} ontoggle="homeOpen.more=this.open"><summary><span>More</span><span class="sub">win · log · bench · week ›</span></summary><div class="more-in">
-    ${winsBlock}
-    ${logsCard()}
-    ${benchCard()}
-  <details class="card sec fold" ${homeOpen.inits?'open':''} ontoggle="homeOpen.inits=this.open"><summary><span>This week's initiatives</span><span class="sub num">${initsDone}/${inits.length} ›</span></summary>
-    <div style="margin-top:12px">${bar(weekPct(w),'var(--accent2)')}
-    <div class="stack" style="margin-top:10px">${inits.map(i=>`<div class="check ${wk.inits[i.id]?'on':''}" onclick="toggleInit('${w}','${i.id}')"><div class="box">${wk.inits[i.id]?'✓':''}</div><div class="txt">${esc(i.text)}</div><div class="side">${wkSide(w,i)}${tIcon(i.track)}</div></div>`).join('')}</div>
-    <div class="row" style="margin-top:12px"><button class="btn ghost sm" onclick="go('week')">Open the week →</button></div></div></details>
-  <details class="card sec fold" ${homeOpen.tracks?'open':''} ontoggle="homeOpen.tracks=this.open"><summary><span>${THIS_Q} tracks</span><span class="sub num">${Math.round(qPct*100)}% ›</span></summary>
-    <div class="help keep" style="margin:12px 0 10px">A <b>track</b> is one lane of your life. Every objective, weekly initiative and Top 3 item is tagged with the lane it pushes, so you can see which one is starving. At least one Top 3 item has to be a money lane (📸 ⚙️ 🔥).</div>
-    <div class="tracks">${TRACKS.map(t=>{ const os=qObjs.filter(o=>o.track===t.key); const p=os.length?os.reduce((s,o)=>s+objPct(o),0)/os.length:0; return `<div class="tcard" style="--tc:${t.color}" onclick="go('quarter')">${ring(p,t.color,54)}<div><div class="name">${t.icon} ${t.name}</div><div class="status">${p>=.8?'Crushing it':p>=.5?'On track':p>=.25?'Building':'Started'}</div></div></div>`;}).join('')}</div></details>
-  </div></details>`;
+  ${isToday?homeQuests():''}${S.datum&&S.datum.session?benchCard():''}`;
 }
+/* b313: home shows quests again — side quests, this week (initiatives + money quest) and one season line; the old “More” fold is gone */
+function homeWins(isToday){ const L=S.wins.filter(x=>x.d===curDay);
+  if (!homeOpen.win && !L.length) return `<button class="btn ghost sm" style="margin-top:12px" onclick="homeOpen.win=true;render();setTimeout(()=>document.getElementById('winInput')?.focus(),60)">＋ Win</button>`;
+  return `<div class="tag" style="margin:14px 0 6px">Win${L.length>1?'s':''} from ${isToday?'today':'this day'}</div>
+      <form class="inline" onsubmit="return addWin(event)"><input class="inp" id="winInput" maxlength="140" placeholder="e.g. went to gym when I didn't want to" autocomplete="off"><button class="btn">+ Win</button></form>
+      ${L.length?`<div class="stack" style="margin-top:8px">${L.map(x=>`<div class="check on" style="cursor:default" data-hold="win:${x.id}"><div class="box">★</div><div class="txt" style="text-decoration:none;color:var(--fg)">${esc(x.text)}</div></div>`).join('')}</div>`:''}`; }
+function homeQuests(){ const Q=questLogData(), WL=weekInits(THIS_WEEK), wk=week(THIS_WEEK), SB=seasonBoss(), T=seasonTrack(), se=season();
+  const row=(on,txt,act,sub)=>`<div class="check ${on?'on':''}" onclick="${act}"><div class="box">${on?'✓':''}</div><div class="txt">${txt}${sub?` <span class="sub">· ${sub}</span>`:''}</div></div>`;
+  const wkH=(WL.length||Q.mq)?`<div class="tag" style="margin:16px 0 8px">This week · ${Q.wDone}/${Q.wTot}${Q.weekly?' · ✓ cleared':' → 🎁 +60💰'}</div>
+    <div class="stack">${(()=>{ const rows=[...WL.map(i=>[!!wk.inits[i.id],row(!!wk.inits[i.id],esc(i.text),`toggleInit('${THIS_WEEK}','${i.id}')`)]), ...(Q.mq?[[!!Q.mq.done,row(!!Q.mq.done,esc(Q.mq.text.replace(/^💰 /,'')),Q.mq.done?`questUndo('${Q.mq.id}')`:`questDone('${Q.mq.id}')`,'money quest')]]:[])];
+      const todo=rows.filter(r=>!r[0]), done=rows.filter(r=>r[0]), all=homeOpen.wkAll, L=all?[...todo,...done]:todo.slice(0,4);   // open goals first, 4 at a glance
+      return L.map(r=>r[1]).join('')+(rows.length>L.length||all?`<button class="btn ghost sm" style="width:100%" onclick="homeOpen.wkAll=!homeOpen.wkAll;render()">${all?'Show fewer':`Show all ${rows.length}${done.length?` · ${done.length} done`:''}`}</button>`:''); })()}</div>`
+    :`<button class="btn ghost sm" style="margin-top:14px" onclick="go('week')">Set this week’s goals ›</button>`;
+  const seasonL=`<button class="ql-line" style="margin-top:14px" onclick="seasonOpen()"><span>${SB.ic}</span><b>${SB.dead?esc(SB.n)+' defeated':'Defeat '+esc(SB.n)}</b><i>·</i><span>${SB.hp?`${SB.hits}/${SB.need}`:'set goals'}</span><em>›</em></button>`;
+  return questsCard(TODAY).replace(/\n  <\/div>$/, '')+wkH+seasonL+`\n  </div>`; }
 function shiftDay(n){ const k=addDays(curDay,n); if(k>TODAY) return; curDay=k; render(); }
 function toggleTop3(i){ const d=ensureDay(curDay); if(!d.top3[i].text.trim()){ toast('Write it first'); return; } d.top3[i].done=!d.top3[i].done; krCredit('t3:'+curDay+':'+i, d.top3[i].text, d.top3[i].track, d.top3[i].done); commit(); if(d.top3.every(t=>t.done)){ toast('Top 3 done. That\'s the day. 🔥'); sprPlay('hype'); } }
 function setTop3(i,v){ const d=ensureDay(curDay); d.top3[i].text=v; commit({skipXp:true}); }
@@ -5671,7 +5675,7 @@ function vContent(){
       <div class="card sec"><div class="hdr"><h2>Pillar mix</h2><span class="sub">last 30 days · ${tot} post${tot===1?'':'s'}</span></div>
         <div class="ct-mix">${PILLARS.map(([k,l,ic,c])=>`<i style="flex:${byP[k]||0};background:${c}"></i>`).join('')||''}${tot?'':'<i style="flex:1;background:var(--card2)"></i>'}</div>
         <div class="ct-leg">${PILLARS.map(([k,l,ic,c])=>`<span><i style="background:${c}"></i>${ic} ${l} <b class="num">${byP[k]||0}</b></span>`).join('')}</div>
-        ${tot&&!byP.datum?`<div class="help" style="margin-top:8px">No Datum posts this month — a bench clip counts toward both content and the grillz track.</div>`:''}</div>${postedCard()}`;
+        ${tot&&!byP.datum?`<div class="help" style="margin-top:8px">No Datum posts this month — a bench clip counts toward both content and the grillz track.</div>`:''}</div>${postedCard()}${logsCard()}`;
   }
   if (ctTab==='create') return head + vCreate();
   if (ctTab==='ideas'){
@@ -11429,7 +11433,7 @@ function questRow(q, k){
 }
 let qcAll=false, qcDone=false;
 function questsCard(k){
-  const boss = activeBoss(), open = openQuests().filter(q=>q.size!=='B').reverse(), today = questsDoneOn(k);
+  const boss = activeBoss(), open = openQuests().filter(q=>q.size!=='B' && !q.mq).reverse(), today = questsDoneOn(k);   // the money quest lives under “This week”
   const smalls = today.filter(q=>q.size==='S').length, show = qcAll ? open : open.slice(0,6);
   const recent = (S.quests||[]).filter(q=>q.done).sort((a,b)=>b.done.localeCompare(a.done)).slice(0,12);
   return `<div class="card sec" style="margin-top:14px">

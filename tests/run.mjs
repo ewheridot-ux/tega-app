@@ -408,6 +408,15 @@ const yt = await page.evaluate(() => { const keepV = YVID, id = Object.keys(YP)[
   yVidPlay(id); const f = [...document.querySelectorAll('iframe')].map(x => x.src).find(u => u.startsWith(YT_HOST)); r.sheet = !!f && /start=12/.test(f);
   document.querySelectorAll('.modal,.g-sh,#gsh').forEach(m => m.remove()); window.claude = was; YVID = keepV; return r; });
 ok('YouTube on the phone plays through the https video page; web keeps the direct player', yt.web && yt.phone && yt.sheet, JSON.stringify(yt));
+// Home: quests are back on the page (side quests + this week + season), the old “More” fold is gone, log lives in Content
+const hq = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ q: S.quests, w: S.wins }); curDay = TODAY; view = 'today';
+  (S.quests ||= []).push({ id: 'HQ1', text: 'home quest', size: 'S' }); commit({ skipXp: true }); render(); const v = document.getElementById('view').innerHTML;
+  r.quests = /⚔️ Quests/.test(v) && v.includes('home quest') && /Defeat|defeated/.test(v); r.noMore = !/more-fold/.test(v) && !/📝 Log/.test(v);
+  r.oneQuests = (v.match(/⚔️ Quests/g) || []).length === 1; r.win = v.includes('homeOpen.win') || /winInput/.test(v);
+  ctTab = 'plan'; view = 'content'; render(); r.log = /📝 Log/.test(document.getElementById('view').innerHTML);
+  const k = JSON.parse(keep); S.quests = k.q; S.wins = k.w; view = 'today'; commit({ skipXp: true }); return r; });
+ok('home shows Quests again (side quests, this week, season), once', hq.quests && hq.oneQuests, JSON.stringify(hq));
+ok('the More fold is gone; wins stay on Today; the log moved to Content', hq.noMore && hq.win && hq.log, JSON.stringify(hq));
 { const vp = await browser.newPage(); await vp.route('https://www.youtube-nocookie.com/**', r => r.fulfill({ body: '<p>yt</p>', contentType: 'text/html' }));
   await vp.route('https://ewheridot-ux.github.io/**', r => r.fulfill({ body: fs.readFileSync(new URL('../docs/yt.html', import.meta.url)), contentType: 'text/html' }));
   await vp.goto('https://ewheridot-ux.github.io/tega-app/yt.html?v=dQw4w9WgXcQ&loop=1&mute=1&start=9'); const src = await vp.evaluate(() => document.querySelector('iframe')?.src || '');
