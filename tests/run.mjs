@@ -401,6 +401,13 @@ const sg = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ a: 
   const k2 = JSON.parse(keep); S.sageSaved = k2.a; S.sageNo = k2.n; commit({ skipXp: true }); document.querySelectorAll('#toast-act').forEach(m => m.remove()); return r; });
 ok('character line is a quote with its author; tap for the next one', sg.quote && sg.next, JSON.stringify(sg));
 ok('hold a quote: save it (Settings) or never see it again', sg.menu && sg.saved && sg.hidden, JSON.stringify(sg));
+// iPhone app: YouTube refuses embeds from capacitor:// (error 153) → show the still and open YouTube; web keeps the embed
+const yt = await page.evaluate(() => { const keepV = YVID, id = Object.keys(YP)[0]; YVID = { [id]: { v: 'dQw4w9WgXcQ', start: 12 } }; const r = {};
+  r.web = /<iframe/.test(yLoop(id)); const was = window.claude; window.claude = Object.assign({}, was || {}, { native: true });
+  r.phone = !/<iframe/.test(yLoop(id)) && /i\.ytimg\.com/.test(yLoop(id)); let opened = null; const o = HTMLAnchorElement.prototype.click; HTMLAnchorElement.prototype.click = function () { opened = this.href; };
+  yVidPlay(id); HTMLAnchorElement.prototype.click = o; r.opens = /youtube\.com\/watch\?v=/.test(opened || '') && !document.querySelector('.g-sh iframe, #gsh iframe');
+  window.claude = was; YVID = keepV; return r; });
+ok('YouTube on the phone: still + opens YouTube (no broken embed); web keeps the player', yt.skip || (yt.web && yt.phone && yt.opens), JSON.stringify(yt));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
