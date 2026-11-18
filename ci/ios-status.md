@@ -1,126 +1,126 @@
-# iPhone build #164 — failure
+# iPhone build #165 — failure
 
-Sun Nov 15 01:40:12 UTC 2026
+Wed Nov 18 09:29:02 UTC 2026
 
 ```
-"errors" : [ {
-"id" : "EDCMFY323W67NKPEL7HRXNHIHE",
-"status" : "403",
-"code" : "FORBIDDEN.REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED",
-"title" : "A required agreement is missing or has expired.",
-"detail" : "This request requires an in-effect agreement that has not been signed or has expired.",
-"links" : {
-"see" : "/business"
-}
-} ]
-}
-
-registered com.ewheridot.tegaexe.widgets False
-com.ewheridot.tegaexe.widgets MISSING
-GET /v1/bundleIds?filter[identifier]=com.ewheridot.tegaexe.share&include=bundleIdCapabilities -> 403 {
-"errors" : [ {
-"id" : "NFGTZ6OXMK4WPOAYVS74DBJKNE",
-"status" : "403",
-"code" : "FORBIDDEN.REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED",
-"title" : "A required agreement is missing or has expired.",
-"detail" : "This request requires an in-effect agreement that has not been signed or has expired.",
-"links" : {
-"see" : "/business"
-}
-} ]
-}
-
-POST /v1/bundleIds -> 403 {
-"errors" : [ {
-"id" : "U4BZ55SS6UGVYQ2WYKNA6KWICM",
-"status" : "403",
-"code" : "FORBIDDEN.REQUIRED_AGREEMENTS_MISSING_OR_EXPIRED",
-"title" : "A required agreement is missing or has expired.",
-"detail" : "This request requires an in-effect agreement that has not been signed or has expired.",
-"links" : {
-"see" : "/business"
-}
-} ]
-}
-
-registered com.ewheridot.tegaexe.share False
-com.ewheridot.tegaexe.share MISSING
-== try: full (health=yes widgets+share=yes)
-native code added (healthkit=true, extensions=true)
-** ARCHIVE SUCCEEDED **
-entitlements: healthkit keychain-access-groups 
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No profiles for 'com.ewheridot.tegaexe' were found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-== try: noHealth (health=no widgets+share=yes)
-native code added (healthkit=false, extensions=true)
-** ARCHIVE SUCCEEDED **
-entitlements: keychain-access-groups 
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No profiles for 'com.ewheridot.tegaexe.share' were found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No profiles for 'com.ewheridot.tegaexe.widgets' were found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-== try: noWidgets (health=yes widgets+share=no)
-native code added (healthkit=true, extensions=false)
-** ARCHIVE SUCCEEDED **
-entitlements: healthkit keychain-access-groups 
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No profiles for 'com.ewheridot.tegaexe' were found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-== try: basic (health=no widgets+share=no)
-native code added (healthkit=false, extensions=false)
-** ARCHIVE SUCCEEDED **
-entitlements: keychain-access-groups 
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-== try: plain (no native code)
-** ARCHIVE SUCCEEDED **
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
-error: exportArchive Unable to process request - PLA Update available
-error: exportArchive No signing certificate "iOS Distribution" found
+✓ swipe social: one #view — 1
+✓ swipe social: no transform left on #view
+✓ swipe social: moved to next tab
+✓ swipe social: header and tab bar hold still — 0 px
+✓ swipe social: the tab's content slides — 390 px
+✓ swipe hustle: page never blank — min opacity 1.00 over 33 frames
+✓ swipe hustle: one #view — 1
+✓ swipe hustle: no transform left on #view
+✓ swipe hustle: moved to next tab
+✓ swipe hustle: header and tab bar hold still — 0 px
+✓ swipe hustle: the tab's content slides — 390 px
+✓ swipe today: page never blank — min opacity 1.00 over 39 frames
+✓ swipe today: one #view — 1
+✓ swipe today: no transform left on #view
+✓ swipe today: moved to next tab
+✓ swipe today: header and tab bar hold still — 0 px
+✓ swipe today: the tab's content slides — 390 px
+✓ swipe money: page never blank — min opacity 1.00 over 43 frames
+✓ swipe money: one #view — 1
+✓ swipe money: no transform left on #view
+✓ swipe money: moved to next tab
+✓ swipe money: header and tab bar hold still — 0 px
+✓ swipe money: the tab's content slides — 390 px
+· gym: no tab bar
+✓ swipe social: next tab keeps your scroll — was 500 → 500
+✓ swipe today: next tab keeps your scroll — was 500 → 500
+✓ swipe money: next tab keeps your scroll — was 500 → 500
+✓ drag social (scrolled 300): next tab shows beside your finger, no gap
+✓ drag social: scroll holds while dragging
+✓ drag social: let go early → back on the same tab
+✓ drag social: long drag → next tab, same height
+✓ drag social: nothing left transformed
+✓ drag today (scrolled 300): next tab shows beside your finger, no gap
+✓ drag today: scroll holds while dragging
+✓ drag today: let go early → back on the same tab
+✓ drag today: long drag → next tab, same height
+✓ drag today: nothing left transformed
+✓ drag money (scrolled 300): next tab shows beside your finger, no gap
+✓ drag money: scroll holds while dragging
+✓ drag money: let go early → back on the same tab
+✓ drag money: long drag → next tab, same height
+✓ drag money: nothing left transformed
+✓ swipe to a seen tab (social): its copy is right beside your finger
+✓ swipe to a seen tab (social): no redraw while dragging — 0 redraws
+✓ swipe to a seen tab (social): let go early → nothing redrawn, same tab — 0 redraws
+✓ swipe to a seen tab (social): lands with one redraw, same height — 1 redraws
+✓ swipe to a seen tab (money): its copy is right beside your finger
+✓ swipe to a seen tab (money): no redraw while dragging — 0 redraws
+✓ swipe to a seen tab (money): let go early → nothing redrawn, same tab — 0 redraws
+✓ swipe to a seen tab (money): lands with one redraw, same height — 1 redraws
+✓ lost finger-lift: a new touch settles the half-way swipe
+✓ lost finger-lift: redraws are not held afterwards
+✓ lost finger-lift: with no new touch, it settles by itself (past a quarter → next tab)
+✓ tab highlight slides to the new tab
+✓ tab highlight cleans up after the slide
+✓ changing section: the old page dissolves over the new one
+✓ changing section: nothing left behind
+✓ start: the avatar-style library is not loaded (your pixel avatar doesn't need it)
+✓ no page errors
+all perf checks passed
+testing app.html · engine webkit
+fixture {"days":60,"txns":2183,"gym":24}
+✓ avatar gets baked and saved on the phone
+✓ avatar is a real picture on the first render (not a placeholder), cloud still loading
+✗ avatar painted within 300 ms of the app's first frame — 422 ms
+page-change render ms today:41 week:20 quests:17 model:35 content:13 datum:19 gym:15 money:37 social:18 hustle:20 learn:19 city:39 evolve:47
+after-data-change render ms today:47 week:26 quests:26 model:62 content:19 datum:31 gym:32 money:45 social:25 hustle:26 learn:30 city:60 evolve:66
+✓ render today < 100 ms — 41 ms
+✓ render week < 100 ms — 20 ms
+✓ render quests < 100 ms — 17 ms
+✓ render model < 100 ms — 35 ms
+✓ render content < 100 ms — 13 ms
+✓ render datum < 100 ms — 19 ms
+✓ render gym < 100 ms — 15 ms
+✓ render money < 100 ms — 37 ms
+✓ render social < 100 ms — 18 ms
+✓ render hustle < 100 ms — 20 ms
+✓ render learn < 100 ms — 19 ms
+✓ render city < 100 ms — 39 ms
+✓ render evolve < 100 ms — 47 ms
+✓ a tap that saves data (commit) on Today < 200 ms — 86 ms
+✓ Life look via #life — study/street
+✓ Life look via #social — study/street
+✓ Life look via #hustle — study/street
+✓ Life look via #learn — study/street
+✓ swipe social: page never blank — min opacity 1.00 over 50 frames
+✓ swipe social: one #view — 1
+✓ swipe social: no transform left on #view
+✓ swipe social: moved to next tab
+✓ swipe social: header and tab bar hold still — 0 px
+✓ swipe social: the tab's content slides — 390 px
+✓ swipe hustle: page never blank — min opacity 1.00 over 44 frames
+✓ swipe hustle: one #view — 1
+✓ swipe hustle: no transform left on #view
+✓ swipe hustle: moved to next tab
+✓ swipe hustle: header and tab bar hold still — 0 px
+✓ swipe hustle: the tab's content slides — 390 px
+✓ swipe today: page never blank — min opacity 1.00 over 42 frames
+✓ swipe today: one #view — 1
+✓ swipe today: no transform left on #view
+✓ swipe today: moved to next tab
+✓ swipe today: header and tab bar hold still — 0 px
+✓ swipe today: the tab's content slides — 390 px
+✓ swipe money: page never blank — min opacity 1.00 over 20 frames
+✓ swipe money: one #view — 1
+✓ swipe money: no transform left on #view
+✓ swipe money: moved to next tab
+✓ swipe money: header and tab bar hold still — 0 px
+✓ swipe money: the tab's content slides — 390 px
+· gym: no tab bar
+✓ swipe social: next tab keeps your scroll — was 500 → 500
+✓ swipe today: next tab keeps your scroll — was 500 → 500
+✓ swipe money: next tab keeps your scroll — was 500 → 500
+✓ tab highlight slides to the new tab
+✓ tab highlight cleans up after the slide
+✓ changing section: the old page dissolves over the new one
+✓ changing section: nothing left behind
+✓ start: the avatar-style library is not loaded (your pixel avatar doesn't need it)
+✓ no page errors
+1 check(s) failed
 ```
