@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Tega.exe video</title>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}iframe{position:fixed;inset:0;width:100%;height:100%;border:0}</style>
+</head>
+<body>
+<script>
+/* Tega.exe plays YouTube demos through this page. The iPhone app runs from capacitor://, which sends YouTube no web address,
+   so YouTube refuses to play (error 153). Loaded from here, the player gets a real https address and plays.
+   It only takes a video id and player options from the link — no personal data. */
+(function () {
+  var q = new URLSearchParams(location.search), v = q.get('v') || '';
+  if (!/^[A-Za-z0-9_-]{11}$/.test(v)) return;
+  var p = new URLSearchParams({ playsinline: '1', rel: '0', modestbranding: '1', iv_load_policy: '3', enablejsapi: '0' });
+  var num = function (k) { var n = parseInt(q.get(k), 10); return isFinite(n) && n >= 0 ? String(n) : null; };
+  if (num('start')) p.set('start', num('start'));
+  if (q.get('loop') === '1') { p.set('loop', '1'); p.set('playlist', v); }
+  if (q.get('autoplay') === '1') p.set('autoplay', '1');
+  if (q.get('mute') === '1') p.set('mute', '1');
+  if (q.get('controls') === '0') p.set('controls', '0');
+  var f = document.createElement('iframe');
+  f.src = 'https://www.youtube-nocookie.com/embed/' + v + '?' + p.toString();
+  f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+  f.referrerPolicy = 'strict-origin-when-cross-origin';
+  f.allowFullscreen = true;
+  f.title = 'Video';
+  document.body.appendChild(f);
+})();
+</script>
+</body>
+</html>
