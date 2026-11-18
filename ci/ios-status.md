@@ -1,6 +1,6 @@
-# iPhone build #165 — failure
+# iPhone build #166 — failure
 
-Wed Nov 18 09:29:02 UTC 2026
+Wed Nov 18 09:39:58 UTC 2026
 
 ```
 ✓ swipe social: one #view — 1
@@ -8,19 +8,19 @@ Wed Nov 18 09:29:02 UTC 2026
 ✓ swipe social: moved to next tab
 ✓ swipe social: header and tab bar hold still — 0 px
 ✓ swipe social: the tab's content slides — 390 px
-✓ swipe hustle: page never blank — min opacity 1.00 over 33 frames
+✓ swipe hustle: page never blank — min opacity 1.00 over 48 frames
 ✓ swipe hustle: one #view — 1
 ✓ swipe hustle: no transform left on #view
 ✓ swipe hustle: moved to next tab
 ✓ swipe hustle: header and tab bar hold still — 0 px
 ✓ swipe hustle: the tab's content slides — 390 px
-✓ swipe today: page never blank — min opacity 1.00 over 39 frames
+✓ swipe today: page never blank — min opacity 1.00 over 45 frames
 ✓ swipe today: one #view — 1
 ✓ swipe today: no transform left on #view
 ✓ swipe today: moved to next tab
 ✓ swipe today: header and tab bar hold still — 0 px
 ✓ swipe today: the tab's content slides — 390 px
-✓ swipe money: page never blank — min opacity 1.00 over 43 frames
+✓ swipe money: page never blank — min opacity 1.00 over 46 frames
 ✓ swipe money: one #view — 1
 ✓ swipe money: no transform left on #view
 ✓ swipe money: moved to next tab
@@ -67,23 +67,23 @@ testing app.html · engine webkit
 fixture {"days":60,"txns":2183,"gym":24}
 ✓ avatar gets baked and saved on the phone
 ✓ avatar is a real picture on the first render (not a placeholder), cloud still loading
-✗ avatar painted within 300 ms of the app's first frame — 422 ms
-page-change render ms today:41 week:20 quests:17 model:35 content:13 datum:19 gym:15 money:37 social:18 hustle:20 learn:19 city:39 evolve:47
-after-data-change render ms today:47 week:26 quests:26 model:62 content:19 datum:31 gym:32 money:45 social:25 hustle:26 learn:30 city:60 evolve:66
-✓ render today < 100 ms — 41 ms
-✓ render week < 100 ms — 20 ms
-✓ render quests < 100 ms — 17 ms
-✓ render model < 100 ms — 35 ms
-✓ render content < 100 ms — 13 ms
-✓ render datum < 100 ms — 19 ms
-✓ render gym < 100 ms — 15 ms
-✓ render money < 100 ms — 37 ms
-✓ render social < 100 ms — 18 ms
-✓ render hustle < 100 ms — 20 ms
-✓ render learn < 100 ms — 19 ms
-✓ render city < 100 ms — 39 ms
-✓ render evolve < 100 ms — 47 ms
-✓ a tap that saves data (commit) on Today < 200 ms — 86 ms
+✗ avatar painted within 300 ms of the app's first frame — 385 ms
+page-change render ms today:38 week:17 quests:12 model:30 content:11 datum:15 gym:9 money:25 social:9 hustle:11 learn:9 city:17 evolve:26
+after-data-change render ms today:37 week:28 quests:22 model:38 content:17 datum:26 gym:11 money:34 social:24 hustle:24 learn:16 city:24 evolve:27
+✓ render today < 100 ms — 38 ms
+✓ render week < 100 ms — 17 ms
+✓ render quests < 100 ms — 12 ms
+✓ render model < 100 ms — 30 ms
+✓ render content < 100 ms — 11 ms
+✓ render datum < 100 ms — 15 ms
+✓ render gym < 100 ms — 9 ms
+✓ render money < 100 ms — 25 ms
+✓ render social < 100 ms — 9 ms
+✓ render hustle < 100 ms — 11 ms
+✓ render learn < 100 ms — 9 ms
+✓ render city < 100 ms — 17 ms
+✓ render evolve < 100 ms — 26 ms
+✓ a tap that saves data (commit) on Today < 200 ms — 59 ms
 ✓ Life look via #life — study/street
 ✓ Life look via #social — study/street
 ✓ Life look via #hustle — study/street
@@ -94,19 +94,19 @@ after-data-change render ms today:47 week:26 quests:26 model:62 content:19 datum
 ✓ swipe social: moved to next tab
 ✓ swipe social: header and tab bar hold still — 0 px
 ✓ swipe social: the tab's content slides — 390 px
-✓ swipe hustle: page never blank — min opacity 1.00 over 44 frames
+✓ swipe hustle: page never blank — min opacity 1.00 over 52 frames
 ✓ swipe hustle: one #view — 1
 ✓ swipe hustle: no transform left on #view
 ✓ swipe hustle: moved to next tab
 ✓ swipe hustle: header and tab bar hold still — 0 px
 ✓ swipe hustle: the tab's content slides — 390 px
-✓ swipe today: page never blank — min opacity 1.00 over 42 frames
+✓ swipe today: page never blank — min opacity 1.00 over 47 frames
 ✓ swipe today: one #view — 1
 ✓ swipe today: no transform left on #view
 ✓ swipe today: moved to next tab
 ✓ swipe today: header and tab bar hold still — 0 px
 ✓ swipe today: the tab's content slides — 390 px
-✓ swipe money: page never blank — min opacity 1.00 over 20 frames
+✓ swipe money: page never blank — min opacity 1.00 over 45 frames
 ✓ swipe money: one #view — 1
 ✓ swipe money: no transform left on #view
 ✓ swipe money: moved to next tab
