@@ -436,6 +436,12 @@ html.sw-run #app{overflow-x:clip}
 #navqa[data-hl="street"] button{font-size:16px;border-radius:12px;text-transform:uppercase;letter-spacing:.04em}#navqa[data-hl="street"] button i{color:#ff6a13}
 #navqa[data-hl="street"] button:active{background:#ff6a13;color:#161616}#navqa[data-hl="street"] button:active i{color:#161616}
 #navqa[data-hl="street"] .nq-open{border-top:1px solid #333}
+/* b314: quest rows — the name gets the full width, XP + track sit on a small line under it */
+.check .q-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.check .q-meta .chip{font-size:11px;padding:3px 8px;line-height:1.2;max-width:100%;white-space:nowrap}
+.check .txt{min-width:0;overflow-wrap:anywhere}
+.stack>.check{min-width:0;max-width:100%;box-sizing:border-box}
+.stack:has(>.check){grid-template-columns:minmax(0,1fr)}
 /* b311: YouTube stills on the phone (embeds are refused there) */
 .yt-still{position:relative;display:block;overflow:hidden;padding:0;border:0;background:#000}button.yt-still{width:100%;cursor:pointer}
 .yt-still img{width:100%;height:100%;object-fit:cover;display:block}
@@ -2030,7 +2036,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b313';
+const BUILD='b314';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -11425,9 +11431,8 @@ function questRow(q, k){
   const z = QSIZE[q.size]||QSIZE.S;
   return `<div class="check ${q.done?'on':''}" data-hold="quest:${q.id}" style="${q.size==='B'?'border-color:var(--bad)':''}">
     <div class="box" onclick="${q.done?`questUndo('${q.id}')`:`questDone('${q.id}','${k}')`}">${q.done?'✓':''}</div>
-    <div class="txt"><div>${esc(q.text)}</div>${q.defn?`<div class="sub" style="font-size:12px;margin-top:2px">Done means: ${esc(q.defn)}</div>`:''}${q.done?`<div class="sub" style="font-size:11px">cleared ${nice(q.done)}</div>`:''}</div>
-    <span class="chip" style="${q.size==='B'?'background:var(--bad);color:#fff':q.size==='M'?'background:var(--accent);color:#fff':''}">${z.icon} +${z.xp}</span>
-    ${q.track?trackChip(q.track):''}
+    <div class="txt"><div>${esc(q.text)}</div>${q.defn?`<div class="sub" style="font-size:12px;margin-top:2px">Done means: ${esc(q.defn)}</div>`:''}${q.done?`<div class="sub" style="font-size:11px">cleared ${nice(q.done)}</div>`:''}
+      <div class="q-meta"><span class="chip" style="${q.size==='B'?'background:var(--bad);color:#fff':q.size==='M'?'background:var(--accent);color:#fff':''}">${z.icon} +${z.xp}</span>${q.track?trackChip(q.track):''}</div></div>
     <button class="btn danger sm" style="padding:2px 7px" onclick="questDel('${q.id}')" title="remove">✕</button>
   </div>`;
 }
