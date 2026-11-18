@@ -401,13 +401,18 @@ const sg = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ a: 
   const k2 = JSON.parse(keep); S.sageSaved = k2.a; S.sageNo = k2.n; commit({ skipXp: true }); document.querySelectorAll('#toast-act').forEach(m => m.remove()); return r; });
 ok('character line is a quote with its author; tap for the next one', sg.quote && sg.next, JSON.stringify(sg));
 ok('hold a quote: save it (Settings) or never see it again', sg.menu && sg.saved && sg.hidden, JSON.stringify(sg));
-// iPhone app: YouTube refuses embeds from capacitor:// (error 153) → show the still and open YouTube; web keeps the embed
+// iPhone app: YouTube refuses embeds from capacitor:// (error 153) → the phone plays through our https page (docs/yt.html); web embeds directly
 const yt = await page.evaluate(() => { const keepV = YVID, id = Object.keys(YP)[0]; YVID = { [id]: { v: 'dQw4w9WgXcQ', start: 12 } }; const r = {};
-  r.web = /<iframe/.test(yLoop(id)); const was = window.claude; window.claude = Object.assign({}, was || {}, { native: true });
-  r.phone = !/<iframe/.test(yLoop(id)) && /i\.ytimg\.com/.test(yLoop(id)); let opened = null; const o = HTMLAnchorElement.prototype.click; HTMLAnchorElement.prototype.click = function () { opened = this.href; };
-  yVidPlay(id); HTMLAnchorElement.prototype.click = o; r.opens = /youtube\.com\/watch\?v=/.test(opened || '') && !document.querySelector('.g-sh iframe, #gsh iframe');
-  window.claude = was; YVID = keepV; return r; });
-ok('YouTube on the phone: still + opens YouTube (no broken embed); web keeps the player', yt.skip || (yt.web && yt.phone && yt.opens), JSON.stringify(yt));
+  r.web = /youtube-nocookie\.com\/embed\/dQw4w9WgXcQ/.test(yLoop(id)); const was = window.claude; window.claude = Object.assign({}, was || {}, { native: true });
+  const L = yLoop(id); r.phone = L.includes(YT_HOST + '?v=dQw4w9WgXcQ') && /loop=1/.test(L) && /mute=1/.test(L);
+  yVidPlay(id); const f = [...document.querySelectorAll('iframe')].map(x => x.src).find(u => u.startsWith(YT_HOST)); r.sheet = !!f && /start=12/.test(f);
+  document.querySelectorAll('.modal,.g-sh,#gsh').forEach(m => m.remove()); window.claude = was; YVID = keepV; return r; });
+ok('YouTube on the phone plays through the https video page; web keeps the direct player', yt.web && yt.phone && yt.sheet, JSON.stringify(yt));
+{ const vp = await browser.newPage(); await vp.route('https://www.youtube-nocookie.com/**', r => r.fulfill({ body: '<p>yt</p>', contentType: 'text/html' }));
+  await vp.route('https://ewheridot-ux.github.io/**', r => r.fulfill({ body: fs.readFileSync(new URL('../docs/yt.html', import.meta.url)), contentType: 'text/html' }));
+  await vp.goto('https://ewheridot-ux.github.io/tega-app/yt.html?v=dQw4w9WgXcQ&loop=1&mute=1&start=9'); const src = await vp.evaluate(() => document.querySelector('iframe')?.src || '');
+  await vp.goto('https://ewheridot-ux.github.io/tega-app/yt.html?v=bad"><script>'); const bad = await vp.evaluate(() => document.querySelectorAll('iframe').length); await vp.close();
+  ok('video page builds the YouTube player and ignores bad links', /embed\/dQw4w9WgXcQ\?/.test(src) && /playlist=dQw4w9WgXcQ/.test(src) && /start=9/.test(src) && bad === 0, src + ' bad=' + bad); }
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

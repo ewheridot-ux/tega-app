@@ -2030,7 +2030,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b311';
+const BUILD='b312';
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
@@ -4320,8 +4320,7 @@ async function inspoPhotos(sid,inp){ const F=[...(inp.files||[])]; if (!F.length
   inspoBusy=false; if (n){ commit(); gSheetClose(); toast(`Saved ${n} to Inspo`); } else toast('Couldn’t save that photo here'); }
 function inspoLink(ev,sid){ ev.preventDefault(); const f=ev.target; (lrSub(sid).inspo ||= []).push(inspoItem(f.u.value,f.t.value.trim().slice(0,120))); commit(); gSheetClose(); toast('Saved to Inspo'); return false; }
 function inspoOpen(sid,iid){ const x=lrSub(sid), it=(x.inspo||[]).find(z=>z.id===iid); if (!it) return;
-  const media=it.kind==='img'?`<img src="${BLOBURL}${it.blob}" alt="" style="width:100%;border-radius:12px;display:block">`:it.kind==='imgurl'?`<img src="${esc(it.url)}" alt="" style="width:100%;border-radius:12px;display:block">`:it.kind==='yt'?(ytEmbedOK()?`<div class="yv-wrap ${it.short?'sh':''}"><iframe src="https://www.youtube-nocookie.com/embed/${it.v}?playsinline=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`
-    :`<button class="yv-wrap yt-still ${it.short?'sh':''}" onclick="ytOpen('${esc(it.v)}')" aria-label="Play on YouTube"><img src="${ytThumb(it.v)}" alt="" loading="lazy" referrerpolicy="no-referrer"><span class="yt-play">▶</span></button>`):'';
+  const media=it.kind==='img'?`<img src="${BLOBURL}${it.blob}" alt="" style="width:100%;border-radius:12px;display:block">`:it.kind==='imgurl'?`<img src="${esc(it.url)}" alt="" style="width:100%;border-radius:12px;display:block">`:it.kind==='yt'?`<div class="yv-wrap ${it.short?'sh':''}"><iframe src="${ytSrc(it.v)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`:'';
   gSheet(`<span class="tag">${esc(x.name)} · inspo · ${nice(it.d)}</span>${media}<input class="inp" style="margin-top:10px;width:100%" value="${esc(it.t||'')}" placeholder="What you like about it" onchange="inspoNote('${sid}','${iid}',this.value)">
     <div class="row" style="gap:6px;margin-top:10px;flex-wrap:wrap">${it.url?`<a class="btn ghost sm" href="${esc(it.url)}" target="_blank" rel="noopener">Open ↗</a>`:''}<button class="btn ghost sm" onclick="inspoDel('${sid}','${iid}')">Remove</button></div>`); }
 function inspoNote(sid,iid,v){ const it=(lrSub(sid).inspo||[]).find(z=>z.id===iid); if (it){ it.t=v.trim().slice(0,120); commit({skipXp:true}); } }
@@ -7823,14 +7822,17 @@ async function yvidLoad(){ if (YVID||!dbHandle||!dbHandle.doc||Date.now()-yvidAt
    so on the phone we show the video's still and open YouTube itself; the web copy keeps the live embed. */
 const ytEmbedOK = () => !(window.claude && window.claude.native) && !/^capacitor:|^ionic:|^file:/.test(location.protocol);
 const ytThumb = v => `https://i.ytimg.com/vi/${encodeURIComponent(v)}/hqdefault.jpg`;
+/* b312: on the phone, play through our own https page (docs/yt.html on GitHub Pages) — YouTube accepts that address */
+const YT_HOST = 'https://ewheridot-ux.github.io/tega-app/yt.html';
+function ytSrc(v, o={}){ if (ytEmbedOK()){ const p=new URLSearchParams({playsinline:'1',rel:'0',modestbranding:'1',iv_load_policy:'3'}); if(o.start) p.set('start',String(+o.start||0)); if(o.loop){ p.set('loop','1'); p.set('playlist',v); } if(o.autoplay) p.set('autoplay','1'); if(o.mute) p.set('mute','1'); if(o.controls===0) p.set('controls','0'); return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(v)}?${p}`; }
+  const p=new URLSearchParams({v}); if(o.start) p.set('start',String(+o.start||0)); if(o.loop) p.set('loop','1'); if(o.autoplay) p.set('autoplay','1'); if(o.mute) p.set('mute','1'); if(o.controls===0) p.set('controls','0'); return `${YT_HOST}?${p}`; }
 function ytOpen(v,start){ const u=`https://www.youtube.com/watch?v=${encodeURIComponent(v)}${start?'&t='+(+start||0)+'s':''}`; const a=document.createElement('a'); a.href=u; a.target='_blank'; a.rel='noopener'; document.body.appendChild(a); a.click(); a.remove(); }
 function yLoop(id,wide){ yvidLoad(); const v=YVID&&YVID[id]; if (!v||!v.v) return '';
-  if (!ytEmbedOK()) return `<span class="${wide?'yv-loop':'yg-vid'} ${v.short?'sh':''} yt-still"><img src="${ytThumb(v.v)}" alt="${esc(YP[id].n)}" loading="lazy" referrerpolicy="no-referrer"></span>`; const src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.v)}?autoplay=1&mute=1&loop=1&playlist=${encodeURIComponent(v.v)}&controls=0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3${v.start?'&start='+(+v.start||0):''}`;
+  const src=ytSrc(v.v,{autoplay:1,mute:1,loop:1,controls:0,start:v.start});
   return `<span class="${wide?'yv-loop':'yg-vid'} ${v.short?'sh':''}"><iframe src="${src}" title="${esc(YP[id].n)} demo" allow="autoplay; encrypted-media" tabindex="-1"></iframe></span>`; }
 function yVidBtn(id,cls){ yvidLoad(); const v=YVID&&YVID[id]; return v&&v.v?`<button class="${cls||'btn ghost sm'}" onclick="yVidPlay('${id}')">▶ Watch a real demo</button>`:`<a class="${cls||'btn ghost sm'}" href="https://www.youtube.com/results?search_query=${encodeURIComponent(YP[id].n+' stretch how to')}" target="_blank" rel="noopener">▶ Watch a real demo</a>`; }
 function yVidPlay(id){ const v=YVID&&YVID[id]; if (!v) return; const sh=!!v.short;
-  if (!ytEmbedOK()){ ytOpen(v.v, v.start); return; }
-  gSheet(`<span class="tag">${esc(v.ch||'YouTube')}</span><h2 class="g-sh-t">${esc(YP[id].n)}</h2><div class="yv-wrap ${sh?'sh':''}"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.v)}?playsinline=1&rel=0&modestbranding=1${v.start?'&start='+(+v.start||0):''}" title="${esc(YP[id].n)} demo" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
+  gSheet(`<span class="tag">${esc(v.ch||'YouTube')}</span><h2 class="g-sh-t">${esc(YP[id].n)}</h2><div class="yv-wrap ${sh?'sh':''}"><iframe src="${ytSrc(v.v,{start:v.start})}" title="${esc(YP[id].n)} demo" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
     <div class="row" style="gap:6px;margin-top:10px"><a class="btn ghost sm" href="https://www.youtube.com/watch?v=${encodeURIComponent(v.v)}" target="_blank" rel="noopener">Open in YouTube</a><button class="btn ghost sm" onclick="yPoseSheet('${id}')">‹ Steps</button></div>`); }
 const ySteps=(id,cls)=>YPOSE[id]?`<ol class="${cls||'y-steps'}">${YPOSE[id].steps.map(t=>`<li>${esc(t)}</li>`).join('')}</ol>`:'';
 
