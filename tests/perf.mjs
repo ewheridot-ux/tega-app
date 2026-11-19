@@ -53,7 +53,7 @@ ok('avatar is a real picture on the first render (not a placeholder), cloud stil
 ok('avatar painted within 300 ms of the app\'s first frame', av.d != null && av.d < 300, (av.d == null ? 'not recorded' : Math.round(av.d) + ' ms') + (avs.length > 1 ? ` (best of ${avs.length}: ${avs.map(x => x.d == null ? '–' : Math.round(x.d)).join(', ')})` : ''));
 
 // render time per page (median of 5): a page change (cached numbers) and a render right after your data changed
-const PAGES = ['today', 'week', 'quests', 'model', 'content', 'datum', 'gym', 'money', 'social', 'hustle', 'learn', 'city', 'evolve'];
+const PAGES = ['today', 'week', 'quests', 'model', 'content', 'datum', 'gym', 'money', 'social', 'learn', 'city', 'evolve'];
 const times = {}, fresh = {};
 for (const v of PAGES) {
   const r = await page.evaluate(async v => { location.hash = v; await new Promise(r => setTimeout(r, 300)); const nav = [], dat = [], med = a => a.sort((x, y) => x - y)[a.length >> 1];
@@ -76,7 +76,7 @@ let tapT = tap; if (tapT >= 2 * BUDGET) tapT = Math.min(tapT, await page.evaluat
 ok(`a tap that saves data (commit) on Today < ${2 * BUDGET} ms`, tapT < 2 * BUDGET, Math.round(tapT) + ' ms' + (tapT !== tap ? ` (first look ${Math.round(tap)})` : ''));
 
 // Life look: every Life entry (nav icon + each tab) shows Streetwear · Safety Orange
-for (const v of ['life', 'social', 'hustle', 'learn']) {
+for (const v of ['life', 'social', 'learn']) {
   const a = await page.evaluate(async v => { location.hash = 'today'; await new Promise(r => setTimeout(r, 200)); location.hash = v; await new Promise(r => setTimeout(r, 300));
     const h = document.documentElement; return { skin: h.dataset.skin, look: h.dataset.look, hl: getComputedStyle(document.querySelector('.nav button.on')).backgroundColor }; }, v);
   ok(`Life look via #${v}`, a.skin === 'study' && a.look === 'street', `${a.skin}/${a.look}`);
@@ -104,7 +104,7 @@ const swipe = async (v, dir) => {
     const v = document.getElementById('view'); S0.stuckTransform = (v.style.transform || '') + (getComputedStyle(v).transform !== 'none' ? ' computed:' + getComputedStyle(v).transform : '') + (getComputedStyle(v).willChange.includes('transform') ? ' will-change' : '');
     S0.moved = (swInfo() || {}).i !== before; return S0; }, dir);
 };
-for (const v of ['social', 'hustle', 'today', 'money', 'gym']) {
+for (const v of ['social', 'week', 'today', 'money', 'gym']) {
   const r = await swipe(v, 1) || await swipe(v, -1);
   if (!r) { console.log(`· ${v}: no tab bar`); continue; }
   ok(`swipe ${v}: page never blank`, r.blank === 0, `min opacity ${r.minOp.toFixed(2)} over ${r.frames} frames`);
@@ -237,7 +237,7 @@ if (SHOTS && canTouch) { // finger held 150 px into a drag, scrolled down: both 
     const T = (type, x) => { const t = new Touch({ identifier: 2, target: tgt, clientX: x, clientY: y }); tgt.dispatchEvent(new TouchEvent(type, { touches: type === 'touchend' ? [] : [t], targetTouches: type === 'touchend' ? [] : [t], changedTouches: [t], bubbles: true, cancelable: true })); };
     T('touchstart', W / 2); for (let k = 1; k <= 8; k++) { T('touchmove', W / 2 - 150 * k / 8); await raf(); } await wait(300); T('touchmove', W / 2 - 151); await raf(); window.__held = () => T('touchend', W / 2 - 151); return true; });
   if (held) { await page.screenshot({ path: path.join(SHOTS, `${ENGINE}-drag-held.png`) }); await page.evaluate(() => window.__held()); await page.waitForTimeout(700); } }
-if (SHOTS) for (const v of ['today', 'social', 'hustle', 'learn', 'gym', 'money', 'model', 'city']) {
+if (SHOTS) for (const v of ['today', 'social', 'learn', 'gym', 'money', 'model', 'city']) {
   await page.evaluate(async v => { try { evoSnooze = true; closeEvo(); } catch (e) { } location.hash = v; await new Promise(r => setTimeout(r, 500)); scrollTo(0, 0); }, v); await page.waitForTimeout(500);
   await page.screenshot({ path: path.join(SHOTS, `${ENGINE}-${v}.png`) });
 }

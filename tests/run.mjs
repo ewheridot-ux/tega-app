@@ -184,21 +184,54 @@ ok('Undo puts everything back', ag.undone, JSON.stringify(ag));
 ok('problems you report go on the fix list', ag.fix, JSON.stringify(ag));
 ok('Tega can add quests', ag.quest, JSON.stringify(ag));
 ok('Ask Tega button sits next to your picture', await page.evaluate(() => !!document.querySelector('.brand .tg-ask')));
-// the side hustle area: starter goal, logging counts everywhere, XP only goes up, it's on the city, stats, skill trees and bosses
-const hz = await page.evaluate(() => { delete S.hustle; S.quarters[THIS_Q].objectives=S.quarters[THIS_Q].objectives.filter(o=>o.track!=='hustle'); hustleSeed(); _mVer++; commit({skipXp:true}); const x0=computeXP(); go('hustle'); const H=ensureHustle(), seeded=(S.quarters[THIS_Q].objectives||[]).some(o=>o.track==='hustle');
-  H.log.push({id:'hzT', d:TODAY, mins:120, note:'test'}); H.ships.push({id:'hzS', d:TODAY, text:'test'}); _mVer++; commit({skipXp:true});
-  const kr=(S.quarters[THIS_Q].objectives.find(o=>o.track==='hustle')?.krs||[]).find(k=>k.src==='hustlehrs');
-  const r={seeded, hrs:fact('hustlehrs',TODAY), kr:kr&&kr.current, xpUp:computeXP()>x0, stat:statAttrs().some(a=>a.n==='HUSTLE'), tree:!!areaInfo('HUSTLE'), boss:bossList().some(b=>b.id==='hustle'), track:T.hustle.name, renamed:''};
-  ensureHustle().name='CAD'; ensureHustle().icon='⚙️'; r.renamed=T.hustle.name+T.hustle.icon; ensureHustle().name='Side Hustle'; ensureHustle().icon='🚀';
-  H.log=H.log.filter(l=>l.id!=='hzT'); H.ships=H.ships.filter(l=>l.id!=='hzS'); _mVer++; commit({skipXp:true}); r.xpKept=computeXP()>=x0; go('city'); return r; }).catch(e=>({err:String(e)}));
-await page.waitForFunction(() => [...document.querySelectorAll('.cy-m')].some(e => /Workshop/.test(e.getAttribute('aria-label') || '')), null, { timeout: 4000 }).catch(() => {});   // the city can take a moment to draw
+// b317: the side hustle is no longer a category — it's a Project in Learning. Nothing lost: its log still earns XP, feeds goals and hits the Fog boss
+const hz = await page.evaluate(() => { const r = {}, H = ensureHustle(), keep = JSON.stringify({ h: S.hustle, l: S.learn, q: S.quarters, w: S.weeklyTemplate });
+  r.noNav = !LIFE.some(([k]) => k === 'hustle') && !TRACKS.some(t => t.key === 'hustle') && !AREAS.some(a => a.k === 'HUSTLE') && !bossList().some(b => b.id === 'hustle');
+  // an old item tracked 'hustle' moves to Learning on migrate
+  const st = JSON.parse(JSON.stringify(S)); delete st.hustleOff; st.quests = [...(st.quests || []), { id: 'qz', text: 'old hustle quest', track: 'hustle' }]; migrate(st); r.retracked = st.quests.find(q => q.id === 'qz').track === 'learning';
+  const xBefore = computeXP(); H.log.push({ id: 'hzT', d: TODAY, mins: 120, note: 'test' }); H.ships.push({ id: 'hzS', d: TODAY, text: 'test' }); lrSubs(); S.learn.hzAdded = 0; S.learn.subjects = S.learn.subjects.filter(x => x.link !== 'hustle'); _mVer++; commit({ skipXp: true });
+  const x0 = computeXP(), P = lrSubs().find(x => x.link === 'hustle'); r.project = !!P && P.kind === 'project';
+  r.page = P ? /Log/.test(vProject(P)) && /shipped/.test(vProject(P)) : false; r.hrs = fact('hustlehrs', TODAY);
+  const fog0 = aBossEvents('mind', TODAY.slice(0, 7)).filter(e => /test|Side project|2h/.test(e.l)).length; r.fog = fog0 > 0;
+  // a brand-new project earns XP too
+  S.learn.subjects.push({ id: 'pNew', name: 'Etsy shop', icon: '🧵', kind: 'project', log: [], ships: [], income: [] }); _mVer++; commit({ skipXp: true }); const x1 = computeXP();
+  const f = document.createElement('form'); f.innerHTML = '<input name="mins" value="60"><input name="note" value="x">'; projLog({ preventDefault() { }, target: f }, 'pNew'); r.newXp = computeXP() > x1; r.src = !!ksrc('proj:pNew');
+  H.log = H.log.filter(l => l.id !== 'hzT'); H.ships = H.ships.filter(l => l.id !== 'hzS'); _mVer++; commit({ skipXp: true }); r.xpKept = computeXP() >= xBefore;
+  const k = JSON.parse(keep); S.hustle = k.h; S.learn = k.l; S.quarters = k.q; S.weeklyTemplate = k.w; _mVer++; commit({ skipXp: true }); go('city'); return r; }).catch(e => ({ err: String(e) }));
+await page.waitForFunction(() => document.querySelectorAll('.cy-m').length > 3, null, { timeout: 4000 }).catch(() => {});
 const hzCity = await page.evaluate(() => [...document.querySelectorAll('.cy-m')].map(e=>e.getAttribute('aria-label')).join('|'));
-ok('side hustle gets a starter goal', hz.seeded, JSON.stringify(hz));
-ok('logging side hustle time counts toward its goal', hz.hrs === 2 && hz.kr >= 2, JSON.stringify(hz));
-ok('side hustle work earns XP, and XP never drops when it is deleted', hz.xpUp && hz.xpKept, JSON.stringify(hz));
-ok('side hustle has a stat, skill tree and boss', hz.stat && hz.tree && hz.boss, JSON.stringify(hz));
-ok('you can rename it (e.g. to CAD)', hz.renamed === 'CAD⚙️', JSON.stringify(hz));
-ok('the city shows the side hustle', /Workshop/.test(hzCity), hzCity);
+ok('Hustle is gone as a category (Life, tracks, areas, bosses)', hz.noNav, JSON.stringify(hz));
+ok('old side-hustle items move to the Learning track', hz.retracked, JSON.stringify(hz));
+ok('the side hustle lives in Learning as a Project, with its log', hz.project && hz.page && hz.hrs === 2, JSON.stringify(hz));
+ok('project time earns XP, feeds goals and hits the Fog boss; XP never drops', hz.fog && hz.newXp && hz.src && hz.xpKept, JSON.stringify(hz));
+ok('the city has no Workshop any more', !/Workshop/.test(hzCity) && /Library/.test(hzCity), hzCity);
+// Circle runs itself: Close the day “saw anyone” logs a hangout that counts; coming up + birthdays + reach out; hold a person; deleted events stay gone
+const ci = await page.evaluate(() => { const r = {}, keep = JSON.stringify(S.circle || {}); const C = (S.circle ||= { ev: [], people: [] }); C.people ||= [];
+  C.people.push({ name: 'Zed', first: addDays(TODAY, -60), last: addDays(TODAY, -30), n: 3 }, { name: 'Ama', first: addDays(TODAY, -10), last: addDays(TODAY, -2), n: 5, bday: addDays(TODAY, 5).slice(5) });
+  C.ev = (C.ev || []).concat([{ id: 'Gfut', d: addDays(TODAY, 3), name: 'Dinner · Test Spot', where: '', src: 'Resy' }]); commit({ skipXp: true });
+  const v = vCircle(); r.order = v.indexOf('Coming up') < v.indexOf('Recent') && /Ama’s birthday/.test(v) && /Dinner · Test Spot/.test(v) && /Reach out/.test(v) && /Zed/.test(v);
+  const n0 = fact('events', TODAY, TODAY); closeDayOpen(); const chip = [...document.querySelectorAll('#cdSaw button')].find(b => b.dataset.n === 'Ama'); chip && chip.click(); document.getElementById('cdSawNew').value = 'Kofi';
+  closeDaySave(); r.saw = fact('events', TODAY, TODAY) === n0 + 1 && C.people.some(p => p.name === 'Kofi' && p.last === TODAY) && C.people.find(p => p.name === 'Ama').last === TODAY;
+  r.personHold = !!holdInfo('person', 'Ama')?.acts.some(a => /birthday/.test(a[0])); socHide('Gfut'); r.hidden = !socAll().some(e => e.id === 'Gfut');
+  S.circle = JSON.parse(keep); commit({ skipXp: true }); document.querySelectorAll('.modal,#toast-act').forEach(m => m.remove()); return r; });
+ok('Circle leads with coming up, birthdays and who to reach out to', ci.order, JSON.stringify(ci));
+ok('Close the day: tap who you saw → a hangout that counts, people updated', ci.saw, JSON.stringify(ci));
+ok('Circle: hold a person for birthday; deleted events stay gone', ci.personHold && ci.hidden, JSON.stringify(ci));
+// Grow: subject types — book sessions tick reading + count XP, finishing a book is a win; hobby/project log hours with XP; all hit the Fog
+const gw = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ l: S.learn, w: S.wins, h: S.habits, d: S.days[TODAY] }); lrSubs();
+  view = 'learn'; lrAdding = true; render(); r.types = document.querySelectorAll('.lr-types button').length === 5;
+  const mk = (ty, name) => { lrNewType = ty; const f = document.createElement('form'); f.innerHTML = `<input name="ic" value=""><input name="n" value="${name}">`; lrAddSub({ preventDefault() { }, target: f }); return lrSubs().find(x => x.name === name); };
+  const B = mk('book', 'Atomic Habits'), H = mk('hobby', 'Painting'), P = mk('project', 'Etsy shop');
+  r.kinds = B.kind === 'custom' && B.type === 'book' && H.kind === 'project' && H.hobby && P.kind === 'project' && !P.hobby;
+  B.lessons = [{ id: 'b1', t: 'Ch 1', mins: 30 }, { id: 'b2', t: 'Ch 2', mins: 30 }]; S.habits.push({ id: 'hRead', name: 'Read 30 min', icon: '📖' }); commit({ skipXp: true });
+  const x0 = computeXP(), w0 = S.wins.length; lrDone(B.id, 'b1'); r.readTick = !!ensureDay(TODAY).habits.hRead; lrDone(B.id, 'b2');
+  r.finished = !!B.finished && S.wins.length === w0 + 1 && computeXP() >= x0 + 15 * 2 + 50;
+  r.hobbyPage = !/Ship/.test(vProject(H)) && /Hobby/.test(vProject(H)) && /Ship/.test(vProject(P));
+  const fog = aBossEvents('mind', TODAY.slice(0, 7)); r.fog = fog.some(e => /Lesson · Atomic Habits/.test(e.l));
+  const k = JSON.parse(keep); S.learn = k.l; S.wins = k.w; S.habits = k.h; S.days[TODAY] = k.d; lrAdding = false; view = 'today'; commit({ skipXp: true }); return r; });
+ok('Grow: add a Skill, Book, Language, Hobby or Project', gw.types && gw.kinds, JSON.stringify(gw));
+ok('Grow: a book session ticks reading; finishing a book = win + bonus XP; lessons hit the Fog', gw.readTick && gw.finished && gw.fog, JSON.stringify(gw));
+ok('Grow: hobbies log practice (no ship/income), projects keep both', gw.hobbyPage, JSON.stringify(gw));
 // Top 3 stays empty until you write it; one way into Tega
 const t3 = await page.evaluate(() => { const d=ensureDay(TODAY); const keep=JSON.stringify(d.top3); d.top3[0]={text:'auto thing',track:'',done:false,auto:1}; d.top3[1]={text:'mine',track:'',done:false}; d.top3[2]={text:'',track:'',done:false}; S.t3clear=''; d.t3auto=0; runAutos();
   const r={cleared:d.top3[0].text==='', kept:d.top3[1].text==='mine', notFilled:d.top3[2].text===''}; d.top3=JSON.parse(keep); go('today'); return r; });

@@ -23,3 +23,8 @@ Rules that never bend:
 - New CSS goes right above the `/* @css-insert */` marker, between whole rules — never inside a selector.
 - Tab bars (`.seg` or `[role=tablist]`) get swipe + slide animation for free; new pages should use one.
 - Wishlist (Money → Now): claiming loot you saved for gives 10 XP per $100 (same as old tax bills) and logs a win.
+- Side hustle (b318): no longer its own category. It is a Learning Project (old data stays in S.hustle; its XP, badges and goal sources still count; items tracked 'hustle' moved to 'learning'). Projects earn 10 XP/hour + 40 per thing shipped, have goal sources (proj:<id> hours) and hit the Fog boss.
+- Learning (b318): subject types Skill / Book / Language / Hobby / Project. Lessons 15 XP; finishing a book +50 XP and a win; book sessions tick a "Read" habit; every lesson and project session hits the Fog boss.
+- Circle (b318): Close the day "Saw anyone?" logs a hangout for today (counts as an event: XP, SOCIAL, Plaza, Hermit King); calendar plans "with Sam" update people.
+- Activities link by words (b317): stretch/mobility/yoga, gym/workout, guitar/practice, bench/Datum, post/film, read (books), study/lesson/learn — matching habits and Top 3 tick themselves.
+

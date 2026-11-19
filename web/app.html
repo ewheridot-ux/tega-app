@@ -436,6 +436,13 @@ html.sw-run #app{overflow-x:clip}
 #navqa[data-hl="street"] button{font-size:16px;border-radius:12px;text-transform:uppercase;letter-spacing:.04em}#navqa[data-hl="street"] button i{color:#ff6a13}
 #navqa[data-hl="street"] button:active{background:#ff6a13;color:#161616}#navqa[data-hl="street"] button:active i{color:#161616}
 #navqa[data-hl="street"] .nq-open{border-top:1px solid #333}
+/* b317: Grow — subject types */
+.lr-types{display:flex;gap:6px;overflow-x:auto;margin-top:10px;padding-bottom:2px;scrollbar-width:none}.lr-types::-webkit-scrollbar{display:none}
+.lr-types button{flex:none;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card2);color:var(--fg);font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}
+.lr-types button.on{background:var(--accent);border-color:transparent;color:var(--bg);font-weight:700}
+/* b317: close the day — who did you see */
+.cd-saw{display:flex;flex-wrap:wrap;gap:6px}.cd-saw button{padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card2);color:var(--fg);font:inherit;font-size:13px;cursor:pointer}
+.cd-saw button.on{background:var(--relationships,#b98cff);border-color:transparent;color:#120a1f;font-weight:700}.cd-saw .inp{flex:1 1 120px;min-width:110px;padding:7px 10px;font-size:13px}
 /* b317: key result rows stay inside the card — the text column can't grow past its share, hints wrap instead of running off */
 .krt{grid-template-columns:minmax(0,1fr)}
 .krt>*{min-width:0}
@@ -2073,7 +2080,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b317';
+const BUILD='b318';
 /* b316: bottom sheets sit above the iPhone keyboard — the sheet follows the visible part of the screen (visualViewport),
    and the field you tap scrolls into view inside it. Before, the keyboard slid over “New quest” and every other sheet. */
 (function(){ const v=window.visualViewport, R=document.documentElement; if (!v) return;
@@ -2133,9 +2140,9 @@ const TRACKS = [
   {key:'relationships',name:'Relationships',icon:'🤝',color:'var(--relationships)'},
   {key:'fitness',name:'Fitness',icon:'💪',color:'var(--fitness)'},
   {key:'learning',name:'Learning',icon:'📚',color:'var(--learning)'},
-  {key:'hustle', get name(){ try { return (S.hustle&&S.hustle.name)||'Side Hustle'; } catch(e){ return 'Side Hustle'; } }, get icon(){ try { return (S.hustle&&S.hustle.icon)||'🚀'; } catch(e){ return '🚀'; } }, color:'var(--hustle)'},
+  /* b317: the side hustle is no longer its own category — it lives in Learning as a Project (see hustleRetire) */
 ];
-const T = Object.fromEntries(TRACKS.map(t=>[t.key,t])); T.cad={key:'cad',name:'CAD (archived)',icon:'⚙️',color:'var(--cad)'};
+const T = Object.fromEntries(TRACKS.map(t=>[t.key,t])); T.cad={key:'cad',name:'CAD (archived)',icon:'⚙️',color:'var(--cad)'}; T.hustle={key:'hustle',name:'Learning',icon:'📚',color:'var(--learning)'};   // old items read as Learning
 const tIcon = k => T[k]?.icon || '🎯';
 const tColor = k => T[k]?.color || 'var(--accent)';
 
@@ -2237,7 +2244,19 @@ function cadArchive(st){ if (st.cadOff) return; st.cadOff=1; const A=((st.archiv
   if (Array.isArray(st.weeklyTemplate)){ A.weekly.push(...st.weeklyTemplate.filter(isC)); st.weeklyTemplate=st.weeklyTemplate.filter(x=>!isC(x)); }
   if (Array.isArray(st.dl)){ const c=x=>/upwork|\bcad\b/i.test(x.text||'')||x.type==='cad'; A.deadlines.push(...st.dl.filter(c)); st.dl=st.dl.filter(x=>!c(x)); }
   if (Array.isArray(st.quests)){ A.quests.push(...st.quests.filter(q=>isC(q)&&!q.done)); st.quests=st.quests.filter(q=>!(isC(q)&&!q.done)); } }
-function migrate(st){ try { cadArchive(st); } catch(e){}
+/* b317: retire the side hustle as a category. Nothing is deleted: its log, ships and income stay in st.hustle (XP, badges and goal
+   sources keep counting), it shows up in Learning as a Project, and everything tracked 'hustle' moves to the Learning track. */
+function hustleRetire(st){ if (st.hustleOff) return; const lr=x=>{ if (x && x.track==='hustle') x.track='learning'; }, arr=v=>Array.isArray(v)?v:[];
+  for (const Q of Object.values(st.quarters||{})) for (const o of arr(Q&&Q.objectives)) lr(o);
+  for (const Y of Object.values(st.years||{})) for (const o of arr(Y&&Y.objectives)) lr(o);
+  for (const m of arr(st.vision&&st.vision.milestones)) lr(m);
+  for (const x of arr(st.weeklyTemplate)) lr(x);
+  // some week fields are maps (inits = {id:true}); arr() only walks lists
+  for (const W of Object.values(st.weeks||{})) for (const x of [...arr(W&&W.extra), ...arr(W&&W.inits)]) lr(x);
+  for (const x of arr(st.quests)) lr(x); for (const x of arr(st.dl)) lr(x);
+  for (const d of Object.values(st.days||{})) for (const t of arr(d&&d.top3)) lr(t);
+  st.hustleOff=new Date().toISOString().slice(0,10); }
+function migrate(st){ try { cadArchive(st); } catch(e){} try { hustleRetire(st); } catch(e){}
   try { if (st.rescueDone && !st.streakRescued){ st.shieldUsed ||= {}; for (const k of ['2026-10-18','2026-10-19']) if (!(st.days?.[k]&&(st.days[k].checkin))) st.shieldUsed[k]=1; st.streakRescued=1; } } catch(e){}
   if (!st.habits.some(h=>h.id==='datum')) st.habits.splice(2,0,{id:'datum',name:'Bench session',icon:'◆'});
   const d = seed();
@@ -2425,6 +2444,7 @@ function computeXP0(){
   xp += rpgExtraXP();
   xp += datumXP();
   try { const H=ensureHustle(); xp += Math.round(H.log.reduce((a,l)=>a+(+l.mins||0),0)/60*10) + H.ships.length*40; } catch(e){}
+  try { for (const x of ((S.learn||{}).subjects||[])) if (x.kind==='project' && x.link!=='hustle') xp += Math.round((x.log||[]).reduce((a,l)=>a+(+l.mins||0),0)/60*10) + (x.ships||[]).length*40; } catch(e){}   // b317: every Learning project earns like the old hustle
   xp += gymXP();
   xp += moneyXP();
   xp += bossXP();
@@ -2434,11 +2454,11 @@ function computeXP0(){
   return xp;
 }
 // b295: learning pays like everything else — a lesson done 15, what it gave you written down 10, a drawing stage 25, inspo 3 (5 a day)
-const LXP={lesson:15, out:10, stage:25, inspo:3, inspoDay:5, hang:20};
+const LXP={lesson:15, out:10, stage:25, inspo:3, inspoDay:5, hang:20, book:50};
 function learnXP(){ let x=0; const D=ensureDatum();
   x+=Object.values(D.learnDone||{}).filter(d=>String(d)>=GAME_START).length*LXP.lesson + (D.learning||[]).filter(l=>l.output&&(l.d||'')>=GAME_START).length*LXP.out;
   x+=Object.values(S.drawLearn||{}).filter(d=>String(d)>=GAME_START).length*LXP.stage;
-  const byDay={}; for (const sb of ((S.learn||{}).subjects||[])){ x+=(sb.lessons||[]).filter(l=>l.done).length*LXP.lesson + (sb.log||[]).filter(g=>g.out).length*LXP.out; for (const it of sb.inspo||[]) byDay[it.d]=(byDay[it.d]||0)+1; }
+  const byDay={}; for (const sb of ((S.learn||{}).subjects||[])){ x+=(sb.lessons||[]).filter(l=>l.done).length*LXP.lesson + (sb.log||[]).filter(g=>g.out).length*LXP.out + (sb.finished&&sb.finished>=GAME_START?LXP.book:0); for (const it of sb.inspo||[]) byDay[it.d]=(byDay[it.d]||0)+1; }
   for (const n of Object.values(byDay)) x+=Math.min(LXP.inspoDay,n)*LXP.inspo; return x; }
 // a hangout that happened (logged, pasted, shared or from the calendar once its day passes) is worth 20
 function socialXP(){ try { return socAll().filter(e=>e.d>=GAME_START&&e.d<=TODAY).length*LXP.hang; } catch(e){ return 0; } }
@@ -2972,7 +2992,7 @@ function syncDatumKRs(){ // Datum numbers → quarter KRs
 /* ===================== Side hustle (b255): a whole area waiting for you to decide what it is ===================== */
 function ensureHustle(){ if (!S.hustle) S.hustle={name:'Side Hustle', icon:'🚀', log:[], ships:[], income:[], since:TODAY}; const H=S.hustle; H.log ||= []; H.ships ||= []; H.income ||= []; return H; }
 // first time only: one starter goal this quarter + a weekly goal, so it has goals like every other area (both editable / deletable)
-function hustleSeed(){ const H=ensureHustle(); if (H.seeded) return; H.seeded=TODAY;
+function hustleSeed(){ if (S.hustleOff) return; const H=ensureHustle(); if (H.seeded) return; H.seeded=TODAY;
   const Q=S.quarters?.[THIS_Q]; if (Q && !Q.objectives.some(o=>o.track==='hustle')) Q.objectives.push({id:uid(), track:'hustle', title:'Pick my side hustle and get it moving', why:'An extra income stream that isn’t modeling or Datum — try it before committing.', done:'Decided what it is, put real hours in, shipped something.', krs:[
     {id:uid(), text:'Side hustle hours', target:20, current:0, unit:'', src:'hustlehrs', base:0},
     {id:uid(), text:'Things shipped', target:2, current:0, unit:'', src:'hustleship', base:0},
@@ -2999,6 +3019,25 @@ function vHustle(){ const H=ensureHustle(); hustleSeed(); const [qs]=qRange(THIS
   <div class="card sec"><div class="hdr"><h2>Goals · ${THIS_Q}</h2><button class="btn ghost sm" onclick="hzGoal()">＋ Goal</button></div>${objs.length?objs.map(o=>`<button class="hz-o" onclick="curQ='${THIS_Q}';qOpen='${o.id}';go('quarter')"><span><b>${esc(o.title)}</b><small>${(o.krs||[]).map(k=>`${esc(k.text)} ${k.target===1?(krHit(k)?'✓':'—'):`${k.current||0}/${k.target}`}`).join(' · ')}</small></span><em class="num">${Math.round(objPct(o)*100)}%</em></button>`).join(''):'<div class="empty">No goals yet.</div>'}</div>
   <div class="card sec"><div class="hdr"><h2>Activity</h2></div>${feed.length?feed.map(x=>`<div class="hz-r" data-hold="hz:${x.k}|${x.id}"><span>${x.ic}</span><span style="flex:1;min-width:0">${esc(x.t)}<small>${nice(x.d)}</small></span><button class="x" onclick="hzDel('${x.k}','${x.id}')" aria-label="Delete">✕</button></div>`).join(''):'<div class="empty">Log your first session above — even 30 minutes counts.</div>'}</div>`; }
 
+/* b317: a Learning Project — sessions (hours), things shipped, money earned. The old side hustle is one (its data stays in S.hustle). */
+function projStore(x){ if (x.link==='hustle') return ensureHustle(); x.log ||= []; x.ships ||= []; x.income ||= []; return x; }
+let projMins=60;
+function projLog(e,id){ e.preventDefault(); const x=lrSubs().find(z=>z.id===id); if (!x) return false; const f=e.target, mins=Math.max(5,Math.min(720,+f.mins.value||0));
+  projStore(x).log.push({id:uid(), d:TODAY, mins, note:f.note.value.trim()}); projMins=mins; commit(); toast(`${x.icon||'🛠️'} ${fmtMins(mins)} logged · +XP`); return false; }
+function projShip(e,id){ e.preventDefault(); const x=lrSubs().find(z=>z.id===id), t=e.target.t.value.trim(); if (!x||!t) return false; projStore(x).ships.push({id:uid(), d:TODAY, text:t}); commit(); confetti(); toast('📦 Shipped'); return false; }
+function projPaid(e,id){ e.preventDefault(); const x=lrSubs().find(z=>z.id===id), a=+e.target.amt.value||0; if (!x||a<=0) return false; projStore(x).income.push({id:uid(), d:TODAY, amt:a, note:e.target.note.value.trim()}); commit(); toast(`💸 ${money0(a)} earned`); return false; }
+function projDel(id,kind,eid){ const x=lrSubs().find(z=>z.id===id); if (!x) return; const P=projStore(x); P[kind]=(P[kind]||[]).filter(e=>e.id!==eid); commit({skipXp:true}); }
+function vProject(x){ const P=projStore(x), [qs]=qRange(THIS_Q), ys=THIS_Y+'-01-01', sum=(L,f,a)=>L.filter(e=>e.d>=a).reduce((s,e)=>s+f(e),0);
+  const hQ=Math.round(sum(P.log,e=>+e.mins||0,qs)/6)/10, sh=P.ships.filter(e=>e.d>=qs).length, inc=sum(P.income,e=>+e.amt||0,ys), last=P.log.slice().sort((a,b)=>b.d.localeCompare(a.d))[0];
+  const feed=[...P.log.map(e=>({d:e.d, k:'log', id:e.id, t:`${fmtMins(+e.mins||0)}${e.note?' · '+e.note:''}`, ic:'🛠️'})), ...P.ships.map(e=>({d:e.d, k:'ships', id:e.id, t:`Shipped: ${e.text}`, ic:'📦'})), ...P.income.map(e=>({d:e.d, k:'income', id:e.id, t:`${money0(+e.amt||0)}${e.note?' · '+e.note:''}`, ic:'💸'}))].sort((a,b)=>b.d.localeCompare(a.d)).slice(0,12);
+  const hk=x.link==='hustle';
+  return `<div class="card sec"><div class="hdr"><h2>${esc(x.icon||'🛠️')} ${esc(x.name)}</h2><span class="sub">${x.hobby?'Hobby':'Project'}${last?` · last ${nice(last.d)}`:''}</span></div>
+    <div class="hz-st">${(x.hobby?[[hQ+'h','this quarter'],[P.log.filter(e=>e.d>=weekMonday(THIS_WEEK)).length,'sessions this week']]:[[hQ+'h','this quarter'],[sh,'shipped'],[money0(inc),'earned '+THIS_Y]]).map(([v,l])=>`<div><b class="num">${v}</b><small>${l}</small></div>`).join('')}</div>
+    <form class="hz-f" style="margin-top:12px" onsubmit="return projLog(event,'${x.id}')"><div class="seg" style="display:flex">${[30,60,90,120].map(m=>`<button type="button" class="${projMins===m?'on':''}" style="flex:1" onclick="projMins=${m};this.form.mins.value=${m};[...this.parentNode.children].forEach(b=>b.classList.toggle('on',b===this))">${fmtMins(m)}</button>`).join('')}</div>
+      <div class="row" style="gap:6px;flex-wrap:nowrap"><input class="inp num" name="mins" type="number" min="5" max="720" value="${projMins}" style="width:76px" aria-label="Minutes"><input class="inp" name="note" placeholder="what you worked on" style="flex:1;min-width:0"><button class="btn sm">Log</button></div></form>
+    ${x.hobby?'':`<form class="row" style="gap:6px;margin-top:10px;flex-wrap:nowrap" onsubmit="return projShip(event,'${x.id}')"><input class="inp" name="t" placeholder="📦 shipped something?" style="flex:1;min-width:0"><button class="btn ghost sm">Ship</button></form>
+    <form class="row" style="gap:6px;margin-top:8px;flex-wrap:nowrap" onsubmit="return projPaid(event,'${x.id}')"><input class="inp num" name="amt" type="number" min="1" step="any" placeholder="💸 $" style="width:90px"><input class="inp" name="note" placeholder="got paid for…" style="flex:1;min-width:0"><button class="btn ghost sm">Add</button></form>`}</div>
+  <div class="card sec"><div class="hdr"><h2>Activity</h2></div>${feed.length?feed.map(e=>`<div class="hz-r" ${hk?`data-hold="hz:${e.k}|${e.id}"`:''}><span>${e.ic}</span><span style="flex:1;min-width:0">${esc(e.t)}<small>${nice(e.d)}</small></span><button class="x" onclick="projDel('${x.id}','${e.k}','${e.id}')" aria-label="Delete">✕</button></div>`).join(''):'<div class="empty">Log your first session above — even 30 minutes counts.</div>'}</div>`; }
 function vDatum(){
   const D=ensureDatum(), ph=dActivePhase(), spent=dSpent(), planned=dPlanned();
   const onBench=D.prototypes.filter(p=>p.status!=='complete'&&p.status!=='failed');
@@ -3314,7 +3353,7 @@ window.addEventListener('hashchange', () => { const v=location.hash.slice(1); if
   if (ky) scrollTo(0,_swY); else if (from!==to && m && Date.now()-m.t<6e5) scrollTo(0,m.y); else window.scrollTo(0,0); _swY=null; } });   // b300: a tab change keeps your scroll; a new section starts at the top
 const GOALS = [['week','Week'],['quarter','OKRs'],['year','Year'],['vision','5-Year']];
 // b290: Life = the real categories that aren't work: your people, the side hustle, and what you're learning
-const LIFE = [['social','Circle'],['hustle','Hustle'],['learn','Learning']];
+const LIFE = [['social','Circle'],['learn','Learning']];   // b317: Hustle moved into Learning
 let lLast = 'social';
 let gLast = 'week';
 
@@ -3325,7 +3364,7 @@ function lifeNext(){ try { const cur=lrSubs().filter(x=>!x.archived&&x.kind==='c
 function lrGoNext(id){ lrTab=id; const jump=()=>setTimeout(()=>{ const c=document.getElementById('lr-upnext'); if (c) c.scrollIntoView({behavior:'smooth', block:'start'}); }, 80);
   if (view==='learn'){ render(); jump(); } else { location.hash='learn'; jump(); } }
 function lifeHero(){ try { const [qs]=qRange(THIS_Q), wk=weekMonday(THIS_WEEK), mo=TODAY.slice(0,7)+'-01', pad=n=>String(Math.round(+n||0)).padStart(2,'0');
-  const rows=[['social','Circle','nights out this quarter',fact('events',qs,TODAY)],['hustle',T.hustle.name,'hours this week',fact('hustlehrs',wk,TODAY)],['learn','Learning','lessons this month',lrLessonsDone(mo,TODAY)]], nx=lifeNext();
+  const rows=[['social','Circle','nights out this quarter',fact('events',qs,TODAY)],['learn','Learning','lessons + project hours this month',lrLessonsDone(mo,TODAY)+Math.round(fact('hustlehrs',mo,TODAY))]], nx=lifeNext();
   return `<div class="lf-hero"><span class="lf-stk">WK ${String(THIS_WEEK).split('W').pop()} · ${MON3[+TODAY.slice(5,7)-1].toUpperCase()}</span><h1 class="lf-h">LIFE <span>RN.</span></h1>
     ${rows.map(([k,n,sub,v])=>`<button class="lf-r ${view===k?'on':''}" onclick="go('${k}')"><span>${esc(n)}<small>${sub}</small></span><b class="num">${pad(v)}</b></button>`).join('')}
     ${nx?`<button class="lf-r lf-nx" onclick="${nx.go}"><span>Next up<small>${esc(nx.t)}</small></span><b>→</b></button>`:''}</div>`; } catch(e){ return ''; } }
@@ -3375,7 +3414,7 @@ function render(){
       ${(()=>{ const se=season(); let t=0, sd=false; try { t=seasonTrack().tier; sd=seasonBoss().showdown&&!seasonBoss().dead; } catch(e){} return `<span class="pill" style="cursor:pointer;box-shadow:inset 0 0 0 1.5px ${se.c}" onclick="seasonOpen()" title="Season ${se.no} · ${se.name}">${sd?'⚔️':se.ic} ${t}/13</span>`; })()}
     </div>
     <div class="nav" data-hl="${LIFE.some(([k])=>k===view)?'study':({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab'})[view]||'crt'}">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='today'&&GOALS.some(([k])=>k===view))||(v==='life'&&LIFE.some(([k])=>k===view))?'on':''}" data-tab="${v}" onclick="if(!navHeld())go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
-    <div id="view">${view==='today'?goalsTabs():GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):LIFE.some(([k])=>k===view)?lifeHero()+lifeTabs():''}${AREA_VIEW[view]?areaChip(AREA_VIEW[view]):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve,social:vSocial,bosses:vBosses,city:vCity,hustle:vHustle,learn:vLearning})[view]()}</div>`;
+    <div id="view">${view==='today'?goalsTabs():GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):LIFE.some(([k])=>k===view)?lifeHero()+lifeTabs():''}${AREA_VIEW[view]?areaChip(AREA_VIEW[view]):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve,social:vSocial,bosses:vBosses,city:vCity,hustle:()=>{ setTimeout(()=>{ lrTab=(lrSubs().find(x=>x.link==='hustle')||{}).id||lrTab; location.hash='learn'; },0); return ''; },learn:vLearning})[view]()}</div>`;
   if (window.__avPaint==null) try { const p=document.querySelector('.pfp-sm img, .pfp-sm svg'); if (p){ const first=(window.__r1||0)===1, t=()=>{ if (window.__avPaint==null){ window.__avPaint=performance.now(); window.__avFirst=first; } }; if (p.tagName!=='IMG'||p.complete) t(); else p.addEventListener('load',t,{once:true}); } } catch(e){}
   dlSheetRefresh(); try { if (_swAnim) swAnimApply(); else if (_pgLast!==view){ const v=document.getElementById('view'); if (v&&_pgLast&&!pgDissolve(_oldR&&_oldV, _oldR)){ v.classList.remove('pg-in'); void v.offsetWidth; v.classList.add('pg-in'); } } _pgLast=view; } catch(e){}
   try { swRememberSoon(); } catch(e){}
@@ -4317,27 +4356,44 @@ function lrLook(){ const i=LR_LOOKS.findIndex(([k])=>k===(S.learnLook||'zine'));
    (Guitar first) has lessons you add or let Tega suggest, a log of what you got out of each, and links to related pages. Archived, never deleted. */
 const LR_SEED_GTR=[['Tune up and hold the pick','tuning a guitar and holding a pick beginner'],['First chords: D, A and E','justin guitar first chords D A E beginner'],['One-minute chord changes','one minute chord changes guitar exercise'],['Strumming: down-up in time','beginner strumming pattern down up guitar'],['G and C chords','beginner G and C chord guitar lesson'],['Your first 4-chord song','easy 4 chord songs guitar beginner lesson'],['Reading tabs','how to read guitar tabs beginner'],['Power chords','power chords beginner guitar lesson']].map(([t,q],i)=>({id:'g'+i,t,url:'https://www.youtube.com/results?search_query='+encodeURIComponent(q),src:'YouTube search',mins:15}));
 function lrSubs(){ const L=(S.learn ||= {}); if (!L.subjects){ L.subjects=[{id:'datum',name:'Datum craft',icon:'◆',kind:'datum'},{id:'draw',name:'Drawing',icon:'✎',kind:'draw'},{id:'guitar',name:'Guitar',icon:'♪',kind:'custom',link:'guitar',lessons:LR_SEED_GTR,log:[]}]; }
+  if (S.hustleOff && !L.hzAdded){ L.hzAdded=1; const H=S.hustle, goalUses=Object.values(S.quarters||{}).some(Q=>(Q.objectives||[]).some(o=>(o.krs||[]).some(k=>/^hustle/.test(k.src||''))));
+    if (H && ((H.log||[]).length||(H.ships||[]).length||(H.income||[]).length||(H.name&&H.name!=='Side Hustle')||goalUses) && !L.subjects.some(x=>x.link==='hustle'))
+    L.subjects.push({id:'proj-hz', name:H.name&&H.name!=='Side Hustle'?H.name:'Side project', icon:H.icon||'🚀', kind:'project', link:'hustle'}); }
   return L.subjects; }
 const lrSub=id=>lrSubs().find(x=>x.id===id);
-function lrProg(x){ if (x.kind==='datum'){ const D=ensureDatum(); D.learnDone ||= {}; const n=LEARN_RES.filter(r=>D.learnDone[r.url]).length; return [n,LEARN_RES.length]; }
+function lrProg(x){ if (x.kind==='project'){ const P=projStore(x), [qs]=qRange(THIS_Q), h=Math.round((P.log||[]).filter(l=>l.d>=qs).reduce((a,l)=>a+(+l.mins||0),0)/60); return [h, Math.max(10, Math.ceil((h+1)/10)*10)]; }
+  if (x.kind==='datum'){ const D=ensureDatum(); D.learnDone ||= {}; const n=LEARN_RES.filter(r=>D.learnDone[r.url]).length; return [n,LEARN_RES.length]; }
   if (x.kind==='draw'){ const L=S.drawLearn||{}; return [DRAW_PATH.filter(z=>L[z.k]).length, DRAW_PATH.length]; }
   const ls=x.lessons||[]; return [ls.filter(l=>l.done).length, ls.length]; }
-function lrAddSub(ev){ ev.preventDefault(); const f=ev.target, name=f.n.value.trim(); if (!name) return false; const id='s'+uid();
-  lrSubs().push({id, name:name.slice(0,40), icon:(f.ic.value.trim()||'✦').slice(0,2), kind:'custom', lessons:[], log:[], link:/guitar/i.test(name)?'guitar':undefined}); lrTab=id; lrAdding=false; commit({skipXp:true}); return false; }
+/* b317: Grow — one place for anything you're getting better at. Pick a type when you add it; each gets its own plan,
+   and all of it pays the same XP, moves the Learning track and your goals, and hits the Fog. */
+const LR_TYPES={skill:['✦','Skill','What do you want to learn? (e.g. Photoshop)'], book:['📖','Book','Book title (e.g. Atomic Habits)'], language:['🗣️','Language','Which language? (e.g. Spanish)'], hobby:['🎨','Hobby','Which hobby? (e.g. guitar, painting)'], project:['🛠️','Project','What are you building? (e.g. Etsy shop)']};
+let lrNewType='skill';
+function lrAddSub(ev){ ev.preventDefault(); const f=ev.target, name=f.n.value.trim(); if (!name) return false; const id='s'+uid(), ty=lrNewType||'skill', ic=(f.ic.value.trim()||LR_TYPES[ty][0]).slice(0,2);
+  const base={id, name:name.slice(0,40), icon:ic, type:ty};
+  if (ty==='project'||ty==='hobby') lrSubs().push({...base, kind:'project', hobby:ty==='hobby'||undefined, log:[], ships:[], income:[]});
+  else lrSubs().push({...base, kind:'custom', lessons:[], log:[], link:/guitar/i.test(name)?'guitar':undefined});
+  lrTab=id; lrAdding=false; lrNewType='skill'; commit({skipXp:true}); if (['skill','book','language'].includes(ty)) setTimeout(()=>lrSuggest(id),50); return false; }
 let lrAdding=false, lrEdit=false, lrBusy=false;
 function lrArchive(id){ const x=lrSub(id); if (!x) return; x.archived=!x.archived; if (x.archived&&lrTab===id) lrTab=(lrSubs().find(z=>!z.archived)||{}).id||'news'; commit({skipXp:true}); toast(x.archived?`${x.name} archived — bring it back from Edit`:`${x.name} is back`); }
 function lrRename(id,v){ const x=lrSub(id); if (x&&v.trim()){ x.name=v.trim().slice(0,40); commit({skipXp:true}); } }
 function lrAddLesson(ev,id){ ev.preventDefault(); const f=ev.target, t=f.t.value.trim(); if (!t) return false; let u=f.u.value.trim(); if (u&&!/^https?:/i.test(u)) u='https://'+u;
   (lrSub(id).lessons ||= []).push({id:uid(), t:t.slice(0,90), url:u||'https://www.youtube.com/results?search_query='+encodeURIComponent(t+' '+lrSub(id).name), src:u?'':'YouTube search', mins:+f.m.value||0}); commit({skipXp:true}); return false; }
-function lrDone(id,lid){ const x=lrSub(id), l=(x.lessons||[]).find(z=>z.id===lid); if (!l) return; l.done=l.done?null:TODAY; if (l.done) (x.log ||= []).push({id:uid(), d:TODAY, t:l.t, out:''}); else x.log=(x.log||[]).filter(g=>!(g.t===l.t&&g.d===TODAY&&!g.out)); commit(); if (l.done) toast('Nice — add what you got out of it below'); }
+function lrDone(id,lid){ const x=lrSub(id), l=(x.lessons||[]).find(z=>z.id===lid); if (!l) return; l.done=l.done?null:TODAY;
+  if (x.type==='book' && l.done && (x.lessons||[]).every(z=>z.done) && !x.finished){ x.finished=TODAY; S.wins.push({id:uid(), d:TODAY, text:`📖 Finished ${x.name}`}); setTimeout(()=>{ confetti(); toast(`📖 Finished ${x.name} · +${LXP.book} XP`); },300); } if (l.done) (x.log ||= []).push({id:uid(), d:TODAY, t:l.t, out:''}); else x.log=(x.log||[]).filter(g=>!(g.t===l.t&&g.d===TODAY&&!g.out)); commit(); if (l.done) toast('Nice — add what you got out of it below'); }
 function lrDelLesson(id,lid){ const x=lrSub(id); x.lessons=(x.lessons||[]).filter(z=>z.id!==lid); commit({skipXp:true}); }
 function lrLogOut(id,gid,v){ const g=(lrSub(id).log||[]).find(z=>z.id===gid); if (g){ g.out=v.trim(); commit(); } }
 function lrLogAdd(ev,id){ ev.preventDefault(); const f=ev.target; if (!f.t.value.trim()) return false; (lrSub(id).log ||= []).push({id:uid(), d:TODAY, t:f.t.value.trim().slice(0,90), out:f.o.value.trim()}); commit(); return false; }
 async function lrSuggest(id){ const x=lrSub(id); if (lrBusy) return; if (typeof sampleLib==='undefined'||!sampleLib||!sampleLib.json) return toast('Tega can’t suggest right now — add lessons by hand');
   lrBusy=true; render(); try { const have=(x.lessons||[]).map(l=>l.t), done=(x.log||[]).map(g=>g.t);
-    const r=await sampleLib.json(`The user is learning "${x.name}". Done so far: ${JSON.stringify(done.slice(-15))}. Already on the list: ${JSON.stringify(have)}. Suggest the next 6 lessons in a sensible order, each a concrete 10-30 minute step a beginner-to-intermediate can do. For each give a YouTube search query that will surface a good free lesson. Return JSON only: {"lessons":[{"t":"short title","q":"youtube search query","mins":15}]}`);
+    const ask = x.type==='book'
+      ? `The user is reading the book "${x.name}". Done so far: ${JSON.stringify(done.slice(-15))}. Already on the list: ${JSON.stringify(have)}. Split the rest of the book into reading sessions of about 30 minutes each (by chapter or part, in order, up to 10 at a time). For each give a search query for a short summary or discussion of that part. Return JSON only: {"lessons":[{"t":"Ch 1–2 · short topic","q":"search query","mins":30}]}`
+      : x.type==='language'
+      ? `The user is learning ${x.name} from where they are. Done so far: ${JSON.stringify(done.slice(-15))}. Already on the list: ${JSON.stringify(have)}. Suggest the next 7 daily practice sessions of 10-15 minutes (one per day: words, phrases, listening, speaking), in order. For each give a YouTube search query for a good free lesson. Return JSON only: {"lessons":[{"t":"Day N · short topic","q":"youtube search query","mins":12}]}`
+      : `The user is learning "${x.name}". Done so far: ${JSON.stringify(done.slice(-15))}. Already on the list: ${JSON.stringify(have)}. Suggest the next 6 lessons in a sensible order, each a concrete 10-30 minute step a beginner-to-intermediate can do. For each give a YouTube search query that will surface a good free lesson. Return JSON only: {"lessons":[{"t":"short title","q":"youtube search query","mins":15}]}`;
+    const r=await sampleLib.json(ask);
     const o=r&&(r.lessons?r:r.value||r.data||r.result)||{}, L=(o.lessons||[]).filter(l=>l&&l.t&&!have.includes(l.t)).slice(0,8);
-    for (const l of L) (x.lessons ||= []).push({id:uid(), t:String(l.t).slice(0,90), url:'https://www.youtube.com/results?search_query='+encodeURIComponent(l.q||l.t), src:'YouTube search', mins:+l.mins||15});
+    for (const l of L) (x.lessons ||= []).push({id:uid(), t:String(l.t).slice(0,90), url:(x.type==='book'?'https://www.google.com/search?q=':'https://www.youtube.com/results?search_query=')+encodeURIComponent(l.q||l.t), src:x.type==='book'?'summary search':'YouTube search', mins:+l.mins||15});
     commit({skipXp:true}); toast(L.length?`Added ${L.length} lessons`:'No new lessons came back'); } catch(e){ toast('Couldn’t get suggestions: '+String(e&&e.message||e).slice(0,50)); }
   lrBusy=false; render(); }
 function lrLinked(x){ if (x.link!=='guitar'||!S.gtr) return ''; const G=S.gtr, wk=weekMonday(THIS_WEEK), mins=(G.log||[]).filter(l=>l.d>=wk).reduce((a,l)=>a+(+l.mins||0),0), lrn=(G.songs||[]).filter(z=>z.status===0);
@@ -4403,11 +4459,11 @@ function vLearning(){ lrNewsLoad(); const SUB=lrSubs(), live=SUB.filter(x=>!x.ar
   const subT=live.map(x=>{ const [n,t]=lrProg(x); return tile(x.id,x.icon||'✦',x.name,`${n}<small>/${t}</small>`,t?n/t:0).replace('<button ',`<button data-hold="lrsub:${x.id}" `); }).join('');
   const goals=`<div class="card sec"><div class="hdr"><h2>Learning goals · ${THIS_Q}</h2><button class="btn ghost sm" onclick="curQ=THIS_Q;qAdd=true;qAddTrack='learning';go('quarter')">＋ Goal</button></div>${objs.length?objs.map(o=>`<button class="hz-o" onclick="curQ='${THIS_Q}';qOpen='${o.id}';go('quarter')"><span><b>${esc(o.title)}</b><small>${(o.krs||[]).map(k=>`${esc(k.text)} ${k.target===1?(krHit(k)?'✓':'—'):`${k.current||0}/${k.target}`}`).join(' · ')}</small></span><em class="num">${Math.round(objPct(o)*100)}%</em></button>`).join(''):'<div class="empty">No Learning goals this quarter. Add one and every lesson you finish moves it.</div>'}</div>`;
   const cur=live.find(x=>x.id===lrTab);
-  const body=lrTab==='goals'?goals:lrTab==='news'?lrNewsHtml():lrTab==='foryou'?lrForYouHtml():!cur?'':lrInspo(cur)+(cur.kind==='datum'?dLearn():cur.kind==='draw'?vLearn():lrCustom(cur));
+  const body=lrTab==='goals'?goals:lrTab==='news'?lrNewsHtml():lrTab==='foryou'?lrForYouHtml():!cur?'':lrInspo(cur)+(cur.kind==='datum'?dLearn():cur.kind==='draw'?vLearn():cur.kind==='project'?vProject(cur):lrCustom(cur));
   const edit=lrEdit?`<div class="lr-edit">${SUB.map(x=>`<div class="row" style="gap:6px;flex-wrap:nowrap"><span style="width:22px;text-align:center">${esc(x.icon||'✦')}</span><input class="inp" style="flex:1;min-width:0" value="${esc(x.name)}" onchange="lrRename('${x.id}',this.value)"><button class="btn ghost sm" onclick="lrArchive('${x.id}')">${x.archived?'Restore':'Archive'}</button></div>`).join('')}</div>`:'';
   return `<div class="card sec lr-hero"><div class="lr-top"><div class="lr-k">Learning · ${new Date(TODAY+'T12:00').toLocaleDateString('en-US',{month:'long'})}</div></div><h2 class="lr-h">Subjects</h2>
     <div class="lr-tiles lr-subs" role="tablist">${subT}</div>
-    ${''}${lrAdding?`<form class="row lr-new" onsubmit="return lrAddSub(event)"><input class="inp" name="ic" placeholder="🎹" style="width:48px;text-align:center;padding-left:4px;padding-right:4px"><input class="inp" name="n" placeholder="What are you learning? (e.g. Spanish)" style="flex:1;min-width:0" required><button class="btn sm">Add</button></form>`:''}
+    ${''}${lrAdding?`<div class="lr-types" role="tablist">${Object.entries(LR_TYPES).map(([k,[ic,l]])=>`<button type="button" class="${lrNewType===k?'on':''}" onclick="lrNewType='${k}';render()">${ic} ${l}</button>`).join('')}</div><form class="row lr-new" onsubmit="return lrAddSub(event)"><input class="inp" name="ic" placeholder="${LR_TYPES[lrNewType][0]}" style="width:48px;text-align:center;padding-left:4px;padding-right:4px"><input class="inp" name="n" placeholder="${LR_TYPES[lrNewType][2]}" style="flex:1;min-width:0" required><button class="btn sm">Add</button></form>${['skill','book','language'].includes(lrNewType)?'<div class="help" style="margin-top:6px">Tega builds the plan for you right after.</div>':''}`:''}
     <div class="lr-tiles lr-more" role="tablist">${[['goals','★','Goals',op==null?'':op+'%'],['news','◉','News',lrNews?nwN:''],['foryou','✦','For you',lrNews&&fyN?fyN:'']].map(([k,ic,l,n])=>`<button role="tab" aria-selected="${lrTab===k}" class="${lrTab===k?'on':''}" onclick="lrTab='${k}';render()"><i>${ic}</i><span style="color:var(--lr-ink);font-weight:600">${l}</span>${n!==''?`<small class="num lr-n">${n}</small>`:''}</button>`).join('')}</div>
     ${owed?`<div class="lr-owe">✍️ ${owed} lesson${owed===1?'':'s'} still need what you got out of ${owed===1?'it':'them'} — see each subject’s log</div>`:''}
     <div class="row" style="gap:14px;margin-top:8px"><button class="linkbtn" style="font-size:12px" onclick="lrAdding=!lrAdding;render()">${lrAdding?'Cancel':'＋ Subject'}</button><button class="linkbtn" style="font-size:12px" onclick="lrEdit=!lrEdit;render()">${lrEdit?'Done editing':`Edit subjects${arch.length?` · ${arch.length} archived`:''}`}</button></div>${edit}</div>
@@ -6105,12 +6161,15 @@ function closeDayOpen(){ let m=document.getElementById('cday'); if(!m){ m=docume
     ${(()=>{ const H=hitsToday(), xp=dayXpFor(TODAY); return `<div class="cd-hits"><div class="row between"><span class="tag">Today you hit</span><b class="num" style="color:var(--good)">+${xp} XP</b></div>${H.length?`<div class="cd-hl">${H.map(h=>`<span class="hp-${h.k}">${h.ic} ${esc(h.t)}</span>`).join('')}</div>`:'<div class="sub" style="font-size:12px">No hits yet — anything you finish today shows up here.</div>'}</div>`; })()}
     <div class="tag" style="margin:12px 0 6px">How did today feel?</div>
     <div class="mm-vibe">${['😩','😐','🙂','🔥'].map((v,i)=>`<button class="${d.close?.feel===i?'on':''}" onclick="closeDaySet(${i})">${v}</button>`).join('')}</div>
+    <div class="tag" style="margin:14px 0 6px">Saw anyone today?</div>
+    <div class="cd-saw" id="cdSaw">${(()=>{ const seen=((S.circle||{}).saw||{})[TODAY]||[]; return socTop(8).map(p=>`<button type="button" class="${seen.includes(p.name)?'on':''}" data-n="${esc(p.name)}" onclick="this.classList.toggle('on')">${esc(p.name)}</button>`).join('')+`<input class="inp" id="cdSawNew" placeholder="＋ someone" autocomplete="off">`; })()}</div>
     <div class="tag" style="margin:14px 0 6px">One win</div>
     <input id="cdWin" class="inp" style="width:100%;box-sizing:border-box" placeholder="small counts" value="${esc(win?win.text:'')}">
     <button class="btn good" style="width:100%;justify-content:center;margin-top:12px" onclick="closeDaySave()">Close it out</button></div>`; }
 function closeDaySet(i){ const d=ensureDay(TODAY); d.close={...(d.close||{}), feel:i}; document.querySelectorAll('#cday .mm-vibe button').forEach((b,j)=>b.classList.toggle('on',j===i)); }
 function closeDaySave(){ const d=ensureDay(TODAY), t=(document.getElementById('cdWin')?.value||'').trim(); d.close={...(d.close||{}), at:new Date().toTimeString().slice(0,5)};
   if (t){ const w=S.wins.find(w=>w.d===TODAY); if (w) w.text=t; else S.wins.push({id:uid(), d:TODAY, text:t}); }
+  try { const names=[...document.querySelectorAll('#cdSaw button.on')].map(b=>b.dataset.n), nw=(document.getElementById('cdSawNew')?.value||'').split(',').map(x=>x.trim()).filter(Boolean); socSawToday(names.concat(nw)); } catch(e){}
   document.getElementById('cday')?.remove(); commit(); toast(['day closed. sleep like you meant it.','logged. tomorrow’s him problem.','closed out. the streak thanks you.'][new Date().getDate()%3]); }
 function ideaLink(id,v){ const x=(S.ideas||[]).find(x=>x.id===id); if(!x) return; x.link=v.trim(); const L=(S.logs||[]).find(l=>l.id===x.logId); if (L) L.b=x.link; commit({skipXp:true}); }
 function ideaStats(x){ if (!x.link) return null; const all=[...(igData().posts||[]),...(tkData().posts||[])]; const norm=u=>String(u||'').replace(/[?#].*$/,'').replace(/\/$/,''); return all.find(p=>norm(p.link)===norm(x.link))||null; }
@@ -6171,15 +6230,43 @@ async function socFromText(txt){ if (socPasteBusy) return 0;
 function socAdd(ev){ ev.preventDefault(); const f=ev.target, g=k=>f.querySelector(`[name=${k}]`).value.trim(); if(!g('name')) return false; const C=(S.circle ||= {ev:[],people:[]}); C.ev.push({id:'M'+uid(), d:g('d')||TODAY, name:g('name'), where:g('who'), src:'by hand'}); for (const p of g('who').split(',').map(x=>x.trim()).filter(Boolean)) socSeen(p, g('d')||TODAY); commit(); toast('🤝 Logged'); return false; }
 function socSeen(name,d){ const C=(S.circle ||= {ev:[],people:[]}); const p=C.people.find(p=>p.name.toLowerCase()===name.toLowerCase()); if (p){ p.last=d>p.last?d:p.last; p.n=(p.n||1)+1; } else C.people.push({name, first:d, last:d, n:1}); }
 function socPersonAdd(ev){ ev.preventDefault(); const v=ev.target.querySelector('input').value.trim(); if(!v) return false; socSeen(v,TODAY); commit({skipXp:true}); return false; }
+/* b317: Circle runs itself. Plans from email and your calendar come in on their own; Close the day asks who you saw (one tap);
+   the page leads with what's coming up and who you haven't seen. Typing a plan is still there, behind “＋ Log a plan”. */
+const qa = v => JSON.stringify(v).replace(/"/g,'&quot;');
+function socTop(n){ const C=S.circle||{people:[]}; return (C.people||[]).slice().sort((a,b)=>(b.last||'').localeCompare(a.last||'') || (b.n||0)-(a.n||0)).slice(0,n); }
+function socBdayNext(p){ if (!p.bday) return null; const y=+TODAY.slice(0,4); let d=`${y}-${p.bday}`; if (d<TODAY) d=`${y+1}-${p.bday}`; return d; }
+function socLogOpen(){ document.getElementById('soc-m')?.remove(); const m=document.createElement('div'); m.id='soc-m'; m.className='modal';
+  m.innerHTML=`<div class="card"><div class="row between" style="margin-bottom:10px"><h2 style="font-size:20px">＋ Log a plan</h2><button class="btn ghost sm" onclick="this.closest('.modal').remove()" aria-label="Close">✕</button></div>
+    <form onsubmit="this.closest('.modal').remove();return socPaste(event)" style="margin-bottom:10px"><textarea class="inp grow" rows="2" placeholder="Paste an invite — a Partiful link or text, an OpenTable or Resy text, a group chat plan"></textarea><button class="btn sm" style="margin-top:6px;width:100%;justify-content:center">Log from the invite</button></form>
+    <form class="mm-add" onsubmit="this.closest('.modal').remove();return socAdd(event)"><input class="inp" name="name" placeholder="What (dinner, game, party)" required><input class="inp" type="date" name="d" value="${TODAY}"><input class="inp" name="who" placeholder="Who (names, comma separated)" style="grid-column:1/-1"><button class="btn">Log it</button></form></div>`;
+  m.addEventListener('click',e=>{ if (e.target===m) m.remove(); }); document.body.appendChild(m); }
+function socBday(name){ const C=S.circle||{people:[]}, p=(C.people||[]).find(x=>x.name===name); if (!p) return; document.getElementById('soc-m')?.remove(); const m=document.createElement('div'); m.id='soc-m'; m.className='modal';
+  m.innerHTML=`<div class="card"><div class="row between" style="margin-bottom:10px"><h2 style="font-size:20px">🎂 ${esc(name)}’s birthday</h2><button class="btn ghost sm" onclick="this.closest('.modal').remove()" aria-label="Close">✕</button></div>
+    <form class="inline" onsubmit="event.preventDefault();socBdaySave(${qa(name)},this.d.value);this.closest('.modal').remove();return false"><input class="inp" type="date" name="d" value="${p.bday?THIS_Y+'-'+p.bday:''}" required><button class="btn">Save</button></form>
+    <div class="help" style="margin-top:8px">Only the month and day are kept. It shows in Coming up two weeks before.</div></div>`;
+  m.addEventListener('click',e=>{ if (e.target===m) m.remove(); }); document.body.appendChild(m); }
+function socBdaySave(name,v){ const p=((S.circle||{}).people||[]).find(x=>x.name===name); if (!p||!/^\d{4}-\d{2}-\d{2}$/.test(v)) return; p.bday=v.slice(5); commit({skipXp:true}); toast('🎂 Saved'); }
+// Close the day: who did you see? one hangout for today, counted like any other night out
+function socHide(id){ const C=(S.circle ||= {ev:[],people:[]}); (C.hide ||= {})[id]=1; commit({skipXp:true}); toastAct('🗑 Deleted','Undo',()=>{ delete C.hide[id]; commit({skipXp:true}); }); }
+function socSawToday(names){ names=[...new Set((names||[]).map(x=>String(x).trim()).filter(Boolean))]; if (!names.length) return; const C=(S.circle ||= {ev:[],people:[]}); C.ev ||= [];
+  for (const n of names) if (!((C.saw ||= {})[TODAY]||[]).includes(n)){ socSeen(n, TODAY); (C.saw[TODAY] ||= []).push(n); }
+  const id='D'+TODAY, all=C.saw[TODAY], e=C.ev.find(x=>x.id===id); const nm='Hung out · '+all.slice(0,3).join(', ')+(all.length>3?` +${all.length-3}`:'');
+  if (e){ e.name=nm; e.where=all.join(', '); } else C.ev.push({id, d:TODAY, name:nm, where:all.join(', '), src:'close the day'}); }
 function vCircle(){
   if (mcpLib && (S.circle||{}).syncDay!==TODAY) setTimeout(()=>socSync(false),0);
-  const E=socAll(), C=S.circle||{people:[]}, [qs,qe]=qRange(THIS_Q), inQ=E.filter(e=>e.d>=qs&&e.d<=qe&&e.d<=TODAY), P=(C.people||[]).slice().sort((a,b)=>a.last.localeCompare(b.last));
-  return `${mcpLib?`<div class="row" style="justify-content:flex-end;margin-bottom:8px"><button class="btn ghost sm" onclick="socSync(true)">↻ Check email</button></div>`:''}
-    <div class="card sec"><div class="hdr"><h2>Log a hangout</h2></div><form onsubmit="return socPaste(event)" style="margin-bottom:10px"><textarea class="inp grow" rows="2" placeholder="Paste an invite — a Partiful link or text, an OpenTable or Resy text, a group chat plan"></textarea><button class="btn sm" style="margin-top:6px;width:100%;justify-content:center">Log from the invite</button></form><form class="mm-add" onsubmit="return socAdd(event)"><input class="inp" name="name" placeholder="What (dinner, game, party)" required><input class="inp" type="date" name="d" value="${TODAY}"><input class="inp" name="who" placeholder="Who (names, comma separated)" style="grid-column:1/-1"><button class="btn">Log it</button></form></div>
-    <div class="card sec mm-list"><div class="tag mm-lab">Events</div>${E.map(e=>`<div class="ag-r" style="cursor:default${e.d>TODAY?';opacity:.75':''}"><span class="ag-d num">${e.d>TODAY?'⏳ ':''}${nice(e.d)}${e.d.slice(0,4)!==THIS_Y?' '+e.d.slice(2,4):''}</span><span class="ag-t"><b>${esc(e.name)}</b><small class="sub" style="display:block;font-size:11.5px">${esc(e.where||'')}${e.src?` · ${e.src}`:''}</small></span>${e.url?`<a href="${e.url}" target="_blank" rel="noopener" class="mm-pl">📎</a>`:''}</div>`).join('')||'<div class="empty">Nothing yet.</div>'}</div>
-    <div class="card sec mm-list"><div class="tag mm-lab">People</div>${P.map(p=>{ const dd=daysBetween(p.last,TODAY); return `<div class="mm-pay"><span><span class="fire" style="opacity:${Math.max(.15,1-daysBetween(p.last,TODAY)/45)}">🔥</span> ${esc(p.name)}</span><span class="sub"><span class="bond b${bondOf(p).i}">${bondOf(p).name}</span> · ${p.n}×${p.first?` · since ${nice(p.first)}`:''}</span><b class="num" style="${dd>30?'color:var(--warn)':''}">${dd===0?'today':dd+'d'}</b><button class="mm-dis" onclick="socSeen(${JSON.stringify(p.name).replace(/"/g,'&quot;')},TODAY);commit({skipXp:true})" aria-label="Saw them today">✓</button></div>`; }).join('')||'<div class="sub" style="padding:6px 10px">Add the people you want to keep close.</div>'}
+  const E=socAll(), C=S.circle||{people:[]}, P=(C.people||[]).slice().sort((a,b)=>(a.last||'').localeCompare(b.last||''));
+  const up=E.filter(e=>e.d>TODAY).sort((a,b)=>a.d.localeCompare(b.d)), past=E.filter(e=>e.d<=TODAY);
+  const bdays=(C.people||[]).map(p=>[p,socBdayNext(p)]).filter(([,d])=>d && daysBetween(TODAY,d)<=14).sort((a,b)=>a[1].localeCompare(b[1]));
+  const nudge=P.filter(p=>p.last && daysBetween(p.last,TODAY)>=21).slice(0,3);
+  const evRow=e=>`<div class="ag-r" style="cursor:default" data-hold="socev:${e.id}"><span class="ag-d num">${nice(e.d)}${e.d.slice(0,4)!==THIS_Y?' '+e.d.slice(2,4):''}</span><span class="ag-t"><b>${esc(e.name)}</b><small class="sub" style="display:block;font-size:11.5px">${esc(e.where||'')}${e.src?` · ${e.src}`:''}</small></span>${e.url?`<a href="${e.url}" target="_blank" rel="noopener" class="mm-pl">📎</a>`:''}</div>`;
+  const pRow=p=>{ const dd=daysBetween(p.last,TODAY), b=bondOf(p); return `<div class="mm-pay" data-hold="person:${esc(p.name)}"><span><span class="fire" style="opacity:${Math.max(.15,1-dd/45)}">🔥</span> ${esc(p.name)}${p.bday?' <span class="sub">🎂</span>':''}</span><span class="sub"><span class="bond b${b.i}">${b.name}</span> · ${p.n||1}×</span><b class="num" style="${dd>30?'color:var(--warn)':''}">${dd===0?'today':dd+'d'}</b><button class="mm-dis" onclick="socSawToday([${qa(p.name)}]);commit()" aria-label="Saw them today">✓</button></div>`; };
+  return `<div class="row" style="justify-content:flex-end;gap:8px;margin-bottom:8px">${mcpLib?`<button class="btn ghost sm" onclick="socSync(true)">↻ Check email</button>`:''}<button class="btn sm" onclick="socLogOpen()">＋ Log a plan</button></div>
+    <div class="card sec mm-list"><div class="tag mm-lab">Coming up</div>${up.length||bdays.length?[...bdays.map(([p,d])=>`<div class="ag-r" style="cursor:default"><span class="ag-d num">${nice(d)}</span><span class="ag-t"><b>🎂 ${esc(p.name)}’s birthday</b><small class="sub" style="display:block;font-size:11.5px">${daysBetween(TODAY,d)===0?'today':`in ${daysBetween(TODAY,d)} days`}</small></span></div>`), ...up.map(evRow)].join(''):'<div class="sub" style="padding:6px 10px">Nothing planned yet. Invites from your email and calendar show up here by themselves.</div>'}</div>
+    ${nudge.length?`<div class="card sec mm-list"><div class="tag mm-lab">Reach out</div>${nudge.map(p=>`<div class="mm-pay" data-hold="person:${esc(p.name)}"><span>👋 ${esc(p.name)}</span><span class="sub">haven’t seen them in ${daysBetween(p.last,TODAY)} days</span><b></b><button class="mm-dis" onclick="socSawToday([${qa(p.name)}]);commit()" aria-label="Saw them today">✓</button></div>`).join('')}</div>`:''}
+    <div class="card sec mm-list"><div class="tag mm-lab">Recent · ${past.filter(e=>e.d>=qRange(THIS_Q)[0]).length} this quarter</div>${past.slice(0,8).map(evRow).join('')||'<div class="empty">Nothing yet.</div>'}${past.length>8?infold('socmore','Older',`${past.length-8}`,past.slice(8).map(evRow).join('')):''}</div>
+    <div class="card sec mm-list"><div class="tag mm-lab">People</div>${P.map(pRow).join('')||'<div class="sub" style="padding:6px 10px">People you see show up here — from Close the day, invites and your calendar.</div>'}
       <form class="ct-add" style="padding:8px 10px" onsubmit="return socPersonAdd(event)"><input class="inp" placeholder="add a person"><button class="btn sm">Add</button></form></div>
-    <div class="help" style="padding:0 6px">Posh tickets, Resy and OpenTable dinners, and tickets friends send you come in from your email by themselves. Plans made over text don't — paste the invite above, ask Tega (“log Sam’s party Friday”), or add it to your iPhone calendar (turn on calendar sync in Partiful, tap Add to Calendar in OpenTable) and it comes in by itself. Upcoming plans show here and count once the day passes.</div>`;
+    <div class="help" style="padding:0 6px">Plans in your email (Posh, Partiful, Resy, OpenTable, AXS) and your iPhone calendar come in by themselves. Close the day asks who you saw — one tap. Hold a person for their birthday.</div>`;
 }
 
 /* ===================== Quarter Close: a ceremony, not a form ===================== */
@@ -6603,7 +6690,7 @@ function seasonRecapCheck(force){ try { const R=R_(), [y,n]=THIS_Q.split('-Q').m
     <button class="btn" style="margin-top:14px;width:100%;justify-content:center" onclick="seasonOpen()">Start ${season().ic} ${season().name} ›</button>`); } catch(e){ console.warn('recap',e); } }
 
 /* ===================== b248: the city — the game's home base (opened from your picture, top left) ===================== */
-const CITY_BOSS={HUSTLE:['ab_hustle'],MODEL:['vault'],DATUM:['ab_datum'],CONTENT:['ab_content'],BODY:['warden'],MONEY:['wyrm'],SOCIAL:['ab_social'],MIND:['ab_mind']};
+const CITY_BOSS={MODEL:['vault'],DATUM:['ab_datum'],CONTENT:['ab_content'],BODY:['warden'],MONEY:['wyrm'],SOCIAL:['ab_social'],MIND:['ab_mind']};
 // b273: mini PixelLab boss portraits for the town (first idle frame; defeated → last frame of the defeat animation, greyed)
 function bossMini(id, dead){ const k=['vault','wyrm','warden'].includes(id)?id:BOSS_SPR[String(id).replace(/^ab_/,'')]; if (!k) return null;
   if (window.PXM&&PXM[k]) return `<i class="bmini${dead?' dead':''}" style="background-image:url('${PXM[k]}');background-size:100% 100%"></i>`;
@@ -7301,6 +7388,9 @@ const HOLDK={
   lesson:{ at:id=>{ const [sid,lid]=id.split('|'); return hIx(lrSub(sid).lessons,lid); }, list:id=>(lrSub(id.split('|')[0]).lessons ||= []), name:x=>x.t, acts:(x,id)=>{ const [sid,lid]=id.split('|'); return [['✓ Done', `lrDone('${sid}','${lid}')`]]; } },
   wish:{ at:id=>hIx(wishL(),id), list:()=>wishL(), name:x=>`${wishRar(x.price)[2]} ${x.name} · ${money0(+x.price||0)}`,
     acts:(x,id)=>x.claimed?[]:[[x.target?'★ Target':'★ Make it the target', `wishTarget('${id}')`], ['＋ Stash money', `wishStash('${id}')`], [x.need?'Mark as a want':'Mark as a need', `(()=>{const w=wishL().find(z=>z.id==='${id}');if(w){w.need=!w.need;commit({skipXp:true});}})()`]] },
+  person:{ at:id=>{ const L=(S.circle ||= {ev:[],people:[]}).people ||= []; return [L, L.findIndex(p=>p.name===id)]; }, list:()=>((S.circle ||= {ev:[],people:[]}).people ||= []), name:x=>x.name,
+    acts:(x,id)=>[['🎂 '+(x.bday?'Change birthday':'Add birthday'), `socBday(${JSON.stringify(id)})`], ['✓ Saw them today', `socSawToday([${JSON.stringify(id)}]);commit()`]] },
+  socev:{ keep:1, at:id=>{ const L=socAll(); return [L, L.findIndex(e=>e.id===id)]; }, name:x=>x.name, acts:(x,id)=>[['🗑 Delete', `socHide(${JSON.stringify(id)})`,'danger']] },   // hidden, not removed: email/calendar would bring it back
   lrsub:{ at:id=>hIx(lrSubs(),id), list:()=>lrSubs(), name:x=>`${x.icon||'✦'} ${x.name}`, acts:(x,id)=>[[x.archived?'↺ Bring it back':'📦 Archive (keep its log)', `lrArchive('${id}')`]] },
   gsess:{ keep:1, at:id=>hIx(G_().sessions,id), name:x=>`${x.name} · ${nice(x.d)}`, acts:(x,id)=>[['Open', `gLogOpen='${id}';render()`], ['🗑 Delete', `gDelSession('${id}')`,'danger']] },
   txn:{ at:id=>hIx(S.money.budget.txns,id), list:()=>S.money.budget.txns, name:x=>`${x.desc} · ${x.amt<0?'−':'+'}$${Math.abs(x.amt).toFixed(2)}`,
@@ -8644,10 +8734,10 @@ const KSRC = [
   ['Money','cush','Cushion ($)','🛋','$',()=>Math.round(+S.money.s.cushNow||0),1],
   ['Money','house','House fund ($)','🏠','$',()=>Math.round(bal('house')),1],
   ['Money','writeoffs','Write-offs logged ($)','🧾','$',(a,b)=>Math.round(((S.money.budget||{}).deductibles||[]).filter(x=>(x.d||x.date||'')>=a&&(x.d||x.date||'')<=b).reduce((s,x)=>s+(+x.amt||0),0))],
-  ['Side hustle','hustlehrs','Side hustle hours','🚀','h',(a,b)=>Math.round(ensureHustle().log.filter(l=>l.d>=a&&l.d<=b).reduce((s,l)=>s+(+l.mins||0),0)/6)/10],
-  ['Side hustle','hustlen','Side hustle sessions','🛠️','',(a,b)=>new Set(ensureHustle().log.filter(l=>l.d>=a&&l.d<=b&&(+l.mins||0)>0).map(l=>l.d)).size],
-  ['Side hustle','hustleship','Side hustle things shipped','📦','',(a,b)=>ensureHustle().ships.filter(x=>x.d>=a&&x.d<=b).length],
-  ['Side hustle','hustleinc','Side hustle income ($)','💸','$',(a,b)=>Math.round(ensureHustle().income.filter(x=>x.d>=a&&x.d<=b).reduce((s,x)=>s+(+x.amt||0),0))],
+  ['Learning','hustlehrs','Project hours (old side hustle)','🚀','h',(a,b)=>Math.round(ensureHustle().log.filter(l=>l.d>=a&&l.d<=b).reduce((s,l)=>s+(+l.mins||0),0)/6)/10],
+  ['Learning','hustlen','Project sessions (old side hustle)','🛠️','',(a,b)=>new Set(ensureHustle().log.filter(l=>l.d>=a&&l.d<=b&&(+l.mins||0)>0).map(l=>l.d)).size],
+  ['Learning','hustleship','Project things shipped (old side hustle)','📦','',(a,b)=>ensureHustle().ships.filter(x=>x.d>=a&&x.d<=b).length],
+  ['Learning','hustleinc','Project income $ (old side hustle)','💸','$',(a,b)=>Math.round(ensureHustle().income.filter(x=>x.d>=a&&x.d<=b).reduce((s,x)=>s+(+x.amt||0),0))],
   ['People','events','Hangouts / events','🎉','',(a,b)=>{ try { return socAll().filter(e=>e.d>=a&&e.d<=b).length; } catch(e){ return null; } }],
   ['People','people','New people met','🙋','',(a,b)=>((S.circle||{}).people||[]).filter(p=>(p.first||'')>=a&&(p.first||'')<=b).length],
   ['People','spots','New places eaten','🍽','',(a,b)=>newSpots(a,b).length],
@@ -8674,6 +8764,7 @@ function fact(key, a='0000-01-01', b=TODAY){ return rpgC('f:'+key+a+b,()=>{ cons
 const isPastDay = k => k<=TODAY;
 function ksrcAll(){ const hab=(S.habits||[]).filter(h=>h.id!=='gym').map(h=>['Habits','habit:'+h.id,`${h.name} (days)`,h.icon,'',(a,b)=>dCount(a,b,d=>d.habits?.[h.id])]);
   const subs=((S.learn||{}).subjects||[]).filter(x=>x.kind==='custom').map(x=>['Learning','learn:'+x.id,`${x.name} lessons done`,x.icon||'✦','',(a,b)=>(x.lessons||[]).filter(l=>l.done&&l.done>=a&&l.done<=b).length]);
+  for (const x of ((S.learn||{}).subjects||[]).filter(x=>x.kind==='project'&&x.link!=='hustle')) subs.push(['Learning','proj:'+x.id,`${x.name} hours`,x.icon||'🛠️','h',(a,b)=>Math.round((x.log||[]).filter(l=>l.d>=a&&l.d<=b).reduce((s,l)=>s+(+l.mins||0),0)/6)/10]);   // b317
   return KSRC.concat(hab, subs); }
 const ksrc = key => ksrcAll().find(s=>s[1]===key);
 function srcVal(key,a,b){ const s=ksrc(key); if(!s) return null; if (s[6] && b<TODAY) return null; try { const v=s[5](a,b); return v===null||v===undefined||isNaN(v)?null:+v; } catch(e){ return null; } }
@@ -9063,7 +9154,6 @@ function statAttrs(){
     {n:'BODY',c:CS_COL.fitness,v:pct(gym,12),sub:`${gym} workouts`,go:"go('gym')"},
     {n:'MONEY',c:CS_COL.financial,v:pct(bw,4),sub:`${bw} of 4 weeks under budget`,go:"go('money')"},
     {n:'SOCIAL',c:CS_COL.relationships,v:pct(ev,4),sub:`${ev} hangouts`,go:"go('social')"},
-    {n:'HUSTLE',c:CS_COL.hustle,v:Math.round((pct(sv('hustlehrs'),12)*2+pct(sv('hustleship'),2))/3),sub:`${sv('hustlehrs')}h · ${sv('hustleship')} shipped`,go:"go('hustle')"},
     {n:'MIND',c:CS_COL.personal,v:Math.round((pct(jr,20)+pct(sv('habit:read'),20)+pct(sv('habit:morning'),20))/3),sub:`${jr} journal · ${sv('habit:read')} read · ${sv('habit:morning')} morning days`}];
   return A; }
 function statSheet(){ try {
@@ -9143,7 +9233,6 @@ const HQB=[
   {k:'fitness',n:'Gym',a:'BODY',c:'#ff5a5a',go:"go('gym')",feed:'Workouts',life:()=>srcVal('gym','2000-01-01',TODAY)||0,steps:[1,10,30,60,120]},
   {k:'financial',n:'Bank',a:'MONEY',c:'#39ff9f',go:"go('money')",feed:'Checks received',life:()=>srcVal('checks','2000-01-01',TODAY)||0,steps:[1,5,15,30,60]},
   {k:'relationships',n:'Plaza',a:'SOCIAL',c:'#b98cff',go:"go('social')",feed:'Hangouts',life:()=>srcVal('events','2000-01-01',TODAY)||0,steps:[1,5,15,30,60]},
-  {k:'hustle',n:'Workshop',a:'HUSTLE',c:'#c6ff4d',go:"go('hustle')",feed:'Hustle hours',life:()=>srcVal('hustlehrs','2000-01-01',TODAY)||0,steps:[1,10,30,60,120]},
   {k:'personal',n:'Library',a:'MIND',c:'#ff9ad5',go:"go('today')",feed:'Journal days',life:()=>srcVal('habit:journal','2000-01-01',TODAY)||0,steps:[1,10,30,60,120]}];
 function hqData(){ let A=[]; try { A=statAttrs(); } catch(e){} const act=Object.fromEntries(A.map(a=>[a.n,a]));
   return HQB.map((b,i)=>{ const life=Math.round(b.life()*10)/10, AI=areaInfo(b.a), lvl=AI?AI.lvl:0, next=b.steps[lvl]; const at=act[b.a]||{v:0,sub:''};
@@ -9589,8 +9678,7 @@ const AREAS=[
   {k:'BODY',n:'Body',track:'fitness',c:'#ff5a5a',trees:['body'],go:"go('gym')"},
   {k:'MONEY',n:'Money',track:'financial',c:'#39ff9f',trees:['money'],go:"go('money')"},
   {k:'SOCIAL',n:'Social',track:'relationships',c:'#b98cff',trees:['social'],go:"go('social')"},
-  {k:'MIND',n:'Mind & Learning',track:'personal',c:'#ff9ad5',trees:['mind','disc'],go:"go('today')"},
-  {k:'HUSTLE', get n(){ return T.hustle.name; }, track:'hustle',c:'#c6ff4d',trees:['hustle'],go:"go('hustle')"}];
+  {k:'MIND',n:'Mind & Learning',track:'personal',c:'#ff9ad5',trees:['mind','disc','hustle'],go:"go('learn')"}];   // b317: the old hustle tree lives here now
 const AREA_STEPS=[1,4,10,18,28];   // skill nodes unlocked across the area's trees → level 1..5
 function areaInfo(k){ return rpgC('area:'+k,()=>{ const a=AREAS.find(x=>x.k===k); if(!a) return null; const T=a.trees.map(skBuild), on=T.reduce((s,t)=>s+t.on,0), tot=T.reduce((s,t)=>s+t.nodes.length,0), lvl=AREA_STEPS.filter(x=>on>=x).length;
   const next=T.flatMap(t=>t.nodes.filter(n=>n.avail&&!n.on).map(n=>({...n,tree:t.name}))).sort((x,y)=>y.pct-x.pct)[0];
@@ -9624,7 +9712,8 @@ const ACT_LINKS=[
   [/guitar|practi[cs]e/i, k=>(S.gtr?.log||[]).some(l=>l.d===k)],
   [/bench|datum|wax|carv/i, k=>(ensureDatum().prototypes||[]).some(p=>(p.log||[]).some(l=>l.d===k)) || (ensureDatum().road||[]).some(r=>r.d===k)],
   [/\bpost(ed)?\b|film/i, k=>(S.logs||[]).some(l=>l.kind==='post'&&l.d===k)],
-  [/\bread|study|lesson/i, k=>((S.learn||{}).subjects||[]).some(x=>(x.lessons||[]).some(l=>l.done===k))],
+  [/\bread/i, k=>((S.learn||{}).subjects||[]).some(x=>x.type==='book'&&(x.lessons||[]).some(l=>l.done===k))],   // reading = a book session
+  [/study|lesson|learn/i, k=>((S.learn||{}).subjects||[]).some(x=>(x.lessons||[]).some(l=>l.done===k))],
 ];
 const actDoneOn = (text, k) => ACT_LINKS.some(([re,f])=>{ try { return re.test(text||'') && f(k); } catch(e){ return false; } });
 function autoLinks(){ for (const k of [TODAY, addDays(TODAY,-1)]){ const d=S.days?.[k]; if (!d) continue; d.habits ||= {}; d.hAuto ||= {};
@@ -9692,13 +9781,15 @@ async function nsCalendar(){ if (!window.native?.calendar) return; if (S.icalAt 
   const dk=ms=>{ const d=new Date(ms); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
   S.ical=(r.events||[]).filter(e=>e.title).slice(0,120).map(e=>({id:e.id, d:dk(e.start), t:e.title.slice(0,80), tm:e.allDay?'':new Date(e.start).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}), loc:e.loc.slice(0,60)}));
   const C=(S.circle ||= {ev:[],people:[]}); let n=0; for (const e of S.ical) if (e.d<=addDays(TODAY,30) && SOC_RE.test(e.t+' '+(e.loc||'')) && !C.ev.some(x=>x.id==='cal:'+e.id || (x.d===e.d && x.name===e.t))){ C.ev.push({id:'cal:'+e.id, d:e.d, name:e.t, where:e.loc||'', src:'from your calendar'}); n++; }
+  for (const e of S.ical) if (e.d<=TODAY && SOC_RE.test(e.t+' '+(e.loc||''))){ const m=/\b(?:w\/|with)\s+([A-Z][a-z]+(?:\s*(?:,|&|and)\s*[A-Z][a-z]+)*)/.exec(e.t); if (!m) continue;
+    for (const nm of m[1].split(/\s*(?:,|&|and)\s*/)) { const k='cal:'+e.id+':'+nm; C.seenK ||= {}; if (!C.seenK[k]){ C.seenK[k]=1; socSeen(nm, e.d); } } }   // b317
   if (n) autoNote('cal',`${n} hangout${n===1?'':'s'} from your calendar`); commit({skipXp:true}); }
 async function nativeSync(){ if (!window.native) return; for (const f of [nsLocation, nsHealth, nsCalendar]) { try { await f(); } catch(e){ console.warn('native sync',f.name,e); } } }
 window.tegaNativeSync = ()=>liveRefresh('resume');
 
 /* ===================== b186: one place for everything ===================== */
 // every section belongs to one of the 7 areas; its chip opens that area's level + skill trees
-const AREA_VIEW={learn:'MIND',hustle:'HUSTLE',model:'MODEL',datum:'DATUM',content:'CONTENT',gym:'BODY',money:'MONEY',social:'SOCIAL'};
+const AREA_VIEW={learn:'MIND',model:'MODEL',datum:'DATUM',content:'CONTENT',gym:'BODY',money:'MONEY',social:'SOCIAL'};
 function areaChip(k){ try { const A=areaInfo(k); if(!A) return ''; const span=A.toNext>0?(AREA_STEPS[A.lvl]-(AREA_STEPS[A.lvl-1]||0)):1, got=A.toNext>0?span-A.toNext:1;
   return `<button class="ar-chip sec" style="--c:${A.c}" onclick="areaOpen('${k}')" aria-label="${esc(A.n)} level ${A.lvl}, open skill trees"><b>${A.k}</b><span class="num">LV ${A.lvl}</span><small>${esc(k==='money'?(()=>{ try { const R=moneyRank(); return R.r[1]; } catch(e){ return A.rank||''; } })():(A.rank||''))}</small><i><u style="width:${Math.round(got/span*100)}%"></u></i><em>›</em></button>`; } catch(e){ return ''; } }
 function statPick(html, titles){ const t=document.createElement('template'); t.innerHTML=html; return [...t.content.children].filter(e=>titles.includes((e.querySelector('h2')?.textContent||'').trim())).map(e=>e.outerHTML).join(''); }
@@ -10094,7 +10185,7 @@ function inboxFile(kind){ const x=_inbox.shift(); if (!x) return; const u=x.url|
 const TAB_GO=(v,set)=>()=>{ try { set&&set(); } catch(e){} go(v); render(); };
 const NAV_QA={
   today:[['✓','Check in',()=>{ go('today'); setTimeout(openCheckin,250); }],['!','Add deadline',()=>{ go('today'); setTimeout(dlAddOpen,250); }],['★','New quest',()=>openQuick()],['◎','OKRs',TAB_GO('quarter')],['↻','Sunday review',()=>openReview()]],
-  life:[['◍','Circle',TAB_GO('social')],['▲','Hustle',TAB_GO('hustle')],['✎','Learning',TAB_GO('learn')]],
+  life:[['◍','Circle',TAB_GO('social')],['✎','Learning',TAB_GO('learn')]],
   model:[['◉','Now',TAB_GO('model',()=>mTab='now')],['▤','Bookings',TAB_GO('model',()=>mTab='book')]],
   content:[['▶','Log a post',()=>{ go('content'); setTimeout(()=>openLog('post'),250); }],['◇','Ideas',TAB_GO('content',()=>ctTab='ideas')],['▦','Plan',TAB_GO('content',()=>ctTab='plan')]],
   datum:[['⚒︎','Bench',TAB_GO('datum',()=>dView='bench')],['◎','Casters',TAB_GO('datum',()=>dView='casters')],['$','Business',TAB_GO('datum',()=>dView='biz')]],
@@ -10576,7 +10667,7 @@ const ABOSS={
     attack:['Isolation','10 days with no hangout → he heals 15'], loot:'Crown of the Hermit · 300 XP', go:"go('social')"},
   mind:{area:'MIND', c:'#ff9ad5', ic:'🌫️', name:'The Fog', title:'Eater of Mornings', hp:0,
     lore:'It rolls in when the routine slips — snoozing, scrolling, forgetting why. Clear days burn it off.',
-    phases:['Thick','Thinning','Patchy','Clear Skies'], hits:[['Check-in','2'],['Read 30 min','2'],['Journal','2'],['Morning routine','2'],['Night stretch (yoga)','4'],['Perfect day (all Top 3)','4 · crit'],['Weekly review','10']],
+    phases:['Thick','Thinning','Patchy','Clear Skies'], hits:[['Check-in','2'],['Read 30 min','2'],['Journal','2'],['Morning routine','2'],['Night stretch (yoga)','4'],['Lesson done (Learning)','3'],['Project session','up to 10'],['Perfect day (all Top 3)','4 · crit'],['Weekly review','10']],
     attack:['Lost Day','a past day with no check-in → it heals 3'], loot:'Lantern of Clear Days · 300 XP', go:"go('today')"}
 };
 const monthDays = m => new Date(+m.slice(0,4), +m.slice(5,7), 0).getDate();
@@ -10598,6 +10689,9 @@ function aBossEvents(k, m){ const E=[], inM=d=>d&&String(d).slice(0,7)===m, past
       if (n) E.push({d, dmg:n, l:'Clear day'}); const t3=(day.top3||[]).filter(t=>(t.text||'').trim()); if (t3.length && t3.every(t=>t.done)) E.push({d, dmg:4, l:'Perfect day', crit:1}); }
     for (const [w,x] of Object.entries(S.weeks||{})){ const end=addDays(weekMonday(w),6); if (x.review?.done && inM(end)) E.push({d:end, dmg:10, l:'Weekly review'}); }
     for (const y of (S.yoga?.log||[])) if (inM(y.d)) E.push({d:y.d, dmg:4, l:'Night stretch'});
+    // b317: learning hits the Fog too — every lesson done, every project session
+    for (const x of ((S.learn||{}).subjects||[])){ for (const l of (x.lessons||[])) if (l.done && inM(l.done)) E.push({d:l.done, dmg:3, l:`Lesson · ${x.name}`});
+      if (x.kind==='project') for (const l of projStore(x).log) if (inM(l.d) && (+l.mins||0)>0) E.push({d:l.d, dmg:Math.min(10,Math.round((+l.mins||0)/60*5)), l:`${x.name} ${fmtMins(+l.mins||0)}`}); }
     const first=m+'-01', last=m===TODAY.slice(0,7)?addDays(TODAY,-1):m+'-'+monthDays(m); for (let d=first; d<=last; d=addDays(d,1)) if (d>='2026-10-01' && !(S.days[d]||{}).checkin) E.push({d, dmg:-3, l:'Lost Day', heal:1}); }
   return E.filter(e=>e.d<=TODAY && e.dmg).sort((a,b)=>b.d.localeCompare(a.d)); }
 function heals(E, m, dates, gap, amt, label){ const first=m+'-01', end=m===TODAY.slice(0,7)?TODAY:m+'-'+monthDays(m); let lastHit=dates.filter(d=>d<first).pop()||addDays(first,-1);
@@ -10728,7 +10822,7 @@ function bossList(){ const L=[];
     lore:b.name==='Savor'?'A scorpion made of plastic and late fees. It’s the smaller one — and it’s over its $1,000 limit, so it strikes first.':'An orange drake that hoards your old purchases. Bigger and slower — it gets its turn after the Stinger falls.',
     how:[['A card payment you tick on a check','its amount'],['Paid to $0','+500 XP kill']], attack:['Interest','~27% a year gets added back every month you carry a balance'], loot:'+500 XP · card freed for good',
     hits:b.hits.map(h=>({d:h.d, v:'−'+money0(h.amt), l:'payment'})), art:()=>bossArtFor(b.name,b.pct,b.dead,b.name==='Savor'?stingerArt:drakeArt), go:"go('money')"}); } catch(e){}
-  for (const k of ['social','mind','hustle']) L.push(abItem(k));
+  for (const k of ['social','mind']) L.push(abItem(k));   // b317: the Someday Spider retired with the side hustle
   return L; }
 const BOSS_SPR={hustle:'spider',datum:'golem', content:'algo', social:'hermit', mind:'fog', Savor:'stinger', Discover:'drake'};
 function bossArtFor(key, pct, dead, svg){ const sp=BOSS_SPR[key]; if (sp && PXW[sp+'_idle'] && pxOn()) return bossSprite(sp, {hp:dead?0:Math.max(1,pct*100), max:100, pct}, 0); if (sp && PXW[sp+'_idle']) return `<img class="bossimg ${dead?'dead':''}" style="image-rendering:pixelated" src="${(PXW[sp+'_still']||PXW[sp+'_idle']).src}" alt="">`; return svg(pct, dead); }
