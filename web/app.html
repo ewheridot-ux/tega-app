@@ -436,6 +436,12 @@ html.sw-run #app{overflow-x:clip}
 #navqa[data-hl="street"] button{font-size:16px;border-radius:12px;text-transform:uppercase;letter-spacing:.04em}#navqa[data-hl="street"] button i{color:#ff6a13}
 #navqa[data-hl="street"] button:active{background:#ff6a13;color:#161616}#navqa[data-hl="street"] button:active i{color:#161616}
 #navqa[data-hl="street"] .nq-open{border-top:1px solid #333}
+/* b317: key result rows stay inside the card — the text column can't grow past its share, hints wrap instead of running off */
+.krt{grid-template-columns:minmax(0,1fr)}
+.krt>*{min-width:0}
+.krt .krmeta{min-width:0;flex-wrap:wrap}.krt .krmeta span{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}
+.krl>.krc{flex-wrap:nowrap;align-self:start;padding-top:2px}
+.krn{overflow-wrap:anywhere}
 /* b316: wishlist loot */
 .wl-r{display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--card2);border:1px solid color-mix(in srgb,var(--rc) 35%,transparent)}
 .wl-r.tgt{border-color:var(--rc);box-shadow:0 0 0 1px var(--rc),0 0 18px color-mix(in srgb,var(--rc) 25%,transparent)}
@@ -2067,7 +2073,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b316';
+const BUILD='b317';
 /* b316: bottom sheets sit above the iPhone keyboard — the sheet follows the visible part of the screen (visualViewport),
    and the field you tap scrolls into view inside it. Before, the keyboard slid over “New quest” and every other sheet. */
 (function(){ const v=window.visualViewport, R=document.documentElement; if (!v) return;

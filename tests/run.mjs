@@ -461,6 +461,13 @@ const wl = await page.evaluate(async () => { const keep = JSON.stringify({ w: S.
   const k = JSON.parse(keep); S.money.wish = k.w || []; S.wins = k.wins; S.holdTrash = k.h; view = 'today'; commit({ skipXp: true }); document.querySelectorAll('.modal,#toast-act').forEach(m => m.remove()); return r; });
 ok('wishlist: rarity by price, wants cool off, one ★ target, shows in Money', wl.rar && wl.target && wl.cool && wl.card, JSON.stringify(wl));
 ok('wishlist: stash, claim only when fully saved → XP + a win; hold to delete, restorable', wl.notYet && wl.blocked && wl.claimed && wl.del && wl.back, JSON.stringify(wl));
+// Goals page: key result rows with long hints stay inside their card
+const krw = await page.evaluate(async () => { const Q = S.quarters[THIS_Q]; if (!Q || !Q.objectives || !Q.objectives[0]) return { skip: 1 }; const o = Q.objectives[0], keep = JSON.stringify(o.krs);
+  o.krs.push({ id: 'krW', text: 'Study or build sessions with a long name', target: 12, current: 0, how: 'One focused 60-min block a week on engineering or code for Datum tools and more' });
+  commit({ skipXp: true }); view = 'quarter'; qOpen = o.id; render(); await new Promise(r => setTimeout(r, 200)); let bad = 0;
+  for (const r of document.querySelectorAll('.krl')) { const cb = r.closest('.card').getBoundingClientRect(); for (const e of r.querySelectorAll('*')) { const b = e.getBoundingClientRect(); if (b.width && b.right > cb.right + 0.5) bad++; } }
+  o.krs = JSON.parse(keep); view = 'today'; commit({ skipXp: true }); return { bad }; });
+ok('goals: key result rows stay inside the card, long hints wrap', krw.skip || krw.bad === 0, JSON.stringify(krw));
 // Life → “Next up” opens that subject's lessons even when you're already on the Learning page
 const nxu = await page.evaluate(async () => { const keep = JSON.stringify(S.learn), r = {}; const subs = lrSubs(); subs.unshift({ id: 'NXS', name: 'Piano', icon: '🎹', kind: 'custom', lessons: [{ id: 'L1', t: 'C major scale', url: 'https://example.com', mins: 10 }], log: [] });
   commit({ skipXp: true }); location.hash = 'learn'; await new Promise(r => setTimeout(r, 300)); lrTab = 'goals'; render(); const nx = lifeNext(); r.points = /lrGoNext\('NXS'\)/.test(nx.go);
