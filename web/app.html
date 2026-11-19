@@ -4743,7 +4743,7 @@ function homeQuests(){ const Q=questLogData(), WL=weekInits(THIS_WEEK), wk=week(
   const seasonL=`<button class="ql-line" style="margin-top:14px" onclick="seasonOpen()"><span>${SB.ic}</span><b>${SB.dead?esc(SB.n)+' defeated':'Defeat '+esc(SB.n)}</b><i>·</i><span>${SB.hp?`${SB.hits}/${SB.need}`:'set goals'}</span><em>›</em></button>`;
   return questsCard(TODAY).replace(/\n  <\/div>$/, '')+wkH+seasonL+`\n  </div>`; }
 function shiftDay(n){ const k=addDays(curDay,n); if(k>TODAY) return; curDay=k; render(); }
-function toggleTop3(i){ const d=ensureDay(curDay); if(!d.top3[i].text.trim()){ toast('Write it first'); return; } d.top3[i].done=!d.top3[i].done; krCredit('t3:'+curDay+':'+i, d.top3[i].text, d.top3[i].track, d.top3[i].done); commit(); if(d.top3.every(t=>t.done)){ toast('Top 3 done. That\'s the day. 🔥'); sprPlay('hype'); } }
+function toggleTop3(i){ const d=ensureDay(curDay); if(!d.top3[i].text.trim()){ toast('Write it first'); return; } d.top3[i].done=!d.top3[i].done; if (!d.top3[i].done && d.top3[i].autoDone) d.top3[i].autoOff=1; krCredit('t3:'+curDay+':'+i, d.top3[i].text, d.top3[i].track, d.top3[i].done); commit(); if(d.top3.every(t=>t.done)){ toast('Top 3 done. That\'s the day. 🔥'); sprPlay('hype'); } }
 function setTop3(i,v){ const d=ensureDay(curDay); d.top3[i].text=v; commit({skipXp:true}); }
 function setTop3Track(i,v){ const d=ensureDay(curDay); d.top3[i].track=v; commit({skipXp:true}); }
 function toggleHabit(h){ const d=ensureDay(curDay); d.habits[h]=!d.habits[h]; if (!d.habits[h] && d.hAuto && d.hAuto[h]) d.hAuto[h+'Off']=1; commit(); }
@@ -5093,8 +5093,8 @@ function csvToTxns(text, acctHint){
   return {txns:out, acct};
 }
 function importCsv(){ const ta=document.getElementById('csvBox'); const acct=document.getElementById('csvAcct').value; const r=csvToTxns(ta.value, acct||null); if (r.err){ toast(r.err); return; } if(!r.txns.length){ toast('No transactions found in that paste'); return; } importTxns(r.txns); commit({skipXp:true}); }
-function addTxnManual(e){ e.preventDefault(); const d=document.getElementById('txD').value, desc=document.getElementById('txDesc').value.trim(), amt=num(document.getElementById('txAmt').value), acct=document.getElementById('txAcct').value; if(!d||!desc||isNaN(amt)) { toast('Date, description and amount needed'); return false; } importTxns([{d,desc,amt:-Math.abs(amt),acct}]); commit({skipXp:true}); return false; }
-function setTxnCat(id, cat){ const t=S.money.budget.txns.find(t=>t.id===id); if(!t) return; t.user=true; t.cat=cat; if (cat==='deduct') t.sc='work'; else if (t.sc==='work') t.sc=spendCat({...t, cat}); if (cat==='deduct') addDeductible(t); else S.money.budget.deductibles = S.money.budget.deductibles.filter(x=>x.txn!==id); commit({skipXp:true}); }
+function addTxnManual(e){ e.preventDefault(); const d=document.getElementById('txD').value, desc=document.getElementById('txDesc').value.trim(), amt=num(document.getElementById('txAmt').value), acct=document.getElementById('txAcct').value; if(!d||!desc||isNaN(amt)) { toast('Date, description and amount needed'); return false; } importTxns([{d,desc,amt:-Math.abs(amt),acct}]); if (S.habits.some(h=>h.id==='expense')) ensureDay(TODAY).habits.expense=true; commit({skipXp:true}); return false; }
+function setTxnCat(id, cat){ const t=S.money.budget.txns.find(t=>t.id===id); if(!t) return; t.user=true; t.cat=cat; if (S.habits.some(h=>h.id==='expense')) ensureDay(TODAY).habits.expense=true; if (cat==='deduct') t.sc='work'; else if (t.sc==='work') t.sc=spendCat({...t, cat}); if (cat==='deduct') addDeductible(t); else S.money.budget.deductibles = S.money.budget.deductibles.filter(x=>x.txn!==id); commit({skipXp:true}); }
 function delTxn(id){ holdGo('txn', id); }   // b309: soft delete + Undo, and remembered so the bank sync never brings it back
 /* b309: deleted transactions stay deleted — every way a sync recognizes a row is remembered in budget.gone */
 function txnLk(t){ return t.d+'|'+(+t.amt).toFixed(2)+'|'+t.acct; }
@@ -8753,7 +8753,7 @@ function aQuest(k){ k=k||TODAY; const g=G_(), Q=aQday(k), su=g.setup, sess=g.ses
   const L=[];
   if (due) L.push({k:'wo',t:'Clear today’s workout',auto:sess.length>0});
   else L.push({k:'walk',t:'Rest day · 20-min walk',auto:mins('cardio')>=20});
-  L.push({k:'mob',t:'10 min stretch or mobility',auto:mins('stretch')>=8});
+  L.push({k:'mob',t:'10 min stretch or mobility',auto:mins('stretch')>=8 || yogaMinsOn(k)>=5 || mins('stretch')+yogaMinsOn(k)>=8});   // b317: night stretches count too
   L.push({k:'pro',t:`Protein · ${lean?Math.round(bw*.9):bw} g`});
   L.push({k:'h2o',t:'Water · 3 L'});
   if (pen && k===TODAY && !Q.penSeen){ Q.penSeen=1; setTimeout(()=>sprPlay('missed'),400); }
@@ -9616,7 +9616,23 @@ function autoTop3(){ const d=ensureDay(TODAY); if (d.t3auto) return; const free=
   let n=0; for (const t of d.top3){ if (t.text.trim()) continue; const x=order.shift(); if (!x) break; t.text=x.text; t.track=x.track||''; t.auto=1; n++; }
   d.t3auto=1; if (n) autoNote('top3',`Filled ${n} of today's Top 3`); }
 // 2) habits that tick themselves
-function autoHabits(){ for (const k of [TODAY, addDays(TODAY,-1)]){ const d=S.days?.[k]; if (!d) continue; d.habits ||= {};
+/* b317: one thing you did ticks everything that's about it — habits with a matching name and Top 3 items say the same thing.
+   Each activity is matched by words, so habits you add later (“Stretch”, “Mobility”, “Practice guitar”) link up by themselves. */
+const ACT_LINKS=[
+  [/stretch|mobility|yoga|flexib/i, k=>yogaMinsOn(k)>=5 || G_().sessions.some(s=>s.d===k&&s.ex.some(e=>GX[e.x]?.k==='stretch'))],
+  [/\bgym\b|work ?out|lift|train/i, k=>G_().sessions.some(s=>s.d===k)],
+  [/guitar|practi[cs]e/i, k=>(S.gtr?.log||[]).some(l=>l.d===k)],
+  [/bench|datum|wax|carv/i, k=>(ensureDatum().prototypes||[]).some(p=>(p.log||[]).some(l=>l.d===k)) || (ensureDatum().road||[]).some(r=>r.d===k)],
+  [/\bpost(ed)?\b|film/i, k=>(S.logs||[]).some(l=>l.kind==='post'&&l.d===k)],
+  [/\bread|study|lesson/i, k=>((S.learn||{}).subjects||[]).some(x=>(x.lessons||[]).some(l=>l.done===k))],
+];
+const actDoneOn = (text, k) => ACT_LINKS.some(([re,f])=>{ try { return re.test(text||'') && f(k); } catch(e){ return false; } });
+function autoLinks(){ for (const k of [TODAY, addDays(TODAY,-1)]){ const d=S.days?.[k]; if (!d) continue; d.habits ||= {}; d.hAuto ||= {};
+    for (const h of (S.habits||[])){ if (['gym','datum','guitar','content','journal','morning'].includes(h.id)) continue;   // these already have their own rules
+      const on=actDoneOn(h.name,k); if (on && !d.habits[h.id] && !d.hAuto[h.id+'Off']){ d.habits[h.id]=true; d.hAuto[h.id]=1; }
+      else if (!on && d.hAuto[h.id]===1 && d.habits[h.id]){ d.habits[h.id]=false; delete d.hAuto[h.id]; } }
+    (d.top3||[]).forEach((t,i)=>{ if ((t.text||'').trim() && !t.done && !t.autoOff && actDoneOn(t.text,k)){ t.done=true; t.autoDone=1; try { krCredit('t3:'+k+':'+i, t.text, t.track, true); } catch(e){} } }); } }
+function autoHabits(){ try { autoLinks(); } catch(e){} for (const k of [TODAY, addDays(TODAY,-1)]){ const d=S.days?.[k]; if (!d) continue; d.habits ||= {};
     if (S.habits.some(h=>h.id==='morning') && d.checkin && d.checkin.at && d.checkin.at<'09:30' && !d.habits.morning && !(d.hAuto||{}).morningOff){ d.habits.morning=true; (d.hAuto ||= {}).morning=1; }
     if (S.habits.some(h=>h.id==='journal') && d.close && d.close.at && (S.wins||[]).some(w=>w.d===k) && !d.habits.journal && !(d.hAuto||{}).journalOff){ d.habits.journal=true; (d.hAuto ||= {}).journal=1; }
     if (S.habits.some(h=>h.id==='content') && (S.logs||[]).some(l=>l.kind==='post'&&l.d===k) && !d.habits.content){ d.habits.content=true; (d.hAuto ||= {}).content=1; }
@@ -9640,7 +9656,10 @@ function autoChase(){ try { const st=stmtNow(), P=mPipe(), E=mAll(), un=E.filter
   if (!old || daysBetween(old.start,TODAY)<270) { S.chaseQ=null; return; }
   const body=`Hi Roza and Jawahar,\n\nPer my financial statement dated ${nice(st.asOf)}, ${st.asOf.slice(0,4)}, my account balance is ${money0(st.balance)}. The oldest unpaid job is ${old.c} on ${parseD(old.start).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}, and ${un.length} jobs are still outstanding.\n\nCould you share a payment schedule for the remaining balance? Since I'm modeling full time, consistent payments twice a month would really help.\n\nThank you,\nTega`;
   S.chaseQ={key:TODAY.slice(0,7), to:['roza@onemanagement.com','JC@onemanagement.com'], subject:'Payment schedule for outstanding jobs', body}; } catch(e){} }
-function runAutos(){ for (const f of [autoCloseWorkout, autoCarry, autoHabits, autoDeduct, autoChase, t3Clear]) { try { f(); } catch(e){ console.warn('auto',f.name,e); } } }
+// b317: a goal that counts a habit you'd switched off could never move — switch that habit back on
+function krHabitsOn(){ const off=S.habitsOff||[]; if (!off.length) return; const need=new Set(); for (const Q of Object.values(S.quarters||{})) for (const o of (Q.objectives||[])) for (const k of (o.krs||[])) if (/^habit:/.test(k.src||'')) need.add(k.src.slice(6));
+  for (const id of need){ const h=off.find(x=>x.id===id); if (h){ S.habits.push(h); S.habitsOff=S.habitsOff.filter(x=>x.id!==id); try { autoNote('habit:'+id, `“${h.name}” is back in your habits — a goal counts it`); } catch(e){} } } }
+function runAutos(){ for (const f of [krHabitsOn, autoCloseWorkout, autoCarry, autoHabits, autoDeduct, autoChase, t3Clear]) { try { f(); } catch(e){ console.warn('auto',f.name,e); } } }
 
 /* ===================== phone sync (b185): Apple Health, location, iPhone Calendar ===================== */
 const NS_CITIES=[['Chicago',41.88,-87.63],['New York',40.71,-74.0],['Los Angeles',34.05,-118.24],['London',51.51,-0.13],['Milan',45.46,9.19],['Indianapolis',39.77,-86.16],['Miami',25.76,-80.19],['Paris',48.86,2.35],['Atlanta',33.75,-84.39]];
@@ -10836,6 +10855,7 @@ const yDayN=()=>Math.floor(parseD(TODAY).getTime()/864e5);
 function yFlow(f){ const n=yDayN(); return YFLOWS[f][2].map((slot,i)=>{ const o=slot.split('|'); return o[(n+i)%o.length]; }); }
 function Y_(){ return (S.yoga ||= {log:[]}); }
 function yogaDoneOn(k){ return Y_().log.some(x=>x.d===k); }
+const yogaMinsOn = k => Y_().log.filter(x=>x.d===k).reduce((a,x)=>a+(+x.mins||+x.min||0),0);
 function yogaStreak(){ let n=0, k=yogaDoneOn(TODAY)?TODAY:addDays(TODAY,-1); while (yogaDoneOn(k) && n<999){ n++; k=addDays(k,-1); } return n; }
 // tonight's flow leans on what you trained today
 function yogaPick(){ const sess=(G_().sessions||[]).filter(s=>s.d===TODAY), worked=new Set(sess.flatMap(s=>s.ex.flatMap(e=>GX[e.x]?.p||[])));

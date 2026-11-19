@@ -468,6 +468,20 @@ const krw = await page.evaluate(async () => { const Q = S.quarters[THIS_Q]; if (
   for (const r of document.querySelectorAll('.krl')) { const cb = r.closest('.card').getBoundingClientRect(); for (const e of r.querySelectorAll('*')) { const b = e.getBoundingClientRect(); if (b.width && b.right > cb.right + 0.5) bad++; } }
   o.krs = JSON.parse(keep); view = 'today'; commit({ skipXp: true }); return { bad }; });
 ok('goals: key result rows stay inside the card, long hints wrap', krw.skip || krw.bad === 0, JSON.stringify(krw));
+// One activity ticks everything about it: night stretch → gym daily quest “stretch or mobility”, a Stretch habit, a “stretch” Top 3; untick sticks
+const lk = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ y: S.yoga, h: S.habits, ho: S.habitsOff, d: S.days[TODAY], q: S.quarters });
+  S.habits.push({ id: 'hStr', name: 'Nightly stretch', icon: '🌙' }); const d = ensureDay(TODAY); d.top3[2] = { ...d.top3[2], text: 'do my stretches', done: false };
+  delete d.top3[2].autoOff; delete d.top3[2].autoDone; commit({ skipXp: true });
+  r.before = !aQuest().L.find(x => x.k === 'mob').ok && !d.habits.hStr;
+  Y_().log.push({ d: TODAY, f: 'wind', mins: 12 }); commit({ skipXp: true });
+  r.quest = aQuest().L.find(x => x.k === 'mob').ok; r.habit = !!ensureDay(TODAY).habits.hStr; r.top3 = !!ensureDay(TODAY).top3[2].done;
+  curDay = TODAY; toggleTop3(2); commit({ skipXp: true }); r.untickSticks = !ensureDay(TODAY).top3[2].done;
+  // a goal that counts a switched-off habit brings the habit back
+  S.habitsOff = [...(S.habitsOff || []), { id: 'hRd', name: 'Read 30 min', icon: '📖' }]; const o = (S.quarters[THIS_Q].objectives || [])[0];
+  if (o) { o.krs.push({ id: 'krRd', text: 'Reading days', target: 30, current: 0, src: 'habit:hRd' }); commit({ skipXp: true }); r.habitBack = S.habits.some(h => h.id === 'hRd'); } else r.habitBack = true;
+  const k = JSON.parse(keep); S.yoga = k.y; S.habits = k.h; S.habitsOff = k.ho; S.days[TODAY] = k.d; S.quarters = k.q; commit({ skipXp: true }); return r; });
+ok('night stretch ticks the gym daily quest, a stretch habit and a stretch Top 3 (untick sticks)', lk.before && lk.quest && lk.habit && lk.top3 && lk.untickSticks, JSON.stringify(lk));
+ok('a goal counting a switched-off habit switches it back on', lk.habitBack, JSON.stringify(lk));
 // Life → “Next up” opens that subject's lessons even when you're already on the Learning page
 const nxu = await page.evaluate(async () => { const keep = JSON.stringify(S.learn), r = {}; const subs = lrSubs(); subs.unshift({ id: 'NXS', name: 'Piano', icon: '🎹', kind: 'custom', lessons: [{ id: 'L1', t: 'C major scale', url: 'https://example.com', mins: 10 }], log: [] });
   commit({ skipXp: true }); location.hash = 'learn'; await new Promise(r => setTimeout(r, 300)); lrTab = 'goals'; render(); const nx = lifeNext(); r.points = /lrGoNext\('NXS'\)/.test(nx.go);
