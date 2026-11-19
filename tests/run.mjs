@@ -438,6 +438,13 @@ const nxu = await page.evaluate(async () => { const keep = JSON.stringify(S.lear
   (0, eval)(nx.go); await new Promise(r => setTimeout(r, 300)); r.opened = lrTab === 'NXS' && !!document.getElementById('lr-upnext') && document.getElementById('view').innerHTML.includes('C major scale');
   S.learn = JSON.parse(keep); commit({ skipXp: true }); location.hash = 'today'; await new Promise(r => setTimeout(r, 200)); return r; });
 ok('Life “Next up” opens the subject and its lesson, even from the Learning page', nxu.points && nxu.opened, JSON.stringify(nxu));
+// Keyboard open (visible screen shrinks) → the New quest sheet and its text box stay above the keyboard
+const kb = await page.evaluate(async () => { const R = document.documentElement;
+  openQuick(); await new Promise(r => setTimeout(r, 450)); R.style.setProperty('--vvt', '0px'); R.style.setProperty('--vvh', '380px'); R.classList.add('kb-open'); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); const m = [...document.querySelectorAll('.modal')].pop(), c = m && m.querySelector('.card'), inp = m && m.querySelector('input,textarea');
+  const cb = c ? c.getBoundingClientRect() : null, ib = inp ? inp.getBoundingClientRect() : null;
+  const r = { sheet: !!cb && cb.bottom <= 381 && cb.top >= 0, input: !!ib && ib.bottom <= 381 && ib.top >= 0 };
+  m && m.remove(); R.style.removeProperty('--vvt'); R.style.removeProperty('--vvh'); R.classList.remove('kb-open'); return r; });
+ok('keyboard open: the New quest sheet and its text box stay above the keyboard', kb.sheet && kb.input, JSON.stringify(kb));
 { const vp = await browser.newPage(); await vp.route('https://www.youtube-nocookie.com/**', r => r.fulfill({ body: '<p>yt</p>', contentType: 'text/html' }));
   await vp.route('https://ewheridot-ux.github.io/**', r => r.fulfill({ body: fs.readFileSync(new URL('../docs/yt.html', import.meta.url)), contentType: 'text/html' }));
   await vp.goto('https://ewheridot-ux.github.io/tega-app/yt.html?v=dQw4w9WgXcQ&loop=1&mute=1&start=9'); const src = await vp.evaluate(() => document.querySelector('iframe')?.src || '');

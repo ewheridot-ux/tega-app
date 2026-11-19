@@ -436,6 +436,8 @@ html.sw-run #app{overflow-x:clip}
 #navqa[data-hl="street"] button{font-size:16px;border-radius:12px;text-transform:uppercase;letter-spacing:.04em}#navqa[data-hl="street"] button i{color:#ff6a13}
 #navqa[data-hl="street"] button:active{background:#ff6a13;color:#161616}#navqa[data-hl="street"] button:active i{color:#161616}
 #navqa[data-hl="street"] .nq-open{border-top:1px solid #333}
+/* b316: keyboard open → the sheet hugs the keyboard, no extra home-bar padding */
+html.kb-open .modal .card{padding-bottom:16px}
 /* b315: hold → red ✕ in the corner */
 .hold-on{outline:2px solid var(--bad);outline-offset:2px;border-radius:inherit;animation:holdJig .18s ease-in-out infinite alternate}
 @keyframes holdJig{from{transform:rotate(-.6deg)}to{transform:rotate(.6deg)}}
@@ -633,9 +635,9 @@ textarea.inp{resize:vertical;min-height:64px}
 .daynav{display:flex;gap:6px;align-items:center}
 .help{font-size:12px;color:var(--muted);line-height:1.45}
 details summary{cursor:pointer;font-weight:600;color:var(--muted);font-size:13px}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:grid;place-items:end center;z-index:100;padding:0}
+.modal{position:fixed;inset:0;top:var(--vvt,0px);bottom:auto;height:var(--vvh,100%);background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:grid;place-items:end center;z-index:100;padding:0}
 @media(min-width:600px){.modal{place-items:center;padding:16px}}
-.modal .card{max-width:520px;width:100%;max-height:90vh;overflow:auto;border-radius:28px 28px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom,0px));animation:sheet .35s cubic-bezier(.2,1,.3,1)}
+.modal .card{max-width:520px;width:100%;max-height:min(90vh, calc(var(--vvh,100vh) - 12px));overflow:auto;border-radius:28px 28px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom,0px));animation:sheet .35s cubic-bezier(.2,1,.3,1)}
 @media(min-width:600px){.modal .card{border-radius:28px}}
 @keyframes sheet{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
 .hidden{display:none!important}
@@ -2043,7 +2045,14 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b315';
+const BUILD='b316';
+/* b316: bottom sheets sit above the iPhone keyboard — the sheet follows the visible part of the screen (visualViewport),
+   and the field you tap scrolls into view inside it. Before, the keyboard slid over “New quest” and every other sheet. */
+(function(){ const v=window.visualViewport, R=document.documentElement; if (!v) return;
+  const fit=()=>{ R.style.setProperty('--vvt', v.offsetTop+'px'); R.style.setProperty('--vvh', v.height+'px'); R.classList.toggle('kb-open', innerHeight - v.height > 120); };
+  v.addEventListener('resize', fit); v.addEventListener('scroll', fit); fit();
+  document.addEventListener('focusin', e=>{ const f=e.target; if (!f.matches || !f.matches('input,textarea,select') || !f.closest('.modal')) return;
+    setTimeout(()=>{ fit(); try { f.scrollIntoView({block:'center', behavior:'smooth'}); } catch(_){} }, 320); }); })();
 const thaw = o => JSON.parse(JSON.stringify(o)); // cloud snapshots arrive frozen — always work on a plain copy
 function showErr(m){ try{ let el=document.getElementById('errbar'); if(!el){ el=document.createElement('div'); el.id='errbar'; el.style.cssText='position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:999;background:#b00020;color:#fff;font:600 12px/1.35 system-ui;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word'; el.onclick=()=>el.remove(); document.body.appendChild(el); } el.textContent='App error ('+BUILD+') — screenshot this for Claude · tap to dismiss\n'+m; }catch(e){} }
 // a bare "Script error." (no file, no line) comes from the phone's bridge and can't be acted on: the bridge guard reports the real one, so just note it
