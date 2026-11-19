@@ -417,6 +417,27 @@ const hq = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ q: 
   const k = JSON.parse(keep); S.quests = k.q; S.wins = k.w; view = 'today'; commit({ skipXp: true }); return r; });
 ok('home shows Quests again (side quests, this week, season), once', hq.quests && hq.oneQuests, JSON.stringify(hq));
 ok('the More fold is gone; wins stay on Today; the log moved to Content', hq.noMore && hq.win && hq.log, JSON.stringify(hq));
+// Hold anything deletable → red ✕ in its corner deletes it (Undo/restore as always); ⋯ opens the full menu; tap elsewhere cancels
+const hx = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ w: S.wins, h: S.holdTrash, l: S.learn }); curDay = TODAY; view = 'today';
+  S.wins.push({ id: 'HX1', d: TODAY, text: 'corner x win' }); commit({ skipXp: true }); render();
+  const el = document.querySelector('[data-hold="win:HX1"]'); holdOpen('win:HX1', el);
+  r.badge = !!document.querySelector('.hold-x.hx-del') && el.classList.contains('hold-on') && !document.getElementById('hold-m');
+  document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })); r.cancel = !document.querySelector('.hold-x');
+  holdOpen('win:HX1', document.querySelector('[data-hold="win:HX1"]')); document.querySelector('.hold-x.hx-del').click(); r.deleted = !S.wins.some(w => w.id === 'HX1') && S.holdTrash.some(e => e.id === 'HX1');
+  holdBack('win', 'HX1'); r.undo = S.wins.some(w => w.id === 'HX1');
+  // Learning subjects: hold → ✕ deletes the subject (restorable), ⋯ offers Archive
+  const subs = lrSubs(); subs.push({ id: 'SUBX', name: 'Spanish', icon: '🇪🇸', kind: 'custom', lessons: [], log: [] }); commit({ skipXp: true }); view = 'learn'; lrTab = 'SUBX'; render();
+  const t = document.querySelector('[data-hold="lrsub:SUBX"]'); r.subTile = !!t; holdOpen('lrsub:SUBX', t); r.subMore = !!document.querySelector('.hold-x.hx-more');
+  document.querySelector('.hold-x.hx-del').click(); r.subGone = !lrSubs().some(x => x.id === 'SUBX') && lrTab !== 'SUBX'; holdBack('lrsub', 'SUBX'); r.subBack = lrSubs().some(x => x.id === 'SUBX');
+  const k = JSON.parse(keep); S.wins = k.w; S.holdTrash = k.h; S.learn = k.l; view = 'today'; commit({ skipXp: true }); holdBadgeOff(); document.querySelectorAll('#toast-act').forEach(m => m.remove()); return r; });
+ok('hold: a red ✕ appears in the corner, tap elsewhere cancels, ✕ deletes with Undo', hx.badge && hx.cancel && hx.deleted && hx.undo, JSON.stringify(hx));
+ok('hold a Learning subject: ✕ deletes it (restorable), ⋯ has Archive', hx.subTile && hx.subMore && hx.subGone && hx.subBack, JSON.stringify(hx));
+// Life → “Next up” opens that subject's lessons even when you're already on the Learning page
+const nxu = await page.evaluate(async () => { const keep = JSON.stringify(S.learn), r = {}; const subs = lrSubs(); subs.unshift({ id: 'NXS', name: 'Piano', icon: '🎹', kind: 'custom', lessons: [{ id: 'L1', t: 'C major scale', url: 'https://example.com', mins: 10 }], log: [] });
+  commit({ skipXp: true }); location.hash = 'learn'; await new Promise(r => setTimeout(r, 300)); lrTab = 'goals'; render(); const nx = lifeNext(); r.points = /lrGoNext\('NXS'\)/.test(nx.go);
+  (0, eval)(nx.go); await new Promise(r => setTimeout(r, 300)); r.opened = lrTab === 'NXS' && !!document.getElementById('lr-upnext') && document.getElementById('view').innerHTML.includes('C major scale');
+  S.learn = JSON.parse(keep); commit({ skipXp: true }); location.hash = 'today'; await new Promise(r => setTimeout(r, 200)); return r; });
+ok('Life “Next up” opens the subject and its lesson, even from the Learning page', nxu.points && nxu.opened, JSON.stringify(nxu));
 { const vp = await browser.newPage(); await vp.route('https://www.youtube-nocookie.com/**', r => r.fulfill({ body: '<p>yt</p>', contentType: 'text/html' }));
   await vp.route('https://ewheridot-ux.github.io/**', r => r.fulfill({ body: fs.readFileSync(new URL('../docs/yt.html', import.meta.url)), contentType: 'text/html' }));
   await vp.goto('https://ewheridot-ux.github.io/tega-app/yt.html?v=dQw4w9WgXcQ&loop=1&mute=1&start=9'); const src = await vp.evaluate(() => document.querySelector('iframe')?.src || '');
