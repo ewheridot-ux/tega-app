@@ -25,10 +25,10 @@ jobs:
           [ -z "$DBPASS" ] && { echo "Missing GitHub secret SUPABASE_DB_PASSWORD" | tee -a $L; exit 1; }
           export SUPABASE_DB_PASSWORD="$DBPASS"   # newer CLIs read the database password from here, not -p
           # the AI key first, so a database hiccup can never block a key update
-          if [ -n "$ANTHROPIC_API_KEY" ]; then supabase secrets set ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" --project-ref "$REF" 2>&1 | tee -a $L; else echo "ANTHROPIC_API_KEY not added yet — AI coach waits for it" | tee -a $L; fi
-          supabase functions deploy claude --project-ref "$REF" 2>&1 | tee -a $L
+          if [ -n "$ANTHROPIC_API_KEY" ]; then supabase secrets set ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" --project-ref "$REF" --yes 2>&1 | tee -a $L; else echo "ANTHROPIC_API_KEY not added yet — AI coach waits for it" | tee -a $L; fi
+          supabase functions deploy claude --project-ref "$REF" --yes 2>&1 | tee -a $L
           supabase link --project-ref "$REF" 2>&1 | tee -a $L
-          supabase db push --linked 2>&1 | tee -a $L
+          supabase db push --linked --yes 2>&1 | tee -a $L
           echo "ALL DONE" | tee -a $L
       - name: Report status to the repo
         if: always()
