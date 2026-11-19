@@ -22,3 +22,4 @@ Rules that never bend:
 - Circle, Hustle and Learning share one Life look: Streetwear · Safety Orange (`data-look="street"`), with the LIFE RN. header holding the three numbers + next up. No per-page switchers, no repeated counters.
 - New CSS goes right above the `/* @css-insert */` marker, between whole rules — never inside a selector.
 - Tab bars (`.seg` or `[role=tablist]`) get swipe + slide animation for free; new pages should use one.
+- Wishlist (Money → Now): claiming loot you saved for gives 10 XP per $100 (same as old tax bills) and logs a win.

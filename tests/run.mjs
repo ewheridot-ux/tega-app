@@ -432,6 +432,35 @@ const hx = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ w: 
   const k = JSON.parse(keep); S.wins = k.w; S.holdTrash = k.h; S.learn = k.l; view = 'today'; commit({ skipXp: true }); holdBadgeOff(); document.querySelectorAll('#toast-act').forEach(m => m.remove()); return r; });
 ok('hold: a red ✕ appears in the corner, tap elsewhere cancels, ✕ deletes with Undo', hx.badge && hx.cancel && hx.deleted && hx.undo, JSON.stringify(hx));
 ok('hold a Learning subject: ✕ deletes it (restorable), ⋯ has Archive', hx.subTile && hx.subMore && hx.subGone && hx.subBack, JSON.stringify(hx));
+// ⋯ on a held item opens the full menu with no error (b315 broke it: its tap code carried &quot;)
+const hm = await page.evaluate(async () => { const keep = JSON.stringify(S.ideas || []); (S.ideas ||= []).push({ id: 'HM1', text: 'idea', st: 'idea' });
+  const el = document.createElement('div'); el.setAttribute('data-hold', 'idea:HM1'); document.body.appendChild(el); holdOpen('idea:HM1', el);
+  let err = null; try { document.querySelector('.hx-more').click(); } catch (e) { err = e.message; } await new Promise(r => setTimeout(r, 60));
+  const r = { err, sheet: !!document.getElementById('hold-m'), errbar: !!document.getElementById('errbar') }; document.getElementById('hold-m')?.remove(); el.remove(); holdBadgeOff(); S.ideas = JSON.parse(keep); return r; });
+ok('hold → ⋯ opens the full menu, no error', !hm.err && hm.sheet && !hm.errbar, JSON.stringify(hm));
+// Mass delete: hold one → bar; tap others to add; Delete N removes all; one Undo brings all back
+const md = await page.evaluate(async () => { const keep = JSON.stringify({ w: S.wins, h: S.holdTrash }); curDay = TODAY; view = 'today';
+  for (const n of [1, 2, 3]) S.wins.push({ id: 'MD' + n, d: TODAY, text: 'bulk ' + n }); commit({ skipXp: true }); render();
+  const q = n => document.querySelector(`[data-hold="win:MD${n}"]`), r = {};
+  holdOpen('win:MD1', q(1)); r.bar = !!document.getElementById('selbar'); q(2).click(); q(3).click(); r.count = /Delete 3/.test(document.getElementById('selbar')?.textContent || '');
+  q(3).click(); r.untoggle = /Delete 2/.test(document.getElementById('selbar')?.textContent || ''); q(3).click();
+  document.querySelector('#selbar .sel-del').click(); r.gone = !S.wins.some(w => /^MD/.test(w.id)); r.noBar = !document.getElementById('selbar');
+  const u = document.querySelector('#toast-act button'); u && u.click(); r.back = S.wins.filter(w => /^MD/.test(w.id)).length === 3;
+  const k = JSON.parse(keep); S.wins = k.w; S.holdTrash = k.h; commit({ skipXp: true }); document.querySelectorAll('#toast-act').forEach(m => m.remove()); return r; });
+ok('mass delete: hold one, tap others, delete them all, one Undo brings all back', md.bar && md.count && md.untoggle && md.gone && md.noBar && md.back, JSON.stringify(md));
+// Wishlist loot: add (rarity by price), wants cool off, ★ target, stash, claim → XP + win; hold to delete
+const wl = await page.evaluate(async () => { const keep = JSON.stringify({ w: S.money.wish, wins: S.wins, h: S.holdTrash }), r = {}; S.money.wish = [];
+  wishSheet(); document.getElementById('wishN').value = 'Steamer'; document.getElementById('wishP').value = '120'; wishKind(true); wishSave();
+  wishSheet(); document.getElementById('wishN').value = 'Jordan 4s'; document.getElementById('wishP').value = '230'; wishSave();
+  const L = wishL(), st = L.find(w => w.name === 'Steamer'), jd = L.find(w => w.name === 'Jordan 4s');
+  r.rar = wishRar(120)[0] === 'Rare' && wishRar(230)[0] === 'Epic' && wishRar(800)[0] === 'Legendary'; r.target = st.target && !jd.target; r.cool = /cooling/.test(wishLock(jd) || '') && !wishLock(st);
+  moneyTab = 'now'; view = 'money'; render(); r.card = /🎁 Wishlist/.test(document.getElementById('view').innerHTML) && !!document.querySelector('[data-hold="wish:' + st.id + '"]');
+  const x0 = computeXP(), w0 = S.wins.length; wishStashGo(st.id, 100); r.notYet = !st.claimed; wishClaim(st.id); r.blocked = !st.claimed; wishStashGo(st.id, 20); wishClaim(st.id);
+  r.claimed = !!st.claimed && S.wins.length === w0 + 1 && computeXP() >= x0 + 10; r.nextTarget = jd.target === false || jd.target === true;
+  holdGo('wish', jd.id); r.del = !wishL().some(w => w.id === jd.id); holdBack('wish', jd.id); r.back = wishL().some(w => w.id === jd.id);
+  const k = JSON.parse(keep); S.money.wish = k.w || []; S.wins = k.wins; S.holdTrash = k.h; view = 'today'; commit({ skipXp: true }); document.querySelectorAll('.modal,#toast-act').forEach(m => m.remove()); return r; });
+ok('wishlist: rarity by price, wants cool off, one ★ target, shows in Money', wl.rar && wl.target && wl.cool && wl.card, JSON.stringify(wl));
+ok('wishlist: stash, claim only when fully saved → XP + a win; hold to delete, restorable', wl.notYet && wl.blocked && wl.claimed && wl.del && wl.back, JSON.stringify(wl));
 // Life → “Next up” opens that subject's lessons even when you're already on the Learning page
 const nxu = await page.evaluate(async () => { const keep = JSON.stringify(S.learn), r = {}; const subs = lrSubs(); subs.unshift({ id: 'NXS', name: 'Piano', icon: '🎹', kind: 'custom', lessons: [{ id: 'L1', t: 'C major scale', url: 'https://example.com', mins: 10 }], log: [] });
   commit({ skipXp: true }); location.hash = 'learn'; await new Promise(r => setTimeout(r, 300)); lrTab = 'goals'; render(); const nx = lifeNext(); r.points = /lrGoNext\('NXS'\)/.test(nx.go);

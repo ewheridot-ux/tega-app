@@ -436,6 +436,18 @@ html.sw-run #app{overflow-x:clip}
 #navqa[data-hl="street"] button{font-size:16px;border-radius:12px;text-transform:uppercase;letter-spacing:.04em}#navqa[data-hl="street"] button i{color:#ff6a13}
 #navqa[data-hl="street"] button:active{background:#ff6a13;color:#161616}#navqa[data-hl="street"] button:active i{color:#161616}
 #navqa[data-hl="street"] .nq-open{border-top:1px solid #333}
+/* b316: wishlist loot */
+.wl-r{display:grid;grid-template-columns:32px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--card2);border:1px solid color-mix(in srgb,var(--rc) 35%,transparent)}
+.wl-r.tgt{border-color:var(--rc);box-shadow:0 0 0 1px var(--rc),0 0 18px color-mix(in srgb,var(--rc) 25%,transparent)}
+.wl-r.locked{opacity:.6}
+.wl-ic{font-size:22px;text-align:center}
+.wl-m{min-width:0;display:flex;flex-direction:column;gap:2px;overflow-wrap:anywhere}.wl-m small{font-size:11.5px;color:var(--sub)}.wl-m i{font-style:normal;font-weight:700}
+.wl-bar{display:block;height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:4px}.wl-bar i{display:block;height:100%;background:var(--rc);border-radius:99px}
+.wl-act{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+/* b316: mass delete bar */
+[data-hold].sel-on{box-shadow:0 0 0 2px var(--bad);border-radius:12px}
+.selbar{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 86px);z-index:10055;display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:18px;background:var(--card);border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.5);animation:holdPop .22s ease-out both}
+.selbar span{flex:1;font-size:13px;color:var(--sub)}.selbar .btn.sel-del{background:var(--bad)!important;color:#fff!important;border-color:var(--bad)!important;box-shadow:none!important}
 /* b316: whole-pose view */
 .yg-vid iframe,.yv-loop iframe{pointer-events:none}
 .yv-zoom{position:absolute;right:14%;bottom:12%;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;font-style:normal;font-size:15px;pointer-events:none}
@@ -448,9 +460,10 @@ html.sw-run #app{overflow-x:clip}
 /* b316: keyboard open → the sheet hugs the keyboard, no extra home-bar padding */
 html.kb-open .modal .card{padding-bottom:16px}
 /* b315: hold → red ✕ in the corner */
-.hold-on{outline:2px solid var(--bad);outline-offset:2px;border-radius:inherit;animation:holdJig .18s ease-in-out infinite alternate}
-@keyframes holdJig{from{transform:rotate(-.6deg)}to{transform:rotate(.6deg)}}
-@media (prefers-reduced-motion:reduce){.hold-on{animation:none}}
+.hold-on{position:relative;z-index:5;transform:scale(1.03);box-shadow:0 0 0 2px color-mix(in srgb,var(--bad) 70%,transparent),0 14px 32px rgba(0,0,0,.45);transition:transform .32s cubic-bezier(.2,1.4,.4,1),box-shadow .25s ease}
+.hold-x{animation:holdPop .26s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes holdPop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.hold-on{transform:none;transition:none}.hold-x{animation:none}}
 .hold-x{position:fixed;z-index:10050;width:32px;height:32px;border-radius:50%;border:2px solid var(--bg);display:grid;place-items:center;font-size:15px;font-weight:700;line-height:1;padding:0;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.4)}
 .hold-x.hx-del{background:var(--bad);color:#fff}
 .hold-x.hx-more{background:var(--card2);color:var(--fg)}
@@ -964,7 +977,7 @@ details summary{cursor:pointer;font-weight:600;color:var(--muted);font-size:13px
 .pc-tr{display:flex;gap:8px;align-items:center;padding:10px 12px;border-radius:12px;background:var(--card)}.pc-tr>div{flex:1;min-width:0;display:grid}.pc-tr small{font-size:11.5px}
 
 [data-hold]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
-[data-hold].holding{transform:scale(.98);transition:transform .5s ease;filter:brightness(1.08)}
+[data-hold].holding{transform:scale(.97);transition:transform .55s cubic-bezier(.3,0,.2,1);filter:brightness(1.06)}
 .hold-m{align-items:flex-end}
 .hold-sheet{width:min(440px,100%);margin:0 auto;border-radius:18px 18px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}
 .hold-t{font-weight:700;font-size:16px;margin:0 2px 12px;text-wrap:balance}
@@ -2584,8 +2597,8 @@ function celebrateDiff(before){
 }
 let toastT, toastQ=[];
 // toast with one action button (e.g. Undo) — stays 5s
-function toastAct(m, lab, fn){ let el=document.getElementById('toast-act'); if (!el){ el=document.createElement('div'); el.id='toast-act'; el.className='toast-act'; document.body.appendChild(el); } el.innerHTML=`<span>${esc(m)}</span><button>${esc(lab)}</button>`; el.querySelector('button').onclick=()=>{ el.classList.remove('show'); fn(); }; el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),5000); }
-function toast(m){ const el=document.getElementById('toast'); el.textContent=m; el.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2200); }
+function toastAct(m, lab, fn){ if (window._bulkQuiet) return; let el=document.getElementById('toast-act'); if (!el){ el=document.createElement('div'); el.id='toast-act'; el.className='toast-act'; document.body.appendChild(el); } el.innerHTML=`<span>${esc(m)}</span><button>${esc(lab)}</button>`; el.querySelector('button').onclick=()=>{ el.classList.remove('show'); fn(); }; el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),5000); }
+function toast(m){ if (window._bulkQuiet) return; const el=document.getElementById('toast'); el.textContent=m; el.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2200); }
 function toastXp(n){ toast(`+${n} XP`); }
 function confetti(){ const c=document.getElementById('confetti'); const cols=['#8b5cf6','#22d3ee','#fbbf24','#22c55e','#f97316','#ec4899']; for(let i=0;i<60;i++){ const p=document.createElement('i'); p.style.left=Math.random()*100+'vw'; p.style.background=cols[i%cols.length]; p.style.animationDelay=(Math.random()*.4)+'s'; p.style.transform=`rotate(${Math.random()*360}deg)`; c.appendChild(p); setTimeout(()=>p.remove(),2000);} }
 
@@ -7280,6 +7293,8 @@ const HOLDK={
   quest:{ at:id=>hIx(S.quests,id), list:()=>(S.quests ||= []), name:x=>x.text },
   dream:{ at:i=>{ const L=R_().dream; return [L, +i<L.length?+i:-1]; }, list:()=>R_().dream, name:x=>x },
   lesson:{ at:id=>{ const [sid,lid]=id.split('|'); return hIx(lrSub(sid).lessons,lid); }, list:id=>(lrSub(id.split('|')[0]).lessons ||= []), name:x=>x.t, acts:(x,id)=>{ const [sid,lid]=id.split('|'); return [['✓ Done', `lrDone('${sid}','${lid}')`]]; } },
+  wish:{ at:id=>hIx(wishL(),id), list:()=>wishL(), name:x=>`${wishRar(x.price)[2]} ${x.name} · ${money0(+x.price||0)}`,
+    acts:(x,id)=>x.claimed?[]:[[x.target?'★ Target':'★ Make it the target', `wishTarget('${id}')`], ['＋ Stash money', `wishStash('${id}')`], [x.need?'Mark as a want':'Mark as a need', `(()=>{const w=wishL().find(z=>z.id==='${id}');if(w){w.need=!w.need;commit({skipXp:true});}})()`]] },
   lrsub:{ at:id=>hIx(lrSubs(),id), list:()=>lrSubs(), name:x=>`${x.icon||'✦'} ${x.name}`, acts:(x,id)=>[[x.archived?'↺ Bring it back':'📦 Archive (keep its log)', `lrArchive('${id}')`]] },
   gsess:{ keep:1, at:id=>hIx(G_().sessions,id), name:x=>`${x.name} · ${nice(x.d)}`, acts:(x,id)=>[['Open', `gLogOpen='${id}';render()`], ['🗑 Delete', `gDelSession('${id}')`,'danger']] },
   txn:{ at:id=>hIx(S.money.budget.txns,id), list:()=>S.money.budget.txns, name:x=>`${x.desc} · ${x.amt<0?'−':'+'}$${Math.abs(x.amt).toFixed(2)}`,
@@ -7332,14 +7347,30 @@ function picTrashFold(where){ const D=ensureDatum(), rows=[];
   return `<div class="card sec" style="padding:4px 18px">${infold('pictr'+where,'Recently deleted',`${rows.length}`,`<div class="stack" style="gap:6px">${rows.map(([img,t,d,a])=>`<div class="row between hid-r"><span class="row" style="gap:10px;flex-wrap:nowrap;min-width:0"><img class="pictr-th" src="${BLOBURL}${img}" alt="" loading="lazy"><span>${esc(t)}${d?` <span class="sub">· ${nice(d)}</span>`:''}</span></span><button class="btn ghost sm" onclick="${a}">Restore</button></div>`).join('')}</div>`)}</div>`; }
 /* b315: press and hold anything deletable → it lights up with a red ✕ in its corner (one tap deletes, Undo as always);
    “⋯” in the other corner opens the full menu when there are other actions. Tap anywhere else or scroll to cancel. */
-function holdBadgeOff(){ document.querySelectorAll('.hold-x').forEach(b=>b.remove()); document.querySelectorAll('.hold-on').forEach(e=>e.classList.remove('hold-on')); }
-function holdOpen(spec, el){ const [kind,...r]=spec.split(':'), id=r.join(':'), I=holdInfo(kind,id); if(!I) return;
+function holdBadgeOff(){ document.querySelectorAll('.hold-x').forEach(b=>b.remove()); document.querySelectorAll('.hold-on').forEach(e=>e.classList.remove('hold-on')); selEnd(); }
+/* b316: mass delete — while something is held, a bar shows “Delete N”; tap other items to add them. One Undo brings them all back.
+   Only kinds that can be undone take part (pictures and every row kind in HOLDK). */
+let _sel=null;
+const selUndo=(k,id)=>HOLDK[k]?()=>holdBack(k,id):(['art','dph','mood','pbref'].includes(k)?()=>picUndo(k,id):null);
+function selDo(k,id){ if (HOLDK[k] && !HOLDK[k].keep) return holdGo(k,id); if (['art','dph','mood','pbref'].includes(k)) return picDel(k,id); }
+function selStart(spec, el){ const k=spec.split(':')[0]; if (!selUndo(k,'x') || (HOLDK[k]&&HOLDK[k].keep)) return; _sel={specs:new Set([spec])}; selBar(); }
+function selEnd(){ _sel=null; document.getElementById('selbar')?.remove(); document.querySelectorAll('.sel-on').forEach(e=>e.classList.remove('sel-on')); }
+function selBar(){ let b=document.getElementById('selbar'); if (!_sel){ b&&b.remove(); return; } if (!b){ b=document.createElement('div'); b.id='selbar'; b.className='selbar'; document.body.appendChild(b); }
+  const n=_sel.specs.size; b.innerHTML=`<span>${n>1?`${n} selected`:'Tap others to select more'}</span><button class="btn ghost sm" onclick="event.stopPropagation();holdBadgeOff()">Cancel</button><button class="btn sm sel-del" onclick="event.stopPropagation();selDelete()">🗑 Delete ${n}</button>`; }
+function selToggle(el){ const spec=el.dataset.hold, k=spec.split(':')[0]; if (!selUndo(k,'x') || (HOLDK[k]&&HOLDK[k].keep)) return false;
+  if (_sel.specs.has(spec)){ _sel.specs.delete(spec); el.classList.remove('sel-on','hold-on'); } else { _sel.specs.add(spec); el.classList.add('sel-on'); }
+  document.querySelectorAll('.hold-x').forEach(b=>b.remove()); if (!_sel.specs.size) holdBadgeOff(); else selBar(); return true; }
+function selDelete(){ if (!_sel) return; const L=[..._sel.specs].map(sp=>{ const [k,...r]=sp.split(':'); return [k,r.join(':')]; }); holdBadgeOff();
+  window._bulkQuiet=true; const done=[]; try { for (const [k,id] of L){ try { selDo(k,id); done.push([k,id]); } catch(e){} } } finally { window._bulkQuiet=false; }
+  toastAct(`🗑 Deleted ${done.length}`, 'Undo', ()=>{ window._bulkQuiet=true; try { for (const [k,id] of done.slice().reverse()) try { selUndo(k,id)(); } catch(e){} } finally { window._bulkQuiet=false; } toast(`↩︎ ${done.length} back`); }); }
+function holdOpen(spec, el){ if (_sel && el){ selToggle(el); return; }   // while selecting, a hold just adds/removes that item
+  const [kind,...r]=spec.split(':'), id=r.join(':'), I=holdInfo(kind,id); if(!I) return;
   try { navigator.vibrate && navigator.vibrate(12); } catch(e){}
   const del=I.acts.find(a=>a[2]==='danger');
   if (el && el.isConnected && del){ holdBadgeOff(); const R=el.getBoundingClientRect(), W=innerWidth, cl=(v,a,b)=>Math.max(a,Math.min(b,v)), y=cl(R.top-12, 6, innerHeight-40);
     const mk=(cls,txt,lab,js,x)=>{ const b=document.createElement('button'); b.type='button'; b.className='hold-x '+cls; b.textContent=txt; b.setAttribute('aria-label',lab); b.style.left=x+'px'; b.style.top=y+'px'; b.setAttribute('onclick',`event.stopPropagation();holdBadgeOff();${js}`); document.body.appendChild(b); };
-    el.classList.add('hold-on'); mk('hx-del','✕',del[0].replace(/^\S+\s/,''),del[1], cl(R.right-18, 6, W-38));
-    if (I.acts.some(a=>a!==del)) mk('hx-more','⋯','More',`holdSheet(${JSON.stringify(spec).replace(/"/g,'&quot;')})`, cl(R.left-14, 6, W-38));
+    el.classList.add('hold-on'); selStart(spec, el); mk('hx-del','✕',del[0].replace(/^\S+\s/,''),del[1], cl(R.right-18, 6, W-38));
+    if (I.acts.some(a=>a!==del)) mk('hx-more','⋯','More',`holdSheet(${JSON.stringify(spec)})`, cl(R.left-14, 6, W-38));
     return; }
   holdSheet(spec); }
 function holdSheet(spec){ const [kind,...r]=spec.split(':'), id=r.join(':'), I=holdInfo(kind,id); if(!I) return;
@@ -7361,8 +7392,9 @@ function hidFold(k){ const H=hidStore(k), rows=[];
   const clear=()=>{ if(tm){ clearTimeout(tm); tm=null; } if(el){ el.classList.remove('holding'); el=null; } };
   document.addEventListener('pointerdown',e=>{ if (e.button>0) return; const t=e.target.closest('[data-hold]'); if(!t || e.target.closest('input,textarea,select,a')) return; fired=false; sx=e.clientX; sy=e.clientY; el=t; t.classList.add('holding');
     tm=setTimeout(()=>{ tm=null; fired=true; const spec=t.dataset.hold; clear(); holdOpen(spec, t); }, 550); }, {passive:true});
-  document.addEventListener('pointerdown',e=>{ if (!e.target.closest('.hold-x')) holdBadgeOff(); }, {capture:true, passive:true});
-  document.addEventListener('scroll',()=>holdBadgeOff(), {capture:true, passive:true});
+  document.addEventListener('pointerdown',e=>{ if (e.target.closest('.hold-x,#selbar')) return; if (_sel && e.target.closest('[data-hold]')) return; holdBadgeOff(); }, {capture:true, passive:true});
+  document.addEventListener('click',e=>{ if (!_sel || fired) return; const t=e.target.closest('[data-hold]'); if (!t || e.target.closest('.hold-x,#selbar')) return; if (selToggle(t)){ e.preventDefault(); e.stopPropagation(); } }, {capture:true});
+  document.addEventListener('scroll',()=>{ document.querySelectorAll('.hold-x').forEach(b=>b.remove()); if (!_sel) holdBadgeOff(); }, {capture:true, passive:true});
   document.addEventListener('pointermove',e=>{ if(tm && (Math.abs(e.clientX-sx)>10||Math.abs(e.clientY-sy)>10)) clear(); }, {passive:true});
   ['pointerup','pointercancel','scroll'].forEach(ev=>document.addEventListener(ev,()=>{ if(tm) clear(); }, {passive:true, capture:true}));
   document.addEventListener('click',e=>{ if (fired){ fired=false; e.preventDefault(); e.stopPropagation(); } }, true);
@@ -10354,7 +10386,7 @@ function bottomLine(){ try { const P=projection(), s=S.money.s, R=P.rows, mon=d=
       return `<button class="bl-s ${x[3]} ${i===cur?'cur':''}" onclick="blOpen=blOpen===${i}?null:${i};render()" aria-expanded="${op}">${head}</button>${op||sbEdit?`<div class="bl-d">${x[4]==='cards'&&op?`<div class="bl-cards">${cardList().map(cd=>{ const m=CARDS.find(z=>z.re.test(cd.name)); return `<div class="row between"><span>💳 <b>${esc(cd.name)}</b><small>${m?`minimum ${money0(+S.money.s[m.key]||0)} · due the ${m.day}${['st','nd','rd'][((m.day%10)-1)]&&![11,12,13].includes(m.day)?['st','nd','rd'][(m.day%10)-1]:'th'}${m.auto?' · autopay':' · pay by hand'}`:''}</small></span><b class="num">${money0(cd.bal)}</b></div>`; }).join('')}<div class="sub" style="font-size:12px;margin-top:4px">Separate cards, separate payments. Extra goes to the smallest balance first.</div></div>`:''}<div class="row between" style="flex-wrap:nowrap;gap:8px"><small class="sub">${esc(r.src)}</small><span class="sb-chip ${r.st}">${r.st==='on'?'on track':`${r.st} ${money0(Math.abs(r.diff))}`}</span></div>${sbBar(r)||`<div class="sb-v"><span><b class="num">${money0(r.v)}</b> now</span><span>should be <b class="num">${money0(r.plan)}</b></span></div>`}${sbEdit&&r.k!=='cards'?`<div class="sb-l">${A.length?A.filter(a=>acctKind(a)!=='debt').map(a=>{ const on=(sbLinks()[r.k]||[]).includes(a.name); return `<button class="${on?'on':''}" onclick="sbLink('${r.k}',${JSON.stringify(a.name).replace(/"/g,'&quot;')},${!on})">${on?'✓ ':''}${esc(a.name.replace(/\s*····\d+/,''))}</button>`; }).join(''):'<small class="sub">No bank accounts synced yet</small>'}</div>`:''}</div>`:''}`; }).join('')}
     <div class="help keep" style="margin-top:8px">Each step only gets money once everything above it is covered. Tap a step to see where that bucket is vs where it should be (white line) and its goal; red = money a check covered that hasn’t moved yet. Checks on file through ${nice(last)}.</div></div>`; } catch(e){ return ''; } }
 let blOpen=null;
-function vMoneyNow(){ if (!S.money.m221) setTimeout(()=>{ try { m221(); } catch(e){} }, 0); try { moneyQuest(); cardKills(); } catch(e){} const b=moneyBits(); return `${moneyHead()}${payNoticeCard()}${bottomLine()}${wfTodo()}${leftoverCard(b.P)}${moneyLinks()}`; }
+function vMoneyNow(){ if (!S.money.m221) setTimeout(()=>{ try { m221(); } catch(e){} }, 0); try { moneyQuest(); cardKills(); } catch(e){} const b=moneyBits(); return `${moneyHead()}${payNoticeCard()}${bottomLine()}${wfTodo()}${leftoverCard(b.P)}${wishCard()}${moneyLinks()}`; }
 
 /* ---- b277: paycheck history — what each check sent to each bucket, whether it moved, and how it compares to the schedule ---- */
 const PH_B=[['tax','📊','Tax Buffer'],['ef','🛡️','Emergency fund'],['cu','🪙','Cushion'],['cards','💳','Credit cards'],['house','🏡','House fund'],['ret','📈','Investing'],['stay','🏦','Stays for bills + spending']];
@@ -10483,6 +10515,7 @@ function rankCard(){ const R=moneyRank(), M=S.money;
   return `<div class="mr-card sec"><div class="mr-steps">${MRANKS.map((r,j)=>`<i class="${j<R.i?'done':j===R.i?'on':''}" title="${r[1]}">${r[0]}</i>`).join('')}</div>
     <div class="mr-t"><b>${R.r[0]} ${R.r[1]}</b>${R.next?`<span>next: ${R.next[0]} ${R.next[1]} — ${R.next[2]}${R.hint?` · <b>${R.hint}</b>`:''}</span>`:'<span>top rank</span>'}</div></div>`; }
 function moneyXP(){ let x=0; try { x+=Math.floor(tdPaidIn(GAME_START,'2099-12-31')/100)*10; } catch(e){}   // b304: 10 XP per $100 toward old tax bills
+  x+=wishXP();   // b316: claimed wishlist loot, paid from what you stashed
   try { x+=Math.floor(cardHits().reduce((a,h)=>a+h.amt,0)/100)*10 + Object.entries(S.money.cardDead||{}).filter(([n,d])=>d>=GAME_START).length*500 + cleanChain().xp + coinXP(); } catch(e){} return x; }
 function cardKills(){ const M=S.money; M.cardDead ||= {}; for (const b of cardBosses()) if (b.dead && b.max>0.5 && !M.cardDead[b.name]){ M.cardDead[b.name]=TODAY; setTimeout(()=>{ confetti(); toast(`💀 ${b.name} slain — paid off!`); S.wins.push({id:uid(), d:TODAY, text:`💀 Slew ${b.name} (${b.title}) — card paid off`}); commit(); },400); } }
 // payday: the split drops into its buckets
@@ -10916,6 +10949,58 @@ function sweepToCards(){ const L=leftover(); if (!L||L.safe<1) return; const amt
 function tickSweep(id,i){ const w=(S.money.sweeps||[]).find(x=>x.id===id); if (!w) return; w.done ||= {}; w.done[i]=!w.done[i]; const a=w.alloc[i][1], s=S.money.s; s.cardsPaid=Math.max(0,r2((+s.cardsPaid||0)+(w.done[i]?1:-1)*a));
   if (w.done[i]){ _bossHit.card=a; toast(`💥 Extra ${money0(a)} hit on ${w.alloc[i][0]}`); if (w.alloc.every((_,j)=>w.done[j])) setTimeout(confetti,150); } commit({skipXp:true}); }
 function undoSweep(id){ S.money.sweeps=(S.money.sweeps||[]).filter(x=>x.id!==id); commit({skipXp:true}); }
+/* b316: Wishlist = loot. Things you want but can't afford yet. Rarity by price, a 7-day cool-off on wants, wants wait behind the
+   old tax bills, one ★ target you stash toward, and claiming it (paid from what you stashed) gives XP — same rate as paying
+   old tax bills — plus a win. Stashing is a note of money you set aside; it doesn't move money. Hold an item to delete it. */
+const WISH_COOL=7;
+function wishL(){ const M=S.money; return (M.wish ||= []); }
+function wishRar(p){ p=+p||0; return p>=750?['Legendary','#f5c542','👑']:p>=200?['Epic','#b98cff','💎']:p>=50?['Rare','#5ab0ff','🔷']:['Common','#a8b3c7','⚪']; }
+const wishSaved = w => (w.saved||[]).reduce((a,x)=>a+(+x.amt||0),0);
+function wishLock(w){ if (w.claimed) return null; if (!w.need){ const age=daysBetween(w.d||TODAY,TODAY); if (age<WISH_COOL) return `🧊 cooling off · ${WISH_COOL-age}d`; }
+  try { if (!w.need && tdOpen().length) return '⛓ after the tax bills'; } catch(e){} return null; }
+function wishXP(){ let x=0; try { for (const w of wishL()) if (w.claimed && w.claimed>=GAME_START) x+=Math.floor(Math.min(wishSaved(w), +w.price||0)/100)*10; } catch(e){} return x; }
+function wishSheet(){ document.getElementById('wish-m')?.remove(); const m=document.createElement('div'); m.id='wish-m'; m.className='modal';
+  m.innerHTML=`<div class="card"><div class="row between" style="margin-bottom:12px"><h2 style="font-size:20px">🎁 Add loot</h2><button class="btn ghost sm" onclick="this.closest('.modal').remove()" aria-label="Close">✕</button></div>
+    <form onsubmit="return wishSave(event)" class="stack" style="gap:10px"><input class="inp" id="wishN" maxlength="80" placeholder="What do you want?" autocomplete="off" required>
+    <input class="inp num" id="wishP" inputmode="decimal" placeholder="About how much? ($)" autocomplete="off" required>
+    <div class="seg" style="display:flex"><button type="button" class="on" style="flex:1" id="wishWant" onclick="wishKind(false)">Want · cools off ${WISH_COOL}d</button><button type="button" style="flex:1" id="wishNeed" onclick="wishKind(true)">Need</button></div>
+    <button class="btn" type="submit">Add to wishlist</button></form></div>`;
+  m.addEventListener('click',e=>{ if (e.target===m) m.remove(); }); document.body.appendChild(m); m._need=false; setTimeout(()=>document.getElementById('wishN')?.focus(),80); }
+function wishKind(need){ const m=document.getElementById('wish-m'); if (!m) return; m._need=need; document.getElementById('wishNeed').classList.toggle('on',need); document.getElementById('wishWant').classList.toggle('on',!need); }
+function wishSave(e){ e&&e.preventDefault(); const m=document.getElementById('wish-m'), n=(document.getElementById('wishN').value||'').trim(), p=parseFloat(String(document.getElementById('wishP').value||'').replace(/[^0-9.]/g,''));
+  if (!n){ return false; } if (!(p>0)){ toast('Add a price so it can be planned'); return false; }
+  const L=wishL(); L.push({id:uid(), name:n.slice(0,80), price:Math.round(p*100)/100, need:!!(m&&m._need), d:TODAY, saved:[]}); if (!L.some(w=>w.target&&!w.claimed)) L[L.length-1].target=true;
+  m&&m.remove(); commit({skipXp:true}); const [rn,,ri]=wishRar(p); toast(`${ri} ${rn} loot added`); return false; }
+const wishAdd = () => wishSheet();
+function wishTarget(id){ for (const w of wishL()) w.target = w.id===id && !w.claimed; commit({skipXp:true}); }
+function wishStash(id){ const w=wishL().find(x=>x.id===id); if (!w) return; const left=Math.max(0,(+w.price||0)-wishSaved(w));
+  document.getElementById('wish-m')?.remove(); const m=document.createElement('div'); m.id='wish-m'; m.className='modal';
+  const chips=[10,25,50,100].filter(a=>a<left).concat(left>0?[Math.ceil(left*100)/100]:[]);
+  m.innerHTML=`<div class="card"><div class="row between" style="margin-bottom:6px"><h2 style="font-size:20px">💰 Stash for ${esc(w.name)}</h2><button class="btn ghost sm" onclick="this.closest('.modal').remove()" aria-label="Close">✕</button></div>
+    <div class="sub" style="margin-bottom:12px">${money0(left)} to go · money you've set aside for it</div>
+    <div class="row" style="gap:8px;flex-wrap:wrap;margin-bottom:10px">${chips.map(a=>`<button class="btn ghost sm" onclick="wishStashGo('${id}',${a})">${a===chips[chips.length-1]&&a===Math.ceil(left*100)/100?'All '+money0(a):'+'+money0(a)}</button>`).join('')}</div>
+    <form onsubmit="event.preventDefault();wishStashGo('${id}',parseFloat(String(document.getElementById('wishA').value).replace(/[^0-9.]/g,'')));return false" class="inline"><input class="inp num" id="wishA" inputmode="decimal" placeholder="Other amount" autocomplete="off"><button class="btn">Stash</button></form></div>`;
+  m.addEventListener('click',e=>{ if (e.target===m) m.remove(); }); document.body.appendChild(m); }
+function wishStashGo(id,a){ const w=wishL().find(x=>x.id===id); document.getElementById('wish-m')?.remove(); if (!w || !(a>0)) return;
+  (w.saved ||= []).push({d:TODAY, amt:Math.round(a*100)/100}); commit({skipXp:true}); toast(wishSaved(w)>=w.price-0.005?`✨ ${w.name} is ready to claim`:`💰 +${money0(a)} stashed`); }
+function wishClaim(id){ const w=wishL().find(x=>x.id===id); if (!w||w.claimed) return; if (wishSaved(w) < (+w.price||0)-0.005){ toast('Stash the full price first'); return; }
+  w.claimed=TODAY; w.target=false; const nx=wishL().find(x=>!x.claimed&&!wishLock(x)); if (nx && !wishL().some(x=>x.target&&!x.claimed)) nx.target=true;
+  S.wins.push({id:uid(), d:TODAY, text:`${wishRar(w.price)[2]} Claimed ${w.name} — saved up, no debt`}); confetti(); commit(); toast(`🎉 Loot claimed · +${Math.floor(Math.min(wishSaved(w),w.price)/100)*10} XP`); }
+function wishCard(){ const L=wishL(), open=L.filter(w=>!w.claimed), got=L.filter(w=>w.claimed);
+  const tgt=open.find(w=>w.target), total=open.reduce((a,w)=>a+(+w.price||0),0);
+  const row=w=>{ const [rn,rc,ri]=wishRar(w.price), sv=wishSaved(w), p=Math.min(1,sv/(+w.price||1)), lock=wishLock(w), ready=sv>=w.price-0.005;
+    return `<div class="wl-r ${w.target?'tgt':''} ${lock?'locked':''}" data-hold="wish:${w.id}" style="--rc:${rc}">
+      <span class="wl-ic">${ri}</span><span class="wl-m"><b>${esc(w.name)}</b><small><i style="color:${rc}">${rn}</i>${w.need?' · need':''}${lock?` · ${lock}`:''}</small>
+      ${sv>0||w.target?`<span class="wl-bar"><i style="width:${Math.round(p*100)}%"></i></span><small class="num">${money0(sv)} of ${money0(w.price)}</small>`:''}</span>
+      <span class="wl-act"><b class="num">${money0(w.price)}</b>${ready?`<button class="btn sm" onclick="event.stopPropagation();wishClaim('${w.id}')">Claim</button>`
+        :(!lock?`<button class="btn ghost sm" onclick="event.stopPropagation();${w.target?`wishStash('${w.id}')`:`wishTarget('${w.id}')`}">${w.target?'＋ Stash':'★ Target'}</button>`:'')}</span></div>`; };
+  const order=open.slice().sort((a,b)=>(b.target?1:0)-(a.target?1:0) || (wishLock(a)?1:0)-(wishLock(b)?1:0) || (+a.price)-(+b.price));
+  return `<div class="card sec wl-card"><div class="hdr"><h2>🎁 Wishlist</h2><span class="row" style="gap:8px;flex-wrap:nowrap"><span class="sub">${open.length?`${open.length} · ${money0(total)}`:''}</span><button class="btn sm" onclick="wishAdd()" aria-label="Add to wishlist">＋</button></span></div>
+    ${open.length?`<div class="stack" style="gap:8px">${order.map(row).join('')}</div>
+      ${tgt?'':`<div class="help" style="margin-top:8px">Pick one ★ target to stash toward.</div>`}`
+      :`<div class="empty">Things you want but can't afford yet go here. Save up, claim it, earn XP.</div>`}
+    ${got.length?infold('wlgot','Claimed',`${got.length}`,`<div class="stack" style="gap:6px">${got.slice().reverse().map(w=>`<div class="row between" data-hold="wish:${w.id}"><span>${wishRar(w.price)[2]} ${esc(w.name)} <span class="sub">· ${nice(w.claimed)}</span></span><span class="num sub">${money0(w.price)}</span></div>`).join('')}</div>`):''}
+    <div class="help" style="margin-top:8px">Stash = money you've set aside for it · wants cool off ${WISH_COOL} days · hold an item to delete</div></div>`; }
 function leftoverCard(P){ const L=leftover(); if (!L) return `<div class="card sec lo-card">${nextCheckFold(P)}</div>`; const pend=sweepsFor(L.c.id);
   const bar=(plan,sp)=>{ const p=plan>0?Math.min(1,sp/plan):(sp>0?1:0), over=sp>plan+0.5; return `<div class="lo-bar"><i style="width:${Math.round(p*100)}%;background:${over?'var(--bad)':'var(--good)'}"></i></div>`; };
   return `<div class="card sec lo-card"><div class="row between"><span class="tag">🧮 This check · ${nice(L.g)}</span><span class="sub">${L.dLeft?`${L.dLeft}d until next check`:'period over'}${L.through?` · bank through ${nice(L.through)}`:''}</span></div>
