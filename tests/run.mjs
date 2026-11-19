@@ -191,7 +191,7 @@ const hz = await page.evaluate(() => { delete S.hustle; S.quarters[THIS_Q].objec
   const r={seeded, hrs:fact('hustlehrs',TODAY), kr:kr&&kr.current, xpUp:computeXP()>x0, stat:statAttrs().some(a=>a.n==='HUSTLE'), tree:!!areaInfo('HUSTLE'), boss:bossList().some(b=>b.id==='hustle'), track:T.hustle.name, renamed:''};
   ensureHustle().name='CAD'; ensureHustle().icon='⚙️'; r.renamed=T.hustle.name+T.hustle.icon; ensureHustle().name='Side Hustle'; ensureHustle().icon='🚀';
   H.log=H.log.filter(l=>l.id!=='hzT'); H.ships=H.ships.filter(l=>l.id!=='hzS'); _mVer++; commit({skipXp:true}); r.xpKept=computeXP()>=x0; go('city'); return r; }).catch(e=>({err:String(e)}));
-await page.waitForTimeout(400);
+await page.waitForFunction(() => [...document.querySelectorAll('.cy-m')].some(e => /Workshop/.test(e.getAttribute('aria-label') || '')), null, { timeout: 4000 }).catch(() => {});   // the city can take a moment to draw
 const hzCity = await page.evaluate(() => [...document.querySelectorAll('.cy-m')].map(e=>e.getAttribute('aria-label')).join('|'));
 ok('side hustle gets a starter goal', hz.seeded, JSON.stringify(hz));
 ok('logging side hustle time counts toward its goal', hz.hrs === 2 && hz.kr >= 2, JSON.stringify(hz));
@@ -445,6 +445,12 @@ const kb = await page.evaluate(async () => { const R = document.documentElement;
   const r = { sheet: !!cb && cb.bottom <= 381 && cb.top >= 0, input: !!ib && ib.bottom <= 381 && ib.top >= 0 };
   m && m.remove(); R.style.removeProperty('--vvt'); R.style.removeProperty('--vvh'); R.classList.remove('kb-open'); return r; });
 ok('keyboard open: the New quest sheet and its text box stay above the keyboard', kb.sheet && kb.input, JSON.stringify(kb));
+// Pose demo: the circle crops it → tap opens the whole pose (vertical shorts at 9:16, uncropped, looping); tap closes
+const yx = await page.evaluate(() => { const keepV = YVID, id = Object.keys(YP)[0]; YVID = { [id]: { v: 'dQw4w9WgXcQ', short: 1 } }; const r = {};
+  const h = document.createElement('div'); h.innerHTML = yLoop(id); document.body.appendChild(h); h.querySelector('.yg-vid').click();
+  const m = document.getElementById('yx'), f = m && m.querySelector('.yx-f'); r.open = !!m && /loop=1|loop%3D1/.test(m.innerHTML); if (f) { const b = f.getBoundingClientRect(); r.whole = Math.abs(b.width / b.height - 9 / 16) < 0.02 && b.bottom <= innerHeight && b.top >= 0; }
+  m && m.click(); r.closed = !document.getElementById('yx'); h.remove(); YVID = keepV; return r; });
+ok('pose demo: tap the circle to see the whole pose (uncropped), tap to close', yx.open && yx.whole && yx.closed, JSON.stringify(yx));
 { const vp = await browser.newPage(); await vp.route('https://www.youtube-nocookie.com/**', r => r.fulfill({ body: '<p>yt</p>', contentType: 'text/html' }));
   await vp.route('https://ewheridot-ux.github.io/**', r => r.fulfill({ body: fs.readFileSync(new URL('../docs/yt.html', import.meta.url)), contentType: 'text/html' }));
   await vp.goto('https://ewheridot-ux.github.io/tega-app/yt.html?v=dQw4w9WgXcQ&loop=1&mute=1&start=9'); const src = await vp.evaluate(() => document.querySelector('iframe')?.src || '');
