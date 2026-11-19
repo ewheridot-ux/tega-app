@@ -454,21 +454,21 @@ ok('the More fold is gone; wins stay on Today; the log moved to Content', hq.noM
 const hx = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ w: S.wins, h: S.holdTrash, l: S.learn }); curDay = TODAY; view = 'today';
   S.wins.push({ id: 'HX1', d: TODAY, text: 'corner x win' }); commit({ skipXp: true }); render();
   const el = document.querySelector('[data-hold="win:HX1"]'); holdOpen('win:HX1', el);
-  r.badge = !!document.querySelector('.hold-x.hx-del') && el.classList.contains('hold-on') && !document.getElementById('hold-m');
-  document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })); r.cancel = !document.querySelector('.hold-x');
-  holdOpen('win:HX1', document.querySelector('[data-hold="win:HX1"]')); document.querySelector('.hold-x.hx-del').click(); r.deleted = !S.wins.some(w => w.id === 'HX1') && S.holdTrash.some(e => e.id === 'HX1');
+  r.badge = !!document.querySelector('#selbar .sel-del') && el.classList.contains('sel-on') && !document.querySelector('.hold-x') && !document.getElementById('hold-m');
+  document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })); r.cancel = !document.getElementById('selbar') && !document.querySelector('.sel-on');
+  holdOpen('win:HX1', document.querySelector('[data-hold="win:HX1"]')); document.querySelector('#selbar .sel-del').click(); r.deleted = !S.wins.some(w => w.id === 'HX1') && S.holdTrash.some(e => e.id === 'HX1');
   holdBack('win', 'HX1'); r.undo = S.wins.some(w => w.id === 'HX1');
   // Learning subjects: hold → ✕ deletes the subject (restorable), ⋯ offers Archive
   const subs = lrSubs(); subs.push({ id: 'SUBX', name: 'Spanish', icon: '🇪🇸', kind: 'custom', lessons: [], log: [] }); commit({ skipXp: true }); view = 'learn'; lrTab = 'SUBX'; render();
-  const t = document.querySelector('[data-hold="lrsub:SUBX"]'); r.subTile = !!t; holdOpen('lrsub:SUBX', t); r.subMore = !!document.querySelector('.hold-x.hx-more');
-  document.querySelector('.hold-x.hx-del').click(); r.subGone = !lrSubs().some(x => x.id === 'SUBX') && lrTab !== 'SUBX'; holdBack('lrsub', 'SUBX'); r.subBack = lrSubs().some(x => x.id === 'SUBX');
+  const t = document.querySelector('[data-hold="lrsub:SUBX"]'); r.subTile = !!t; holdOpen('lrsub:SUBX', t); r.subMore = !!document.querySelector('#selbar [aria-label="More actions"]');
+  document.querySelector('#selbar .sel-del').click(); r.subGone = !lrSubs().some(x => x.id === 'SUBX') && lrTab !== 'SUBX'; holdBack('lrsub', 'SUBX'); r.subBack = lrSubs().some(x => x.id === 'SUBX');
   const k = JSON.parse(keep); S.wins = k.w; S.holdTrash = k.h; S.learn = k.l; view = 'today'; commit({ skipXp: true }); holdBadgeOff(); document.querySelectorAll('#toast-act').forEach(m => m.remove()); return r; });
-ok('hold: a red ✕ appears in the corner, tap elsewhere cancels, ✕ deletes with Undo', hx.badge && hx.cancel && hx.deleted && hx.undo, JSON.stringify(hx));
-ok('hold a Learning subject: ✕ deletes it (restorable), ⋯ has Archive', hx.subTile && hx.subMore && hx.subGone && hx.subBack, JSON.stringify(hx));
+ok('hold: the row is selected, a bar offers Delete; tap elsewhere cancels; Delete has Undo', hx.badge && hx.cancel && hx.deleted && hx.undo, JSON.stringify(hx));
+ok('hold a Learning subject: Delete removes it (restorable), ⋯ has Archive', hx.subTile && hx.subMore && hx.subGone && hx.subBack, JSON.stringify(hx));
 // ⋯ on a held item opens the full menu with no error (b315 broke it: its tap code carried &quot;)
 const hm = await page.evaluate(async () => { const keep = JSON.stringify(S.ideas || []); (S.ideas ||= []).push({ id: 'HM1', text: 'idea', st: 'idea' });
   const el = document.createElement('div'); el.setAttribute('data-hold', 'idea:HM1'); document.body.appendChild(el); holdOpen('idea:HM1', el);
-  let err = null; try { document.querySelector('.hx-more').click(); } catch (e) { err = e.message; } await new Promise(r => setTimeout(r, 60));
+  let err = null; try { document.querySelector('#selbar [aria-label="More actions"]').click(); } catch (e) { err = e.message; } await new Promise(r => setTimeout(r, 60));
   const r = { err, sheet: !!document.getElementById('hold-m'), errbar: !!document.getElementById('errbar') }; document.getElementById('hold-m')?.remove(); el.remove(); holdBadgeOff(); S.ideas = JSON.parse(keep); return r; });
 ok('hold → ⋯ opens the full menu, no error', !hm.err && hm.sheet && !hm.errbar, JSON.stringify(hm));
 // Mass delete: hold one → bar; tap others to add; Delete N removes all; one Undo brings all back
@@ -481,6 +481,14 @@ const md = await page.evaluate(async () => { const keep = JSON.stringify({ w: S.
   const u = document.querySelector('#toast-act button'); u && u.click(); r.back = S.wins.filter(w => /^MD/.test(w.id)).length === 3;
   const k = JSON.parse(keep); S.wins = k.w; S.holdTrash = k.h; commit({ skipXp: true }); document.querySelectorAll('#toast-act').forEach(m => m.remove()); return r; });
 ok('mass delete: hold one, tap others, delete them all, one Undo brings all back', md.bar && md.count && md.untoggle && md.gone && md.noBar && md.back, JSON.stringify(md));
+// Selecting is minimal: no badges floating over rows, selected rows don't grow or overlap their neighbours
+const so = await page.evaluate(async () => { const keep = JSON.stringify(S.wins); curDay = TODAY; view = 'today'; for (const n of [1, 2, 3]) S.wins.push({ id: 'SO' + n, d: TODAY, text: 'row ' + n }); commit({ skipXp: true }); render();
+  const q = n => document.querySelector(`[data-hold="win:SO${n}"]`), before = [1, 2, 3].map(n => q(n).getBoundingClientRect());
+  holdOpen('win:SO1', q(1)); q(2).click(); q(3).click(); await new Promise(r => setTimeout(r, 350)); const after = [1, 2, 3].map(n => q(n).getBoundingClientRect());
+  const gap = A => [A[1].top - A[0].bottom, A[2].top - A[1].bottom], same = before.every((b, i) => Math.abs(b.height - after[i].height) < 1 && Math.abs(b.width - after[i].width) < 1) && gap(after).every((g, i) => Math.abs(g - gap(before)[i]) < 1 && g >= 0);
+  const r = { badges: document.querySelectorAll('.hold-x').length, same, three: /Delete 3/.test(document.getElementById('selbar')?.textContent || '') };
+  holdBadgeOff(); S.wins = JSON.parse(keep); commit({ skipXp: true }); return r; });
+ok('selecting is minimal: no floating badges, rows keep their size and place', so.badges === 0 && so.same && so.three, JSON.stringify(so));
 // Wishlist loot: add (rarity by price), wants cool off, ★ target, stash, claim → XP + win; hold to delete
 const wl = await page.evaluate(async () => { const keep = JSON.stringify({ w: S.money.wish, wins: S.wins, h: S.holdTrash }), r = {}; S.money.wish = [];
   wishSheet(); document.getElementById('wishN').value = 'Steamer'; document.getElementById('wishP').value = '120'; wishKind(true); wishSave();
