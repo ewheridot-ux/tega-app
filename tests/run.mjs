@@ -489,6 +489,21 @@ const so = await page.evaluate(async () => { const keep = JSON.stringify(S.wins)
   const r = { badges: document.querySelectorAll('.hold-x').length, same, three: /Delete 3/.test(document.getElementById('selbar')?.textContent || '') };
   holdBadgeOff(); S.wins = JSON.parse(keep); commit({ skipXp: true }); return r; });
 ok('selecting is minimal: no floating badges, rows keep their size and place', so.badges === 0 && so.same && so.three, JSON.stringify(so));
+// Tape vault (Modeling → Tapes): move from Photos → sort → iOS asked before removing originals; send = +10 XP; hold to delete; files purged 30 days later
+const vt = await page.evaluate(async () => { const r = {}, keep = JSON.stringify({ v: S.vault, h: S.holdTrash }), wasN = window.native, calls = {};
+  S.vault = []; view = 'model'; mTab = 'vault'; render(); r.webNote = /lives on your iPhone/.test(document.getElementById('view').innerHTML) && /Tapes/.test(document.getElementById('view').innerHTML);
+  window.native = Object.assign({}, wasN || {}, { vault: { ok: true, path: n => 'file:///vault/' + n, src: n => 'blob:' + n,
+    pick: async () => [{ id: 'v1', kind: 'video', file: 'v1.mov', thumb: 'v1_t.jpg', dur: 63, size: 80 << 20, asset: 'A1' }, { id: 'v2', kind: 'photo', file: 'v2.jpg', thumb: 'v2_t.jpg', size: 3 << 20, asset: 'A2' }],
+    deleteFromPhotos: async a => { calls.del = a; return { ok: true, deleted: a.length }; }, remove: async f => { calls.rm = f; }, share: async f => { calls.share = f; return true; } } });
+  await vaultAdd(); r.added = S.vault.length === 2 && S.vault[0].cat === 'tape' && S.vault[1].cat === 'selfie' && !!document.getElementById('vlt-m');
+  await vaultClean(); r.photos = JSON.stringify(calls.del) === '["A1","A2"]' && S.vault.every(x => x.fromPhotos === TODAY);
+  render(); r.grid = document.querySelectorAll('.vt-it').length === 2 && /1:03/.test(document.getElementById('view').innerHTML) && /Latest self-tape/.test(document.getElementById('view').innerHTML);
+  const x0 = computeXP(); await vSend('v1'); r.sent = JSON.stringify(calls.share) === '["v1.mov"]' && computeXP() >= x0 + 10 && fact('tapesent', TODAY, TODAY) === 1;
+  holdGo('vault', 'v2'); r.soft = !S.vault.some(x => x.id === 'v2') && S.holdTrash.some(e => e.k === 'vault' && e.id === 'v2');
+  S.holdTrash.find(e => e.id === 'v2').at = addDays(TODAY, -31); vaultPurge(); r.purged = JSON.stringify(calls.rm) === '["v2.jpg","v2_t.jpg"]' && !S.holdTrash.some(e => e.id === 'v2');
+  window.native = wasN; const k = JSON.parse(keep); S.vault = k.v || []; S.holdTrash = k.h; view = 'today'; commit({ skipXp: true }); document.querySelectorAll('.modal,#toast-act').forEach(m => m.remove()); return r; });
+ok('tape vault: Modeling → Tapes; move from Photos, sorted (tape / selfie), iOS asked to remove originals', vt.webNote && vt.added && vt.photos && vt.grid, JSON.stringify(vt));
+ok('tape vault: send a self-tape = +10 XP + goal source; delete is soft, files purged after 30 days', vt.sent && vt.soft && vt.purged, JSON.stringify(vt));
 // Wishlist loot: add (rarity by price), wants cool off, ★ target, stash, claim → XP + win; hold to delete
 const wl = await page.evaluate(async () => { const keep = JSON.stringify({ w: S.money.wish, wins: S.wins, h: S.holdTrash }), r = {}; S.money.wish = [];
   wishSheet(); document.getElementById('wishN').value = 'Steamer'; document.getElementById('wishP').value = '120'; wishKind(true); wishSave();

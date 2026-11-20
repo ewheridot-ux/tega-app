@@ -7,7 +7,7 @@ set_str(){ pb "Delete :$1"; /usr/libexec/PlistBuddy -c "Add :$1 string $2" "$P";
 set_bool(){ pb "Delete :$1"; /usr/libexec/PlistBuddy -c "Add :$1 bool $2" "$P"; }
 set_str CFBundleDisplayName "Tega.exe"
 set_str NSCameraUsageDescription "Take photos of your pieces, art and progress."
-set_str NSPhotoLibraryUsageDescription "Add photos from your library to Datum, your art wall and your room."
+set_str NSPhotoLibraryUsageDescription "Add photos from your library to Datum, your art wall and your room, and move casting tapes into your Modeling vault (you approve every removal)."
 set_str NSPhotoLibraryAddUsageDescription "Save bench photos and cards to your Photos."
 set_str NSLocationWhenInUseUsageDescription "Find castings and casters near you."
 set_str NSLocationAlwaysAndWhenInUseUsageDescription "Tega.exe only uses your location while you have the app open, to find castings and casters near you."

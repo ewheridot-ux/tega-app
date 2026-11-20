@@ -436,6 +436,15 @@ html.sw-run #app{overflow-x:clip}
 #navqa[data-hl="street"] button{font-size:16px;border-radius:12px;text-transform:uppercase;letter-spacing:.04em}#navqa[data-hl="street"] button i{color:#ff6a13}
 #navqa[data-hl="street"] button:active{background:#ff6a13;color:#161616}#navqa[data-hl="street"] button:active i{color:#161616}
 #navqa[data-hl="street"] .nq-open{border-top:1px solid #333}
+/* b320: tape vault */
+.vt-cats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}.vt-cats::-webkit-scrollbar{display:none}
+.vt-cats button{flex:none;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card2);color:var(--fg);font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}
+.vt-cats button.on{background:var(--accent);border-color:transparent;color:var(--bg);font-weight:700}.vt-cats .num{opacity:.7;margin-left:2px}
+.vt-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:12px}
+.vt-it{position:relative;aspect-ratio:3/4;border-radius:12px;overflow:hidden;border:0;padding:0;background:var(--card2);cursor:pointer;display:grid;place-items:center}
+.vt-it img{width:100%;height:100%;object-fit:cover;display:block}.vt-it i{font-style:normal;font-size:26px}
+.vt-it b{position:absolute;right:6px;bottom:6px;font-size:11px;padding:2px 6px;border-radius:8px;background:rgba(0,0,0,.6);color:#fff}
+.vt-view video,.vt-view img{width:100%;max-height:60vh;border-radius:14px;background:#000;display:block;object-fit:contain}
 /* b317: Grow — subject types */
 .lr-types{display:flex;gap:6px;overflow-x:auto;margin-top:10px;padding-bottom:2px;scrollbar-width:none}.lr-types::-webkit-scrollbar{display:none}
 .lr-types button{flex:none;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card2);color:var(--fg);font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}
@@ -2083,7 +2092,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b319';
+const BUILD='b320';
 /* b316: bottom sheets sit above the iPhone keyboard — the sheet follows the visible part of the screen (visualViewport),
    and the field you tap scrolls into view inside it. Before, the keyboard slid over “New quest” and every other sheet. */
 (function(){ const v=window.visualViewport, R=document.documentElement; if (!v) return;
@@ -2454,6 +2463,7 @@ function computeXP0(){
   try { xp += sbossXP(); } catch(e){}
   try { xp += yogaXP() + dungeonXP(); } catch(e){}
   try { xp += learnXP() + socialXP(); } catch(e){}
+  try { xp += vaultXP(); } catch(e){}   // b320: self-tapes sent from the vault
   return xp;
 }
 // b295: learning pays like everything else — a lesson done 15, what it gave you written down 10, a drawing stage 25, inspo 3 (5 a day)
@@ -5467,13 +5477,65 @@ function mBook(E, P){
     <details class="card sec fold mm-fold"><summary><span>Rate card</span><span class="sub">›</span></summary><div class="more-in"><div class="card sec mm-list"><div class="tag mm-lab">Rate card · per day</div>${rates.map(([k,a,b,n])=>`<div class="mm-pay"><span>${esc(k)}</span><span class="sub">${n} job${n===1?'':'s'}</span><b class="num">${a===b?money0(a):money0(a)+'–'+money0(b).replace('$','')}</b><span></span></div>`).join('')}</div></div></details>
     <details class="card sec mm-list fold"><summary><b>Agents</b><span class="sub">${MODEL_AGENTS.length}</span></summary>${MODEL_AGENTS.map((a,i)=>`<details class="mm-ag"><summary><b>${esc(a.n)}</b><small>${esc(a.r)}</small></summary>${a.c.filter(c=>c.email||c.phone).map(c=>`<div class="mm-ct"><div style="min-width:0"><b>${esc(c.name)}</b>${c.title?`<small>${esc(c.title)}</small>`:''}</div><div class="mm-cv">${c.email?`<span>${esc(c.email)}</span>`:''}${c.phone?`<span class="num">${esc(c.phone)}</span>`:''}</div></div>`).join('')}</details>`).join('')}</details>`;
 }
+/* b320: Tape vault — casting tapes, selfies and digitals moved out of Photos into Tega's own folder on your iPhone.
+   Pick → copied in → iOS asks before removing the originals (they wait 30 days in Recently Deleted). Tap to watch or send to your agent.
+   The files live only on this phone (the list syncs, the videos don't). Sending a self-tape counts: +10 XP and the “Self-tapes sent” goal source. */
+const VCAT={tape:['🎬','Self-tapes'], selfie:['🤳','Selfies & digitals'], casting:['📸','Castings']};
+let vCat='all', vPending=null;
+const V_ = () => (S.vault ||= []);
+const vHas = () => !!(window.native && window.native.vault);
+function vSrc(f){ return vHas()?window.native.vault.src(f):f; }
+try { window.addEventListener('tega-vault', ()=>{ if (view==='model'&&mTab==='vault') render(); }); } catch(e){}
+async function vaultAdd(){ if (!vHas()){ toast('Open Tega.exe on your iPhone to move tapes in'); return; }
+  const items=await window.native.vault.pick(); if (items===null){ toast('Update the app to use the tape vault'); return; } if (!items.length) return;
+  const L=items.map(x=>({id:x.id, kind:x.kind, file:x.file, thumb:x.thumb||'', dur:x.dur||0, size:x.size||0, asset:x.asset||'', d:TODAY, cat:x.kind==='video'?'tape':'selfie'}));
+  V_().push(...L); commit({skipXp:true}); vPending=L.map(x=>x.id); vaultAfter(); }
+function vaultAfter(){ const L=V_().filter(x=>(vPending||[]).includes(x.id)); if (!L.length) return; document.getElementById('vlt-m')?.remove(); const m=document.createElement('div'); m.id='vlt-m'; m.className='modal';
+  const mb=Math.round(L.reduce((a,x)=>a+(+x.size||0),0)/1048576);
+  m.innerHTML=`<div class="card"><h2 style="font-size:20px">🎬 ${L.length} moved into Tega</h2><div class="sub" style="margin:6px 0 12px">${mb?mb+' MB · ':''}what are they?</div>
+    <div class="vt-cats">${Object.entries(VCAT).map(([k,[ic,l]])=>`<button class="${L.every(x=>x.cat===k)?'on':''}" onclick="vSetCat('${k}')">${ic} ${l}</button>`).join('')}</div>
+    <button class="btn" style="width:100%;justify-content:center;margin-top:14px" onclick="vaultClean()">Remove ${L.length===1?'it':'them'} from Photos</button>
+    <button class="btn ghost" style="width:100%;justify-content:center;margin-top:8px" onclick="vPending=null;this.closest('.modal').remove()">Keep both</button>
+    <div class="help" style="margin-top:8px">iPhone asks first, and keeps them in Recently Deleted for 30 days. Your copies stay here.</div></div>`;
+  m.addEventListener('click',e=>{ if (e.target===m){ vPending=null; m.remove(); } }); document.body.appendChild(m); }
+function vSetCat(k){ for (const x of V_()) if ((vPending||[]).includes(x.id)) x.cat=k; commit({skipXp:true}); vaultAfter(); }
+async function vaultClean(){ const L=V_().filter(x=>(vPending||[]).includes(x.id)&&x.asset); document.getElementById('vlt-m')?.remove(); vPending=null; if (!L.length) return;
+  const r=await window.native.vault.deleteFromPhotos(L.map(x=>x.asset)); if (r&&r.ok){ for (const x of L) x.fromPhotos=TODAY; commit({skipXp:true}); toast(`🧹 ${r.deleted} removed from Photos — they're safe in Tega`); }
+  else toast(r&&r.reason==='no access'?'Tega needs Photos access to remove them (Settings → Tega.exe → Photos)':'Kept in Photos too'); }
+function vOpen(id){ const x=V_().find(z=>z.id===id); if (!x) return; document.getElementById('vlt-m')?.remove(); const m=document.createElement('div'); m.id='vlt-m'; m.className='modal';
+  m.innerHTML=`<div class="card vt-view"><div class="row between" style="margin-bottom:10px"><span class="tag">${VCAT[x.cat]?.[0]||''} ${VCAT[x.cat]?.[1]||''} · ${nice(x.d)}</span><button class="btn ghost sm" onclick="this.closest('.modal').remove()" aria-label="Close">✕</button></div>
+    ${x.kind==='video'?`<video src="${vSrc(x.file)}" controls playsinline preload="metadata" ${x.thumb?`poster="${vSrc(x.thumb)}"`:''}></video>`:`<img src="${vSrc(x.file)}" alt="">`}
+    <div class="vt-cats" style="margin-top:12px">${Object.entries(VCAT).map(([k,[ic,l]])=>`<button class="${x.cat===k?'on':''}" onclick="vRecat('${id}','${k}')">${ic} ${l}</button>`).join('')}</div>
+    <button class="btn" style="width:100%;justify-content:center;margin-top:12px" onclick="vSend('${id}')">Send to your agent ›</button>
+    ${x.sent?`<div class="help" style="margin-top:6px;text-align:center">sent ${x.sent}×</div>`:''}</div>`;
+  m.addEventListener('click',e=>{ if (e.target===m) m.remove(); }); document.body.appendChild(m); }
+function vRecat(id,k){ const x=V_().find(z=>z.id===id); if (!x) return; x.cat=k; commit({skipXp:true}); vOpen(id); }
+async function vSend(id){ const x=V_().find(z=>z.id===id); if (!x) return; if (!vHas()){ toast('Send it from your iPhone'); return; }
+  const ok=await window.native.vault.share([x.file]); if (!ok) return; x.sent=(x.sent||0)+1; (x.sends ||= []).push(TODAY); commit(); if (x.cat==='tape') toast('🎬 Self-tape sent · +10 XP'); }
+const vaultXP = () => V_().filter(x=>x.cat==='tape').reduce((a,x)=>a+(x.sends||[]).filter(d=>d>=GAME_START).length*10,0);
+// files of tapes deleted more than 30 days ago are removed from the phone for real (until then Recently deleted brings them back)
+function vaultPurge(){ if (!vHas()) return; const T=S.holdTrash||[], old=T.filter(e=>e.k==='vault' && e.at && daysBetween(e.at,TODAY)>30); if (!old.length) return;
+  window.native.vault.remove(old.flatMap(e=>[e.x.file,e.x.thumb].filter(Boolean))); S.holdTrash=T.filter(e=>!old.includes(e)); commit({skipXp:true}); }
+function vVault(){ try { vaultPurge(); } catch(e){}
+  const A=V_(), n=k=>A.filter(x=>x.cat===k).length, L=A.filter(x=>vCat==='all'||x.cat===vCat).slice().sort((a,b)=>(b.d||'').localeCompare(a.d||''));
+  const latest=k=>A.filter(x=>x.cat===k).sort((a,b)=>(b.d||'').localeCompare(a.d||''))[0];
+  const quick=['selfie','tape'].map(k=>latest(k)).filter(Boolean);
+  const mb=Math.round(A.reduce((a,x)=>a+(+x.size||0),0)/1048576);
+  return `<div class="card sec"><div class="hdr"><h2>🎬 Tape vault</h2><button class="btn sm" onclick="vaultAdd()">＋ Move from Photos</button></div>
+    <div class="sub" style="font-size:12.5px">${A.length?`${A.length} saved${mb?` · ${mb>=1024?(mb/1024).toFixed(1)+' GB':mb+' MB'}`:''} · on this iPhone, out of your camera roll`:'Casting tapes, selfies and digitals you want to keep — without filling your camera roll.'}</div>
+    ${quick.length?`<div class="tag" style="margin:14px 0 6px">Agent asking? Send in one tap</div><div class="row" style="gap:8px">${quick.map(x=>`<button class="btn ghost sm" onclick="vSend('${x.id}')">${VCAT[x.cat][0]} Latest ${x.cat==='tape'?'self-tape':'selfie'}</button>`).join('')}</div>`:''}
+    ${A.length?`<div class="vt-cats" style="margin-top:14px">${[['all','All',A.length],...Object.entries(VCAT).map(([k,[ic,l]])=>[k,ic+' '+l,n(k)])].map(([k,l,c])=>`<button class="${vCat===k?'on':''}" onclick="vCat='${k}';render()">${l} <span class="num">${c}</span></button>`).join('')}</div>
+      <div class="vt-grid">${L.map(x=>`<button class="vt-it" data-hold="vault:${x.id}" onclick="vOpen('${x.id}')">${x.thumb||x.kind==='photo'?`<img src="${vSrc(x.thumb||x.file)}" alt="" loading="lazy">`:`<i>${VCAT[x.cat]?.[0]||'🎬'}</i>`}${x.kind==='video'?`<b class="num">${x.dur?Math.floor(x.dur/60)+':'+String(Math.round(x.dur%60)).padStart(2,'0'):'▶'}</b>`:''}</button>`).join('')||'<div class="empty">Nothing here yet.</div>'}</div>`:''}
+    ${vHas()?'':'<div class="help" style="margin-top:10px">The vault lives on your iPhone — open Tega.exe there to add or play tapes.</div>'}
+    <div class="help" style="margin-top:10px">Saved on this phone only (not in iCloud Photos) · hold one to delete · back it up by sending it to Files</div></div>`; }
 function vModel(){
   if (mcpLib && !mTried && Date.now()-(mState().syncAt||0)>30*60e3) setTimeout(()=>mSync(false),0);
   if (mTab==='content'){ mTab='now'; setTimeout(()=>go('content'),0); }
-  if (!['now','clients','book','card'].includes(mTab)) mTab='now';
+  if (!['now','clients','book','card','vault'].includes(mTab)) mTab='now';
   const mSeg=t=>`<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${t.map(([k,l])=>`<button class="${mTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px" onclick="mTab='${k}';render()">${l}</button>`).join('')}</div>`;
-  const MT5=[['now','Bookings'],['clients','Clients'],['book','Book'],['card','Card']];
+  const MT5=[['now','Bookings'],['clients','Clients'],['book','Book'],['card','Card'],['vault','Tapes']];
   if (mTab==='card') return mSeg(MT5) + mCardView();
+  if (mTab==='vault') return mSeg(MT5) + vVault();
   const E=mAll(), P=mPipe(), jobs=E.filter(e=>e.t==='job'&&!DEAD_S.includes(e.s)), days=fact('setdays'), ck=fact('setdays:ck');
   const first=jobs.map(j=>j.start).filter(Boolean).sort()[0]||'';
   const tabs=MT5;
@@ -7389,6 +7451,7 @@ const HOLDK={
   quest:{ at:id=>hIx(S.quests,id), list:()=>(S.quests ||= []), name:x=>x.text },
   dream:{ at:i=>{ const L=R_().dream; return [L, +i<L.length?+i:-1]; }, list:()=>R_().dream, name:x=>x },
   lesson:{ at:id=>{ const [sid,lid]=id.split('|'); return hIx(lrSub(sid).lessons,lid); }, list:id=>(lrSub(id.split('|')[0]).lessons ||= []), name:x=>x.t, acts:(x,id)=>{ const [sid,lid]=id.split('|'); return [['✓ Done', `lrDone('${sid}','${lid}')`]]; } },
+  vault:{ at:id=>hIx(V_(),id), list:()=>V_(), name:x=>`${VCAT[x.cat]?.[0]||'🎬'} ${VCAT[x.cat]?.[1]||'Tape'} · ${nice(x.d)}`, acts:(x,id)=>[['Send to your agent', `vSend('${id}')`]] },
   wish:{ at:id=>hIx(wishL(),id), list:()=>wishL(), name:x=>`${wishRar(x.price)[2]} ${x.name} · ${money0(+x.price||0)}`,
     acts:(x,id)=>x.claimed?[]:[[x.target?'★ Target':'★ Make it the target', `wishTarget('${id}')`], ['＋ Stash money', `wishStash('${id}')`], [x.need?'Mark as a want':'Mark as a need', `(()=>{const w=wishL().find(z=>z.id==='${id}');if(w){w.need=!w.need;commit({skipXp:true});}})()`]] },
   person:{ at:id=>{ const L=(S.circle ||= {ev:[],people:[]}).people ||= []; return [L, L.findIndex(p=>p.name===id)]; }, list:()=>((S.circle ||= {ev:[],people:[]}).people ||= []), name:x=>x.name,
@@ -8703,6 +8766,7 @@ const KSRC = [
   ['Content','igfollowers','Instagram followers','👥','',()=>igData().followers||0,1],
   ['Modeling','outreach','Outreach logged','🤝','',(a,b)=>(S.logs||[]).filter(l=>l.kind==='outreach'&&l.d>=a&&l.d<=b).length],
   ['Modeling','proposals','Proposals sent','📨','',(a,b)=>(S.logs||[]).filter(l=>l.kind==='proposal'&&l.d>=a&&l.d<=b).length],
+  ['Modeling','tapesent','Self-tapes sent (from the vault)','🎬','',(a,b)=>(S.vault||[]).filter(x=>x.cat==='tape').reduce((n,x)=>n+(x.sends||[]).filter(d=>d>=a&&d<=b).length,0)],
   ['Modeling','setdays','Days on set','🎬','',(a,b)=>liveBookings().filter(e=>e.t==='job').reduce((s,e)=>s+(e.d||[]).filter(k=>k>=a&&k<=b&&k<=TODAY).length,0)],
   ['Modeling','setdays:ck','Days on set for Calvin Klein','🎬','',(a,b)=>liveBookings().filter(e=>e.t==='job'&&/calvin/i.test(e.c||'')).reduce((s,e)=>s+(e.d||[]).filter(k=>k>=a&&k<=b&&k<=TODAY).length,0)],
   ['Modeling','jobs','Jobs','📸','',(a,b)=>liveBookings().filter(e=>e.t==='job'&&(e.d||[]).some(k=>k>=a&&k<=b&&k<=TODAY)).length],

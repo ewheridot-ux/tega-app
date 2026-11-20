@@ -44,6 +44,9 @@ public class TegaNativePlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "liveUpdate", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "liveEnd", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "info", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "vaultPick", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "vaultDelete", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "vaultRemove", returnType: CAPPluginReturnPromise),
     ]
 
     override public func load() {

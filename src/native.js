@@ -245,6 +245,8 @@ async function perm() { if (permAsked) return; permAsked = true; try { const p =
 const at = (dateKey, h, m = 0) => { const [y, mo, d] = dateKey.split('-').map(Number); return new Date(y, mo - 1, d, h, m, 0); };
 const keyOf = dt => `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
 let remT = null, lastState = null;
+let vaultDir = '';
+const vaultDirP = Filesystem.getUri({ directory: Directory.Documents, path: 'TegaVault' }).then(r => { vaultDir = String(r.uri).replace(/\/?$/, '/'); try { window.dispatchEvent(new Event('tega-vault')); } catch (e) {} }).catch(() => {});
 window.native = {
   async restAlarm(ts) {
     try {
@@ -269,6 +271,17 @@ window.native = {
     return { stamps: feedStamps, at: feedRowAt, upload: up, signedIn: !!(auth && auth.refresh_token) }; },
   async calendarSync(items) { const sig = JSON.stringify(items); if (sig === lastCal) return; clearTimeout(calT); calT = setTimeout(async () => { if (calBusy) return; calBusy = true; try { await calSync(items); lastCal = sig; } catch (e) { console.warn('cal', e); } calBusy = false; }, 2500); },
   async saveWorkout(o) { return tn('healthSaveWorkout', o); },
+  // Tape vault (Modeling): move tapes/selfies out of Photos into Tega's own folder on this phone
+  // files are stored by NAME only: iOS can move the app's folder when the app updates, so the folder is looked up fresh each launch
+  vault: {
+    ok: true,
+    path(name) { return /^file:/.test(name || '') ? name : vaultDir + name; },
+    async pick() { await vaultDirP; const r = await tn('vaultPick'); return r && r.items ? r.items.map(x => ({ ...x, file: String(x.file).split('/').pop(), thumb: x.thumb ? String(x.thumb).split('/').pop() : '' })) : null; },   // null = this build has no vault yet
+    async deleteFromPhotos(assets) { return (await tn('vaultDelete', { assets })) || { ok: false, deleted: 0, reason: 'unavailable' }; },
+    async remove(names) { await vaultDirP; return tn('vaultRemove', { files: names.map(n => window.native.vault.path(n)) }); },
+    src(name) { try { return window.Capacitor.convertFileSrc(window.native.vault.path(name)); } catch (e) { return name; } },
+    async share(names, text) { await vaultDirP; try { await Share.share({ files: names.map(n => window.native.vault.path(n)), text: text || undefined }); return true; } catch (e) { return false; } },
+  },
   async live(kind, o) { return tn(kind === 'start' ? 'liveStart' : kind === 'end' ? 'liveEnd' : 'liveUpdate', o); },
   async share(o) { try { if (o.dataUrl) { const w = await Filesystem.writeFile({ path: o.file || 'tega.png', data: o.dataUrl.split(',')[1], directory: Directory.Cache }); await Share.share({ title: o.title, text: o.text, files: [w.uri] }); } else await Share.share({ title: o.title, text: o.text, url: o.url }); return true; } catch (e) { return false; } },
   // Apple Health: last N days of workouts, sleep, steps and weight
