@@ -31,7 +31,12 @@
   function kick() { try { if (mute || auto) player.mute(); player.playVideo(); } catch (e) {} }
   if (bare) {   // no controls to press, so a tap anywhere plays it (and tells the app, which uses taps to open/close the big view)
     var t = document.createElement('div'); t.id = 'tap'; document.body.appendChild(t);
-    t.addEventListener('click', function () { kick(); try { parent.postMessage({ tegaYt: 'tap', v: v }, '*'); } catch (e) {} });
+    // b323: a tap on a clip that isn't playing yet only starts it — it never closes or opens anything; once it plays, taps go back to the app
+    t.addEventListener('click', function () {
+      var st = -1; try { st = player.getPlayerState(); } catch (e) {}
+      if (st !== 1 && st !== 3) { kick(); return; }
+      try { parent.postMessage({ tegaYt: 'tap', v: v }, '*'); } catch (e) {}
+    });
   }
   window.onYouTubeIframeAPIReady = function () {
     player = new YT.Player('p', {
