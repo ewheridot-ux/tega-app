@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['ci/run-yvid', 'ci/poses.json']
+    paths: ['ci/run-yvid', 'ci/poses.json', 'web/app.html']
 concurrency: { group: yvid, cancel-in-progress: false }
 permissions: { contents: write }
 jobs:
