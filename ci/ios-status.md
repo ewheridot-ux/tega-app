@@ -1,28 +1,28 @@
-# iPhone build #175 — success
+# iPhone build #176 — success
 
-Fri Nov 20 06:05:14 UTC 2026
+Fri Nov 20 07:52:21 UTC 2026
 
 ```
-✓ avatar painted within 300 ms of the app's first frame — 191 ms
-page-change render ms today:34 week:13 quests:8 model:19 content:7 datum:8 gym:10 money:23 social:9 learn:11 city:21 evolve:24
-after-data-change render ms today:38 week:16 quests:12 model:29 content:12 datum:16 gym:20 money:52 social:21 learn:17 city:45 evolve:41
-✓ render today < 100 ms — 34 ms
+✓ avatar painted within 300 ms of the app's first frame — 155 ms
+page-change render ms today:20 week:13 quests:9 model:28 content:11 datum:8 gym:6 money:22 social:9 learn:11 city:16 evolve:23
+after-data-change render ms today:33 week:17 quests:13 model:30 content:15 datum:19 gym:14 money:38 social:22 learn:15 city:24 evolve:35
+✓ render today < 100 ms — 20 ms
 ✓ render week < 100 ms — 13 ms
-✓ render quests < 100 ms — 8 ms
-✓ render model < 100 ms — 19 ms
-✓ render content < 100 ms — 7 ms
+✓ render quests < 100 ms — 9 ms
+✓ render model < 100 ms — 28 ms
+✓ render content < 100 ms — 11 ms
 ✓ render datum < 100 ms — 8 ms
-✓ render gym < 100 ms — 10 ms
-✓ render money < 100 ms — 23 ms
+✓ render gym < 100 ms — 6 ms
+✓ render money < 100 ms — 22 ms
 ✓ render social < 100 ms — 9 ms
 ✓ render learn < 100 ms — 11 ms
-✓ render city < 100 ms — 21 ms
-✓ render evolve < 100 ms — 24 ms
-✓ a tap that saves data (commit) on Today < 200 ms — 55 ms
+✓ render city < 100 ms — 16 ms
+✓ render evolve < 100 ms — 23 ms
+✓ a tap that saves data (commit) on Today < 200 ms — 59 ms
 ✓ Life look via #life — study/street
 ✓ Life look via #social — study/street
 ✓ Life look via #learn — study/street
-✓ swipe social: page never blank — min opacity 1.00 over 54 frames
+✓ swipe social: page never blank — min opacity 1.00 over 53 frames
 ✓ swipe social: one #view — 1
 ✓ swipe social: no transform left on #view
 ✓ swipe social: moved to next tab
@@ -34,13 +34,13 @@ after-data-change render ms today:38 week:16 quests:12 model:29 content:12 datum
 ✓ swipe week: moved to next tab
 ✓ swipe week: header and tab bar hold still — 0 px
 ✓ swipe week: the tab's content slides — 390 px
-✓ swipe today: page never blank — min opacity 1.00 over 44 frames
+✓ swipe today: page never blank — min opacity 1.00 over 45 frames
 ✓ swipe today: one #view — 1
 ✓ swipe today: no transform left on #view
 ✓ swipe today: moved to next tab
 ✓ swipe today: header and tab bar hold still — 0 px
 ✓ swipe today: the tab's content slides — 390 px
-✓ swipe money: page never blank — min opacity 1.00 over 48 frames
+✓ swipe money: page never blank — min opacity 1.00 over 47 frames
 ✓ swipe money: one #view — 1
 ✓ swipe money: no transform left on #view
 ✓ swipe money: moved to next tab
@@ -62,13 +62,13 @@ all perf checks passed
 > node scripts/build-www.mjs
 
 www built with Supabase config
-✔ Adding native Xcode project in ios in 14.96ms
-✔ add in 15.21ms
-✔ Copying web assets from www to ios/App/App/public in 74.01ms
-✔ Creating capacitor.config.json in ios/App/App in 338.46μs
-✔ copy ios in 112.07ms
-✔ Updating iOS plugins in 815.79μs
-✔ Updating iOS native dependencies with pod install in 12.66s
+✔ Adding native Xcode project in ios in 16.90ms
+✔ add in 17.16ms
+✔ Copying web assets from www to ios/App/App/public in 68.53ms
+✔ Creating capacitor.config.json in ios/App/App in 346.62μs
+✔ copy ios in 117.28ms
+✔ Updating iOS plugins in 1.09ms
+✔ Updating iOS native dependencies with pod install in 13.06s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -80,15 +80,15 @@ www built with Supabase config
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 12.72s
+✔ update ios in 13.11s
 [success] ios platform added!
 Follow the Developer Workflow guide to get building:
 https://capacitorjs.com/docs/basics/workflow
-✔ Copying web assets from www to ios/App/App/public in 96.79ms
-✔ Creating capacitor.config.json in ios/App/App in 680.79μs
-✔ copy ios in 114.00ms
-✔ Updating iOS plugins in 955.92μs
-✔ Updating iOS native dependencies with pod install in 5.00s
+✔ Copying web assets from www to ios/App/App/public in 152.55ms
+✔ Creating capacitor.config.json in ios/App/App in 754.46μs
+✔ copy ios in 177.71ms
+✔ Updating iOS plugins in 1.50ms
+✔ Updating iOS native dependencies with pod install in 6.40s
 [info] Found 10 Capacitor plugins for ios:
        @capacitor/app@7.1.2
        @capacitor/filesystem@7.1.9
@@ -100,8 +100,8 @@ https://capacitorjs.com/docs/basics/workflow
        @capacitor/status-bar@7.0.6
        @capgo/capacitor-health@7.2.15
        @ebarooni/capacitor-calendar@7.5.0
-✔ update ios in 5.04s
-[info] Sync finished in 5.296s
+✔ update ios in 6.52s
+[info] Sync finished in 6.753s
 app capabilities: ['IN_APP_PURCHASE', 'HEALTHKIT', 'IN_APP_PURCHASE', 'IN_APP_PURCHASE']
 com.ewheridot.tegaexe.widgets ok
 com.ewheridot.tegaexe.share ok
@@ -112,13 +112,13 @@ entitlements: healthkit keychain-access-groups
 TIER=full
 Running altool at path '/Applications/Xcode_26.3.app/Contents/SharedFrameworks/ContentDelivery.framework/Resources/altool'...
 
-2026-11-20 06:05:14.236  INFO: [ContentDelivery.Uploader.6000022E0040] 
+2026-11-20 07:52:21.270  INFO: [ContentDelivery.Uploader.6000020B8040] 
 ==========================================
 UPLOAD SUCCEEDED with no errors, 1 warning
-Delivery UUID: a138ddd2-5bbf-459b-853d-192cd76fa34c
-Transferred 8130522 bytes in 0.668 seconds (12.2MB/s, 97.351Mbps)
+Delivery UUID: ba53b204-00ce-442f-bf6b-a031879c7a2c
+Transferred 8130676 bytes in 0.668 seconds (12.2MB/s, 97.328Mbps)
 ==========================================
-2026-11-20 06:05:14.237  WARN: [altool.6000022E0040] SDK version issue. This app was built with the iOS 26.2 SDK. Starting April 2027, iOS and iPadOS apps must be built with the iOS 27 SDK or later, included in Xcode 27 or later, in order to be uploaded to App Store Connect or submitted for distribution. (90725)
+2026-11-20 07:52:21.271  WARN: [altool.6000020B8040] SDK version issue. This app was built with the iOS 26.2 SDK. Starting April 2027, iOS and iPadOS apps must be built with the iOS 27 SDK or later, included in Xcode 27 or later, in order to be uploaded to App Store Connect or submitted for distribution. (90725)
    server_warning : 
       code : 90725
       description : SDK version issue. This app was built with the iOS 26.2 SDK. Starting April 2027, iOS and iPadOS apps must be built with the iOS 27 SDK or later, included in Xcode 27 or later, in order to be uploaded to App Store Connect or submitted for distribution.
