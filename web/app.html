@@ -474,13 +474,14 @@ html.sw-run #app{overflow-x:clip}
 .selbar .selb{flex:none;font:inherit;font-size:14px;font-weight:600;padding:8px 12px;border-radius:12px;border:0;background:transparent;color:var(--fg);cursor:pointer;letter-spacing:0;text-transform:none}
 .selbar .selb.sel-del{background:var(--bad);color:#fff}
 /* b316: whole-pose view */
-.yg-vid iframe,.yv-loop iframe{pointer-events:none}
+/* b323: the clip takes its own taps (a held-back clip plays; a playing one tells the app to open/close) */
+.yg-vid iframe,.yv-loop iframe{pointer-events:auto}
 .yv-zoom{position:absolute;right:14%;bottom:12%;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;font-style:normal;font-size:15px;pointer-events:none}
 .yv-loop .yv-zoom{right:10px;bottom:10px}
 .yx{position:fixed;inset:0;z-index:10060;background:rgba(0,0,0,.88);display:grid;place-items:center;align-content:center;gap:12px;padding:calc(env(safe-area-inset-top,0px) + 16px) 16px calc(env(safe-area-inset-bottom,0px) + 16px);animation:sheet .25s ease-out}
 .yx-f{position:relative;width:min(100%, calc((100dvh - 120px) * 16 / 9));aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#000}
 .yx.sh .yx-f{width:min(100%, calc((100dvh - 120px) * 9 / 16));aspect-ratio:9/16}
-.yx-f iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none}
+.yx-f iframe{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:auto}
 .yx-cap{color:#fff;opacity:.7;font-size:13px;text-align:center}
 /* b316: keyboard open → the sheet hugs the keyboard, no extra home-bar padding */
 html.kb-open .modal .card{padding-bottom:16px}
@@ -2092,7 +2093,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b322';
+const BUILD='b323';
 /* b316: bottom sheets sit above the iPhone keyboard — the sheet follows the visible part of the screen (visualViewport),
    and the field you tap scrolls into view inside it. Before, the keyboard slid over “New quest” and every other sheet. */
 (function(){ const v=window.visualViewport, R=document.documentElement; if (!v) return;

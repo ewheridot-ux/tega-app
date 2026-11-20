@@ -6,7 +6,10 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Tega.exe video</title>
 <style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#p,#p iframe{position:fixed;inset:0;width:100%;height:100%;border:0}
-#tap{position:fixed;inset:0;z-index:2;background:transparent}</style>
+#tap{position:fixed;inset:0;z-index:2;background:transparent;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+#tap i{width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;transition:opacity .2s}
+#tap i:after{content:'';margin-left:5px;border-style:solid;border-width:12px 0 12px 20px;border-color:transparent transparent transparent #fff}
+#tap.on i{opacity:0}</style>
 </head>
 <body>
 <div id="p"></div>
@@ -30,7 +33,7 @@
   var player, tries = 0, played = false;
   function kick() { try { if (mute || auto) player.mute(); player.playVideo(); } catch (e) {} }
   if (bare) {   // no controls to press, so a tap anywhere plays it (and tells the app, which uses taps to open/close the big view)
-    var t = document.createElement('div'); t.id = 'tap'; document.body.appendChild(t);
+    var t = document.createElement('div'); t.id = 'tap'; t.innerHTML = '<i></i>'; document.body.appendChild(t);   // ▶ shows until the clip is actually playing
     // b323: a tap on a clip that isn't playing yet only starts it — it never closes or opens anything; once it plays, taps go back to the app
     t.addEventListener('click', function () {
       var st = -1; try { st = player.getPlayerState(); } catch (e) {}
@@ -46,6 +49,7 @@
         onStateChange: function (e) {
           if (loop && e.data === 0) { player.seekTo(start, true); player.playVideo(); }          // ended → go round again
           if (e.data === 1) played = true;
+          var tp = document.getElementById('tap'); if (tp) tp.className = e.data === 1 || e.data === 3 ? 'on' : '';
           if (auto && !played && (e.data === 2 || e.data === 5 || e.data === -1) && tries < 4) { tries++; setTimeout(kick, 400); }   // the phone held it back → nudge it (never fights your own pause)
         }
       }

@@ -581,6 +581,25 @@ const ytap = await page.evaluate(async () => { const keepV = YVID, id = Object.k
   window.dispatchEvent(new MessageEvent('message', { data: { tegaYt: 'tap' }, origin: 'https://evil.example', source: f.contentWindow })); r.ignoresOthers = !document.getElementById('yx');
   h.remove(); YVID = keepV; return r; });
 ok('phone clip taps: tap the circle opens the whole pose, tap closes it (only from our video page)', ytap.open && ytap.closed && ytap.ignoresOthers, JSON.stringify(ytap));
+// a real finger tap on a phone clip the phone held back must play it, not open/close anything (b323: taps used to be swallowed by the layer behind)
+{ const ytApi = `window.YT={Player:function(id,o){ var el=document.getElementById(id), f=document.createElement('iframe'); f.id=id; f.src='about:blank'; el.replaceWith(f); window._yt={plays:0,state:-1}; this.mute=function(){}; this.playVideo=function(){_yt.plays++}; this.getPlayerState=function(){ return _yt.state; }; this.seekTo=function(){}; var me=this; window._ytEv=o.events; setTimeout(function(){ o.events.onReady({target:me}); },0); }}; setTimeout(function(){ onYouTubeIframeAPIReady(); },0);`;
+  await page.route('https://www.youtube.com/iframe_api', r => r.fulfill({ contentType: 'text/javascript', body: ytApi }));
+  await page.route('https://ewheridot-ux.github.io/**', r => r.fulfill({ body: fs.readFileSync(new URL('../docs/yt.html', import.meta.url)), contentType: 'text/html' }));
+  await page.evaluate(() => { window._keepC = window.claude; window._keepV = YVID; const id = Object.keys(YP)[0]; YVID = { [id]: { v: 'dQw4w9WgXcQ' } };
+    window.claude = Object.assign({}, window.claude || {}, { native: {} }); document.getElementById('yx')?.remove();
+    const h = document.createElement('div'); h.id = 'ytest'; h.style.cssText = 'position:fixed;left:40px;top:120px;width:300px;z-index:99999'; h.innerHTML = yLoop(id); document.body.appendChild(h); });
+  await page.waitForTimeout(1200);
+  const fr = page.frames().find(f => f.url().startsWith('https://ewheridot-ux.github.io/'));
+  const box = await page.locator('#ytest .yg-vid').boundingBox(); const cx = box.x + box.width / 2, cy = box.y + box.height / 2;
+  const r = { frame: !!fr };
+  if (fr) { await fr.evaluate(() => { _yt.state = 5; _ytEv.onStateChange({ data: 5 }); }); r.playBadge = await fr.evaluate(() => document.getElementById('tap').className !== 'on');
+    const p0 = await fr.evaluate(() => _yt.plays); await page.mouse.click(cx, cy); await page.waitForTimeout(250);
+    r.tapPlays = (await fr.evaluate(() => _yt.plays)) > p0; r.noBigView = !(await page.evaluate(() => !!document.getElementById('yx')));
+    await fr.evaluate(() => { _yt.state = 1; _ytEv.onStateChange({ data: 1 }); }); r.badgeHides = await fr.evaluate(() => document.getElementById('tap').className === 'on');
+    await page.mouse.click(cx, cy); await page.waitForTimeout(250); r.playingTapOpens = await page.evaluate(() => !!document.getElementById('yx')); }
+  await page.evaluate(() => { document.getElementById('yx')?.remove(); document.getElementById('ytest')?.remove(); window.claude = window._keepC; YVID = window._keepV; });
+  await page.unroute('https://www.youtube.com/iframe_api'); await page.unroute('https://ewheridot-ux.github.io/**');
+  ok('phone finger tap on a held-back clip plays it (▶ shows until it plays) and never closes; a tap while playing opens the whole pose', r.frame && r.playBadge && r.tapPlays && r.noBigView && r.badgeHides && r.playingTapOpens, JSON.stringify(r)); }
 // the claude.ai web copy blocks embedded pages from other sites: no black YouTube boxes there — the drawing stays, the demo opens YouTube
 const ywc = await page.evaluate(() => { const keepV = YVID, keepC = window.claude, keepO = window.ytOpen, id = Object.keys(YP)[0]; YVID = { [id]: { v: 'dQw4w9WgXcQ' } }; const r = {};
   window.claude = { use: keepC && keepC.use }; let opened = ''; const realOpen = ytOpen; ytOpen = v => { opened = v; };
