@@ -504,6 +504,9 @@ const vt = await page.evaluate(async () => { const r = {}, keep = JSON.stringify
   window.native = wasN; const k = JSON.parse(keep); S.vault = k.v || []; S.holdTrash = k.h; view = 'today'; commit({ skipXp: true }); document.querySelectorAll('.modal,#toast-act').forEach(m => m.remove()); return r; });
 ok('tape vault: Modeling → Tapes; move from Photos, sorted (tape / selfie), iOS asked to remove originals', vt.webNote && vt.added && vt.photos && vt.grid, JSON.stringify(vt));
 ok('tape vault: send a self-tape = +10 XP + goal source; delete is soft, files purged after 30 days', vt.sent && vt.soft && vt.purged, JSON.stringify(vt));
+const yv = await page.evaluate(() => { const n0=yDayN(), r={}; for (const f of Object.keys(YFLOWS)){ const N=[...Array(21)].map((_,i)=>yFlowN(f,n0+i));
+  r[f]={ok:N.every(x=>x.length&&x.every(id=>YP[id])&&new Set(x).size===x.length), shared:N.slice(1).reduce((a,x,i)=>a+x.filter(id=>N[i].includes(id)).length,0), firsts:new Set(N.map(x=>x[0])).size, lasts:new Set(N.map(x=>x.at(-1))).size, same:JSON.stringify(yFlow(f))===JSON.stringify(yFlowN(f,n0))}; } return r; });
+ok('stretch flows change nightly: no pose from last night, openers and closers rotate, no pose twice in a flow', Object.values(yv).every(x=>x.ok&&x.same&&x.shared===0&&x.firsts>=3&&x.lasts>=3), JSON.stringify(yv));
 // Wishlist loot: add (rarity by price), wants cool off, ★ target, stash, claim → XP + win; hold to delete
 const wl = await page.evaluate(async () => { const keep = JSON.stringify({ w: S.money.wish, wins: S.wins, h: S.holdTrash }), r = {}; S.money.wish = [];
   wishSheet(); document.getElementById('wishN').value = 'Steamer'; document.getElementById('wishP').value = '120'; wishKind(true); wishSave();
@@ -557,11 +560,22 @@ const yx = await page.evaluate(() => { const keepV = YVID, id = Object.keys(YP)[
   const m = document.getElementById('yx'), f = m && m.querySelector('.yx-f'); r.open = !!m && /loop=1|loop%3D1/.test(m.innerHTML); if (f) { const b = f.getBoundingClientRect(); r.whole = Math.abs(b.width / b.height - 9 / 16) < 0.02 && b.bottom <= innerHeight && b.top >= 0; }
   m && m.click(); r.closed = !document.getElementById('yx'); h.remove(); YVID = keepV; return r; });
 ok('pose demo: tap the circle to see the whole pose (uncropped), tap to close', yx.open && yx.whole && yx.closed, JSON.stringify(yx));
-{ const vp = await browser.newPage(); await vp.route('https://www.youtube-nocookie.com/**', r => r.fulfill({ body: '<p>yt</p>', contentType: 'text/html' }));
+{ const vp = await browser.newPage();
+  // stand-in for YouTube's player script: builds the iframe from the options and counts play() calls
+  await vp.route('https://www.youtube.com/iframe_api', r => r.fulfill({ contentType: 'text/javascript', body: `window.YT={Player:function(id,o){ var el=document.getElementById(id), f=document.createElement('iframe'); f.id=id; f.src=o.host+'/embed/'+o.videoId+'?'+new URLSearchParams(o.playerVars); el.replaceWith(f); window._yt={plays:0,muted:0}; this.mute=function(){_yt.muted++}; this.playVideo=function(){_yt.plays++}; this.seekTo=function(){}; var me=this; setTimeout(function(){ o.events.onReady({target:me}); },0); }}; setTimeout(function(){ onYouTubeIframeAPIReady(); },0);` }));
   await vp.route('https://ewheridot-ux.github.io/**', r => r.fulfill({ body: fs.readFileSync(new URL('../docs/yt.html', import.meta.url)), contentType: 'text/html' }));
-  await vp.goto('https://ewheridot-ux.github.io/tega-app/yt.html?v=dQw4w9WgXcQ&loop=1&mute=1&start=9'); const src = await vp.evaluate(() => document.querySelector('iframe')?.src || '');
-  await vp.goto('https://ewheridot-ux.github.io/tega-app/yt.html?v=bad"><script>'); const bad = await vp.evaluate(() => document.querySelectorAll('iframe').length); await vp.close();
-  ok('video page builds the YouTube player and ignores bad links', /embed\/dQw4w9WgXcQ\?/.test(src) && /playlist=dQw4w9WgXcQ/.test(src) && /start=9/.test(src) && bad === 0, src + ' bad=' + bad); }
+  await vp.goto('https://ewheridot-ux.github.io/tega-app/yt.html?v=dQw4w9WgXcQ&loop=1&mute=1&autoplay=1&controls=0&start=9'); await vp.waitForTimeout(300);
+  const yt = await vp.evaluate(() => ({ src: document.querySelector('iframe')?.src || '', plays: window._yt?.plays || 0, muted: window._yt?.muted || 0, tap: !!document.getElementById('tap') }));
+  await vp.goto('https://ewheridot-ux.github.io/tega-app/yt.html?v=bad"><script>'); await vp.waitForTimeout(200); const bad = await vp.evaluate(() => document.querySelectorAll('iframe').length + (window.YT ? 1 : 0)); await vp.close();
+  ok('video page builds the YouTube player, starts it by itself (muted), a tap plays it too, and ignores bad links', /embed\/dQw4w9WgXcQ\?/.test(yt.src) && /playlist=dQw4w9WgXcQ/.test(yt.src) && /start=9/.test(yt.src) && yt.plays >= 1 && yt.muted >= 1 && yt.tap && bad === 0, JSON.stringify(yt) + ' bad=' + bad); }
+// on the phone the clip page swallows taps and posts 'tap' back: the circle still opens the big view, and a tap closes it
+const ytap = await page.evaluate(async () => { const keepV = YVID, id = Object.keys(YP)[0]; YVID = { [id]: { v: 'dQw4w9WgXcQ' } }; const r = {};
+  const h = document.createElement('div'); h.innerHTML = yLoop(id); document.body.appendChild(h); const f = h.querySelector('iframe');
+  const send = fr => window.dispatchEvent(new MessageEvent('message', { data: { tegaYt: 'tap' }, origin: 'https://ewheridot-ux.github.io', source: fr.contentWindow }));
+  send(f); r.open = !!document.getElementById('yx'); const g = document.querySelector('#yx iframe'); if (g) send(g); r.closed = !document.getElementById('yx');
+  window.dispatchEvent(new MessageEvent('message', { data: { tegaYt: 'tap' }, origin: 'https://evil.example', source: f.contentWindow })); r.ignoresOthers = !document.getElementById('yx');
+  h.remove(); YVID = keepV; return r; });
+ok('phone clip taps: tap the circle opens the whole pose, tap closes it (only from our video page)', ytap.open && ytap.closed && ytap.ignoresOthers, JSON.stringify(ytap));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

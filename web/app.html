@@ -2092,7 +2092,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b320';
+const BUILD='b321';
 /* b316: bottom sheets sit above the iPhone keyboard — the sheet follows the visible part of the screen (visualViewport),
    and the field you tap scrolls into view inside it. Before, the keyboard slid over “New quest” and every other sheet. */
 (function(){ const v=window.visualViewport, R=document.documentElement; if (!v) return;
@@ -8075,13 +8075,17 @@ function yLoop(id,wide){ yvidLoad(); const v=YVID&&YVID[id]; if (!v||!v.v) retur
   const src=ytSrc(v.v,{autoplay:1,mute:1,loop:1,controls:0,start:v.start});
   return `<span class="${wide?'yv-loop':'yg-vid'} ${v.short?'sh':''}" role="button" tabindex="0" aria-label="See the whole pose" onclick="event.stopPropagation();yExpand('${id}')"><iframe src="${src}" title="${esc(YP[id].n)} demo" allow="autoplay; encrypted-media" tabindex="-1"></iframe><i class="yv-zoom" aria-hidden="true">⤢</i></span>`; }
 /* b316: the circle crops the demo — tap (or press and hold) it to see the whole pose, uncropped and still looping; tap anywhere to close */
+/* b321: on the phone the clip plays inside our yt.html page, which swallows taps — it posts 'tap' back so the circle still opens the big view and the big view still closes */
+try { window.addEventListener('message', e=>{ if (!e.data||e.data.tegaYt!=='tap'||!/^https:\/\/ewheridot-ux\.github\.io$/.test(e.origin)) return;
+  const f=[...document.querySelectorAll('iframe')].find(x=>x.contentWindow===e.source); if (!f) return;
+  const yx=f.closest('#yx'); if (yx) return yx.remove(); const sp=f.closest('.yg-vid,.yv-loop'); if (sp) sp.click(); }); } catch(e){}
 function yExpand(id){ const v=YVID&&YVID[id]; if (!v||!v.v) return; document.getElementById('yx')?.remove();
   const m=document.createElement('div'); m.id='yx'; m.className='yx'+(v.short?' sh':''); m.setAttribute('role','dialog'); m.setAttribute('aria-label',YP[id].n+' — whole pose');
   m.innerHTML=`<div class="yx-f"><iframe src="${ytSrc(v.v,{autoplay:1,mute:1,loop:1,controls:0,start:v.start})}" title="${esc(YP[id].n)} demo" allow="autoplay; encrypted-media"></iframe></div><div class="yx-cap">${esc(YP[id].n)} · tap to close</div>`;
   m.onclick=()=>m.remove(); document.body.appendChild(m); }
 function yVidBtn(id,cls){ yvidLoad(); const v=YVID&&YVID[id]; return v&&v.v?`<button class="${cls||'btn ghost sm'}" onclick="yVidPlay('${id}')">▶ Watch a real demo</button>`:`<a class="${cls||'btn ghost sm'}" href="https://www.youtube.com/results?search_query=${encodeURIComponent(YP[id].n+' stretch how to')}" target="_blank" rel="noopener">▶ Watch a real demo</a>`; }
 function yVidPlay(id){ const v=YVID&&YVID[id]; if (!v) return; const sh=!!v.short;
-  gSheet(`<span class="tag">${esc(v.ch||'YouTube')}</span><h2 class="g-sh-t">${esc(YP[id].n)}</h2><div class="yv-wrap ${sh?'sh':''}"><iframe src="${ytSrc(v.v,{start:v.start})}" title="${esc(YP[id].n)} demo" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
+  gSheet(`<span class="tag">${esc(v.ch||'YouTube')}</span><h2 class="g-sh-t">${esc(YP[id].n)}</h2><div class="yv-wrap ${sh?'sh':''}"><iframe src="${ytSrc(v.v,{start:v.start,autoplay:1,mute:1})}" title="${esc(YP[id].n)} demo" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
     <div class="row" style="gap:6px;margin-top:10px"><a class="btn ghost sm" href="https://www.youtube.com/watch?v=${encodeURIComponent(v.v)}" target="_blank" rel="noopener">Open in YouTube</a><button class="btn ghost sm" onclick="yPoseSheet('${id}')">‹ Steps</button></div>`); }
 const ySteps=(id,cls)=>YPOSE[id]?`<ol class="${cls||'y-steps'}">${YPOSE[id].steps.map(t=>`<li>${esc(t)}</li>`).join('')}</ol>`:'';
 
@@ -11003,14 +11007,26 @@ function yLibSheet(){ const groups=[['all','All'],['upper','Neck & shoulders'],[
   <div class="ym-tabs">${groups.map(([k,l])=>`<button class="${yLibF===k?'on':''}" onclick="yLibF='${k}';yLibSheet()">${l}</button>`).join('')}</div>
   <div class="stack" style="gap:6px">${list.map(id=>`<button class="ym-li" onclick="yPoseSheet('${id}',1)">${yMap(id,'ym-mini')}<span><b>${YP[id].ic} ${esc(YP[id].n)}</b><small>${yMusLine(id)}</small></span><i>›</i></button>`).join('')}</div>`); }
 const YP=Object.fromEntries(YOGA.map(([id,n,s,side,cue,ic,a])=>[id,{id,n,s,side,cue:YPOSE[id]?YPOSE[id].steps.join(' '):cue,ic,a:a.split(' ')}]));
-// each flow is a list of slots; 'a|b|c' rotates night to night so the same flow never repeats exactly
-const YFLOWS={wind:['🌙 Wind-down','10 min · every night',['child|puppy','catcow','thread|eagle|cowface','dog|reclinedhs','pigeon|lizard|figure4','fold|widefold|pyramid','twist|banana|seatedtwist','babyhappy|recbutterfly|kneehug','savasana']],
-  hips:['🍑 Hips & back','12 min · after legs or a long day sitting',['catcow','lowlunge|lizard|saddle|twistlunge','halfsplit|pyramid|headtoknee','pigeon|frog','butterfly|squat|recbutterfly|skandasana','figure4|gate','twist|banana','legsup|reclinedhs','savasana']],
-  upper:['💺 Neck & shoulders','9 min · after upper body or a desk day',['neckside','eagle|cowface','puppy|child','thread','chestopen|doorway','sphinx|cobra','sidebend|gate|seatedside','wrist|catcow','savasana']],
-  legs:['🦵 Legs','10 min · after leg day or a long walk',['calfwall|dog','quadside|saddle|standquad|crescent','reclinedhs|halfsplit|headtoknee','pyramid|widefold','frog|squat','figure4|pigeon','bridge|lowlunge','legsup','savasana']],
-  quick:['⚡ Quick 5','5 min · when you’re wiped',['child|puppy','thread|eagle','twist|banana|seatedtwist','legsup|kneehug']]};
+// each flow is a list of slots; every slot has several poses that do the same job (opener, hips, fold, twist, rest…)
+/* b321: picks are shuffled per night and skip anything that flow used the last two nights, so openers and closers change too
+   (it used to step through each slot in order, so nights with 2-pose slots looked the same). Poses not in the library are ignored. */
+const YFLOWS={wind:['🌙 Wind-down','10 min · every night',['child|puppy|kneehug|sphinx|neckside','catcow|seatedside|sidebend|wrist','thread|eagle|cowface|gate','dog|reclinedhs|headtoknee|halfsplit','pigeon|lizard|figure4|frog|lowlunge','fold|widefold|pyramid|butterfly','twist|banana|seatedtwist','babyhappy|bridge|cobra|kneehug','savasana|legsup|recbutterfly']],
+  hips:['🍑 Hips & back','12 min · after legs or a long day sitting',['catcow|child|kneehug|sphinx','lowlunge|lizard|saddle|twistlunge|crescent','halfsplit|pyramid|headtoknee|reclinedhs','pigeon|frog|figure4','butterfly|squat|recbutterfly|skandasana','figure4|gate|babyhappy','twist|banana|seatedtwist','legsup|reclinedhs|bridge','savasana|recbutterfly|legsup']],
+  upper:['💺 Neck & shoulders','9 min · after upper body or a desk day',['neckside|catcow|child','eagle|cowface','puppy|child|dog','thread|gate','chestopen|doorway','sphinx|cobra|bridge','sidebend|gate|seatedside','wrist|catcow|seatedtwist','savasana|legsup|kneehug']],
+  legs:['🦵 Legs','10 min · after leg day or a long walk',['calfwall|dog|catcow','quadside|saddle|standquad|crescent','reclinedhs|halfsplit|headtoknee','pyramid|widefold|fold','frog|squat|skandasana','figure4|pigeon|lizard','bridge|lowlunge|babyhappy','legsup|recbutterfly|kneehug','savasana|legsup|recbutterfly']],
+  quick:['⚡ Quick 5','5 min · when you’re wiped',['child|puppy|kneehug|catcow','thread|eagle|neckside','twist|banana|seatedtwist','legsup|kneehug|recbutterfly|savasana']]};
 const yDayN=()=>Math.floor(parseD(TODAY).getTime()/864e5);
-function yFlow(f){ const n=yDayN(); return YFLOWS[f][2].map((slot,i)=>{ const o=slot.split('|'); return o[(n+i)%o.length]; }); }
+function yRnd(seed){ let t=seed>>>0; return ()=>{ t=(t+0x6D2B79F5)>>>0; let r=Math.imul(t^(t>>>15),1|t); r^=r+Math.imul(r^(r>>>7),61|r); return ((r^(r>>>14))>>>0)/4294967296; }; }
+const _yfC={};
+// each night is picked knowing the nights actually shown before it (a chain from a fixed start, restarted once a year so it stays tiny)
+function yFlowN(f,n){ const F=YFLOWS[f]; if (!F) return []; const A=20454, a=n-A<=364?A:n-((n-A)%364)-364, key=f+':'+a;
+  const C=(_yfC[key] ||= {at:a-1, nights:{}}); const seedF=[...f].reduce((x,c)=>x*31+c.charCodeAt(0)|0,7);
+  while (C.at<n){ const d=++C.at, y1=new Set(C.nights[d-1]||[]), y2=new Set(C.nights[d-2]||[]), used=new Set();
+    C.nights[d]=F[2].map((slot,i)=>{ const o=slot.split('|').filter(id=>YP[id]); if (!o.length) return null; const r=yRnd(d*1009+i*97+seedF);
+      for (let j=o.length-1;j>0;j--){ const k=Math.floor(r()*(j+1)); [o[j],o[k]]=[o[k],o[j]]; }
+      const pick=o.find(id=>!used.has(id)&&!y1.has(id)&&!y2.has(id))||o.find(id=>!used.has(id)&&!y1.has(id))||o.find(id=>!used.has(id))||o[0]; used.add(pick); return pick; }).filter(Boolean); }
+  return C.nights[n] || []; }
+function yFlow(f){ return yFlowN(f,yDayN()); }
 function Y_(){ return (S.yoga ||= {log:[]}); }
 function yogaDoneOn(k){ return Y_().log.some(x=>x.d===k); }
 const yogaMinsOn = k => Y_().log.filter(x=>x.d===k).reduce((a,x)=>a+(+x.mins||+x.min||0),0);
