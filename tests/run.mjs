@@ -576,6 +576,13 @@ const ytap = await page.evaluate(async () => { const keepV = YVID, id = Object.k
   window.dispatchEvent(new MessageEvent('message', { data: { tegaYt: 'tap' }, origin: 'https://evil.example', source: f.contentWindow })); r.ignoresOthers = !document.getElementById('yx');
   h.remove(); YVID = keepV; return r; });
 ok('phone clip taps: tap the circle opens the whole pose, tap closes it (only from our video page)', ytap.open && ytap.closed && ytap.ignoresOthers, JSON.stringify(ytap));
+// the claude.ai web copy blocks embedded pages from other sites: no black YouTube boxes there — the drawing stays, the demo opens YouTube
+const ywc = await page.evaluate(() => { const keepV = YVID, keepC = window.claude, keepO = window.ytOpen, id = Object.keys(YP)[0]; YVID = { [id]: { v: 'dQw4w9WgXcQ' } }; const r = {};
+  window.claude = { use: keepC && keepC.use }; let opened = ''; const realOpen = ytOpen; ytOpen = v => { opened = v; };
+  r.noFrame = yLoop(id) === '' && !/iframe/.test(yLoop(id, 1)); yVidPlay(id); r.opens = opened === 'dQw4w9WgXcQ'; r.noSheet = !document.querySelector('.g-sh iframe, .sheet iframe');
+  window.claude = Object.assign({}, window.claude, { native: {} }); r.phoneFrame = /iframe/.test(yLoop(id));
+  ytOpen = realOpen; window.claude = keepC; YVID = keepV; return r; });
+ok('web copy: pose demos never show as black boxes (drawing stays, ▶ opens YouTube); the phone still plays them in place', ywc.noFrame && ywc.opens && ywc.noSheet && ywc.phoneFrame, JSON.stringify(ywc));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

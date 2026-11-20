@@ -2092,7 +2092,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b321';
+const BUILD='b322';
 /* b316: bottom sheets sit above the iPhone keyboard — the sheet follows the visible part of the screen (visualViewport),
    and the field you tap scrolls into view inside it. Before, the keyboard slid over “New quest” and every other sheet. */
 (function(){ const v=window.visualViewport, R=document.documentElement; if (!v) return;
@@ -4442,7 +4442,7 @@ async function inspoPhotos(sid,inp){ const F=[...(inp.files||[])]; if (!F.length
   inspoBusy=false; if (n){ commit(); gSheetClose(); toast(`Saved ${n} to Inspo`); } else toast('Couldn’t save that photo here'); }
 function inspoLink(ev,sid){ ev.preventDefault(); const f=ev.target; (lrSub(sid).inspo ||= []).push(inspoItem(f.u.value,f.t.value.trim().slice(0,120))); commit(); gSheetClose(); toast('Saved to Inspo'); return false; }
 function inspoOpen(sid,iid){ const x=lrSub(sid), it=(x.inspo||[]).find(z=>z.id===iid); if (!it) return;
-  const media=it.kind==='img'?`<img src="${BLOBURL}${it.blob}" alt="" style="width:100%;border-radius:12px;display:block">`:it.kind==='imgurl'?`<img src="${esc(it.url)}" alt="" style="width:100%;border-radius:12px;display:block">`:it.kind==='yt'?`<div class="yv-wrap ${it.short?'sh':''}"><iframe src="${ytSrc(it.v)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`:'';
+  const media=it.kind==='img'?`<img src="${BLOBURL}${it.blob}" alt="" style="width:100%;border-radius:12px;display:block">`:it.kind==='imgurl'?`<img src="${esc(it.url)}" alt="" style="width:100%;border-radius:12px;display:block">`:it.kind==='yt'?(!ytCanFrame()?`<button class="btn ghost sm" onclick="ytOpen('${esc(it.v)}')">▶ Watch on YouTube</button>`:`<div class="yv-wrap ${it.short?'sh':''}"><iframe src="${ytSrc(it.v)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`):'';
   gSheet(`<span class="tag">${esc(x.name)} · inspo · ${nice(it.d)}</span>${media}<input class="inp" style="margin-top:10px;width:100%" value="${esc(it.t||'')}" placeholder="What you like about it" onchange="inspoNote('${sid}','${iid}',this.value)">
     <div class="row" style="gap:6px;margin-top:10px;flex-wrap:wrap">${it.url?`<a class="btn ghost sm" href="${esc(it.url)}" target="_blank" rel="noopener">Open ↗</a>`:''}<button class="btn ghost sm" onclick="inspoDel('${sid}','${iid}')">Remove</button></div>`); }
 function inspoNote(sid,iid,v){ const it=(lrSub(sid).inspo||[]).find(z=>z.id===iid); if (it){ it.t=v.trim().slice(0,120); commit({skipXp:true}); } }
@@ -8065,13 +8065,16 @@ async function yvidLoad(){ if (YVID||!dbHandle||!dbHandle.doc||Date.now()-yvidAt
 /* b311: YouTube refuses embeds that don't send a web address (error 153). The iPhone app runs from capacitor://, which sends none,
    so on the phone we show the video's still and open YouTube itself; the web copy keeps the live embed. */
 const ytEmbedOK = () => !(window.claude && window.claude.native) && !/^capacitor:|^ionic:|^file:/.test(location.protocol);
+/* b322: the claude.ai web copy runs in a viewer that blocks every embedded page from another site (frame-src 'self'),
+   so a YouTube player there is just a black box — on the web copy the pose keeps its drawing and the demo opens in YouTube */
+const ytCanFrame = () => !(window.claude && !window.claude.native);
 const ytThumb = v => `https://i.ytimg.com/vi/${encodeURIComponent(v)}/hqdefault.jpg`;
 /* b312: on the phone, play through our own https page (docs/yt.html on GitHub Pages) — YouTube accepts that address */
 const YT_HOST = 'https://ewheridot-ux.github.io/tega-app/yt.html';
 function ytSrc(v, o={}){ if (ytEmbedOK()){ const p=new URLSearchParams({playsinline:'1',rel:'0',modestbranding:'1',iv_load_policy:'3'}); if(o.start) p.set('start',String(+o.start||0)); if(o.loop){ p.set('loop','1'); p.set('playlist',v); } if(o.autoplay) p.set('autoplay','1'); if(o.mute) p.set('mute','1'); if(o.controls===0) p.set('controls','0'); return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(v)}?${p}`; }
   const p=new URLSearchParams({v}); if(o.start) p.set('start',String(+o.start||0)); if(o.loop) p.set('loop','1'); if(o.autoplay) p.set('autoplay','1'); if(o.mute) p.set('mute','1'); if(o.controls===0) p.set('controls','0'); return `${YT_HOST}?${p}`; }
 function ytOpen(v,start){ const u=`https://www.youtube.com/watch?v=${encodeURIComponent(v)}${start?'&t='+(+start||0)+'s':''}`; const a=document.createElement('a'); a.href=u; a.target='_blank'; a.rel='noopener'; document.body.appendChild(a); a.click(); a.remove(); }
-function yLoop(id,wide){ yvidLoad(); const v=YVID&&YVID[id]; if (!v||!v.v) return '';
+function yLoop(id,wide){ yvidLoad(); const v=YVID&&YVID[id]; if (!v||!v.v||!ytCanFrame()) return '';
   const src=ytSrc(v.v,{autoplay:1,mute:1,loop:1,controls:0,start:v.start});
   return `<span class="${wide?'yv-loop':'yg-vid'} ${v.short?'sh':''}" role="button" tabindex="0" aria-label="See the whole pose" onclick="event.stopPropagation();yExpand('${id}')"><iframe src="${src}" title="${esc(YP[id].n)} demo" allow="autoplay; encrypted-media" tabindex="-1"></iframe><i class="yv-zoom" aria-hidden="true">⤢</i></span>`; }
 /* b316: the circle crops the demo — tap (or press and hold) it to see the whole pose, uncropped and still looping; tap anywhere to close */
@@ -8084,7 +8087,7 @@ function yExpand(id){ const v=YVID&&YVID[id]; if (!v||!v.v) return; document.get
   m.innerHTML=`<div class="yx-f"><iframe src="${ytSrc(v.v,{autoplay:1,mute:1,loop:1,controls:0,start:v.start})}" title="${esc(YP[id].n)} demo" allow="autoplay; encrypted-media"></iframe></div><div class="yx-cap">${esc(YP[id].n)} · tap to close</div>`;
   m.onclick=()=>m.remove(); document.body.appendChild(m); }
 function yVidBtn(id,cls){ yvidLoad(); const v=YVID&&YVID[id]; return v&&v.v?`<button class="${cls||'btn ghost sm'}" onclick="yVidPlay('${id}')">▶ Watch a real demo</button>`:`<a class="${cls||'btn ghost sm'}" href="https://www.youtube.com/results?search_query=${encodeURIComponent(YP[id].n+' stretch how to')}" target="_blank" rel="noopener">▶ Watch a real demo</a>`; }
-function yVidPlay(id){ const v=YVID&&YVID[id]; if (!v) return; const sh=!!v.short;
+function yVidPlay(id){ const v=YVID&&YVID[id]; if (!v) return; if (!ytCanFrame()) return ytOpen(v.v,v.start); const sh=!!v.short;
   gSheet(`<span class="tag">${esc(v.ch||'YouTube')}</span><h2 class="g-sh-t">${esc(YP[id].n)}</h2><div class="yv-wrap ${sh?'sh':''}"><iframe src="${ytSrc(v.v,{start:v.start,autoplay:1,mute:1})}" title="${esc(YP[id].n)} demo" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
     <div class="row" style="gap:6px;margin-top:10px"><a class="btn ghost sm" href="https://www.youtube.com/watch?v=${encodeURIComponent(v.v)}" target="_blank" rel="noopener">Open in YouTube</a><button class="btn ghost sm" onclick="yPoseSheet('${id}')">‹ Steps</button></div>`); }
 const ySteps=(id,cls)=>YPOSE[id]?`<ol class="${cls||'y-steps'}">${YPOSE[id].steps.map(t=>`<li>${esc(t)}</li>`).join('')}</ol>`:'';
