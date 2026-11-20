@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths: ['ci/run-yvid', 'ci/poses.json']
 concurrency: { group: yvid, cancel-in-progress: false }
-permissions: { contents: read }
+permissions: { contents: write }
 jobs:
   yvid:
     runs-on: ubuntu-latest
@@ -19,5 +19,10 @@ jobs:
           SUPA_URL: https://rlgoetbrlrsdijtlwnsb.supabase.co
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python scripts/yvid.py
-      - uses: actions/upload-artifact@v4
-        with: { name: yvid, path: out/yvid.json, retention-days: 7, if-no-files-found: ignore }
+      - name: Keep the public list (pose id → YouTube id) for the web copy
+        run: |
+          [ -f out/yvid.json ] || exit 0
+          cp out/yvid.json ci/yvid.json
+          git config user.name "tega-bot"; git config user.email "tega-bot@users.noreply.github.com"
+          git add ci/yvid.json; git diff --cached --quiet && exit 0
+          git commit -q -m "ci: stretch demo list [skip ci]"; git pull -q --rebase && git push -q
