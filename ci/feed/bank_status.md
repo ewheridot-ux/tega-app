@@ -1,8 +1,8 @@
-era: 7 accounts, 35 transactions (0 pending)
+era: 7 accounts, 38 transactions (0 pending)
 tx id prefixes: utgr_
-outflow=negative on 35/35
+outflow=negative on 38/38
 account types: Brokerage/Brokerage, Checking/Checking, CreditCard/CreditCard, Savings/Savings
 cards with min due: 0 · with due date: 0
 account fields: accountGroupKey,accountMask,accountType,apr,archive,availableBalance,availableCredit,balanceAsOf,connectionId,creditLimit,currencyCode,currentBalance,institutionName,isBalanceBackfillEnabled,merge,name,nameLayered,nextPaymentDueDate,nextPaymentMinimumAmount,providerId,simulationMode,supportsBalances,supportsTransactions,universalAccountType,visibility
 tx fields: accountGroupKey,accountName,amount,appliedRules,appliedTags,category,categoryKey,currencyCode,description,id,isCashOutflow,isPending,itemisedTotal,lineItems,merchantName,originalDescription,postedDate,reviewStatus,scope,transactionDate,transferLink,unitemisedRemainder
-saved to app: HTTP 200 at 2026-11-20T02:22:22Z
+saved to app: HTTP 200 at 2026-11-20T11:49:49Z
