@@ -8,13 +8,24 @@ H = {'apikey': KEY, 'Authorization': 'Bearer ' + KEY, 'Content-Type': 'applicati
 rows = requests.get(f'{URL}/rest/v1/docs?select=user_id&path=eq.okr/state', headers=H, timeout=60).json()
 if not rows: print('no app state'); sys.exit(0)
 uid = rows[0]['user_id']
-poses = json.load(open('ci/poses.json'))
+# the pose list comes from the app itself, so a new pose gets a video without editing anything here (ci/poses.json is the fallback)
+def app_poses():
+    try:
+        s = open('web/app.html', encoding='utf-8').read(); i = s.index('const YOGA='); blk = s[i:s.index('];', i)]
+        L = [[m.group(1), m.group(2)] for m in re.finditer(r"\['(\w+)','([^']+)',\d+,", blk)]
+        return L if len(L) > 10 else None
+    except Exception: return None
+poses = app_poses() or json.load(open('ci/poses.json'))
 old = requests.get(f'{URL}/rest/v1/docs?select=data&path=eq.yoga/videos&user_id=eq.{uid}', headers=H, timeout=60).json()
 have = (old[0].get('data') or {}) if old else {}
-todo = [p for p in poses if p[0] not in have]
 def oembed(v):
     r = requests.get('https://www.youtube.com/oembed', params={'url': f'https://www.youtube.com/watch?v={v}', 'format': 'json'}, timeout=20)
     return r.json() if r.status_code == 200 else None
+# re-check every saved demo still exists and can be embedded; dead ones get found again below
+dead = 0
+for pid in list(have):
+    if pid not in dict(poses) or not oembed(have[pid].get('v', '')): have.pop(pid); dead += 1
+todo = [p for p in poses if p[0] not in have]
 found = 0
 for i in range(0, len(todo), 9):
     chunk = todo[i:i+9]
@@ -36,4 +47,6 @@ for i in range(0, len(todo), 9):
         have[pid] = {'v': v, 'short': bool(x.get('short')) or (o.get('height', 0) > o.get('width', 1)), 'start': int(x.get('start') or 0), 'ch': o.get('author_name', '')[:60]}
         found += 1
 w = requests.post(f'{URL}/rest/v1/docs?on_conflict=user_id,path', headers={**H, 'Prefer': 'resolution=merge-duplicates,return=minimal'}, json=[{'user_id': uid, 'path': 'yoga/videos', 'data': have}], timeout=60)
-print('saved' if w.status_code < 300 else f'save failed {w.status_code}', 'new', found, 'total', len(have), 'of', len(poses))
+print('saved' if w.status_code < 300 else f'save failed {w.status_code}', 'dead', dead, 'new', found, 'total', len(have), 'of', len(poses))
+# the public list (pose id → YouTube id, no personal data) for the web copy, which keeps its own database
+os.makedirs('out', exist_ok=True); json.dump(have, open('out/yvid.json', 'w'), indent=0, sort_keys=True)
