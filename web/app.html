@@ -609,8 +609,9 @@ html.kb-open .modal .card{padding-bottom:16px}
 .ch-tile span{font-size:22px}.ch-tile b{font-size:12.5px}.ch-tile small{font-size:11px;color:var(--muted)}.ch-tile i{position:absolute;top:6px;right:6px;font-style:normal;background:#ffd23f;color:#1a1300;border-radius:99px;padding:0 6px;font-size:10.5px;font-weight:800}
 /* b327: talent tree styles */
 .tt[data-ts]:not([data-ts=arcade]){font-size-adjust:none;background-size:auto!important}.tt[data-ts]:not([data-ts=arcade]) *{word-spacing:normal}
-.tt[data-ts=jrpg] .tt-n{border-radius:10px!important}.tt[data-ts=stars] .tt-n,.tt[data-ts=dungeon] .tt-n{border-radius:50%!important}.tt[data-ts=gameboy] .tt-n{border-radius:0!important}
-.tt[data-ts=jrpg] .tt-pts{border-radius:8px!important}.tt[data-ts=stars] .tt-pts{border-radius:50%!important}
+/* beat the skins' button corners (they use !important with long selectors) */
+.app .tt[data-ts=jrpg] .tt-map button.tt-n.tt-n{border-radius:10px!important}.app .tt[data-ts=stars] .tt-map button.tt-n.tt-n,.app .tt[data-ts=dungeon] .tt-map button.tt-n.tt-n{border-radius:50%!important}.app .tt[data-ts=gameboy] .tt-map button.tt-n.tt-n{border-radius:0!important}
+.app .tt[data-ts=jrpg] div.tt-pts.tt-pts{border-radius:8px!important}.app .tt[data-ts=stars] div.tt-pts.tt-pts{border-radius:50%!important}
 .tt-styles{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 0 10px;padding:2px 0}.tt-styles::-webkit-scrollbar{display:none}
 .tt-styles button{flex:none;display:flex;gap:6px;align-items:center;border:0;border-radius:10px;padding:7px 11px;background:var(--card2);color:var(--fg);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;box-shadow:inset 0 0 0 1.5px transparent}
 .tt-styles button.on{box-shadow:inset 0 0 0 1.5px var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--card2))}
@@ -656,10 +657,10 @@ html.kb-open .modal .card{padding-bottom:16px}
 .tt[data-ts=dungeon] .tt-pts{background:#2a1d0e;box-shadow:0 0 0 2px #c9a14a,0 0 0 4px #2a1d0e;animation:none}.tt[data-ts=dungeon] .tt-pts b{font-family:'Jacquard 12';font-size:26px;color:#ffe2a0}.tt[data-ts=dungeon] .tt-pts small{font-family:'Jacquard 12';font-size:14px;color:#c9a14a}
 .tt[data-ts=dungeon] .tt-heads span{font-family:'Jacquard 12';font-size:17px;letter-spacing:.02em;text-transform:none;color:#f3e3c0}.tt[data-ts=dungeon] .tt-heads em{font-family:'Jacquard 12';font-size:16px;color:#c9a14a}
 .tt[data-ts=dungeon] .tt-map path{stroke:#4a3018;stroke-width:9;stroke-dasharray:none;stroke-linecap:round;shape-rendering:auto}.tt[data-ts=dungeon] .tt-map path.half{stroke:#6b4521}.tt[data-ts=dungeon] .tt-map path.lit{stroke:#b88a3a;filter:drop-shadow(0 0 5px rgba(255,200,90,.5))}
-.tt-ground{position:absolute;left:-12px;right:-12px;bottom:-12px;height:30px;background:linear-gradient(180deg,transparent,#0c0805 60%);border-top:2px solid #3a2714}
+.tt-ground{position:absolute;left:-12px;right:-12px;bottom:0;height:24px;z-index:0;pointer-events:none;background:linear-gradient(180deg,transparent,#0c0805 60%);border-top:2px solid #3a2714}
 .tt[data-ts=dungeon] .tt-n{width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#3d2c1a,#120c06);border:3px solid #6b5124;box-shadow:inset 0 -4px 0 rgba(0,0,0,.4),0 3px 0 #000;font-size:22px;animation:none}
 .tt[data-ts=dungeon] .tt-n img.pxe{width:26px;height:26px}
-.tt[data-ts=dungeon] .tt-n small{font-family:'Jacquard 12',serif;font-size:17px;line-height:.95;max-width:84px;background:rgba(23,17,11,.85);color:#f3e3c0;padding:1px 6px;border:1px solid #4a3018;max-height:2.3em}
+.tt[data-ts=dungeon] .tt-n small{font-family:'Jacquard 12',serif;font-size:16px;line-height:.95;max-width:76px;background:rgba(23,17,11,.85);color:#f3e3c0;padding:1px 6px;border:1px solid #4a3018;max-height:2.3em}
 .tt[data-ts=dungeon] .tt-n.max{border-color:#ffd27a;background:radial-gradient(circle at 35% 30%,#ffe9a8,#c98a1e 55%,#5a3a08);box-shadow:0 0 16px 4px rgba(255,190,80,.45),0 3px 0 #000}
 .tt[data-ts=dungeon] .tt-n.part{border-color:#7fd9c4;background:radial-gradient(circle at 35% 30%,#bff5e6,#2f9a85 55%,#0b3a31)}
 .tt[data-ts=dungeon] .tt-n.open{border-color:#fff2cf;box-shadow:0 0 0 3px rgba(255,226,160,.25),0 0 14px 3px color-mix(in srgb,var(--c) 50%,transparent);animation:ttOpenD 1.4s ease-in-out infinite}
@@ -6901,7 +6902,7 @@ function ttLayout(T,sty){ const P={}, E=[]; let H, W=null, kind='step';
   const jit=(id,r)=>(hashN(id)%(2*r+1))-r;
   if (sty==='stars'){ kind='line'; const base=[22,50,78]; H=640;
     for (const n of T.nodes) P[n.id]= n.t===5?{x:50,y:72}:{x:base[n.b]+jit(n.id,7)+(n.b===1?0:(n.b===0?-1:1)*(n.t-1)*2), y:560-(n.t-1)*118+jit(n.id+'y',14)}; }
-  else if (sty==='dungeon'){ kind='curve'; H=650; const X=[[29,23,19,16],[50,50,50,50],[71,77,81,84]];
+  else if (sty==='dungeon'){ kind='curve'; H=650; const X=[[24,20,17,15],[50,50,50,50],[76,80,83,85]];
     for (const n of T.nodes) P[n.id]= n.t===5?{x:50,y:78}:{x:X[n.b][n.t-1], y:550-(n.t-1)*112};
     E.unshift(...[0,1,2].map(b=>[{root:1}, T.nodes.find(q=>q.b===b&&q.t===1)])); P.__root={x:50,y:640}; }
   else if (sty==='gameboy'){ kind='hstep'; W=720; H=372; const X=[62,202,342,482,640];
