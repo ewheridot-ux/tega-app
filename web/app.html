@@ -591,6 +591,22 @@ html.kb-open .modal .card{padding-bottom:16px}
 .tt-hub{display:grid;gap:8px}.tt-hrow{display:grid;grid-template-columns:1fr auto;grid-template-areas:'b e' 's e' 'm e';text-align:left;border:0;border-radius:14px;padding:12px 14px;background:var(--card2);color:var(--fg);cursor:pointer;box-shadow:inset 3px 0 0 var(--c)}
 .tt-hrow b{grid-area:b;font-size:16px}.tt-hrow span{grid-area:s;font-size:13px;color:var(--muted)}.tt-hrow small{grid-area:m;font-size:12px;color:var(--muted)}.tt-hrow em,.tt-hrow i{grid-area:e;align-self:center;font-style:normal}
 .tt-hrow em{font-family:var(--px);font-size:12px;background:#ffd23f;color:#1a1300;padding:6px 8px}.tt-dot{color:var(--gold,#ffd23f)}
+/* b326: the Character screen */
+.ch-tabs .ch-tp{font-style:normal;background:#ffd23f;color:#1a1300;border-radius:99px;padding:0 6px;font-size:10.5px;font-weight:800;margin-left:2px}
+.ch-hd-r{display:flex;gap:16px;align-items:center}.ch-av{flex:none;border:0;padding:0;background:none;cursor:pointer}.ch-hd-t{min-width:0;flex:1;display:grid;gap:5px}.ch-hd-t>b{font-size:18px}
+.ch-xp{height:8px;border-radius:4px;background:var(--card2);overflow:hidden}.ch-xp u{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold,#ffd23f))}
+.ch-chips{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:12px}.ch-chips button{border:0;border-radius:12px;padding:8px 4px;background:var(--card2);color:var(--fg);font:inherit;font-size:12px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ch-chips b{font-size:13px}
+.ch-ar{display:grid;gap:8px}.ch-row{display:grid;gap:5px;width:100%;text-align:left;border:0;border-radius:14px;padding:11px 12px;background:var(--card2);color:var(--fg);cursor:pointer;font:inherit;box-shadow:inset 3px 0 0 var(--c)}
+.ch-r1{display:flex;align-items:baseline;gap:8px;min-width:0}.ch-r1 b{font-size:15px}.ch-r1 .num{font-size:12px;font-weight:700;color:var(--c)}.ch-r1 small{color:var(--muted);font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.ch-r1 em{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.04em;padding:2px 6px;border-radius:6px;background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--c);white-space:nowrap}
+.ch-pt{font-style:normal;font-size:11px;font-weight:800;background:#ffd23f;color:#1a1300;padding:2px 7px;border-radius:99px;white-space:nowrap}.ch-go{font-style:normal;color:var(--muted)}
+.ch-bar{display:block;height:6px;border-radius:3px;background:color-mix(in srgb,var(--fg) 8%,transparent);overflow:hidden}.ch-bar u{display:block;height:100%;background:var(--c)}.ch-sub{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ch-ats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0 4px}.ch-ats::-webkit-scrollbar{display:none}
+.ch-ats button{flex:none;border:0;border-radius:99px;padding:8px 13px;background:var(--card2);color:var(--fg);font:inherit;font-size:13px;font-weight:600;cursor:pointer;display:flex;gap:6px;align-items:center;box-shadow:inset 0 0 0 1.5px transparent}
+.ch-ats button.on{background:color-mix(in srgb,var(--c) 22%,var(--card2));box-shadow:inset 0 0 0 1.5px var(--c)}.ch-ats i{font-style:normal;background:#ffd23f;color:#1a1300;border-radius:99px;padding:0 6px;font-size:10.5px;font-weight:800}
+.ch-sk .tt{margin:0 -4px}
+.ch-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.ch-tile{position:relative;display:grid;gap:2px;justify-items:center;text-align:center;border:0;border-radius:14px;padding:12px 6px;background:var(--card);color:var(--fg);cursor:pointer;font:inherit}
+.ch-tile span{font-size:22px}.ch-tile b{font-size:12.5px}.ch-tile small{font-size:11px;color:var(--muted)}.ch-tile i{position:absolute;top:6px;right:6px;font-style:normal;background:#ffd23f;color:#1a1300;border-radius:99px;padding:0 6px;font-size:10.5px;font-weight:800}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -2176,7 +2192,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b325';
+const BUILD='b326';
 /* b316: bottom sheets sit above the iPhone keyboard — the sheet follows the visible part of the screen (visualViewport),
    and the field you tap scrolls into view inside it. Before, the keyboard slid over “New quest” and every other sheet. */
 (function(){ const v=window.visualViewport, R=document.documentElement; if (!v) return;
@@ -3499,14 +3515,14 @@ function render(){
   const _oldV=document.getElementById('view'), _oldR=(_oldV && _pgLast && _pgLast!==view && !_swAnim && secOf(_pgLast)!==secOf(view)) ? _oldV.getBoundingClientRect() : null;   // b302: for the section dissolve
   app.innerHTML = `
     <div class="topbar">
-      <div class="brand"><button class="pfp-sm ${view==='city'||view==='evolve'?'on':''}" style="--ringc:${ringCss(lvl)}" onclick="go('city')" aria-label="Your city · character and settings">${pfpMini(stg)}</button><button class="iconbtn tg-ask" onclick="coachOpen()" title="Ask Tega" aria-label="Ask Tega"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h.01M12 10h.01M16 10h.01" stroke-linecap="round" stroke-width="3"/></svg></button></div>
+      <div class="brand"><button class="pfp-sm ${view==='city'||view==='evolve'?'on':''}" style="--ringc:${ringCss(lvl)}" onclick="charGo('overview')" aria-label="Your character">${pfpMini(stg)}</button><button class="iconbtn tg-ask" onclick="coachOpen()" title="Ask Tega" aria-label="Ask Tega"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h.01M12 10h.01M16 10h.01" stroke-linecap="round" stroke-width="3"/></svg></button></div>
       <div class="wordmark logo" role="button" tabindex="0" aria-label="Home" style="cursor:pointer" onclick="go('today');scrollTo({top:0,behavior:'smooth'})">${logoSVG(24)}</div>
       <div class="right"><span class="sync ${dbStatus==='cloud'?'on':''}" id="sync" onclick="syncInfo()" style="padding:10px 6px;cursor:pointer"><i></i></span><button class="iconbtn" onclick="searchOpen()" title="Search" aria-label="Search"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg></button><button class="iconbtn" onclick="capOpen()" title="Quick capture" aria-label="Quick capture">＋</button></div>
     </div>
     <div class="pills">
       ${S.travel&&S.travel.on?`<span class="pill" style="cursor:pointer" onclick="travelSheet()">✈️ ${esc(S.travel.city||'Away')}</span>`:''}
       <span class="pill fire" style="cursor:pointer" onclick="shopOpen()" title="Streak and shields">🔥 <span class="num">${st.daily}</span><span class="pl-w">&nbsp;day streak</span>&nbsp;·&nbsp;🛡️${shieldsLeft()}/3</span>
-      <span class="pill" style="cursor:pointer" onclick="levelScene(${lvl})" title="Replay level-up">Lv ${lvl}<span class="pl-w"> · ${titleOf(lvl)}</span></span>
+      <span class="pill" style="cursor:pointer" onclick="charGo('overview')" title="Your character">Lv ${lvl}<span class="pl-w"> · ${titleOf(lvl)}</span></span>
       <span class="pill gold-pill" style="cursor:pointer" onclick="shopOpen()" title="Gold — tap for the shop">💰 <span class="num">${(()=>{ try { return goldNow().toLocaleString(); } catch(e){ return 0; } })()}</span></span>
       ${(()=>{ const se=season(); let t=0, sd=false; try { t=seasonTrack().tier; sd=seasonBoss().showdown&&!seasonBoss().dead; } catch(e){} return `<span class="pill" style="cursor:pointer;box-shadow:inset 0 0 0 1.5px ${se.c}" onclick="seasonOpen()" title="Season ${se.no} · ${se.name}">${sd?'⚔️':se.ic} ${t}/13</span>`; })()}
     </div>
@@ -6683,7 +6699,7 @@ function statVal(k){ return (rpgBase()[k]||0)+tStatPts(k); }
 function perksLegacy(){ const P={}; for (const [k] of STATS) for (const [lv,id] of PERKS[k]) if ((rpgBase()[k]||0)+(+R_().pts[k]||0)>=lv) P[id]=1; return P; }
 function perks(){ return perksOn(TODAY); }
 function ptsFree(){ try { return AREAS.reduce((s,A)=>s+tFree(A.k),0); } catch(e){ return 0; } }
-function statAdd(k,n){ gSheetLive(tHub); }
+function statAdd(k,n){ charGo('skills'); }
 function respecOpen(){ const R=R_(); if ((R.respecUsed||'')===THIS_Q) return toast('Already reset this quarter'); const n=tRespec(); R.respecUsed=THIS_Q; commit({skipXp:true}); toast(n?`🔄 ${n} talent point${n===1?'':'s'} back — spend them again`:'Nothing to reset'); }
 
 /* ===================== b325: talent trees — the real skill tree for YOU =====================
@@ -6820,7 +6836,7 @@ function tHub(){ const rows=AREAS.map(A=>{ const I=areaInfo(A.k), f=tFree(A.k), 
     return `<button class="tt-hrow" style="--c:${A.c}" onclick="tAreaTab='tree';areaOpen('${A.k}')"><b>${esc(A.n)}</b><span>LV ${I.lvl} · ${esc(I.rank||'')}${sp?` · ${sp[1]} ${esc(sp[0])}`:''}</span><small>${own}/13 talents</small>${f?`<em>${f}</em>`:'<i>›</i>'}</button>`; }).join('');
   const tot=AREAS.reduce((s,A)=>s+tFree(A.k),0);
   return `<div class="tt-sh"><span class="tag">Skills</span><h2 class="g-sh-t">Your talent trees</h2><div class="sub" style="margin-bottom:12px">Each area earns points from its own feats — real progress only. Spend them to shape who you’re becoming.${tot?` <b style="color:var(--gold)">${tot} to spend.</b>`:''}</div>
-    <div class="tt-hub">${rows}</div><button class="btn ghost sm" style="width:100%;justify-content:center;margin-top:12px" onclick="gSheetLive(vRpgStats)">Stats · titles ›</button></div>`; }
+    <div class="tt-hub">${rows}</div><button class="btn ghost sm" style="width:100%;justify-content:center;margin-top:12px" onclick="charGo('overview')">Stats · titles ›</button></div>`; }
 /* ---------- classes ---------- */
 const CLASSES={
   road:{ic:'🧳',name:'Road Warrior',sig:'Travel, casting & set days earn 1.5×',test:k=>jobDay(k)||travelDay(k)||castDay(k),quest:['Days on the road',k=>jobDay(k)||travelDay(k)||castDay(k),12]},
@@ -7163,8 +7179,8 @@ function vCity(){ const D=hqData(), CY=hqCity(D), B=cityBosses(), Q=questLogData
   <div class="cy-grid sec">
     <button class="card cy-board" onclick="questLogOpen()"><div class="cy-pin">📜 QUEST BOARD ${Q.daily&&Q.weekly?'':'<span class="cy-bang">!</span>'}</div>
       <div class="cy-q"><span>Daily</span><b class="${Q.daily?'ok':''}">${Q.t3d}/3</b></div><div class="cy-q"><span>Weekly</span><b class="${Q.weekly?'ok':''}">${Q.wDone}/${Q.wTot}</b></div><div class="cy-q"><span>Season</span><b>${Q.tier}/13</b></div></button>
-    <div class="card cy-house ${ch||pf?'glow':''}"><div class="cy-pin">🏠 YOUR HOUSE</div><div class="cy-hh"><button class="cy-av" onclick="stMode='progress';go('evolve')" aria-label="Character">${pfpMini(stageOf(lvl))}</button><div><b>Lv ${lvl}</b><small>💰 ${goldNow()} · 🛡️ ${shieldsLeft()}/3</small></div></div>
-      <div class="cy-hb"><button onclick="gSheetLive(vRpgStats)">🧬 Stats${pf?`<i>${pf}</i>`:''}</button><button onclick="stMode='progress';go('evolve')">✨ Evolve</button><button onclick="stMode='settings';setTab='trophies';go('evolve')">🏆 Loot${ch?`<i>${ch}</i>`:''}</button><button onclick="shopOpen()">💰 Shop</button><button onclick="stMode='settings';go('evolve')">⚙️ Settings</button><button onclick="gSheetLive(trophiesBody)">🏆 Titles</button></div></div></div>
+    <div class="card cy-house ${ch||pf?'glow':''}"><div class="cy-pin">🏠 YOUR HOUSE</div><div class="cy-hh"><button class="cy-av" onclick="charGo('overview')" aria-label="Character">${pfpMini(stageOf(lvl))}</button><div><b>Lv ${lvl}</b><small>💰 ${goldNow()} · 🛡️ ${shieldsLeft()}/3</small></div></div>
+      <div class="cy-hb"><button onclick="charGo('skills')">🌳 Skills${pf?`<i>${pf}</i>`:''}</button><button onclick="charGo('look')">✨ Evolve</button><button onclick="charGo('collection')">🏆 Loot${ch?`<i>${ch}</i>`:''}</button><button onclick="shopOpen()">💰 Shop</button><button onclick="stMode='settings';go('evolve')">⚙️ Settings</button><button onclick="gSheetLive(trophiesBody)">🏆 Titles</button></div></div></div>
   <div class="card sec cy-awake"><div class="row between"><span class="tag">⚔️ Bosses awake</span><span class="sub">${Object.values(B).filter(b=>!b.dead).length} of ${Object.keys(B).length}</span></div>
     <div class="cy-bl">${Object.entries(B).map(([a,b])=>`<button class="cy-b ${b.dead?'dead':''}" onclick="go('bosses')"><span>${bossMini(b.id,b.dead)||(b.dead?'💀':b.ic)}</span><b>${esc(b.n)}</b><i><u style="width:${Math.round(b.pct*100)}%"></u></i></button>`).join('')}</div></div>${cityMore()}`; }
 
@@ -7176,7 +7192,7 @@ function vRpgStats(){ const R=R_(), free=ptsFree(), P=perks(), F=rpgFx(TODAY), c
       </div>`; }).join('');
 
   return `
-  <div class="card sec"><div class="hdr"><h2>Stats</h2><button class="chip" style="border:0;cursor:pointer;${free?'background:var(--gold);color:#1a1200':''}" onclick="gSheetLive(tHub)">🌳 ${free} talent point${free===1?'':'s'}</button></div>
+  <div class="card sec"><div class="hdr"><h2>Stats</h2><button class="chip" style="border:0;cursor:pointer;${free?'background:var(--gold);color:#1a1200':''}" onclick="charGo('skills')">🌳 ${free} talent point${free===1?'':'s'}</button></div>
     <div class="help" style="margin:-4px 0 10px">Real life sets the base; talents you take in each area add on top.</div>
     <div class="stack" style="gap:12px">${rows}</div></div>
   <div class="card sec"><div class="hdr"><h2>Class · ${THIS_Q}</h2>${cls?`<span class="chip">${cls.ic} ${cls.name}</span>`:''}</div>
@@ -7186,7 +7202,7 @@ function vRpgStats(){ const R=R_(), free=ptsFree(), P=perks(), F=rpgFx(TODAY), c
 
   <div class="card sec"><div class="hdr"><h2>Title</h2><span class="sub">${T.filter(t=>t[2]).length}/${T.length}</span></div>
     ${(()=>{ const btn=([t,how,ok])=>`<button class="ttl ${ok?'':'lock'} ${titleNow()===t?'on':''}" ${ok?`onclick="titleSet(${JSON.stringify(t).replace(/"/g,'&quot;')})"`:'disabled'} title="${esc(how)}"><b>${ok?esc(t):'???'}</b><small>${esc(how)}</small></button>`, U=T.filter(x=>x[2]), Lk=T.filter(x=>!x[2]); return `<div class="titles">${U.map(btn).join('')}</div>${Lk.length?`<details class="ttl-more"><summary>${Lk.length} locked</summary><div class="titles">${Lk.map(btn).join('')}</div></details>`:''}`; })()}</div>`; }
-function classPickHtml(q){ const cur=R_().cls[q]; if (q>qOf(TT_().mig)) return `<button class="btn ghost sm" style="width:100%;justify-content:center" onclick="gSheetLive(tHub)">🌳 Your specializations live in Skills ›</button>`; return `<div class="cls-pick">${Object.entries(CLASSES).map(([k,c])=>`<button class="${cur===k?'on':''}" onclick="pickClass('${q}','${k}')"><span>${c.ic}</span><b>${c.name}</b><small>${esc(c.sig)}</small></button>`).join('')}</div>`; }
+function classPickHtml(q){ const cur=R_().cls[q]; if (q>qOf(TT_().mig)) return `<button class="btn ghost sm" style="width:100%;justify-content:center" onclick="charGo('skills')">🌳 Your specializations live in Skills ›</button>`; return `<div class="cls-pick">${Object.entries(CLASSES).map(([k,c])=>`<button class="${cur===k?'on':''}" onclick="pickClass('${q}','${k}')"><span>${c.ic}</span><b>${c.name}</b><small>${esc(c.sig)}</small></button>`).join('')}</div>`; }
 
 /* ---------- UI: Cards (collection) ---------- */
 function vCards(){ const R=R_(), F=factions().list, caught=F.filter(f=>f.jobs>0), seen=F.filter(f=>!f.jobs);
@@ -9624,7 +9640,7 @@ function statSheet(){ try {
   return `<div class="card sec cs"><div class="cs-t"><span>&gt; CHARACTER</span><small>last 30 days</small></div>${csHead('')}${csRadar(A)}${csAttrs(A)}
     <div class="cs-note">Strongest: <b style="color:${top.c}">${top.n}</b> · Weakest: <b style="color:${low.c}">${low.n}</b> — ${esc(low.sub)}</div>
     ${csTiles([[String(dailyStreak()),'day streak',CS_COL.grillz],[String(xw),'XP this week',CS_COL.financial],[String(q),'quests · 7d',CS_COL.content]])}
-    <div class="cs-links"><button onclick="gSheetLive(tHub)">🌳 Skills · stats · titles${ptsFree()?`<i>${ptsFree()} pt${ptsFree()===1?'':'s'}</i>`:''}</button><button onclick="gSheetLive(trophiesBody)">🏆 Trophies</button><button onclick="questLogOpen()">📜 Quest log</button><button onclick="shopOpen()">💰 Shop</button><button onclick="stMode='settings';setTab='trophies';render()">🃏 Cards & loot</button></div></div>`;
+    <div class="cs-links"><button onclick="charGo('skills')">🌳 Skills · stats · titles${ptsFree()?`<i>${ptsFree()} pt${ptsFree()===1?'':'s'}</i>`:''}</button><button onclick="gSheetLive(trophiesBody)">🏆 Trophies</button><button onclick="questLogOpen()">📜 Quest log</button><button onclick="shopOpen()">💰 Shop</button><button onclick="stMode='settings';setTab='trophies';render()">🃏 Cards & loot</button></div></div>`;
   } catch(e){ console.warn('stat sheet',e); return ''; } }
 
 /* ===================== goal rings (b182): week · quarter · year at a glance ===================== */
@@ -10145,7 +10161,7 @@ function areaInfo(k){ return rpgC('area:'+k,()=>{ const a=AREAS.find(x=>x.k===k)
   const next=T.flatMap(t=>t.nodes.filter(n=>n.avail&&!n.on).map(n=>({...n,tree:t.name}))).sort((x,y)=>y.pct-x.pct)[0];
   return {...a, T, on, tot, lvl, rank:T[0].ranks[lvl], next, toNext:AREA_STEPS[lvl]!=null?AREA_STEPS[lvl]-on:0}; }); }
 let skArea=null;
-function areaOpen(k){ const A=areaInfo(k); if(!A) return; skArea=k; if (!A.trees.includes(skTree)) skTree=A.trees[0]; areaSheet(); }
+function areaOpen(k){ const A=areaInfo(k); if(!A) return; tAreaTab='tree'; charGo('skills',k); }   // b326: the tree lives on the Character screen now
 function areaSheet(){ const A=areaInfo(skArea); if(!A) return; const st=(()=>{ try { return statAttrs().find(x=>x.n===A.k); } catch(e){ return null; } })();
   gSheet(`<div class="ar-hd" style="--c:${A.c}"><div><small>${esc(A.n.toUpperCase())}</small><h2 class="g-sh-t" style="margin:0">${esc(A.rank)}</h2></div><span class="ar-lv">LV ${A.lvl}</span></div>
     <div class="ar-row"><span>Feats</span><b class="num">${A.on}/${A.tot}</b></div>${A.toNext>0?`<small class="sub">${A.toNext} more to LV ${A.lvl+1}${A.next?` · closest: ${esc(A.next.name)} (${Math.round(A.next.pct*100)}%)`:''}</small>`:'<small class="sub">Max level</small>'}
@@ -10253,7 +10269,7 @@ window.tegaNativeSync = ()=>liveRefresh('resume');
 // every section belongs to one of the 7 areas; its chip opens that area's level + skill trees
 const AREA_VIEW={learn:'MIND',model:'MODEL',datum:'DATUM',content:'CONTENT',gym:'BODY',money:'MONEY',social:'SOCIAL'};
 function areaChip(k){ try { const A=areaInfo(k); if(!A) return ''; const span=A.toNext>0?(AREA_STEPS[A.lvl]-(AREA_STEPS[A.lvl-1]||0)):1, got=A.toNext>0?span-A.toNext:1;
-  return `<button class="ar-chip sec" style="--c:${A.c}" onclick="areaOpen('${k}')" aria-label="${esc(A.n)} level ${A.lvl}, open skill trees"><b>${A.k}</b><span class="num">LV ${A.lvl}</span><small>${esc(k==='money'?(()=>{ try { const R=moneyRank(); return R.r[1]; } catch(e){ return A.rank||''; } })():(A.rank||''))}${tFree(k)?` · <b class="tt-dot">${tFree(k)} pt${tFree(k)===1?'':'s'}</b>`:''}</small><i><u style="width:${Math.round(got/span*100)}%"></u></i><em>›</em></button>`; } catch(e){ return ''; } }
+  return `<button class="ar-chip sec" style="--c:${A.c}" onclick="areaOpen('${k}')" aria-label="${esc(A.n)} level ${A.lvl}, open its talent tree"><b>${A.k}</b><span class="num">LV ${A.lvl}</span><small>${esc(k==='money'?(()=>{ try { const R=moneyRank(); return R.r[1]; } catch(e){ return A.rank||''; } })():(A.rank||''))}${tFree(k)?` · <b class="tt-dot">${tFree(k)} pt${tFree(k)===1?'':'s'}</b>`:''}</small><i><u style="width:${Math.round(got/span*100)}%"></u></i><em>›</em></button>`; } catch(e){ return ''; } }
 function statPick(html, titles){ const t=document.createElement('template'); t.innerHTML=html; return [...t.content.children].filter(e=>titles.includes((e.querySelector('h2')?.textContent||'').trim())).map(e=>e.outerHTML).join(''); }
 function statDrop(html, titles){ const t=document.createElement('template'); t.innerHTML=html; return [...t.content.children].filter(e=>!titles.includes((e.querySelector('h2')?.textContent||'').trim())).map(e=>e.outerHTML).join(''); }
 // stats that belong to one area live in that area's sheet, not on Character
@@ -12423,14 +12439,58 @@ function foldCards(html, order, openKey, subs={}){ const t=document.createElemen
   const names=[...order.filter(n=>folds[n]), ...Object.keys(folds).filter(n=>!order.includes(n))];
   return top.join('')+`<div class="card sec" style="padding-top:6px;padding-bottom:6px">${names.map(n=>folds[n]).join('')}</div>`; }
 let ME_MERGED=false;
+/* b326: one Character screen. Everything about YOU in one place, four tabs:
+   Overview — level, XP, streak/shields/gold/season, and one row per area (level + stat + last 30 days + talent points)
+   Skills   — the talent tree right on the page, the 7 areas as tabs (feats one tap away)
+   Look     — build, style, rings, backgrounds
+   Collection — cards & loot, trophies & titles, quest log, shop, season, bosses, your City
+   The avatar (top left), the Lv pill, the area chip on every page and the old links all land here. Nothing was removed — it was moved. */
+let chTab='overview';
+function charGo(t,a){ try { gSheetClose(); } catch(e){} chTab=t||'overview'; if (a){ skArea=a; try { const A=areaInfo(a); if (A&&!A.trees.includes(skTree)) skTree=A.trees[0]; } catch(e){} } stMode='progress';
+  if (view==='evolve'){ render(); window.scrollTo(0,0); } else go('evolve'); }
+function charHead(){ const xp=computeXP(), lv=levelFor(xp), lo=xpForLevel(lv), hi=xpForLevel(Math.min(MAXLVL,lv+1));   // streak, shields, gold and season live in the pills up top — not repeated here
+  const pct=lv>=MAXLVL?100:Math.round((xp-lo)/Math.max(1,hi-lo)*100);
+  return `<div class="card sec ch-hd"><div class="ch-hd-r"><button class="avatar ringed ch-av" style="--ringc:${ringCss(lv)}" onclick="levelScene(${lv})" aria-label="Replay your level-up">${avatarSVG(stageOf(lv),'smile',84,S.evo||{})}<span class="lvlpip num">${lv}</span></button>
+    <div class="ch-hd-t"><b>Lv ${lv} · ${esc(titleOf(lv))}</b>${titleNow()?`<div class="ttl-now">« ${esc(titleNow())} »</div>`:''}<div class="ch-xp"><u style="width:${pct}%"></u></div><small class="sub">${lv>=MAXLVL?'Max level':`${(hi-xp).toLocaleString()} XP to Lv ${lv+1} · ${weekXp(THIS_WEEK).toLocaleString()} this week`}</small></div></div>
+    </div></div>`; }
+function charAreas(){ const L=statAttrs(), A30=Object.fromEntries(L.map(a=>[a.n,a])), top=L.slice().sort((x,y)=>y.v-x.v)[0], low=L.slice().sort((x,y)=>x.v-y.v)[0];
+  const rows=AREAS.map(x=>{ const I=areaInfo(x.k), a=A30[x.k]||{v:0,sub:''}, stk=Object.keys(T_STAT).find(k=>T_STAT[k].includes(x.k)), f=tFree(x.k);
+    const rank=x.k==='MONEY'?(()=>{ try { return moneyRank().r[1]; } catch(e){ return I.rank||''; } })():(I.rank||'');
+    return `<button class="ch-row" style="--c:${x.c}" onclick="charGo('skills','${x.k}')" aria-label="${esc(x.n)}, level ${I.lvl}, open its talent tree"><span class="ch-r1"><b>${esc(x.n)}</b><span class="num">LV ${I.lvl}</span><small>${esc(rank)}</small>${stk?`<em>${stk} ${Math.max(0,statVal(stk))}</em>`:''}${f?`<i class="ch-pt">${f} pt${f===1?'':'s'}</i>`:'<i class="ch-go">›</i>'}</span>
+      <span class="ch-bar"><u style="width:${a.v}%"></u></span><small class="ch-sub">${a.v}% of a healthy month · ${esc(a.sub)}</small></button>`; }).join('');
+  return `<div class="card sec"><div class="hdr"><h2>Areas</h2><span class="sub">level · stat · last 30 days</span></div><div class="ch-ar">${rows}</div>
+    ${top.v>low.v?`<div class="cs-note" style="margin-top:10px">Strongest: <b style="color:${top.c}">${top.n}</b> · Weakest: <b style="color:${low.c}">${low.n}</b> — ${esc(low.sub)}</div>`:''}
+    ${infold('chradar','30-day shape','the same numbers as a radar',`<div class="cs" style="background:none;box-shadow:none;padding:0">${csRadar(L)}</div>`)}</div>`; }
+function charSkillsTab(){ const a=AREAS.some(x=>x.k===skArea)?skArea:AREAS[0].k; skArea=a; const A=areaInfo(a); if (A&&!A.trees.includes(skTree)) skTree=A.trees[0];
+  const go=(AREA_VIEW&&Object.entries(AREA_VIEW).find(([v,k])=>k===a)||[])[0], cls=classFor(THIS_Q), cq=classQuest(THIS_Q);
+  return `<div class="ch-ats sec" role="tablist">${AREAS.map(x=>`<button role="tab" aria-selected="${x.k===a}" class="${x.k===a?'on':''}" style="--c:${x.c}" onclick="skArea='${x.k}';render()">${esc(x.n.split(' ')[0])}${tFree(x.k)?`<i>${tFree(x.k)}</i>`:''}</button>`).join('')}</div>
+    <div class="card sec ch-sk"><div class="row between" style="align-items:baseline;margin-bottom:10px"><div><b style="font-size:17px">${esc(A.n)}</b> <span class="sub">LV ${A.lvl} · ${esc(A.rank||'')}</span></div>${go?`<button class="linkbtn" onclick="go('${go}')">Go to ${esc(A.n==='Social'?'Circle':A.n.split(' ')[0])} ›</button>`:''}</div>
+      <div class="seg tt-seg" role="tablist" style="margin:0 0 10px"><button role="tab" aria-selected="${tAreaTab==='tree'}" class="${tAreaTab==='tree'?'on':''}" onclick="tAreaTab='tree';render()">🌳 Talents</button><button role="tab" aria-selected="${tAreaTab!=='tree'}" class="${tAreaTab!=='tree'?'on':''}" onclick="tAreaTab='feats';render()">🏅 Feats · ${A.on}/${A.tot}</button></div>
+      ${tAreaTab==='tree'?tTree(a)+`<div class="help" style="margin-top:8px">Feats pay the points (${A.toNext>0?`${A.toNext} more feat${A.toNext===1?'':'s'} to LV ${A.lvl+1}`:'max level'}); each talent also needs a real deed. Tap a node.</div>`:vSkills()}</div>
+    ${areaExtra(a)}
+    ${cls?`<div class="card sec"><div class="hdr"><h2>Class · ${THIS_Q}</h2><span class="chip">${cls.ic} ${cls.name}</span></div><div class="sub">${esc(cls.sig)}</div>${cq?`<div class="row between" style="font-size:13px;margin-top:8px"><span>🗡️ Class quest · ${esc(cq.label)}</span><b class="num">${cq.n}/${cq.target}</b></div>`:''}<div class="help" style="margin-top:6px">From next quarter your specializations above do this job.</div></div>`:''}`; }
+function charLookTab(){ if (!['build','custom'].includes(chMode)) chMode='build';
+  const seg=`<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['build','Build'],['custom','Style']].map(([k,l])=>`<button class="${chMode===k?'on':''}" style="flex:1;min-width:0;padding:8px 2px;font-size:12px" onclick="chMode='${k}';render()">${l}</button>`).join('')}</div>`;
+  ME_MERGED=true; try { return seg+vCharacter(); } finally { ME_MERGED=false; } }
+function charCollTab(){ const ch=(()=>{ try { return chestsWaiting().length; } catch(e){ return 0; } })(), Q=(()=>{ try { return questLogData(); } catch(e){ return {}; } })();
+  const b=(ic,t,sub,on,badge)=>`<button class="ch-tile" onclick="${on}"><span>${ic}</span><b>${t}</b><small>${sub}</small>${badge?`<i>${badge}</i>`:''}</button>`;
+  const grid=`<div class="ch-tiles sec">${b('🏆','Trophies & titles',`${titlesAll().filter(t=>t[2]).length} titles`,'gSheetLive(trophiesBody)')}${b('📜','Quest log',`${Q.t3d||0}/3 today`,'questLogOpen()')}${b('💰','Shop',`${(()=>{ try { return goldNow(); } catch(e){ return 0; } })()} gold`,'shopOpen()')}${b(season().ic,'Season',`tier ${(()=>{ try { return seasonTrack().tier; } catch(e){ return 0; } })()}/13`,'seasonOpen()')}${b('⚔️','Bosses','who’s awake',"go('bosses')")}${b('🏙️','Your City','year by year',"go('city')")}</div>`;
+  chMode='trophies'; ME_MERGED=true; try { return grid+(ch?`<div class="help" style="margin:2px 4px 8px">🎁 ${ch} chest${ch===1?'':'s'} waiting below</div>`:'')+vCharacter(); } finally { ME_MERGED=false; } }
 function vEvolve(){
   if (stMode==='art'){ stMode='progress'; ctTab='create'; setTimeout(()=>go('content'),0); }
   if (stMode==='backup') stMode='settings';
   if (stMode==='circle'){ stMode='progress'; setTimeout(()=>go('social'),0); }
+  if (stMode==='settings' && (setTab==='build'||setTab==='custom')){ chTab='look'; chMode=setTab; stMode='progress'; setTab='app'; }
+  if (stMode==='settings' && setTab==='trophies'){ chTab='collection'; stMode='progress'; setTab='app'; }
   if (!['progress','settings'].includes(stMode)) stMode='progress';
-  const body = stMode==='settings' ? vSettingsAll() :
-    statSheet()+foldCards(statDrop(vStats(),['Furthest behind','Money','Bench time'])+tellsCard()+rivalCard(), ['Consistency','XP per week','Shadow','Your tells','Records'], '', {Consistency:`${[...Array(30)].filter((_,i)=>dayActive(addDays(TODAY,-i))).length} of the last 30 days`, Records:`best streak ${bestDailyStreak()}`});
-  return `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['progress','Character'],['settings','Settings']].map(([k,l])=>`<button class="${stMode===k?'on':''}" style="flex:1 1 auto;min-width:0;padding:9px 6px;font-size:12px;letter-spacing:-.01em" onclick="stMode='${k}';render();window.scrollTo(0,0)">${l}</button>`).join('')}</div>` + body;
+  if (stMode==='settings') return `<div class="row between sec" style="margin-bottom:6px"><button class="linkbtn" onclick="stMode='progress';render();window.scrollTo(0,0)">‹ Character</button><span class="tag">Settings</span></div>`+vSettings();
+  if (!['overview','skills','look','collection'].includes(chTab)) chTab='overview';
+  const pts=ptsFree(), T=[['overview','Overview'],['skills',`Skills${pts?` <i class="ch-tp">${pts}</i>`:''}`],['look','Look'],['collection','Collection']];
+  const seg=`<div class="seg sec ch-tabs" role="tablist" style="display:flex;width:100%;overflow:hidden">${T.map(([k,l])=>`<button role="tab" aria-selected="${chTab===k}" class="${chTab===k?'on':''}" style="flex:1 1 auto;min-width:0;padding:9px 4px;font-size:12px" onclick="chTab='${k}';render();window.scrollTo(0,0)">${l}</button>`).join('')}</div>`;
+  const body = chTab==='skills'?charSkillsTab():chTab==='look'?charLookTab():chTab==='collection'?charCollTab():
+    charHead()+charAreas()+foldCards(statDrop(vStats(),['Furthest behind','Money','Bench time'])+tellsCard()+rivalCard(), ['Consistency','XP per week','Shadow','Your tells','Records'], '', {Consistency:`${[...Array(30)].filter((_,i)=>dayActive(addDays(TODAY,-i))).length} of the last 30 days`, Records:`best streak ${bestDailyStreak()}`})
+    +`<button class="btn ghost sm sec" style="width:100%;justify-content:center;margin-top:4px" onclick="stMode='settings';setTab='app';render();window.scrollTo(0,0)">⚙️ Settings</button>`;
+  return seg+body;
 }
 function vTrophies(){ stMode='settings'; setTab='trophies'; return vEvolve(); }
 /* ---------- backup: a file you keep + a weekly cloud snapshot ---------- */
