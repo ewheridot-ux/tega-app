@@ -34,3 +34,8 @@ Rules that never bend:
   - Habits / Top 3: "study / learn / lesson / Daily 10 / flashcards" tick on any learning day.
   - Fog boss: quiz 2, 5+ flashcards 2, teach-back 3, proof of skill 8 (crit).
   - Home shows one Daily 10 line (+ cards due); Life → Next up opens the next step of whatever you were last on; the weekly recap shows on Learning on Sunday (this week) and Monday (last week).
+- Talent trees (b325): the character's skill tree. 7 areas × (3 specializations × 4 tiers + capstone).
+  - Points per area come only from that area's feats (the milestone trees, which light up by themselves) — up to 40 per area. You choose where they go; every node also needs a real deed (a skMetrics number), tier gates (2/4/7 points in the tree, capstone 12) and the node above it.
+  - Effects plug into the existing day XP (rpgFx multipliers, rpgAdj flat XP), debuffs (immunity), boss damage (aBossEvents), shields (cap + ability shields). Every talent is dated: it only counts from the day you take it, and a reset (shop item / once a quarter) never reaches back.
+  - Old stat-point perks were carried over once as free nodes (dated before the game started, so past XP is unchanged). Stats now = real-life base + talents in that area. Classes already picked keep their quarter; later quarters use specializations.
+  - New talents follow the same rule as everything else: tie them to a real number, never to a tap.

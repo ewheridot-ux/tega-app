@@ -556,6 +556,41 @@ html.kb-open .modal .card{padding-bottom:16px}
 .lt-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.lt-acts button{display:grid;gap:2px;text-align:left;border:0;border-radius:14px;padding:12px;background:var(--card2);color:var(--fg);cursor:pointer;font:inherit}.lt-acts i{font-style:normal;font-size:20px}.lt-acts b{font-size:14px}.lt-acts small{font-size:12px;color:var(--muted)}
 .lt-fb{margin-top:12px;padding:12px;border-radius:12px;background:var(--card2);display:grid;gap:6px;font-size:14px}
 .lt-boss{font-size:56px;text-align:center;margin:10px 0}.lt-boss img.pxe{width:64px;height:64px}.lt-boss.lk{filter:grayscale(1);opacity:.6}
+/* b325: talent trees — 8-bit game screen */
+.tt{background-color:#0b0916;color:#efeaff;border-radius:16px;padding:14px 12px 12px;box-shadow:inset 0 0 0 2px #2a2250;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),radial-gradient(circle at 50% 0,color-mix(in srgb,var(--c) 28%,transparent),transparent 65%);background-size:16px 16px,16px 16px,100% 100%}
+.tt-hud{display:flex;justify-content:space-between;align-items:center;gap:10px}.tt-hud small{font-family:var(--px);font-size:8px;letter-spacing:.08em;color:var(--c)}.tt-hud b{display:block;font-size:15px;margin-top:4px}
+.tt-pts{flex:none;display:grid;place-items:center;padding:6px 10px;background:#1d1838;box-shadow:0 -3px 0 #3a3266,0 3px 0 #3a3266,-3px 0 0 #3a3266,3px 0 0 #3a3266}.tt-pts b{font-family:var(--px);font-size:16px;margin:0}.tt-pts small{font-family:var(--vt);font-size:15px;color:#a79fc9;letter-spacing:0}
+.tt-pts.on{box-shadow:0 -3px 0 #ffd23f,0 3px 0 #ffd23f,-3px 0 0 #ffd23f,3px 0 0 #ffd23f;animation:ltPulse 1.4s steps(4) infinite}.tt-pts.on b{color:#ffd23f}
+.tt-heads{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:12px;text-align:center}.tt-heads span{display:grid;justify-items:center;gap:2px;font-family:var(--px);font-size:7.5px;letter-spacing:.06em;text-transform:uppercase;color:#d9d2ff}.tt-heads i{font-style:normal;font-size:20px}.tt-heads em{font-style:normal;font-family:var(--vt);font-size:15px;color:#a79fc9}
+.tt-map{position:relative;margin:4px -4px 0}.tt-map svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.tt-map path{fill:none;stroke:#3a3266;stroke-width:5;stroke-dasharray:6 6;vector-effect:non-scaling-stroke;shape-rendering:crispEdges}.tt-map path.half{stroke:color-mix(in srgb,var(--c) 55%,#3a3266);stroke-dasharray:none}.tt-map path.lit{stroke:#ffd23f;stroke-dasharray:none;filter:drop-shadow(0 0 4px rgba(255,210,63,.5))}
+.tt-band{position:absolute;left:0;right:0;height:0;border-top:2px dashed rgba(255,255,255,.08)}.tt-band span{position:absolute;right:4px;top:-9px;font-family:var(--px);font-size:7px;letter-spacing:.08em;color:#5d5585;background:#0b0916;padding:2px 4px}.tt-band.on span{color:#ffd23f}
+.tt-n{position:absolute;transform:translate(-50%,-50%);width:56px;height:56px;border:0;padding:0;cursor:pointer;display:grid;place-items:center;font-size:24px;background:#1a1530;color:#fff;z-index:1;-webkit-tap-highlight-color:transparent;
+  box-shadow:0 -4px 0 #3a3266,0 4px 0 #3a3266,-4px 0 0 #3a3266,4px 0 0 #3a3266,inset 0 -6px 0 rgba(0,0,0,.4),inset 0 4px 0 rgba(255,255,255,.06)}
+.tt-n>span{display:grid;place-items:center;line-height:1}.tt-n img.pxe{width:28px;height:28px}
+.tt-n small{position:absolute;top:calc(100% + 9px);left:50%;transform:translateX(-50%);width:max-content;max-width:104px;padding:1px 5px 0;background:#0b0916;font-family:var(--vt);font-size:15px;line-height:.95;color:#d9d2ff;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-height:2.05em}
+.tt-pips{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);display:flex;gap:2px}.tt-pips u{width:6px;height:4px;background:#3a3266}.tt-pips u.on{background:#ffd23f}
+.tt-pips.big{position:static;transform:none;justify-content:center;gap:4px;margin:6px 0}.tt-pips.big u{width:18px;height:8px}
+.tt-ab{position:absolute;top:-10px;right:-10px;font-size:12px;background:#b98cff;color:#1a0f2e;width:18px;height:18px;display:grid;place-items:center;font-style:normal}
+.tt-n.part{background:#0f2d36;box-shadow:0 -4px 0 #5ee6ff,0 4px 0 #5ee6ff,-4px 0 0 #5ee6ff,4px 0 0 #5ee6ff,inset 0 -6px 0 rgba(0,0,0,.35)}
+.tt-n.max{background:#3b2e05;box-shadow:0 -4px 0 #ffd23f,0 4px 0 #ffd23f,-4px 0 0 #ffd23f,4px 0 0 #ffd23f,inset 0 -6px 0 rgba(0,0,0,.35),inset 0 4px 0 rgba(255,255,255,.15)}
+.tt-n.open{background:#24203f;box-shadow:0 -4px 0 #fff,0 4px 0 #fff,-4px 0 0 #fff,4px 0 0 #fff,inset 0 -6px 0 rgba(0,0,0,.35),0 0 16px 3px color-mix(in srgb,var(--c) 60%,transparent);animation:ttOpen 1.2s steps(3) infinite}
+.tt-n.deed{opacity:.85}.tt-n.deed>span{filter:grayscale(.7)}.tt-n.deed::after{content:'';position:absolute;inset:-4px;box-shadow:inset 0 0 0 2px rgba(255,183,3,.6)}
+.tt-n.lk{opacity:.55;filter:saturate(.2)}.tt-n.ab:not(.lk):not(.deed){--ab:#b98cff}.tt-n.ab.max,.tt-n.ab.part{background:#2a1645;box-shadow:0 -4px 0 #b98cff,0 4px 0 #b98cff,-4px 0 0 #b98cff,4px 0 0 #b98cff,inset 0 -6px 0 rgba(0,0,0,.35),0 0 14px 2px rgba(185,140,255,.4)}
+.tt-n.cap{width:72px;height:72px;font-size:32px}.tt-n.cap img.pxe{width:38px;height:38px}.tt-n.cap small{font-family:var(--px);font-size:8px;line-height:1.5;letter-spacing:.06em;max-width:140px}
+@keyframes ttOpen{50%{box-shadow:0 -4px 0 #fff,0 4px 0 #fff,-4px 0 0 #fff,4px 0 0 #fff,inset 0 -6px 0 rgba(0,0,0,.35),0 0 4px 1px color-mix(in srgb,var(--c) 40%,transparent)}}
+@media (prefers-reduced-motion:reduce){.tt-n.open,.tt-pts.on{animation:none}}
+.tt-foot{font-family:var(--vt);font-size:16px;color:#8a83ad;text-align:center;margin-top:4px}
+.tt-sh .tt-big{width:84px;height:84px;margin:14px auto 10px;display:grid;place-items:center;font-size:40px;background:#1a1530;box-shadow:0 -5px 0 #3a3266,0 5px 0 #3a3266,-5px 0 0 #3a3266,5px 0 0 #3a3266,inset 0 -8px 0 rgba(0,0,0,.35)}
+.tt-sh .tt-big img.pxe{width:46px;height:46px}.tt-big.max{background:#3b2e05;box-shadow:0 -5px 0 #ffd23f,0 5px 0 #ffd23f,-5px 0 0 #ffd23f,5px 0 0 #ffd23f,inset 0 -8px 0 rgba(0,0,0,.35)}.tt-big.part{box-shadow:0 -5px 0 #5ee6ff,0 5px 0 #5ee6ff,-5px 0 0 #5ee6ff,5px 0 0 #5ee6ff}.tt-big.open{box-shadow:0 -5px 0 #fff,0 5px 0 #fff,-5px 0 0 #fff,5px 0 0 #fff}.tt-big.ab.max,.tt-big.ab.part{box-shadow:0 -5px 0 #b98cff,0 5px 0 #b98cff,-5px 0 0 #b98cff,5px 0 0 #b98cff}.tt-big.lk,.tt-big.deed{filter:grayscale(.6)}
+.tt-eff{text-align:center;font-size:16px;font-weight:600;margin-top:6px;display:grid;gap:4px}.tt-eff .sub{font-weight:400;font-size:13px}
+.tt-req{display:flex;gap:10px;align-items:baseline;font-size:14px;padding:4px 0}.tt-req i{font-style:normal;width:16px;color:var(--bad);font-weight:800}.tt-req.ok i{color:var(--good)}
+.tt-bar{height:8px;border-radius:4px;background:var(--card2);margin:4px 0 2px 26px;overflow:hidden}.tt-bar u{display:block;height:100%;background:var(--c)}
+.tt-maxed{font-family:var(--px);font-size:11px;letter-spacing:.1em;color:#ffd23f;text-align:center;margin-top:14px}
+.tt-hub{display:grid;gap:8px}.tt-hrow{display:grid;grid-template-columns:1fr auto;grid-template-areas:'b e' 's e' 'm e';text-align:left;border:0;border-radius:14px;padding:12px 14px;background:var(--card2);color:var(--fg);cursor:pointer;box-shadow:inset 3px 0 0 var(--c)}
+.tt-hrow b{grid-area:b;font-size:16px}.tt-hrow span{grid-area:s;font-size:13px;color:var(--muted)}.tt-hrow small{grid-area:m;font-size:12px;color:var(--muted)}.tt-hrow em,.tt-hrow i{grid-area:e;align-self:center;font-style:normal}
+.tt-hrow em{font-family:var(--px);font-size:12px;background:#ffd23f;color:#1a1300;padding:6px 8px}.tt-dot{color:var(--gold,#ffd23f)}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -2141,7 +2176,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b324';
+const BUILD='b325';
 /* b316: bottom sheets sit above the iPhone keyboard — the sheet follows the visible part of the screen (visualViewport),
    and the field you tap scrolls into view inside it. Before, the keyboard slid over “New quest” and every other sheet. */
 (function(){ const v=window.visualViewport, R=document.documentElement; if (!v) return;
@@ -4921,7 +4956,7 @@ function rareBanner(){ const r=rareDay(TODAY); if(!r) return ''; const d=S.days[
   return `<div class="rare" style="cursor:pointer" onclick="toggleRare()" role="button" aria-pressed="${!!d?.rareDone}"><span>🎲</span><div><b style="${d?.rareDone?'text-decoration:line-through;opacity:.6':''}">${esc(r.text)}</b><small>Rare challenge · today only · +50 XP${d?.rareDone?' · done':''}</small></div><span class="krbox ${d?.rareDone?'on':''}">${d?.rareDone?'✓':''}</span></div>`; }
 const dayOn = k => dayActive(k) || !!(S.shieldUsed && S.shieldUsed[k]) || rpgSafe(k);
 function perfectWeeks(){ const ws=new Set(Object.keys(S.days).map(isoWeek)); let n=0; for (const w of ws) if (w<THIS_WEEK && weekDays(w).every(dayActive)) n++; return n; }
-const shieldsLeft = () => { let earned=perfectWeeks(); try { earned+=tierShields()+shieldsBought(); } catch(e){} return Math.max(0, Math.min(3, earned - Object.keys(S.shieldUsed||{}).length)); };
+const shieldsLeft = () => { let earned=perfectWeeks(), cap=3; try { earned+=tierShields()+shieldsBought()+treeShields(); cap=shieldCap(); } catch(e){} return Math.max(0, Math.min(cap, earned - Object.keys(S.shieldUsed||{}).length)); };
 function shieldOffer(){ const y=addDays(TODAY,-1); return shieldsLeft()>0 && !dayOn(y) && dayOn(addDays(y,-1)) ? y : null; }
 function useShield(k){ if (shieldsLeft()<=0) return; (S.shieldUsed ||= {})[k]=TODAY; commit({skipXp:true}); toast('🛡️ Shield used — the streak holds'); }
 function landmarks(){
@@ -6644,12 +6679,148 @@ function rpgBase(){ return rpgC('base',()=>{ const D=ensureDatum(), days=Object.
   let rb=0; try { if (S.gym&&S.gym.sessions&&S.gym.sessions.length) rb=ARANK.indexOf(aRank(gScore()))*2; } catch(e){}
   return { STR:Math.floor(cnt('gym')/3)+rb, CHA:Math.min(40,Math.floor(jobs/2)+hang+Math.floor((+S.ig?.followers||0)/500)), DEX:Math.floor(bench/2)+Math.floor(cnt('datum')/4),
     INT:learn*2+Math.floor(cnt('guitar')/4)+(S.art||[]).length, WIS:Math.floor((cnt('journal')+reviews*3+closes)/3)+Math.floor(ci/10), LUCK:Math.round(jobs/Math.max(1,jobs+casts)*20) }; }); }
-function statVal(k){ return (rpgBase()[k]||0)+(+R_().pts[k]||0); }
-function perks(){ return rpgC('perks',()=>{ const P={}; for (const [k] of STATS) for (const [lv,id] of PERKS[k]) if (statVal(k)>=lv) P[id]=1; return P; }); }
-function ptsFree(){ return Math.max(0, levelFor(computeXP())-1 - Object.values(R_().pts).reduce((a,b)=>a+(+b||0),0)); }
-function statAdd(k,n){ const R=R_(); if (n>0 && !ptsFree()) return toast('No points left — level up for more'); if (n<0) return; R.pts[k]=(+R.pts[k]||0)+n; commit({skipXp:true}); }
-function respecOpen(){ const R=R_(); if ((R.respecUsed||'')===THIS_Q) return toast('Already respecced this quarter'); R.pts={}; R.respecUsed=THIS_Q; commit({skipXp:true}); toast('🔄 Points refunded — spend them again'); }
+function statVal(k){ return (rpgBase()[k]||0)+tStatPts(k); }
+function perksLegacy(){ const P={}; for (const [k] of STATS) for (const [lv,id] of PERKS[k]) if ((rpgBase()[k]||0)+(+R_().pts[k]||0)>=lv) P[id]=1; return P; }
+function perks(){ return perksOn(TODAY); }
+function ptsFree(){ try { return AREAS.reduce((s,A)=>s+tFree(A.k),0); } catch(e){ return 0; } }
+function statAdd(k,n){ gSheetLive(tHub); }
+function respecOpen(){ const R=R_(); if ((R.respecUsed||'')===THIS_Q) return toast('Already reset this quarter'); const n=tRespec(); R.respecUsed=THIS_Q; commit({skipXp:true}); toast(n?`🔄 ${n} talent point${n===1?'':'s'} back — spend them again`:'Nothing to reset'); }
 
+/* ===================== b325: talent trees — the real skill tree for YOU =====================
+   Each of the 7 areas has a tree: 3 specializations × 4 tiers + a capstone. Points for an area come ONLY from that area's feats
+   (the milestones that light up by themselves from what you log), and every node also needs a real deed (e.g. 30 gym days). You choose
+   where the points go — that's your build — but how far you can go is set by what you've actually done.
+   Nodes do things: passives (XP on the days you do the thing, immunity to a debuff, boss damage, an extra shield) and abilities you trigger
+   with a cooldown. A node only counts from the day you take it; a reset never takes back XP you already earned.
+   The old stats (STR, CHA…) now come from real life + the points you put in each area; old perks are nodes (kept for free); classes became
+   the specializations (a class already picked keeps its quarter). */
+const TCOND={ any:()=>true,
+  gym:k=>!!S.days[k]?.habits?.gym || ((S.gym||{}).sessions||[]).some(s=>s.d===k), stretch:k=>{ try { return yogaMinsOn(k)>=5; } catch(e){ return false; } }, move:k=>TCOND.gym(k)||TCOND.stretch(k),
+  pr:k=>((S.gym||{}).sessions||[]).some(s=>s.d===k&&(s.prs||[]).length), gymweek:k=>{ const m=weekMonday(isoWeek(k)); let n=0; for (let i=0;i<7;i++) if (TCOND.gym(addDays(m,i))) n++; return n>=3; },
+  good:k=>S.days[k]?.checkin?.feel===2, checkin:k=>!!S.days[k]?.checkin, early:k=>(S.days[k]?.checkin?.at||'99')<'09:00', journal:k=>!!S.days[k]?.habits?.journal,
+  top3:k=>{ const t=(S.days[k]?.top3||[]).filter(x=>(x.text||'').trim()); return t.length===3&&t.every(x=>x.done); }, learn:k=>{ try { return lrActDays().has(k); } catch(e){ return false; } },
+  datum:k=>!!S.days[k]?.habits?.datum, order:k=>(ensureDatum().orders||[]).some(o=>o.opened===k||o.delivered===k),
+  longbench:k=>(ensureDatum().prototypes||[]).some(p=>(p.log||[]).some(l=>l.d===k&&l.kind==='session'&&(+l.mins||0)>=120)), benchphoto:k=>(ensureDatum().prototypes||[]).some(p=>(p.log||[]).some(l=>l.d===k&&l.photo)),
+  cast:k=>{ try { return castDay(k); } catch(e){ return false; } }, job:k=>{ try { return jobDay(k); } catch(e){ return false; } }, road:k=>TCOND.job(k)||TCOND.cast(k)||(()=>{ try { return travelDay(k); } catch(e){ return false; } })(),
+  outreach:k=>(S.logs||[]).some(l=>(l.kind==='outreach'||l.kind==='proposal')&&l.d===k),
+  post:k=>(S.logs||[]).some(l=>l.kind==='post'&&l.d===k)||!!S.days[k]?.habits?.content, art:k=>(S.art||[]).some(a=>a.d===k), guitar:k=>(S.gtr?.log||[]).some(l=>l.d===k), make:k=>TCOND.post(k)||TCOND.art(k)||TCOND.guitar(k),
+  hang:k=>{ try { return hangDays().has(k); } catch(e){ return false; } }, party:k=>{ try { return partyOn(k); } catch(e){ return false; } }, parents:k=>(S.days[k]?.top3||[]).some(t=>t.done&&/parent|mom|dad/i.test(t.text||'')),
+  pay:k=>S.money.checks.some(c=>c.got&&c.gotOn===k), money:k=>TCOND.pay(k)||TCOND.order(k)||(S.days[k]?.top3||[]).some(t=>t.done&&['financial','grillz','cad'].includes(t.track)),
+  budget:k=>{ try { return !overspentOn(k); } catch(e){ return false; } } };
+const TCN={any:'every day',gym:'gym days',stretch:'night-stretch days',move:'days you train or stretch',pr:'days you set a PR',gymweek:'every day of a 3-workout week',good:'days you check in feeling great',checkin:'check-in days',early:'days you check in before 9',journal:'journal days',top3:'days you finish all Top 3',learn:'Daily 10 days',datum:'Datum days',order:'order days',longbench:'days with a 2-hour bench session',benchphoto:'days you shoot a piece',cast:'casting days',job:'set days',road:'travel, casting and set days',outreach:'outreach days',post:'post days',art:'art days',guitar:'guitar days',make:'days you post, draw or play',hang:'hangout days',party:'days out with a close friend',parents:'days you call home',pay:'paydays',money:'money days',budget:'days you stay on budget'};
+// gates use the same numbers the feats use (skMetrics), plus a few from newer pages
+function tMet(){ return rpgC('tmet',()=>{ const M={...skMetrics()}; try { M.yoga=(S.yoga?.log||[]).length; } catch(e){ M.yoga=0; } try { M.lrDays=lrActDays().size; M.lrProofs=lrSubs().reduce((n,x)=>n+Object.values(x.proofs||{}).filter(p=>p.done).length,0); } catch(e){ M.lrDays=0; M.lrProofs=0; } return M; }); }
+const TGU={yoga:'night stretches',lrDays:'Daily 10 days',lrProofs:'proofs of skill',gym:'gym days',active:'active days',early:'early check-ins',perfect:'perfect days',journal:'journal days',learn:'lessons & reading days',resets:'weekly reviews',pWeeks:'perfect weeks',jobs:'jobs'};
+const tUnit=m=>TGU[m]||SK_UNIT[m]||m;
+const N=(id,b,t,ic,n,r,g,fx,d)=>({id,b,t,ic,n,r,g,fx,d});
+const TTREES={
+  BODY:{st:'STR',boss:null,br:[['Strength','🏋️'],['Endurance','🫁'],['Recovery','🧘']],nodes:[
+    N('grip',0,1,'✊','Iron Grip',3,['gym',3],{m:.02,c:'gym'}), N('ironbody',0,2,'🏋️','Iron Body',1,['gym',15],{legacy:1},'A gym session on a travel day pays double'), N('prhunter',0,3,'🥇','PR Hunter',2,['prs',5],{x:20,c:'pr'}), N('titan',0,4,'🗿','Titan',1,['gymWeeks',12],{legacy:1},'+5% XP on gym days'),
+    N('warmup',1,1,'🔥','Warm-Up',3,['gym',5],{m:.02,c:'move'}), N('secondwind',1,2,'🌬️','Second Wind',1,['gymWeeks',4],{legacy:1},'Rusty can’t touch you'), N('ironlungs',1,3,'🫁','Iron Lungs',2,['gym',30],{m:.04,c:'gymweek'}), N('adrenaline',1,4,'⚡','Adrenaline',1,['gymWeeks',8],{ab:1,cd:7,m:.5}),
+    N('limber',2,1,'🧘','Limber',3,['yoga',3],{m:.02,c:'stretch'}), N('deepsleep',2,2,'😴','Deep Sleep',1,['yoga',10],{m:.05,c:'good'}), N('ironwill',2,3,'🛡️','Iron Will',1,['gym',40],{shield:1},'Hold up to 4 streak shields'), N('phoenix',2,4,'🐦','Phoenix',1,['yoga',30],{ab:1,cd:14,give:'shield'}),
+    N('apex',3,5,'👑','Apex',1,['gym',100],{m:.1,c:'gym'})]},
+  MONEY:{st:'LUCK',boss:null,br:[['Saver','🏦'],['Investor','📈'],['Earner','💸']],nodes:[
+    N('frugal',0,1,'🪙','Frugal',3,['split',1],{m:.02,c:'budget'}), N('calm',0,2,'🧘','Calm Mind',1,['split',3],{legacy:1},'Overspent only costs 5%'), N('taxward',0,3,'🐉','Tax Ward',1,['tax',1000],{immune:'curse'},'The Wyrm’s Curse can’t touch you'), N('vaultkeeper',0,4,'🔐','Vault Keeper',2,['ef',2500],{x:30,c:'pay'}),
+    N('compound',1,1,'📈','Compound',3,['roth',500],{m:.01,c:'any'}), N('fortune',1,2,'🍀','Fortune',1,['net',5000],{legacy:1},'Payday lasts 3 days'), N('jackpot',1,3,'🎰','Jackpot',1,['net',15000],{legacy:1},'Chest loot rolls one rarity higher'), N('dividend',1,4,'💹','Dividend',1,['net',30000],{ab:1,cd:30,x:200}),
+    N('hustler',2,1,'💸','Hustler',3,['landed',1],{x:10,c:'pay'}), N('lucky',2,2,'🎁','Lucky Break',1,['landed',3],{legacy:1},'Chests drop 2 items'), N('closer',2,3,'🤝','Closer',2,['income',10000],{m:.05,c:'money'}), N('windfall',2,4,'🌧️','Windfall',1,['income',25000],{ab:1,cd:7,m:.5}),
+    N('freedom',3,5,'🗽','Free',1,['net',100000],{m:.1,c:'any'})]},
+  MODEL:{st:'CHA',boss:null,br:[['Presence','📸'],['Booker','🎭'],['Network','🌐']],nodes:[
+    N('camera',0,1,'📷','Camera Ready',3,['setDays',1],{m:.03,c:'job'}), N('headliner',0,2,'🌟','Headliner',1,['setDays',10],{legacy:1},'On Set gives +20% instead of +10%'), N('runway',0,3,'🚶','Runway',2,['setDays',25],{x:40,c:'job'}), N('spotlight',0,4,'💡','Spotlight',1,['setDays',40],{ab:1,cd:7,m:.5}),
+    N('silver',1,1,'🗣️','Silver Tongue',1,['castings',3],{legacy:1},'+40 XP on casting days'), N('callback',1,2,'🔁','Callback',3,['castings',10],{m:.03,c:'cast'}), N('roadwarrior',1,3,'🧳','Road Warrior',2,['castings',25],{m:.05,c:'road'}), N('bookedsolid',1,4,'📒','Booked Solid',1,['mIncome',20000],{x:100,c:'job'}),
+    N('reachout',2,1,'📨','Reach Out',3,['outreach',5],{x:10,c:'outreach'}), N('portfolio',2,2,'🗂️','Portfolio',2,['pitches',3],{x:20,c:'outreach'}), N('buzz',2,3,'📣','Buzz',2,['igF',5000],{m:.03,c:'post'}), N('bigname',2,4,'🏛️','Big Name',1,['mIncome',50000],{ab:1,cd:14,x:150}),
+    N('theface',3,5,'👑','The Face',1,['setDays',100],{m:.1,c:'road'})]},
+  DATUM:{st:'DEX',boss:'datum',br:[['Craft','⚒️'],['Merchant','💎'],['Designer','✏️']],nodes:[
+    N('steady',0,1,'🖐️','Steady Hands',1,['benchH',10],{legacy:1},'+10% XP on Datum days'), N('cobweb',0,2,'🕸️','Cobweb-proof',1,['benchSess',10],{legacy:1},'Cobwebs can’t touch you'), N('flow',0,3,'⏳','Flow State',2,['benchLong',180],{x:25,c:'longbench'}), N('mwhands',0,4,'💠','Master Hands',1,['done',5],{legacy:1},'+15% Masterwork chance'),
+    N('firstsale',1,1,'💵','First Sale',3,['sold',1],{x:15,c:'order'}), N('golemslayer',1,2,'🌋','Golem Slayer',2,['sold',3],{boss:.15},'Hits on the Molten Golem land 15% harder per rank'), N('shopkeep',1,3,'🏪','Shopkeeper',2,['revenue',2500],{m:.05,c:'datum'}), N('rushorder',1,4,'🔥','Rush Order',1,['revenue',10000],{ab:1,cd:14,bomb:'datum'}),
+    N('sketchbook',2,1,'📐','Sketchbook',3,['sketches',3],{m:.02,c:'datum'}), N('moodboard',2,2,'📌','Moodboard',1,['pins',20],{x:10,c:'datum'}), N('cadwiz',2,3,'🖥️','CAD Wizard',2,['pieces',10],{m:.03,c:'datum'}), N('shotlist',2,4,'📸','Shot List',1,['shot',10],{x:30,c:'benchphoto'}),
+    N('jeweler',3,5,'👑','Jeweler',1,['revenue',25000],{m:.1,c:'datum'})]},
+  CONTENT:{st:'INT',boss:'content',br:[['Creator','📱'],['Artist','🎨'],['Musician','🎸']],nodes:[
+    N('poster',0,1,'📱','Poster',3,['posts',3],{m:.02,c:'post'}), N('ideamachine',0,2,'💡','Idea Machine',2,['ideasShot',5],{x:10,c:'post'}), N('algohacker',0,3,'👁️','Algorithm Hacker',2,['weeks2',4],{boss:.15},'Hits on The Algorithm land 15% harder per rank'), N('goviral',0,4,'🚀','Go Viral',1,['posts',60],{ab:1,cd:14,bomb:'content'}),
+    N('dailysketch',1,1,'✏️','Daily Sketch',3,['art',3],{m:.02,c:'art'}), N('processshots',1,2,'🖼️','Process Shots',1,['process',5],{x:10,c:'art'}), N('gallery',1,3,'🏛️','Gallery',2,['art',40],{m:.04,c:'art'}), N('musemode',1,4,'🎨','Muse Mode',1,['artWeeks',12],{ab:1,cd:7,m:.5}),
+    N('calluses',2,1,'🎸','Calluses',3,['gSess',5],{m:.02,c:'guitar'}), N('repertoire',2,2,'🎶','Repertoire',2,['canPlay',3],{x:10,c:'guitar'}), N('riffvault',2,3,'🎼','Riff Vault',1,['riffs',10],{m:.05,c:'guitar'}), N('encore',2,4,'🎤','Encore',1,['gH',30],{ab:1,cd:7,x:100}),
+    N('creator',3,5,'👑','Creator',1,['posts',200],{m:.1,c:'make'})]},
+  SOCIAL:{st:'CHA',boss:'social',br:[['Host','🎉'],['Friend','🫂'],['Explorer','🧭']],nodes:[
+    N('makeplans',0,1,'🗓️','Make Plans',3,['hang',3],{m:.02,c:'hang'}), N('magnetic',0,2,'🌙','Magnetic',1,['hang',10],{legacy:1},'Afterglow lasts 3 days'), N('lifeparty',0,3,'🎉','Life of the Party',2,['hang',25],{x:20,c:'hang'}), N('hermitslayer',0,4,'🕳️','Hermit Slayer',2,['hang',40],{boss:.15},'Hits on the Hermit King land 15% harder per rank'),
+    N('loyal',1,1,'🫂','Loyal',3,['people',3],{m:.03,c:'party'}), N('neveralone',1,2,'🛡️','Never Alone',1,['people',5],{immune:'hermit'},'Hermit can’t touch you'), N('callhome',1,3,'📞','Call Home',2,['hang',15],{x:15,c:'parents'}), N('rally',1,4,'📣','Rally',1,['people',10],{ab:1,cd:14,m:.5}),
+    N('foodie',2,1,'🍜','Foodie',3,['nights',3],{x:10,c:'hang'}), N('nightowl',2,2,'🌃','Night Owl',1,['nights',10],{m:.05,c:'hang'}), N('explorer',2,3,'🧭','Explorer',2,['nights',20],{m:.03,c:'road'}), N('crewnight',2,4,'🎡','Crew Night',1,['hang',60],{ab:1,cd:14,x:120}),
+    N('connector',3,5,'👑','Connector',1,['hang',100],{m:.1,c:'hang'})]},
+  MIND:{st:'WIS',boss:'mind',br:[['Scholar','📚'],['Focus','🎯'],['Calm','🦉']],nodes:[
+    N('quick',0,1,'📖','Quick Study',1,['learn',5],{legacy:1},'+25 XP for every weekly review'), N('bookworm',0,2,'📚','Bookworm',3,['learn',15],{m:.02,c:'learn'}), N('polymath',0,3,'🧠','Polymath',1,['learn',40],{legacy:1},'+5% XP every day'), N('eureka',0,4,'💡','Eureka',1,['lrProofs',1],{ab:1,cd:7,m:.5}),
+    N('earlybird',1,1,'🌅','Early Bird',3,['early',5],{m:.02,c:'early'}), N('strategist',1,2,'♟️','Strategist',1,['perfect',5],{legacy:1},'+10% XP when all Top 3 are done'), N('deepwork',1,3,'🎯','Deep Work',2,['pWeeks',2],{x:20,c:'top3'}), N('fogcutter',1,4,'🌫️','Fog Cutter',2,['active',60],{boss:.15},'Hits on The Fog land 15% harder per rank'),
+    N('sage',2,1,'🦉','Sage',1,['journal',10],{legacy:1},'+5% XP on check-in days'), N('sight',2,2,'👁️','Second Sight',1,['resets',4],{legacy:1},'Your weekly review shows a hidden pattern'), N('innervoice',2,3,'✍️','Inner Voice',2,['journal',30],{x:10,c:'journal'}), N('clarity',2,4,'🕯️','Clarity',1,['resets',12],{ab:1,cd:14,give:'shield'}),
+    N('enlightened',3,5,'👑','Enlightened',1,['learn',150],{m:.1,c:'learn'})]}};
+const T_TIER=[0,0,2,4,7,12];   // points already in a tree before a tier opens (capstone = 12)
+const TNODE={}; for (const [a,T] of Object.entries(TTREES)) for (const n of T.nodes) TNODE[n.id]={...n, a};
+function tDesc(n,r){ const f=n.fx, k=Math.max(1,r||1); if (n.d) return n.d; if (f.ab) return `Trigger: ${f.m?`${1+f.m}× XP for the rest of today`:f.x?`+${f.x} XP`:f.give==='shield'?'get a streak shield':f.bomb?`drop a bomb on ${ABOSS[f.bomb]?.name||'the boss'} (25 damage)`:''}. Every ${f.cd} days.`;
+  if (f.m) return `+${Math.round(f.m*k*100)}% XP on ${TCN[f.c]||f.c}`; if (f.x) return `+${f.x*k} XP on ${TCN[f.c]||f.c}`; return ''; }
+// state: a dated log of rank changes, so a node only counts from the day you took it (and a reset never reaches back)
+function TT_(){ const R=R_(); if (!R.tree){ const P=perksLegacy(); R.tree={log:Object.keys(P).filter(id=>TNODE[id]).map(id=>({id, d:'0000-00-00', r:1, gift:1})), ab:{}, bombs:[], mig:TODAY}; if (Object.keys(R.pts||{}).length){ R.ptsOld=R.pts; R.pts={}; } }
+  const T=R.tree; T.log ||= []; T.ab ||= {}; T.bombs ||= []; return T; }
+function tRankOn(id,k){ let r=0; for (const e of TT_().log) if (e.id===id && e.d<=k) r=e.r; return r; }
+const tRank=id=>tRankOn(id,'9999-99-99');
+function perksOn(k){ return rpgC('pk:'+k,()=>{ const P={}; for (const e of TT_().log) if (e.d<=k) P[e.id]=e.r; for (const id of Object.keys(P)) if (!P[id]) delete P[id]; return P; }); }
+function tGift(id){ return TT_().log.some(e=>e.id===id&&e.gift); }
+function tEarned(a){ try { const A=areaInfo(a); if (!A||!A.tot) return 0; return Math.min(40, Math.max(A.on?1:0, Math.round(A.on*40/A.tot))); } catch(e){ return 0; } }
+function tCost(a){ let s=0; for (const n of TTREES[a].nodes){ const r=tRank(n.id), g=tGift(n.id)?1:0; s+=Math.max(0,r-g); } return s; }
+function tInvested(a){ return TTREES[a].nodes.reduce((s,n)=>s+tRank(n.id),0); }
+const tFree=a=>Math.max(0,tEarned(a)-tCost(a));
+function tState(id){ const n=TNODE[id], r=tRank(id), M=tMet(), inv=tInvested(n.a), gv=+M[n.g[0]]||0, deed=gv>=n.g[1], tierOk=inv>=T_TIER[n.t],
+    prev=n.t>1&&n.t<5?TTREES[n.a].nodes.find(z=>z.b===n.b&&z.t===n.t-1):null, prevOk=!prev||tRank(prev.id)>0, free=tFree(n.a);
+  const can=r<n.r && deed && tierOk && prevOk && free>0, cls=r>=n.r?'max':r>0?'part':can?'open':tierOk&&prevOk?'deed':'lk';
+  return {n, r, gv, deed, tierOk, prev, prevOk, free, can, cls, need:T_TIER[n.t], inv}; }
+function tLearn(id){ const S0=tState(id); if (!S0.can) return toast(!S0.deed?`Needs ${S0.n.g[1].toLocaleString('en-US')} ${tUnit(S0.n.g[0])} first`:!S0.tierOk?`Put ${S0.need} points into ${AREAS.find(x=>x.k===S0.n.a).n} first`:!S0.prevOk?`Learn ${S0.prev.n} first`:'No points left here — earn more with feats');
+  TT_().log.push({id, d:TODAY, r:S0.r+1}); commit(); try { sprPlay('hype'); } catch(e){} if (S0.n.t===5||S0.r+1===S0.n.r) try { confetti(); } catch(e){}
+  toast(`${S0.n.ic} ${S0.n.n}${S0.n.r>1?` ${S0.r+1}/${S0.n.r}`:''} learned`); tOpen(id); }
+function tRespec(){ const T=TT_(); let n=0; for (const id of Object.keys(TNODE)){ const r=tRank(id), g=tGift(id)?1:0; if (r>g){ T.log.push({id, d:TODAY, r:g}); n+=r-g; } } return n; }
+// abilities
+function tAbLast(id){ const L=TT_().ab[id]||[]; return L[L.length-1]||''; }
+function tAbReady(id){ const n=TNODE[id], l=tAbLast(id); return tRank(id)>0 && (!l || addDays(l,n.fx.cd)<=TODAY); }
+function tUse(id){ const n=TNODE[id]; if (!tAbReady(id)) return toast(tRank(id)?`Ready again ${nice(addDays(tAbLast(id),n.fx.cd))}`:'Learn it first'); (TT_().ab[id] ||= []).push(TODAY);
+  if (n.fx.bomb) TT_().bombs.push({d:TODAY, k:n.fx.bomb}); commit(); try { confetti(); } catch(e){} toast(`${n.ic} ${n.n}! ${tDesc(n).replace(/^Trigger: /,'').replace(/\. Every.*$/,'')}`); tOpen(id); }
+const tAbOn=(id,k)=>(TT_().ab[id]||[]).includes(k);
+const treeShields=()=>{ let n=0; for (const [id,L] of Object.entries(TT_().ab)) if (TNODE[id]?.fx.give==='shield') n+=L.length; return n; };
+const shieldCap=()=>3+(perksOn(TODAY).ironwill?1:0);
+// XP effects for one day: multipliers (rpgFx) and flat XP (rpgAdj)
+function tFxDay(k){ const P=perksOn(k), out=[]; for (const [id,r] of Object.entries(P)){ const n=TNODE[id]; if (!n||n.fx.legacy) continue; const f=n.fx;
+    if (f.ab){ if (f.m && tAbOn(id,k)) out.push({id:'t_'+id, ic:n.ic, n:n.n, b:1, m:f.m, t:'Ability'}); continue; }
+    if (f.m && TCOND[f.c]?.(k)) out.push({id:'t_'+id, ic:n.ic, n:n.n, b:1, m:f.m*r, t:tDesc(n,r)}); }
+  return out; }
+function tFlatDay(k){ const P=perksOn(k); let x=0; for (const [id,r] of Object.entries(P)){ const n=TNODE[id]; if (!n||n.fx.legacy||!n.fx.x) continue; if (n.fx.ab){ if (tAbOn(id,k)) x+=n.fx.x; } else if (TCOND[n.fx.c]?.(k)) x+=n.fx.x*r; } return x; }
+function tBossMult(boss,k){ let m=1; for (const [id,r] of Object.entries(perksOn(k))){ const n=TNODE[id]; if (n&&n.fx.boss&&TTREES[n.a].boss===boss) m+=n.fx.boss*r; } return m; }
+// the stats now come from real life + the points you put into each area
+const T_STAT={STR:['BODY'],CHA:['MODEL','SOCIAL'],DEX:['DATUM'],INT:['CONTENT'],WIS:['MIND'],LUCK:['MONEY']};
+const tStatPts=st=>(T_STAT[st]||[]).reduce((s,a)=>s+tInvested(a),0);
+// ---- views
+let tSel=null, tAreaTab='tree';
+function tSpec(a){ const T=TTREES[a], by=[0,0,0]; for (const n of T.nodes) if (n.b<3) by[n.b]+=tRank(n.id); const mx=Math.max(...by); return mx?T.br[by.indexOf(mx)]:null; }
+function tTree(a){ const T=TTREES[a], A=AREAS.find(x=>x.k===a), free=tFree(a), inv=tInvested(a), X=[18,50,82], Y=t=>88+(t-1)*124+(t===5?22:0), H=Y(5)+96;
+  const st=Object.fromEntries(T.nodes.map(n=>[n.id,tState(n.id)]));
+  const lines=[]; for (const n of T.nodes){ if (n.t===5){ for (const b of [0,1,2]){ const z=T.nodes.find(q=>q.b===b&&q.t===4); lines.push(`<path d="M${X[b]} ${Y(4)} V${Y(5)-46} H50 V${Y(5)}" class="${st[z.id].r&&st[n.id].r?'lit':st[z.id].r?'half':''}"/>`); } continue; }
+    if (n.t>1){ const pv=T.nodes.find(q=>q.b===n.b&&q.t===n.t-1); lines.push(`<path d="M${X[n.b]} ${Y(n.t-1)} V${Y(n.t)}" class="${st[pv.id].r&&st[n.id].r?'lit':st[pv.id].r?'half':''}"/>`); } }
+  const bands=[2,3,4,5].map(t=>`<div class="tt-band ${inv>=T_TIER[t]?'on':''}" style="top:${Y(t)-(t===5?62:46)}px"><span>${t===5?'CAPSTONE':'TIER '+t} · ${T_TIER[t]} PTS</span></div>`).join('');
+  const node=n=>{ const s0=st[n.id], x=n.t===5?50:X[n.b], pips=n.r>1?`<i class="tt-pips">${Array.from({length:n.r},(_,i)=>`<u class="${i<s0.r?'on':''}"></u>`).join('')}</i>`:'';
+    return `<button class="tt-n ${s0.cls} ${n.fx.ab?'ab':''} ${n.t===5?'cap':''}" style="left:${x}%;top:${Y(n.t)}px" onclick="tOpen('${n.id}')" aria-label="${esc(n.n)}, ${s0.r}/${n.r}"><span>${s0.cls==='lk'?'🔒':n.ic}</span>${pips}${n.fx.ab?'<b class="tt-ab">⚡</b>':''}<small>${esc(n.n)}</small></button>`; };
+  const spec=tSpec(a);
+  return `<div class="tt" style="--c:${A.c}"><div class="tt-hud"><div><small>${esc(A.n.toUpperCase())} · TALENTS</small><b>${spec?`${spec[1]} ${esc(spec[0])}`:'No specialization yet'}</b></div><div class="tt-pts ${free?'on':''}"><b>${free}</b><small>point${free===1?'':'s'}</small></div></div>
+    <div class="tt-heads">${T.br.map(([nm,ic],b)=>`<span><i>${ic}</i>${esc(nm)}<em>${T.nodes.filter(n=>n.b===b).reduce((s,n)=>s+tRank(n.id),0)}</em></span>`).join('')}</div>
+    <div class="tt-map" style="height:${H}px">${bands}<svg viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true">${lines.join('')}</svg>${T.nodes.map(node).join('')}</div>
+    <div class="tt-foot">${tEarned(a)} earned from ${esc(A.n)} feats · ${tCost(a)} spent${T.nodes.some(n=>tGift(n.id))?' · old perks kept free':''}</div></div>`; }
+function tOpen(id){ const s0=tState(id), n=s0.n, A=AREAS.find(x=>x.k===n.a), T=TTREES[n.a], br=n.t===5?['Capstone','👑']:T.br[n.b];
+  const chk=(ok,t)=>`<div class="tt-req ${ok?'ok':''}"><i>${ok?'✓':'✗'}</i><span>${t}</span></div>`;
+  const reqs=s0.r>=n.r?'':`${chk(s0.free>0,`1 ${esc(A.n)} point <span class="sub">· you have ${s0.free}</span>`)}${n.t>1?chk(s0.tierOk,`${s0.need} points already in ${esc(A.n)} <span class="sub">· you have ${s0.inv}</span>`):''}${s0.prev?chk(s0.prevOk,`${esc(s0.prev.n)} learned`):''}
+    ${chk(s0.deed,`${n.g[1].toLocaleString('en-US')} ${esc(tUnit(n.g[0]))} <span class="sub">· ${Math.min(s0.gv,n.g[1]).toLocaleString('en-US')} so far</span>`)}${s0.deed?'':`<div class="tt-bar"><u style="width:${Math.min(100,s0.gv/n.g[1]*100)}%"></u></div>`}`;
+  const ab=n.fx.ab&&s0.r?(()=>{ const ready=tAbReady(id), l=tAbLast(id); return `<button class="btn" style="width:100%;justify-content:center;margin-top:12px" ${ready?`onclick="tUse('${id}')"`:'disabled'}>${ready?`⚡ Activate ${esc(n.n)}`:`Recharging · ready ${nice(addDays(l,n.fx.cd))}`}</button>${l?`<div class="sub" style="text-align:center;margin-top:6px">Last used ${nice(l)} · ${(TT_().ab[id]||[]).length}× total</div>`:''}`; })():'';
+  gSheet(`<div class="tt-sh" style="--c:${A.c}"><button class="linkbtn" onclick="areaOpen('${n.a}')">‹ ${esc(A.n)} tree</button>
+    <div class="tt-big ${s0.cls} ${n.fx.ab?'ab':''}"><span>${n.ic}</span></div><span class="tag" style="display:block;text-align:center">${br[1]} ${esc(br[0])} · ${n.t===5?'capstone':'tier '+n.t}${n.fx.ab?' · ability':''}</span>
+    <h2 class="g-sh-t" style="text-align:center;margin-top:4px">${esc(n.n)}</h2>${n.r>1?`<div class="tt-pips big">${Array.from({length:n.r},(_,i)=>`<u class="${i<s0.r?'on':''}"></u>`).join('')}</div>`:''}
+    <div class="tt-eff">${esc(tDesc(n,Math.max(1,s0.r)))}${n.r>1&&s0.r<n.r&&s0.r>0?`<div class="sub">Next rank: ${esc(tDesc(n,s0.r+1))}</div>`:''}${tGift(id)?'<div class="sub">Kept from your old perks — free</div>':''}</div>
+    ${reqs?`<div class="tag" style="margin:14px 0 6px">${s0.r?'Next rank needs':'Needs'}</div>${reqs}`:''}
+    ${s0.r<n.r?`<button class="btn" style="width:100%;justify-content:center;margin-top:14px" ${s0.can?`onclick="tLearn('${id}')"`:'disabled'}>${s0.can?`Learn${s0.r?' next rank':''} · 1 point`:s0.deed?'Not yet':'Do the work first'}</button>`:`<div class="tt-maxed">${s0.r?'MAXED':''}</div>`}${ab}</div>`); }
+function tHub(){ const rows=AREAS.map(A=>{ const I=areaInfo(A.k), f=tFree(A.k), sp=tSpec(A.k), own=TTREES[A.k].nodes.filter(n=>tRank(n.id)).length;
+    return `<button class="tt-hrow" style="--c:${A.c}" onclick="tAreaTab='tree';areaOpen('${A.k}')"><b>${esc(A.n)}</b><span>LV ${I.lvl} · ${esc(I.rank||'')}${sp?` · ${sp[1]} ${esc(sp[0])}`:''}</span><small>${own}/13 talents</small>${f?`<em>${f}</em>`:'<i>›</i>'}</button>`; }).join('');
+  const tot=AREAS.reduce((s,A)=>s+tFree(A.k),0);
+  return `<div class="tt-sh"><span class="tag">Skills</span><h2 class="g-sh-t">Your talent trees</h2><div class="sub" style="margin-bottom:12px">Each area earns points from its own feats — real progress only. Spend them to shape who you’re becoming.${tot?` <b style="color:var(--gold)">${tot} to spend.</b>`:''}</div>
+    <div class="tt-hub">${rows}</div><button class="btn ghost sm" style="width:100%;justify-content:center;margin-top:12px" onclick="gSheetLive(vRpgStats)">Stats · titles ›</button></div>`; }
 /* ---------- classes ---------- */
 const CLASSES={
   road:{ic:'🧳',name:'Road Warrior',sig:'Travel, casting & set days earn 1.5×',test:k=>jobDay(k)||travelDay(k)||castDay(k),quest:['Days on the road',k=>jobDay(k)||travelDay(k)||castDay(k),12]},
@@ -6660,7 +6831,7 @@ function classFor(q){ return CLASSES[R_().cls[q]]||null; }
 function classOn(k){ const c=classFor(qOf(k)); return c&&k>=RPG_START&&c.test(k)?c:null; }
 function qOf(k){ const [y,m]=k.split('-'); return `${y}-Q${Math.floor((+m-1)/3)+1}`; }
 function classQuest(q){ const c=classFor(q); if(!c) return null; const [a,b]=qRange(q), fn=c.quest[1]||c.test; let n=0; for (let k=a>RPG_START?a:RPG_START; k<=b && k<=TODAY; k=addDays(k,1)) if (fn(k)) n++; return {label:c.quest[0], n, target:c.quest[2]}; }
-function pickClass(q,key){ const R=R_(); if (R.cls[q] && q===THIS_Q && R.clsLock!==q+':open') return toast('Class is locked for this quarter'); R.cls[q]=key; if (R.clsLock===q+':open') delete R.clsLock; commit(); toast(`${CLASSES[key].ic} ${CLASSES[key].name} for ${q}`); if (typeof qcQ!=='undefined' && document.getElementById('qcl')) renderQClose(); }
+function pickClass(q,key){ const R=R_(); if (q>qOf(TT_().mig)) return toast('Classes became specializations — shape yours in Skills'); if (R.cls[q] && q===THIS_Q && R.clsLock!==q+':open') return toast('Class is locked for this quarter'); R.cls[q]=key; if (R.clsLock===q+':open') delete R.clsLock; commit(); toast(`${CLASSES[key].ic} ${CLASSES[key].name} for ${q}`); if (typeof qcQ!=='undefined' && document.getElementById('qcl')) renderQClose(); }
 function classMastery(key){ return Object.entries(R_().cls).filter(([q,c])=>c===key&&S.quarters[q]?.review?.closed).length; }
 
 /* ---------- hardcore ---------- */
@@ -6678,7 +6849,7 @@ function bondOf(p){ let i=0; while (i<BONDS.length-1 && (p.n||1)>=BONDS[i+1][0])
 function partyOn(k){ const P=(S.circle?.people||[]).filter(p=>bondOf(p).i>=2); if (!P.length) return false; let E=[]; try { E=socAll().filter(e=>e.d===k); } catch(e){} return E.some(e=>P.some(p=>(e.where+' '+e.name).toLowerCase().includes(p.name.toLowerCase()))); }
 
 /* ---------- buffs & debuffs ---------- */
-function rpgFx(k){ return rpgC('fx:'+k,()=>{ const F=[], P=perks(), d=S.days[k]||{}, h=d.habits||{}, ago=n=>addDays(k,-n), add=o=>F.push(o);
+function rpgFx(k){ return rpgC('fx:'+k,()=>{ const F=[], P=perksOn(k), d=S.days[k]||{}, h=d.habits||{}, ago=n=>addDays(k,-n), add=o=>F.push(o);
   if (travelDay(k)||travelDay(ago(1))) add({id:'jet',ic:'✈️',n:'Jet-lagged',b:1,m:0,t:'Travel day — one habit keeps your streak'});
   if (jobDay(k)) add({id:'set',ic:'📸',n:'On Set',b:1,m:P.headliner?.2:.1,t:'Shoot day — streak is safe automatically'});
   const payN=P.fortune?3:1; if (S.money.checks.some(c=>c.got&&c.gotOn&&c.gotOn<=k&&c.gotOn>ago(payN))) add({id:'pay',ic:'💸',n:'Payday',b:1,m:.1,t:'A check landed'});
@@ -6693,19 +6864,20 @@ function rpgFx(k){ return rpgC('fx:'+k,()=>{ const F=[], P=perks(), d=S.days[k]|
   if (P.strategist && (d.top3||[]).filter(t=>t.done).length===3) add({id:'strat',ic:'♟️',n:'Strategist',b:1,m:.1,t:'All Top 3 done'});
   if (P.polymath) add({id:'poly',ic:'📚',n:'Polymath',b:1,m:.05,t:'Always on'});
   if (P.sage && d.checkin) add({id:'sage',ic:'🦉',n:'Sage',b:1,m:.05,t:'Checked in'});
+  for (const f of tFxDay(k)) add(f);
   // debuffs
   if (overspentOn(k)) add({id:'over',ic:'🧾',n:'Overspent',b:0,m:P.calm?-.05:-.1,t:`Over $${Math.round((+S.money.s.flexPerCheck||250)/2)} this week. Cure: a no-spend day`});
   const quiet=(hid,n)=>!h[hid] && ![...Array(n)].some((_,i)=>S.days[ago(i+1)]?.habits?.[hid]);
   if (S.habits.some(x=>x.id==='gym') && !P.secondwind && quiet('gym',7)) add({id:'rusty',ic:'🦴',n:'Rusty',b:0,m:-.05,st:{STR:-3},t:'No gym in 7 days. Cure: one session'});
   if (S.habits.some(x=>x.id==='datum') && !P.cobweb && quiet('datum',5)) add({id:'cob',ic:'🕸️',n:'Cobwebs',b:0,m:-.05,st:{DEX:-3},t:'No Datum in 5 days. Cure: any bench or road session'});
-  if (![...Array(21)].some((_,i)=>H.has(ago(i)))) add({id:'hermit',ic:'🏚️',n:'Hermit',b:0,m:-.05,st:{CHA:-3},t:'No hangout in 3 weeks. Cure: log one'});
-  if (wyrmCursed(k)) add({id:'curse',ic:'🐉',n:'Wyrm’s Curse',b:0,m:-.1,t:'A check landed and no tax was set aside. Cure: feed the Wyrm'});
+  if (!P.neveralone && ![...Array(21)].some((_,i)=>H.has(ago(i)))) add({id:'hermit',ic:'🏚️',n:'Hermit',b:0,m:-.05,st:{CHA:-3},t:'No hangout in 3 weeks. Cure: log one'});
+  if (!P.taxward && wyrmCursed(k)) add({id:'curse',ic:'🐉',n:'Wyrm’s Curse',b:0,m:-.1,t:'A check landed and no tax was set aside. Cure: feed the Wyrm'});
   return F; }); }
 function rpgMult(k){ const m=1+rpgFx(k).reduce((a,f)=>a+f.m,0); return Math.max(.5, Math.min(4, m)); }
-function rpgAdj(k, base){ if (k<RPG_START) return 0; let x=Math.round(base*(rpgMult(k)-1)); const P=perks(), d=S.days[k]||{};
-  if (P.ironbody && d.habits?.gym && travelDay(k)) x+=XP.habit; if (P.silver && castDay(k)) x+=40; return x; }
+function rpgAdj(k, base){ if (k<RPG_START) return 0; let x=Math.round(base*(rpgMult(k)-1)); const P=perksOn(k), d=S.days[k]||{};
+  if (P.ironbody && d.habits?.gym && travelDay(k)) x+=XP.habit; if (P.silver && castDay(k)) x+=40; x+=tFlatDay(k); return x; }
 function rpgSafe(k){ if (k<RPG_START || k>TODAY) return false; const d=S.days[k]; const h=d?Object.values(d.habits||{}).filter(Boolean).length:0; return jobDay(k) || ((travelDay(k)||travelDay(addDays(k,-1))) && h>=1); }
-function rpgExtraXP(){ if (!richness(S)) return 0; const R=R_(), P=perks(); let x=0; if (P.quick) x+=Object.entries(S.weeks||{}).filter(([w,v])=>v.review?.done&&addDays(weekMonday(w),6)>=RPG_START).length*25;
+function rpgExtraXP(){ if (!richness(S)) return 0; const R=R_(); let x=0; x+=Object.entries(S.weeks||{}).filter(([w,v])=>v.review?.done&&addDays(weekMonday(w),6)>=RPG_START&&perksOn(addDays(weekMonday(w),6)).quick).length*25;
   const big=Object.keys(R.chests).reduce((a,k)=>a+(/^(vaultkill|wyrmkill)$/.test(k)?500:/^exalted:/.test(k)?250:/^zone:/.test(k)?150:/^hc:/.test(k)?100:0),0); return x+Math.min(2000,big); }
 function statNow(k){ return statVal(k)+rpgFx(TODAY).reduce((a,f)=>a+((f.st||{})[k]||0),0); }
 
@@ -6881,7 +7053,7 @@ function goldEarned(){ return rpgC('goldE',()=>{ const B={}, add=(k,n)=>{ if (n>
 const goldSpent=()=>(R_().spent||[]).reduce((a,x)=>a+(+x.cost||0),0);
 function goldNow(){ return Math.max(0, Object.values(goldEarned()).reduce((a,b)=>a+b,0) - goldSpent()); }
 // ---- shop ----
-const SHOP=[{id:'shield',ic:'🛡️',n:'Streak shield',d:'Covers one missed day so your streak holds. Hold up to 3.',cost:150,g:'p'},{id:'respec',ic:'🔄',n:'Skill-point reset',d:'Refund every stat point and spend them again.',cost:200,g:'p'},
+const SHOP=[{id:'shield',ic:'🛡️',n:'Streak shield',d:'Covers one missed day so your streak holds. Hold up to 3.',cost:150,g:'p'},{id:'respec',ic:'🔄',n:'Talent reset',d:'Refund every talent point and spend them again. XP you already earned stays.',cost:200,g:'p'},
   {id:'xp2',ic:'⚡',n:'Double XP today',d:'Everything you log today earns 2× XP.',cost:250,g:'p'},
   {id:'chest',ic:'🎁',n:'Open a chest now',d:'A loot chest lands in your inbox right away.',cost:200,g:'p'},
   {id:'bomb',ic:'🧨',n:'Boss bomb',d:'25 damage to a boss of your choice this month.',cost:350,g:'p'},
@@ -6894,12 +7066,12 @@ const SHOP=[{id:'shield',ic:'🛡️',n:'Streak shield',d:'Covers one missed day
   {id:'rw_big',ic:'🛍️',n:'Big treat under $150',d:'The bigger thing. Saved up for it.',cost:2500,g:'r'}];
 const shieldsBought=()=>(R_().spent||[]).filter(x=>x.item==='shield').length;
 function shopBuy(id){ const it=SHOP.find(x=>x.id===id); if (!it) return; if (goldNow()<it.cost) return toast(`Need ${it.cost-goldNow()} more 💰`);
-  if (id==='shield' && shieldsLeft()>=3) return toast('You already hold 3 shields');
-  if (id==='respec' && !Object.values(R_().pts||{}).some(v=>+v>0)) return toast('No points spent yet — nothing to reset');
+  if (id==='shield' && shieldsLeft()>=shieldCap()) return toast(`You already hold ${shieldCap()} shields`);
+  if (id==='respec' && !AREAS.some(A=>tCost(A.k)>0)) return toast('No talent points spent yet — nothing to reset');
   if (id==='xp2' && (R_().spent||[]).some(x=>x.item==='xp2'&&x.d===TODAY)) return toast('Double XP is already on today');
   if (id==='reroll'){ const q=weekQ(isoWeek(TODAY)); if (!q) return toast('No weekly quest yet'); if (q.done) return toast('This week’s quest is already done'); }
   if (id==='bomb') return bombPick();
-  const R=R_(); (R.spent ||= []).push({d:TODAY, item:id, cost:it.cost}); if (id==='respec') R.pts={};
+  const R=R_(); (R.spent ||= []).push({d:TODAY, item:id, cost:it.cost}); if (id==='respec') tRespec();
   if (id==='chest') chestGive('shop'+Date.now(), 'Shop chest', 0);
   if (id==='reroll'){ const q=weekQ(isoWeek(TODAY)), O=mqOpts().filter(t=>'💰 '+t!==q.text); if (O.length) q.text='💰 '+O[Math.floor(Math.random()*O.length)]; }
   commit({skipXp:true});
@@ -6998,23 +7170,23 @@ function vCity(){ const D=hqData(), CY=hqCity(D), B=cityBosses(), Q=questLogData
 
 /* ---------- UI: Stats tab ---------- */
 function vRpgStats(){ const R=R_(), free=ptsFree(), P=perks(), F=rpgFx(TODAY), cls=classFor(THIS_Q), cq=classQuest(THIS_Q), T=titlesAll(), open=R.respec===THIS_Q+':open';
-  const rows=STATS.map(([k,ic,name,src])=>{ const base=rpgBase()[k], pt=+R.pts[k]||0, now=statNow(k), mod=now-base-pt, nx=PERKS[k].find(p=>statVal(k)<p[0]);
+  const rows=STATS.map(([k,ic,name,src])=>{ const base=rpgBase()[k], pt=tStatPts(k), now=statNow(k), mod=now-base-pt, nx=null;
     return `<div class="st-row"><span class="st-ic">${ic}</span><div class="st-m"><div class="row between"><b>${k} <span class="sub" style="font-weight:500">${name}</span></b><b class="num" style="${mod<0?'color:var(--bad)':mod>0?'color:var(--good)':''}">${now}${mod?` <small>(${mod>0?'+':''}${mod})</small>`:''}</b></div>
-      <span class="st-bar"><b style="width:${Math.min(100,base/40*100)}%"></b><i style="width:${Math.min(100,pt/40*100)}%"></i></span><small class="sub">${esc(src)}${nx?` · ${nx[2]} at ${nx[0]}`:' · all perks'}</small></div>
-      <div class="st-btn"><button class="iconbtn" onclick="statAdd('${k}',1)" ${free?'':'disabled'} aria-label="Add point to ${k}">＋</button>${open&&pt?`<button class="iconbtn" onclick="statAdd('${k}',-1)" aria-label="Remove point">−</button>`:''}</div></div>`; }).join('');
-  const perkHtml=STATS.map(([k,ic])=>PERKS[k].map(([lv,id,n,t])=>`<div class="perk ${P[id]?'on':''}"><span>${P[id]?ic:'🔒'}</span><div><b>${esc(n)}</b><small>${k} ${lv} · ${esc(t)}</small></div></div>`).join('')).join('');
+      <span class="st-bar"><b style="width:${Math.min(100,base/40*100)}%"></b><i style="width:${Math.min(100,pt/40*100)}%"></i></span><small class="sub">${esc(src)}${pt?` · +${pt} from ${T_STAT[k].map(a=>AREAS.find(x=>x.k===a).n).join(' & ')} talents`:''}</small></div>
+      </div>`; }).join('');
+
   return `
-  <div class="card sec"><div class="hdr"><h2>Stats</h2><span class="chip" style="${free?'background:var(--gold);color:#1a1200':''}">${free} point${free===1?'':'s'} to spend</span></div>
-    <div class="help" style="margin:-4px 0 10px">Real life sets the base. Each level gives 1 point — points are locked in until a Quarter Close respec.</div>
+  <div class="card sec"><div class="hdr"><h2>Stats</h2><button class="chip" style="border:0;cursor:pointer;${free?'background:var(--gold);color:#1a1200':''}" onclick="gSheetLive(tHub)">🌳 ${free} talent point${free===1?'':'s'}</button></div>
+    <div class="help" style="margin:-4px 0 10px">Real life sets the base; talents you take in each area add on top.</div>
     <div class="stack" style="gap:12px">${rows}</div></div>
   <div class="card sec"><div class="hdr"><h2>Class · ${THIS_Q}</h2>${cls?`<span class="chip">${cls.ic} ${cls.name}</span>`:''}</div>
     ${cls?`<div class="sub" style="margin-bottom:8px">${esc(cls.sig)}</div>${cq?`<div class="row between" style="font-size:13px"><span>🗡️ Class quest · ${esc(cq.label)}</span><b class="num">${cq.n}/${cq.target}</b></div><span class="st-bar" style="margin-top:6px"><b style="width:${Math.min(100,cq.n/cq.target*100)}%"></b></span>`:''}`
       :`<div class="help keep" style="margin-bottom:10px">Pick one for the rest of this quarter. It locks until Quarter Close.</div>${classPickHtml(THIS_Q)}`}
     <div class="cls-m">${Object.entries(CLASSES).map(([k,c])=>`<span>${c.ic} ${'★'.repeat(classMastery(k))||'<i class="sub">no stars</i>'}</span>`).join('')}</div></div>
-  <div class="card sec">${infold('rpgperks','Perks',`${Object.keys(P).length}/18 unlocked`,`<div class="perks">${perkHtml}</div>`)}</div>
+
   <div class="card sec"><div class="hdr"><h2>Title</h2><span class="sub">${T.filter(t=>t[2]).length}/${T.length}</span></div>
     ${(()=>{ const btn=([t,how,ok])=>`<button class="ttl ${ok?'':'lock'} ${titleNow()===t?'on':''}" ${ok?`onclick="titleSet(${JSON.stringify(t).replace(/"/g,'&quot;')})"`:'disabled'} title="${esc(how)}"><b>${ok?esc(t):'???'}</b><small>${esc(how)}</small></button>`, U=T.filter(x=>x[2]), Lk=T.filter(x=>!x[2]); return `<div class="titles">${U.map(btn).join('')}</div>${Lk.length?`<details class="ttl-more"><summary>${Lk.length} locked</summary><div class="titles">${Lk.map(btn).join('')}</div></details>`:''}`; })()}</div>`; }
-function classPickHtml(q){ const cur=R_().cls[q]; return `<div class="cls-pick">${Object.entries(CLASSES).map(([k,c])=>`<button class="${cur===k?'on':''}" onclick="pickClass('${q}','${k}')"><span>${c.ic}</span><b>${c.name}</b><small>${esc(c.sig)}</small></button>`).join('')}</div>`; }
+function classPickHtml(q){ const cur=R_().cls[q]; if (q>qOf(TT_().mig)) return `<button class="btn ghost sm" style="width:100%;justify-content:center" onclick="gSheetLive(tHub)">🌳 Your specializations live in Skills ›</button>`; return `<div class="cls-pick">${Object.entries(CLASSES).map(([k,c])=>`<button class="${cur===k?'on':''}" onclick="pickClass('${q}','${k}')"><span>${c.ic}</span><b>${c.name}</b><small>${esc(c.sig)}</small></button>`).join('')}</div>`; }
 
 /* ---------- UI: Cards (collection) ---------- */
 function vCards(){ const R=R_(), F=factions().list, caught=F.filter(f=>f.jobs>0), seen=F.filter(f=>!f.jobs);
@@ -9452,7 +9624,7 @@ function statSheet(){ try {
   return `<div class="card sec cs"><div class="cs-t"><span>&gt; CHARACTER</span><small>last 30 days</small></div>${csHead('')}${csRadar(A)}${csAttrs(A)}
     <div class="cs-note">Strongest: <b style="color:${top.c}">${top.n}</b> · Weakest: <b style="color:${low.c}">${low.n}</b> — ${esc(low.sub)}</div>
     ${csTiles([[String(dailyStreak()),'day streak',CS_COL.grillz],[String(xw),'XP this week',CS_COL.financial],[String(q),'quests · 7d',CS_COL.content]])}
-    <div class="cs-links"><button onclick="gSheetLive(vRpgStats)">🧬 Stats · perks · class · titles${ptsFree()?`<i>${ptsFree()} pt${ptsFree()===1?'':'s'}</i>`:''}</button><button onclick="gSheetLive(trophiesBody)">🏆 Trophies</button><button onclick="questLogOpen()">📜 Quest log</button><button onclick="shopOpen()">💰 Shop</button><button onclick="stMode='settings';setTab='trophies';render()">🃏 Cards & loot</button></div></div>`;
+    <div class="cs-links"><button onclick="gSheetLive(tHub)">🌳 Skills · stats · titles${ptsFree()?`<i>${ptsFree()} pt${ptsFree()===1?'':'s'}</i>`:''}</button><button onclick="gSheetLive(trophiesBody)">🏆 Trophies</button><button onclick="questLogOpen()">📜 Quest log</button><button onclick="shopOpen()">💰 Shop</button><button onclick="stMode='settings';setTab='trophies';render()">🃏 Cards & loot</button></div></div>`;
   } catch(e){ console.warn('stat sheet',e); return ''; } }
 
 /* ===================== goal rings (b182): week · quarter · year at a glance ===================== */
@@ -9976,10 +10148,11 @@ let skArea=null;
 function areaOpen(k){ const A=areaInfo(k); if(!A) return; skArea=k; if (!A.trees.includes(skTree)) skTree=A.trees[0]; areaSheet(); }
 function areaSheet(){ const A=areaInfo(skArea); if(!A) return; const st=(()=>{ try { return statAttrs().find(x=>x.n===A.k); } catch(e){ return null; } })();
   gSheet(`<div class="ar-hd" style="--c:${A.c}"><div><small>${esc(A.n.toUpperCase())}</small><h2 class="g-sh-t" style="margin:0">${esc(A.rank)}</h2></div><span class="ar-lv">LV ${A.lvl}</span></div>
-    <div class="ar-row"><span>Skills unlocked</span><b class="num">${A.on}/${A.tot}</b></div>${A.toNext>0?`<small class="sub">${A.toNext} more to LV ${A.lvl+1}${A.next?` · closest: ${esc(A.next.name)} (${Math.round(A.next.pct*100)}%)`:''}</small>`:'<small class="sub">Max level</small>'}
+    <div class="ar-row"><span>Feats</span><b class="num">${A.on}/${A.tot}</b></div>${A.toNext>0?`<small class="sub">${A.toNext} more to LV ${A.lvl+1}${A.next?` · closest: ${esc(A.next.name)} (${Math.round(A.next.pct*100)}%)`:''}</small>`:'<small class="sub">Max level</small>'}
     ${st?`<div class="ar-row"><span>Last 30 days</span><b class="num">${st.v}%</b></div><small class="sub">${esc(st.sub)}</small>`:''}
     ${(AREA_VIEW[view]===A.k)?'':`<button class="btn ghost sm" style="margin:10px 0 4px" onclick="gSheetClose();${A.go}">Go to ${esc(A.n==='Social'?'Circle':A.n==='Mind'?'Today':A.n==='Body'?'Gym':A.n)} ›</button>`}
-    ${areaExtra(A.k)}${vSkills()}`); document.querySelector('#g-sheet .g-sheet')?.classList.add('ar-sheet'); }
+    ${areaExtra(A.k)}<div class="seg tt-seg" role="tablist" style="margin:14px 0 10px"><button role="tab" aria-selected="${tAreaTab==='tree'}" class="${tAreaTab==='tree'?'on':''}" onclick="tAreaTab='tree';areaSheet()">🌳 Talents${tFree(A.k)?` · ${tFree(A.k)}`:''}</button><button role="tab" aria-selected="${tAreaTab!=='tree'}" class="${tAreaTab!=='tree'?'on':''}" onclick="tAreaTab='feats';areaSheet()">🏅 Feats</button></div>
+    ${tAreaTab==='tree'?tTree(A.k)+'<div class="help" style="margin-top:8px">Feats pay the points; each talent also needs a real deed. Tap a node.</div>':vSkills()}`); document.querySelector('#g-sheet .g-sheet')?.classList.add('ar-sheet'); }
 
 /* ===================== automations (b185): things the app now just does ===================== */
 const AUTO_LOG = (S0=>S0)(null);
@@ -10080,7 +10253,7 @@ window.tegaNativeSync = ()=>liveRefresh('resume');
 // every section belongs to one of the 7 areas; its chip opens that area's level + skill trees
 const AREA_VIEW={learn:'MIND',model:'MODEL',datum:'DATUM',content:'CONTENT',gym:'BODY',money:'MONEY',social:'SOCIAL'};
 function areaChip(k){ try { const A=areaInfo(k); if(!A) return ''; const span=A.toNext>0?(AREA_STEPS[A.lvl]-(AREA_STEPS[A.lvl-1]||0)):1, got=A.toNext>0?span-A.toNext:1;
-  return `<button class="ar-chip sec" style="--c:${A.c}" onclick="areaOpen('${k}')" aria-label="${esc(A.n)} level ${A.lvl}, open skill trees"><b>${A.k}</b><span class="num">LV ${A.lvl}</span><small>${esc(k==='money'?(()=>{ try { const R=moneyRank(); return R.r[1]; } catch(e){ return A.rank||''; } })():(A.rank||''))}</small><i><u style="width:${Math.round(got/span*100)}%"></u></i><em>›</em></button>`; } catch(e){ return ''; } }
+  return `<button class="ar-chip sec" style="--c:${A.c}" onclick="areaOpen('${k}')" aria-label="${esc(A.n)} level ${A.lvl}, open skill trees"><b>${A.k}</b><span class="num">LV ${A.lvl}</span><small>${esc(k==='money'?(()=>{ try { const R=moneyRank(); return R.r[1]; } catch(e){ return A.rank||''; } })():(A.rank||''))}${tFree(k)?` · <b class="tt-dot">${tFree(k)} pt${tFree(k)===1?'':'s'}</b>`:''}</small><i><u style="width:${Math.round(got/span*100)}%"></u></i><em>›</em></button>`; } catch(e){ return ''; } }
 function statPick(html, titles){ const t=document.createElement('template'); t.innerHTML=html; return [...t.content.children].filter(e=>titles.includes((e.querySelector('h2')?.textContent||'').trim())).map(e=>e.outerHTML).join(''); }
 function statDrop(html, titles){ const t=document.createElement('template'); t.innerHTML=html; return [...t.content.children].filter(e=>!titles.includes((e.querySelector('h2')?.textContent||'').trim())).map(e=>e.outerHTML).join(''); }
 // stats that belong to one area live in that area's sheet, not on Character
@@ -10962,6 +11135,7 @@ const ABOSS={
 const monthDays = m => new Date(+m.slice(0,4), +m.slice(5,7), 0).getDate();
 function aBossEvents(k, m){ const E=[], inM=d=>d&&String(d).slice(0,7)===m, past=d=>d<=TODAY;
   for (const x of (R_().spent||[])) if (x.item==='bomb' && x.k===k && inM(x.d)) E.push({d:x.d, dmg:25, l:'Boss bomb 🧨', crit:1});
+  try { for (const x of TT_().bombs) if (x.k===k && inM(x.d)) E.push({d:x.d, dmg:25, l:'Talent bomb ⚡', crit:1}); } catch(e){}
   if (k==='datum'){ const D=ensureDatum(); for (const p of D.prototypes||[]){ for (const l of p.log||[]) if (l.kind==='session' && inM(l.d) && (+l.mins||0)>0) E.push({d:l.d, dmg:Math.round((+l.mins||0)/60*12), l:`Bench ${fmtMins(+l.mins||0)}`}); for (const [st,d] of Object.entries(p.stageAt||{})) if (inM(d)) E.push({d, dmg:20, l:`${p.name||'Piece'} → ${st}`}); }
     for (const o of D.orders||[]) if (inM(o.delivered)) E.push({d:o.delivered, dmg:40, l:`Delivered: ${o.who||'order'}`, crit:1});
     const sd=[...new Set(E.filter(e=>/^Bench/.test(e.l)).map(e=>e.d))].sort(); heals(E, m, sd, 7, 15, 'Cold Bench'); }
@@ -10986,6 +11160,7 @@ function aBossEvents(k, m){ const E=[], inM=d=>d&&String(d).slice(0,7)===m, past
       for (const p of Object.values(x.proofs||{})) if (inM(p.done)) E.push({d:p.done, dmg:8, l:`Proof of skill · ${x.name}`, crit:1}); }
     for (const [d,r] of Object.entries((S.learn||{}).rev||{})) if (inM(d) && (+r.n||0)>=5) E.push({d, dmg:2, l:`${r.n} flashcards`});
     const first=m+'-01', last=m===TODAY.slice(0,7)?addDays(TODAY,-1):m+'-'+monthDays(m); for (let d=first; d<=last; d=addDays(d,1)) if (d>='2026-10-01' && !(S.days[d]||{}).checkin) E.push({d, dmg:-3, l:'Lost Day', heal:1}); }
+  try { for (const e of E) if (e.dmg>0 && !/bomb/.test(e.l)){ const mu=tBossMult(k,e.d); if (mu>1) e.dmg=Math.round(e.dmg*mu); } } catch(e){}
   return E.filter(e=>e.d<=TODAY && e.dmg).sort((a,b)=>b.d.localeCompare(a.d)); }
 function heals(E, m, dates, gap, amt, label){ const first=m+'-01', end=m===TODAY.slice(0,7)?TODAY:m+'-'+monthDays(m); let lastHit=dates.filter(d=>d<first).pop()||addDays(first,-1);
   const inside=dates.filter(d=>d>=first&&d<=end); let cur=first; for (const d of [...inside, addDays(end,1)]){ let k=addDays(lastHit,gap); while (k<d && k<=end){ if (k>=first && k>='2026-10-01') E.push({d:k, dmg:-amt, l:label, heal:1}); k=addDays(k,gap); } lastHit=d; } }

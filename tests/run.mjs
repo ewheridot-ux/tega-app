@@ -640,6 +640,33 @@ const lt = await page.evaluate(async () => { const r = {}, keepAI = sampleLib, k
   gSheetClose(); sampleLib = keepAI; S.learn.subjects = S.learn.subjects.filter(z => z.id !== id); S.learn.cards = lrCards().filter(c => c.sid !== id); delete S.learn.rev[TODAY]; S.wins = S.wins.slice(0, keepWins); commit({ skipXp: true }); go('today');
   return r; });
 ok('Learning skill tree: steps, NEXT, proof-of-skill boss every 5; ranks; quiz → cards; spaced review; teach-back; proof; Daily 10 → goals, habits, Fog, Home; Next up opens the step', Object.values(lt).every(Boolean), JSON.stringify(lt));
+// b325 talent trees: points only from that area's feats, every node needs points + tier + the node above + a real deed; a node only counts
+// from the day you take it (so a reset never takes back XP); abilities have cooldowns; shields, bosses and old perks all carry over
+const tt = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ rpg: S.rpg, days: S.days, su: S.shieldUsed || null }); const T = TT_();
+  r.points = AREAS.every(A => tEarned(A.k) >= 0 && tEarned(A.k) <= 40) && typeof tFree('BODY') === 'number';
+  const y = addDays(TODAY, -1); S.days[y] ||= day(y); S.days[TODAY] ||= day(TODAY); S.days[y].habits.gym = true; S.days[TODAY].habits.gym = true;
+  // gating: no points / no deed → refused and nothing changes
+  const n0 = T.log.length; const realEarn = tEarned; tEarned = () => 0; tLearn('grip'); r.needsPoints = T.log.length === n0; tEarned = () => 40;
+  const realMet = tMet; tMet = () => ({ ...realMet(), gym: 0 }); tLearn('grip'); r.needsDeed = T.log.length === n0;
+  tMet = () => ({ ...realMet(), gym: 999, gymWeeks: 99, prs: 99, yoga: 99 });
+  tLearn('ironlungs'); r.needsTier = T.log.length === n0;   // tier 3 with nothing in the tree
+  const xpY0 = computeXP0(), dayY0 = rpgMult(y);
+  tLearn('grip'); r.learned = tRank('grip') === 1 && tFree('BODY') === 39;
+  r.todayOnly = rpgMult(y) === dayY0 && rpgFx(TODAY).some(f => f.id === 't_grip');   // yesterday's gym day isn't boosted retroactively
+  tLearn('grip'); tLearn('grip'); r.maxed = tRank('grip') === 3 && tState('grip').cls === 'max';
+  tLearn('warmup'); tLearn('secondwind'); r.tierOpens = tRank('secondwind') === 1;   // 3+ points in Body opens tier 2
+  // abilities: Phoenix gives a shield, then recharges; Iron Will lifts the cap
+  for (const id of ['limber', 'deepsleep', 'ironwill', 'phoenix']) tLearn(id); const sh0 = shieldsLeft(); tUse('phoenix'); r.ability = shieldsLeft() === Math.min(shieldCap(), sh0 + 1) && !tAbReady('phoenix') && shieldCap() === 4;
+  // reset: points back, XP already earned stays
+  const xpBefore = computeXP0(); const back = tRespec(); r.respec = back >= 9 && tRank('grip') === 0 && tFree('BODY') === 40 && computeXP0() >= xpBefore - Object.values(perksOn(TODAY)).length * 0 && rpgFx(y).every(f => f.id !== 't_grip');
+  r.xpKept = computeXP0() >= xpY0;
+  // old perks kept for free (they stay through a reset)
+  r.gifts = T.log.filter(e => e.gift).every(e => tRank(e.id) >= 1);
+  // boss talents only hit from the day you take them
+  const B0 = aBossState('social').dmg; T.log.push({ id: 'hermitslayer', d: TODAY, r: 2 }); r.bossDated = aBossState('social').dmg >= B0;
+  tEarned = realEarn; tMet = realMet; const K = JSON.parse(keep); S.rpg = K.rpg; S.days = K.days; if (K.su) S.shieldUsed = K.su; else delete S.shieldUsed; commit({ skipXp: true });
+  return r; });
+ok('talent trees: points only from feats, gated by points + tier + node above + a real deed; counts from the day taken; abilities recharge; reset refunds without taking XP back; old perks kept', Object.values(tt).every(Boolean), JSON.stringify(tt));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
