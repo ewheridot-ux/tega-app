@@ -1,5 +1,5 @@
 <title>Tega.exe</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;600;800&family=Rajdhani:wght@500;600;700&family=Unbounded:wght@500;700;800&family=Press+Start+2P&family=VT323&family=Archivo:wght@500;700;900&family=Space+Mono:wght@400;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Caveat:wght@600;700&family=Anton&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;600;800&family=Rajdhani:wght@500;600;700&family=Unbounded:wght@500;700;800&family=Press+Start+2P&family=VT323&family=Pixelify+Sans:wght@400;600;700&family=Silkscreen:wght@400;700&family=DotGothic16&family=Jacquard+12&family=Cinzel:wght@600;800&family=Archivo:wght@500;700;900&family=Space+Mono:wght@400;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Caveat:wght@600;700&family=Anton&display=swap">
 <style>
 
 /* ===== tokens: dark-first (the brief: Threads / Cash App / Instagram) ===== */
@@ -607,6 +607,83 @@ html.kb-open .modal .card{padding-bottom:16px}
 .ch-sk .tt{margin:0 -4px}
 .ch-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.ch-tile{position:relative;display:grid;gap:2px;justify-items:center;text-align:center;border:0;border-radius:14px;padding:12px 6px;background:var(--card);color:var(--fg);cursor:pointer;font:inherit}
 .ch-tile span{font-size:22px}.ch-tile b{font-size:12.5px}.ch-tile small{font-size:11px;color:var(--muted)}.ch-tile i{position:absolute;top:6px;right:6px;font-style:normal;background:#ffd23f;color:#1a1300;border-radius:99px;padding:0 6px;font-size:10.5px;font-weight:800}
+/* b327: talent tree styles */
+.tt[data-ts]:not([data-ts=arcade]){font-size-adjust:none;background-size:auto!important}.tt[data-ts]:not([data-ts=arcade]) *{word-spacing:normal}
+.tt[data-ts=jrpg] .tt-n{border-radius:10px!important}.tt[data-ts=stars] .tt-n,.tt[data-ts=dungeon] .tt-n{border-radius:50%!important}.tt[data-ts=gameboy] .tt-n{border-radius:0!important}
+.tt[data-ts=jrpg] .tt-pts{border-radius:8px!important}.tt[data-ts=stars] .tt-pts{border-radius:50%!important}
+.tt-styles{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 0 10px;padding:2px 0}.tt-styles::-webkit-scrollbar{display:none}
+.tt-styles button{flex:none;display:flex;gap:6px;align-items:center;border:0;border-radius:10px;padding:7px 11px;background:var(--card2);color:var(--fg);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;box-shadow:inset 0 0 0 1.5px transparent}
+.tt-styles button.on{box-shadow:inset 0 0 0 1.5px var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--card2))}
+.tt-scroll{overflow-x:auto;margin:4px -12px 0;padding:0 12px;scrollbar-width:thin}.tt-scroll .tt-map{margin:0}.tt-hint{font-size:11px;text-align:right;opacity:.7;margin-top:2px}
+/* — JRPG: a 16-bit menu window — */
+.tt[data-ts=jrpg]{background:linear-gradient(180deg,#3046b8 0%,#18237a 45%,#0d144d 100%);border:3px solid #f4f4ff;border-radius:12px;box-shadow:0 0 0 3px #0d144d,0 0 0 5px #8a93d8,inset 0 0 0 2px #0d144d;padding:14px 12px;font-family:'DotGothic16',var(--vt);color:#fff;background-image:none}
+.tt[data-ts=jrpg]{background:linear-gradient(180deg,#3046b8 0%,#18237a 45%,#0d144d 100%)}
+.tt[data-ts=jrpg] .tt-hud small{font-family:'Pixelify Sans',var(--px);font-size:11px;letter-spacing:.12em;color:#ffe66d}.tt[data-ts=jrpg] .tt-hud b{font-family:'Pixelify Sans',sans-serif;font-size:19px;font-weight:600;text-shadow:2px 2px 0 #0d144d}
+.tt[data-ts=jrpg] .tt-pts{background:#0d144d;border:2px solid #fff;border-radius:8px;box-shadow:none;animation:none}.tt[data-ts=jrpg] .tt-pts b{font-family:'Pixelify Sans';font-size:20px;color:#ffe66d}.tt[data-ts=jrpg] .tt-pts small{font-family:'DotGothic16';color:#c9cdf5}
+.tt[data-ts=jrpg] .tt-heads span{font-family:'Pixelify Sans';font-size:12px;letter-spacing:.06em;color:#fff}.tt[data-ts=jrpg] .tt-heads em{font-family:'DotGothic16';color:#ffe66d}
+.tt[data-ts=jrpg] .tt-map path{stroke:rgba(255,255,255,.28);stroke-width:4;stroke-dasharray:none}.tt[data-ts=jrpg] .tt-map path.half{stroke:#8fa0ff}.tt[data-ts=jrpg] .tt-map path.lit{stroke:#ffe66d;filter:none}
+.tt[data-ts=jrpg] .tt-band{border-top:1px solid rgba(255,255,255,.14)}.tt[data-ts=jrpg] .tt-band span{font-family:'DotGothic16';font-size:11px;letter-spacing:.04em;background:#18237a;color:#8a93d8;top:-10px}.tt[data-ts=jrpg] .tt-band.on span{color:#ffe66d}
+.tt[data-ts=jrpg] .tt-n{border-radius:10px;background:#0d144d;border:3px solid #6d77c4;box-shadow:inset 0 -4px 0 rgba(0,0,0,.3);animation:none}
+.tt[data-ts=jrpg] .tt-n small{font-family:'DotGothic16';font-size:13px;line-height:1.1;background:none;color:#fff;text-shadow:1px 1px 0 #0d144d,-1px -1px 0 #0d144d,1px -1px 0 #0d144d,-1px 1px 0 #0d144d;max-height:2.3em}
+.tt[data-ts=jrpg] .tt-n.max{border-color:#ffe66d;background:#3a2f00}.tt[data-ts=jrpg] .tt-n.part{border-color:#7ee0ff}.tt[data-ts=jrpg] .tt-n.open{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.25)}
+.tt[data-ts=jrpg] .tt-n.open::before{content:'▶';position:absolute;left:-26px;top:50%;transform:translateY(-50%);font-size:16px;color:#fff;animation:ttCur .8s steps(2) infinite}
+.tt[data-ts=jrpg] .tt-n.ab.max,.tt[data-ts=jrpg] .tt-n.ab.part{border-color:#d7a8ff;box-shadow:none;background:#2a1050}.tt[data-ts=jrpg] .tt-n.lk{opacity:.5}.tt[data-ts=jrpg] .tt-n.deed::after{inset:-3px;border-radius:10px;box-shadow:inset 0 0 0 2px rgba(255,200,80,.7)}
+.tt[data-ts=jrpg] .tt-pips u{border-radius:2px}.tt[data-ts=jrpg] .tt-n.cap small{font-family:'Pixelify Sans';font-size:12px}.tt[data-ts=jrpg] .tt-foot{font-family:'DotGothic16';font-size:13px;color:#c9cdf5}
+@keyframes ttCur{50%{transform:translate(4px,-50%)}}
+/* — Stars: a constellation — */
+.tt[data-ts=stars]{border-radius:14px;color:#eef2ff;box-shadow:inset 0 0 0 1px rgba(200,215,255,.22),0 0 0 1px rgba(0,0,0,.4);
+  background-color:#050817;background-image:radial-gradient(1px 1px at 12% 18%,#fff 50%,transparent),radial-gradient(1px 1px at 72% 9%,#fff 50%,transparent),radial-gradient(1.5px 1.5px at 38% 44%,#cfe0ff 50%,transparent),radial-gradient(1px 1px at 88% 61%,#fff 50%,transparent),radial-gradient(1px 1px at 22% 77%,#fff 50%,transparent),radial-gradient(1.5px 1.5px at 61% 86%,#ffe9b8 50%,transparent),radial-gradient(1px 1px at 52% 27%,#fff 50%,transparent),radial-gradient(1px 1px at 6% 52%,#fff 50%,transparent),radial-gradient(1px 1px at 94% 33%,#fff 50%,transparent),radial-gradient(120% 70% at 50% 0%,rgba(90,110,220,.35),transparent 70%),radial-gradient(90% 60% at 50% 100%,color-mix(in srgb,var(--c) 25%,transparent),transparent 70%)}
+.tt[data-ts=stars] .tt-hud small{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.3em;color:#c8d3ff}.tt[data-ts=stars] .tt-hud b{font-family:'Cinzel',serif;font-weight:800;font-size:18px;letter-spacing:.06em}
+.tt[data-ts=stars] .tt-pts{background:none;box-shadow:none;border:1px solid rgba(255,233,168,.5);border-radius:50%;width:58px;height:58px;padding:0;animation:none}.tt[data-ts=stars] .tt-pts b{font-family:'Cinzel';font-size:20px;color:#ffe9a8}.tt[data-ts=stars] .tt-pts small{font-family:'Cinzel';font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#c8d3ff}
+.tt[data-ts=stars] .tt-heads span{font-family:'Cinzel';font-size:10px;letter-spacing:.2em;color:#dfe6ff}.tt[data-ts=stars] .tt-heads em{font-family:'Cinzel'}
+.tt[data-ts=stars] .tt-map path{stroke:rgba(190,205,255,.22);stroke-width:1.5;stroke-dasharray:2 5;shape-rendering:auto}.tt[data-ts=stars] .tt-map path.half{stroke:rgba(190,205,255,.55);stroke-dasharray:none}.tt[data-ts=stars] .tt-map path.lit{stroke:#ffe9a8;stroke-width:2;stroke-dasharray:none;filter:drop-shadow(0 0 4px rgba(255,233,168,.8))}
+.tt[data-ts=stars] .tt-n{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),rgba(255,255,255,.02) 70%);box-shadow:0 0 0 1px rgba(200,215,255,.35);font-size:18px;animation:none}
+.tt[data-ts=stars] .tt-n img.pxe{width:22px;height:22px;opacity:.9}
+.tt[data-ts=stars] .tt-n small{font-family:'Cinzel',serif;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;line-height:1.25;background:none;color:#dfe6ff;text-shadow:0 0 6px #050817,0 0 2px #050817;max-height:2.6em;top:calc(100% + 6px)}
+.tt[data-ts=stars] .tt-n.max{background:radial-gradient(circle,#fff6d8 0%,#ffd76a 30%,rgba(255,200,80,.25) 60%,transparent 72%);box-shadow:0 0 18px 6px rgba(255,220,120,.45)}
+.tt[data-ts=stars] .tt-n.part{background:radial-gradient(circle,#e6f0ff 0%,#8fb4ff 35%,rgba(120,160,255,.2) 62%,transparent 72%);box-shadow:0 0 14px 4px rgba(140,180,255,.4)}
+.tt[data-ts=stars] .tt-n.open{box-shadow:0 0 0 1.5px #fff,0 0 16px 4px rgba(255,255,255,.35);animation:ttTw 1.6s ease-in-out infinite}.tt[data-ts=stars] .tt-n.lk{opacity:.35;filter:none}.tt[data-ts=stars] .tt-n.lk>span{font-size:12px;opacity:.6}
+.tt[data-ts=stars] .tt-n.deed::after{inset:-3px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,200,120,.6)}
+.tt[data-ts=stars] .tt-n.ab.max,.tt[data-ts=stars] .tt-n.ab.part{background:radial-gradient(circle,#f3e6ff 0%,#c49bff 35%,rgba(180,130,255,.2) 62%,transparent 72%);box-shadow:0 0 16px 5px rgba(190,140,255,.45)}
+.tt[data-ts=stars] .tt-ab{border-radius:50%;width:16px;height:16px;font-size:10px;top:-6px;right:-6px}.tt[data-ts=stars] .tt-pips{bottom:-6px}.tt[data-ts=stars] .tt-pips u{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.25)}.tt[data-ts=stars] .tt-pips u.on{background:#ffe9a8}
+.tt[data-ts=stars] .tt-n.cap{width:64px;height:64px}.tt[data-ts=stars] .tt-n.cap small{font-size:12px;font-family:'Cinzel'}.tt[data-ts=stars] .tt-foot{font-family:'Cinzel';font-size:11px;letter-spacing:.08em;color:#aab6e8}
+@keyframes ttTw{50%{box-shadow:0 0 0 1.5px #fff,0 0 6px 1px rgba(255,255,255,.2)}}
+/* — Dungeon: a tree growing out of stone, gems on bark — */
+.tt[data-ts=dungeon]{border:4px double #c9a14a;border-radius:6px;color:#f3e3c0;box-shadow:0 0 0 2px #2a1d0e,inset 0 0 40px rgba(0,0,0,.7);
+  background-color:#17110b;background-image:radial-gradient(80% 50% at 50% 100%,color-mix(in srgb,var(--c) 18%,transparent),transparent 70%),repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 2px,transparent 2px 22px),repeating-linear-gradient(90deg,rgba(0,0,0,.25) 0 2px,transparent 2px 44px)}
+.tt[data-ts=dungeon]::before,.tt[data-ts=dungeon]::after{content:'◆';position:absolute;top:6px;font-size:12px;color:#c9a14a}.tt[data-ts=dungeon]{position:relative}.tt[data-ts=dungeon]::before{left:8px}.tt[data-ts=dungeon]::after{right:8px}
+.tt[data-ts=dungeon] .tt-hud{padding:0 14px}.tt[data-ts=dungeon] .tt-hud small{font-family:'Jacquard 12',serif;font-size:16px;letter-spacing:.06em;color:#c9a14a}.tt[data-ts=dungeon] .tt-hud b{font-family:'Jacquard 12',serif;font-size:26px;font-weight:400;color:#ffe2a0;text-shadow:0 2px 0 #000}
+.tt[data-ts=dungeon] .tt-pts{background:#2a1d0e;box-shadow:0 0 0 2px #c9a14a,0 0 0 4px #2a1d0e;animation:none}.tt[data-ts=dungeon] .tt-pts b{font-family:'Jacquard 12';font-size:26px;color:#ffe2a0}.tt[data-ts=dungeon] .tt-pts small{font-family:'Jacquard 12';font-size:14px;color:#c9a14a}
+.tt[data-ts=dungeon] .tt-heads span{font-family:'Jacquard 12';font-size:17px;letter-spacing:.02em;text-transform:none;color:#f3e3c0}.tt[data-ts=dungeon] .tt-heads em{font-family:'Jacquard 12';font-size:16px;color:#c9a14a}
+.tt[data-ts=dungeon] .tt-map path{stroke:#4a3018;stroke-width:9;stroke-dasharray:none;stroke-linecap:round;shape-rendering:auto}.tt[data-ts=dungeon] .tt-map path.half{stroke:#6b4521}.tt[data-ts=dungeon] .tt-map path.lit{stroke:#b88a3a;filter:drop-shadow(0 0 5px rgba(255,200,90,.5))}
+.tt-ground{position:absolute;left:-12px;right:-12px;bottom:-12px;height:30px;background:linear-gradient(180deg,transparent,#0c0805 60%);border-top:2px solid #3a2714}
+.tt[data-ts=dungeon] .tt-n{width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#3d2c1a,#120c06);border:3px solid #6b5124;box-shadow:inset 0 -4px 0 rgba(0,0,0,.4),0 3px 0 #000;font-size:22px;animation:none}
+.tt[data-ts=dungeon] .tt-n img.pxe{width:26px;height:26px}
+.tt[data-ts=dungeon] .tt-n small{font-family:'Jacquard 12',serif;font-size:17px;line-height:.95;max-width:84px;background:rgba(23,17,11,.85);color:#f3e3c0;padding:1px 6px;border:1px solid #4a3018;max-height:2.3em}
+.tt[data-ts=dungeon] .tt-n.max{border-color:#ffd27a;background:radial-gradient(circle at 35% 30%,#ffe9a8,#c98a1e 55%,#5a3a08);box-shadow:0 0 16px 4px rgba(255,190,80,.45),0 3px 0 #000}
+.tt[data-ts=dungeon] .tt-n.part{border-color:#7fd9c4;background:radial-gradient(circle at 35% 30%,#bff5e6,#2f9a85 55%,#0b3a31)}
+.tt[data-ts=dungeon] .tt-n.open{border-color:#fff2cf;box-shadow:0 0 0 3px rgba(255,226,160,.25),0 0 14px 3px color-mix(in srgb,var(--c) 50%,transparent);animation:ttOpenD 1.4s ease-in-out infinite}
+.tt[data-ts=dungeon] .tt-n.lk{opacity:.45;filter:grayscale(1)}.tt[data-ts=dungeon] .tt-n.deed::after{inset:-6px;border-radius:50%;box-shadow:inset 0 0 0 2px rgba(220,140,40,.7)}
+.tt[data-ts=dungeon] .tt-n.ab.max,.tt[data-ts=dungeon] .tt-n.ab.part{border-color:#d8b3ff;background:radial-gradient(circle at 35% 30%,#f1e2ff,#8a4fd6 55%,#2c0d55);box-shadow:0 0 14px 4px rgba(180,120,255,.45)}
+.tt[data-ts=dungeon] .tt-ab{border-radius:50%;background:#c9a14a;color:#1a1000}.tt[data-ts=dungeon] .tt-pips{bottom:-9px}.tt[data-ts=dungeon] .tt-pips u{background:#3a2714;width:7px;height:5px}.tt[data-ts=dungeon] .tt-pips u.on{background:#ffd27a}
+.tt[data-ts=dungeon] .tt-n.cap{width:70px;height:70px;border-width:4px}.tt[data-ts=dungeon] .tt-n.cap small{font-family:'Jacquard 12';font-size:20px;letter-spacing:0;line-height:1}.tt[data-ts=dungeon] .tt-foot{font-family:'Jacquard 12';font-size:17px;color:#c9a14a}
+@keyframes ttOpenD{50%{box-shadow:0 0 0 3px rgba(255,226,160,.1),0 0 6px 1px color-mix(in srgb,var(--c) 30%,transparent)}}
+/* — Game Boy: 4 shades of green, left → right — */
+.tt[data-ts=gameboy]{background:#9bbc0f;color:#0f380f;border-radius:6px;border:4px solid #0f380f;box-shadow:inset 0 0 0 4px #8bac0f,0 6px 0 #306230;background-image:none}
+.tt[data-ts=gameboy] .tt-hud small{font-family:'Press Start 2P',monospace;font-size:8px;letter-spacing:.06em;color:#306230}.tt[data-ts=gameboy] .tt-hud b{font-family:'Silkscreen',monospace;font-size:17px;font-weight:700;color:#0f380f}
+.tt[data-ts=gameboy] .tt-pts{background:#0f380f;box-shadow:none;border-radius:0;animation:none}.tt[data-ts=gameboy] .tt-pts b{font-family:'Press Start 2P';font-size:15px;color:#9bbc0f}.tt[data-ts=gameboy] .tt-pts small{font-family:'Silkscreen';font-size:11px;color:#8bac0f}
+.tt[data-ts=gameboy] .tt-heads span{font-family:'Silkscreen';font-size:11px;color:#0f380f}.tt[data-ts=gameboy] .tt-heads em{font-family:'Press Start 2P';font-size:9px;color:#306230}
+.tt[data-ts=gameboy] img.pxe{filter:grayscale(1) contrast(1.4) brightness(.9) sepia(1) hue-rotate(40deg) saturate(2.4)}
+.tt[data-ts=gameboy] .tt-map path{stroke:#8bac0f;stroke-width:5;stroke-dasharray:none;filter:none}.tt[data-ts=gameboy] .tt-map path.half{stroke:#306230;stroke-dasharray:5 5}.tt[data-ts=gameboy] .tt-map path.lit{stroke:#0f380f;filter:none}
+.tt[data-ts=gameboy] .tt-n{width:50px;height:50px;background:#8bac0f;border:4px solid #0f380f;box-shadow:4px 4px 0 #306230;color:#0f380f;animation:none}
+.tt[data-ts=gameboy] .tt-n small{font-family:'Silkscreen',monospace;font-size:11px;line-height:1.05;background:none;color:#0f380f;max-width:118px;max-height:2.2em;top:calc(100% + 8px)}
+.tt[data-ts=gameboy] .tt-n.max{background:#0f380f;box-shadow:4px 4px 0 #306230}.tt[data-ts=gameboy] .tt-n.max img.pxe{filter:grayscale(1) contrast(1.4) brightness(1.6) sepia(1) hue-rotate(40deg) saturate(2.4)}
+.tt[data-ts=gameboy] .tt-n.part{background:#306230}.tt[data-ts=gameboy] .tt-n.open{background:#9bbc0f;animation:ttGB .6s steps(2) infinite}.tt[data-ts=gameboy] .tt-n.lk{opacity:.5;filter:none;border-style:dashed}
+.tt[data-ts=gameboy] .tt-n.deed::after{inset:-8px;box-shadow:inset 0 0 0 2px #306230}.tt[data-ts=gameboy] .tt-n.ab.max,.tt[data-ts=gameboy] .tt-n.ab.part{background:#306230;box-shadow:4px 4px 0 #0f380f}
+.tt[data-ts=gameboy] .tt-ab{background:#0f380f;color:#9bbc0f}.tt[data-ts=gameboy] .tt-pips u{background:#8bac0f;outline:1px solid #0f380f}.tt[data-ts=gameboy] .tt-pips u.on{background:#9bbc0f}
+.tt[data-ts=gameboy] .tt-n.cap{width:64px;height:64px}.tt[data-ts=gameboy] .tt-n.cap small{font-family:'Press Start 2P';font-size:8px;line-height:1.5}.tt[data-ts=gameboy] .tt-foot,.tt[data-ts=gameboy] .tt-hint{font-family:'Silkscreen';font-size:11px;color:#306230}
+@keyframes ttGB{50%{background:#0f380f}}
+@media (prefers-reduced-motion:reduce){.tt .tt-n{animation:none!important}}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -2192,7 +2269,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b326';
+const BUILD='b327';
 /* b316: bottom sheets sit above the iPhone keyboard — the sheet follows the visible part of the screen (visualViewport),
    and the field you tap scrolls into view inside it. Before, the keyboard slid over “New quest” and every other sheet. */
 (function(){ const v=window.visualViewport, R=document.documentElement; if (!v) return;
@@ -6809,18 +6886,42 @@ const tStatPts=st=>(T_STAT[st]||[]).reduce((s,a)=>s+tInvested(a),0);
 // ---- views
 let tSel=null, tAreaTab='tree';
 function tSpec(a){ const T=TTREES[a], by=[0,0,0]; for (const n of T.nodes) if (n.b<3) by[n.b]+=tRank(n.id); const mx=Math.max(...by); return mx?T.br[by.indexOf(mx)]:null; }
-function tTree(a){ const T=TTREES[a], A=AREAS.find(x=>x.k===a), free=tFree(a), inv=tInvested(a), X=[18,50,82], Y=t=>88+(t-1)*124+(t===5?22:0), H=Y(5)+96;
+/* b327: five ways to see a talent tree — each its own layout, font and frame. Pick on the Skills tab; it remembers.
+   arcade   — neon columns, pixel frames (Press Start / VT323)
+   jrpg     — a 16-bit RPG menu window: blue gradient, white rounded double border, ▶ cursor (Pixelify Sans / DotGothic16)
+   stars    — a constellation you climb from the bottom up to the capstone star (Cinzel)
+   dungeon  — a living tree growing out of the ground, gems on bark branches, gilded frame (Jacquard 12)
+   gameboy  — a 4-shade green tech tree you scroll left → right (Silkscreen / Press Start) */
+const TT_STYLES=[['arcade','🕹️','Arcade'],['jrpg','🗡️','JRPG'],['stars','✨','Stars'],['dungeon','🏰','Dungeon'],['gameboy','🟩','Game Boy']];
+const ttStyle=()=>TT_STYLES.some(z=>z[0]===S.ttStyle)?S.ttStyle:'arcade';
+function ttSetStyle(k){ S.ttStyle=k; commit({skipXp:true}); }
+function ttLayout(T,sty){ const P={}, E=[]; let H, W=null, kind='step';
+  const prevOf=n=>T.nodes.find(q=>q.b===n.b&&q.t===n.t-1);
+  for (const n of T.nodes){ if (n.t===5){ for (const b of [0,1,2]) E.push([T.nodes.find(q=>q.b===b&&q.t===4), n]); } else if (n.t>1) E.push([prevOf(n), n]); }
+  const jit=(id,r)=>(hashN(id)%(2*r+1))-r;
+  if (sty==='stars'){ kind='line'; const base=[22,50,78]; H=640;
+    for (const n of T.nodes) P[n.id]= n.t===5?{x:50,y:72}:{x:base[n.b]+jit(n.id,7)+(n.b===1?0:(n.b===0?-1:1)*(n.t-1)*2), y:560-(n.t-1)*118+jit(n.id+'y',14)}; }
+  else if (sty==='dungeon'){ kind='curve'; H=650; const X=[[29,23,19,16],[50,50,50,50],[71,77,81,84]];
+    for (const n of T.nodes) P[n.id]= n.t===5?{x:50,y:78}:{x:X[n.b][n.t-1], y:550-(n.t-1)*112};
+    E.unshift(...[0,1,2].map(b=>[{root:1}, T.nodes.find(q=>q.b===b&&q.t===1)])); P.__root={x:50,y:640}; }
+  else if (sty==='gameboy'){ kind='hstep'; W=720; H=372; const X=[62,202,342,482,640];
+    for (const n of T.nodes) P[n.id]= n.t===5?{x:X[4]/W*100,y:186}:{x:X[n.t-1]/W*100, y:66+n.b*120}; }
+  else { const X=[18,50,82], Y=t=>88+(t-1)*124+(t===5?22:0); H=Y(5)+96; for (const n of T.nodes) P[n.id]={x:n.t===5?50:X[n.b], y:Y(n.t)}; P.__Y=Y; }
+  return {P,E,H,W,kind}; }
+function tTree(a){ const T=TTREES[a], A=AREAS.find(x=>x.k===a), free=tFree(a), inv=tInvested(a), sty=ttStyle(), L=ttLayout(T,sty), P=L.P;
   const st=Object.fromEntries(T.nodes.map(n=>[n.id,tState(n.id)]));
-  const lines=[]; for (const n of T.nodes){ if (n.t===5){ for (const b of [0,1,2]){ const z=T.nodes.find(q=>q.b===b&&q.t===4); lines.push(`<path d="M${X[b]} ${Y(4)} V${Y(5)-46} H50 V${Y(5)}" class="${st[z.id].r&&st[n.id].r?'lit':st[z.id].r?'half':''}"/>`); } continue; }
-    if (n.t>1){ const pv=T.nodes.find(q=>q.b===n.b&&q.t===n.t-1); lines.push(`<path d="M${X[n.b]} ${Y(n.t-1)} V${Y(n.t)}" class="${st[pv.id].r&&st[n.id].r?'lit':st[pv.id].r?'half':''}"/>`); } }
-  const bands=[2,3,4,5].map(t=>`<div class="tt-band ${inv>=T_TIER[t]?'on':''}" style="top:${Y(t)-(t===5?62:46)}px"><span>${t===5?'CAPSTONE':'TIER '+t} · ${T_TIER[t]} PTS</span></div>`).join('');
-  const node=n=>{ const s0=st[n.id], x=n.t===5?50:X[n.b], pips=n.r>1?`<i class="tt-pips">${Array.from({length:n.r},(_,i)=>`<u class="${i<s0.r?'on':''}"></u>`).join('')}</i>`:'';
-    return `<button class="tt-n ${s0.cls} ${n.fx.ab?'ab':''} ${n.t===5?'cap':''}" style="left:${x}%;top:${Y(n.t)}px" onclick="tOpen('${n.id}')" aria-label="${esc(n.n)}, ${s0.r}/${n.r}"><span>${s0.cls==='lk'?'🔒':n.ic}</span>${pips}${n.fx.ab?'<b class="tt-ab">⚡</b>':''}<small>${esc(n.n)}</small></button>`; };
-  const spec=tSpec(a);
-  return `<div class="tt" style="--c:${A.c}"><div class="tt-hud"><div><small>${esc(A.n.toUpperCase())} · TALENTS</small><b>${spec?`${spec[1]} ${esc(spec[0])}`:'No specialization yet'}</b></div><div class="tt-pts ${free?'on':''}"><b>${free}</b><small>point${free===1?'':'s'}</small></div></div>
+  const path=(p,q)=>L.kind==='line'?`M${p.x} ${p.y} L${q.x} ${q.y}`:L.kind==='curve'?`M${p.x} ${p.y} C${p.x} ${(p.y+q.y)/2}, ${q.x} ${(p.y+q.y)/2}, ${q.x} ${q.y}`
+    :L.kind==='hstep'?`M${p.x} ${p.y} H${(p.x+q.x)/2} V${q.y} H${q.x}`:(q.y-p.y>130&&p.x!==q.x?`M${p.x} ${p.y} V${q.y-46} H${q.x} V${q.y}`:`M${p.x} ${p.y} V${q.y}`);
+  const lines=L.E.map(([u,v])=>{ const p=u.root?P.__root:P[u.id], q=P[v.id], on=u.root?true:st[u.id].r>0, both=on&&st[v.id].r>0; return `<path d="${path(p,q)}" class="${both?'lit':on?'half':''}"/>`; }).join('');
+  const bands=sty==='arcade'||sty==='jrpg'?[2,3,4,5].map(t=>`<div class="tt-band ${inv>=T_TIER[t]?'on':''}" style="top:${P.__Y(t)-(t===5?62:46)}px"><span>${t===5?'CAPSTONE':'TIER '+t} · ${T_TIER[t]} PTS</span></div>`).join(''):'';
+  const node=n=>{ const s0=st[n.id], p=P[n.id], pips=n.r>1?`<i class="tt-pips">${Array.from({length:n.r},(_,i)=>`<u class="${i<s0.r?'on':''}"></u>`).join('')}</i>`:'';
+    return `<button class="tt-n ${s0.cls} ${n.fx.ab?'ab':''} ${n.t===5?'cap':''}" style="left:${p.x}%;top:${p.y}px" onclick="tOpen('${n.id}')" aria-label="${esc(n.n)}, ${s0.r}/${n.r}"><span>${s0.cls==='lk'?'🔒':n.ic}</span>${pips}${n.fx.ab?'<b class="tt-ab">⚡</b>':''}<small>${esc(n.n)}</small></button>`; };
+  const spec=tSpec(a), map=`<div class="tt-map" style="height:${L.H}px${L.W?`;width:${L.W}px`:''}">${bands}${sty==='dungeon'?'<i class="tt-ground"></i>':''}<svg viewBox="0 0 100 ${L.H}" preserveAspectRatio="none" aria-hidden="true">${lines}</svg>${T.nodes.map(node).join('')}</div>`;
+  return `<div class="tt" data-ts="${sty}" style="--c:${A.c}"><div class="tt-hud"><div><small>${esc(A.n.toUpperCase())} · TALENTS</small><b>${spec?`${spec[1]} ${esc(spec[0])}`:'No specialization yet'}</b></div><div class="tt-pts ${free?'on':''}"><b>${free}</b><small>point${free===1?'':'s'}</small></div></div>
     <div class="tt-heads">${T.br.map(([nm,ic],b)=>`<span><i>${ic}</i>${esc(nm)}<em>${T.nodes.filter(n=>n.b===b).reduce((s,n)=>s+tRank(n.id),0)}</em></span>`).join('')}</div>
-    <div class="tt-map" style="height:${H}px">${bands}<svg viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true">${lines.join('')}</svg>${T.nodes.map(node).join('')}</div>
+    ${L.W?`<div class="tt-scroll">${map}</div><div class="tt-hint">scroll → to the capstone</div>`:map}
     <div class="tt-foot">${tEarned(a)} earned from ${esc(A.n)} feats · ${tCost(a)} spent${T.nodes.some(n=>tGift(n.id))?' · old perks kept free':''}</div></div>`; }
+function ttStylePicker(){ const cur=ttStyle(); return `<div class="tt-styles" role="radiogroup" aria-label="Tree style">${TT_STYLES.map(([k,ic,l])=>`<button role="radio" aria-checked="${cur===k}" class="${cur===k?'on':''}" onclick="ttSetStyle('${k}')"><span>${ic}</span>${l}</button>`).join('')}</div>`; }
 function tOpen(id){ const s0=tState(id), n=s0.n, A=AREAS.find(x=>x.k===n.a), T=TTREES[n.a], br=n.t===5?['Capstone','👑']:T.br[n.b];
   const chk=(ok,t)=>`<div class="tt-req ${ok?'ok':''}"><i>${ok?'✓':'✗'}</i><span>${t}</span></div>`;
   const reqs=s0.r>=n.r?'':`${chk(s0.free>0,`1 ${esc(A.n)} point <span class="sub">· you have ${s0.free}</span>`)}${n.t>1?chk(s0.tierOk,`${s0.need} points already in ${esc(A.n)} <span class="sub">· you have ${s0.inv}</span>`):''}${s0.prev?chk(s0.prevOk,`${esc(s0.prev.n)} learned`):''}
@@ -12466,7 +12567,7 @@ function charSkillsTab(){ const a=AREAS.some(x=>x.k===skArea)?skArea:AREAS[0].k;
   return `<div class="ch-ats sec" role="tablist">${AREAS.map(x=>`<button role="tab" aria-selected="${x.k===a}" class="${x.k===a?'on':''}" style="--c:${x.c}" onclick="skArea='${x.k}';render()">${esc(x.n.split(' ')[0])}${tFree(x.k)?`<i>${tFree(x.k)}</i>`:''}</button>`).join('')}</div>
     <div class="card sec ch-sk"><div class="row between" style="align-items:baseline;margin-bottom:10px"><div><b style="font-size:17px">${esc(A.n)}</b> <span class="sub">LV ${A.lvl} · ${esc(A.rank||'')}</span></div>${go?`<button class="linkbtn" onclick="go('${go}')">Go to ${esc(A.n==='Social'?'Circle':A.n.split(' ')[0])} ›</button>`:''}</div>
       <div class="seg tt-seg" role="tablist" style="margin:0 0 10px"><button role="tab" aria-selected="${tAreaTab==='tree'}" class="${tAreaTab==='tree'?'on':''}" onclick="tAreaTab='tree';render()">🌳 Talents</button><button role="tab" aria-selected="${tAreaTab!=='tree'}" class="${tAreaTab!=='tree'?'on':''}" onclick="tAreaTab='feats';render()">🏅 Feats · ${A.on}/${A.tot}</button></div>
-      ${tAreaTab==='tree'?tTree(a)+`<div class="help" style="margin-top:8px">Feats pay the points (${A.toNext>0?`${A.toNext} more feat${A.toNext===1?'':'s'} to LV ${A.lvl+1}`:'max level'}); each talent also needs a real deed. Tap a node.</div>`:vSkills()}</div>
+      ${tAreaTab==='tree'?ttStylePicker()+tTree(a)+`<div class="help" style="margin-top:8px">Feats pay the points (${A.toNext>0?`${A.toNext} more feat${A.toNext===1?'':'s'} to LV ${A.lvl+1}`:'max level'}); each talent also needs a real deed. Tap a node.</div>`:vSkills()}</div>
     ${areaExtra(a)}
     ${cls?`<div class="card sec"><div class="hdr"><h2>Class · ${THIS_Q}</h2><span class="chip">${cls.ic} ${cls.name}</span></div><div class="sub">${esc(cls.sig)}</div>${cq?`<div class="row between" style="font-size:13px;margin-top:8px"><span>🗡️ Class quest · ${esc(cq.label)}</span><b class="num">${cq.n}/${cq.target}</b></div>`:''}<div class="help" style="margin-top:6px">From next quarter your specializations above do this job.</div></div>`:''}`; }
 function charLookTab(){ if (!['build','custom'].includes(chMode)) chMode='build';
