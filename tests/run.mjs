@@ -116,18 +116,20 @@ const rv = await page.evaluate(async () => {
   return r;
 });
 ok('undo takes the hits back', rv.undo); ok('pops wait while a sheet is open', seed === 1 ? rv.waits : rv.waits && rv.after);  // the public copy keeps an evolution picker open, so pops rightly keep waiting ok('overnight changes don’t pop as cures', rv.overnight);
-// the city: opens from your picture, bosses on buildings, quest board on the fountain
+// b326: your picture opens the Character screen (Overview · Skills · Look · Collection); the city opens from Collection — bosses on buildings, quest board on the fountain
 const cy = await page.evaluate(async () => {
   const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
   document.querySelectorAll('#lvs, .modal, #g-sheet').forEach(e => e.remove());
   document.querySelector('.pfp-sm')?.click(); await w(700);
+  r.char = view === 'evolve' && chTab === 'overview' && document.querySelectorAll('.ch-tabs button').length === 4 && document.querySelectorAll('.ch-row').length === 7;
+  chTab = 'collection'; render(); await w(300); [...document.querySelectorAll('.ch-tile')].find(b => /City/.test(b.textContent))?.click(); await w(700);
   r.view = view; r.markers = document.querySelectorAll('#cy-mk .cy-m').length; r.quest = !!document.querySelector('#cy-mk .cy-qm');
   r.house = !!document.querySelector('.cy-house'); r.board = !!document.querySelector('.cy-board');
   document.querySelector('#cy-mk .cy-qm')?.click(); await w(200); r.qlog = !!document.querySelector('#g-sheet .ql-s'); gSheetClose();
-  go('evolve'); await w(300); r.noDup = !document.querySelector('#view .hq-iso') && !/BOSSES/i.test(document.querySelector('#view')?.innerText.slice(0, 4000) || '');
+  chTab = 'overview'; go('evolve'); await w(300); r.noDup = !document.querySelector('#view .hq-iso') && !/BOSSES/i.test(document.querySelector('#view')?.innerText.slice(0, 4000) || '');
   go('city'); await w(300); return r;
 });
-ok('your picture opens the city', cy.view === 'city', cy.view); ok('bosses float on their buildings', cy.markers >= 3, String(cy.markers));
+ok('your picture opens the Character screen; the city opens from Collection', cy.char && cy.view === 'city', JSON.stringify({ char: cy.char, view: cy.view })); ok('bosses float on their buildings', cy.markers >= 3, String(cy.markers));
 ok('quest board marker on the fountain opens the quest log', cy.quest && cy.qlog); ok('quest board + house cards', cy.board && cy.house);
 ok('town and bosses not repeated on the Character page', cy.noDup);
 // changes made while away pop on the next open
@@ -667,6 +669,27 @@ const tt = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ rpg
   tEarned = realEarn; tMet = realMet; const K = JSON.parse(keep); S.rpg = K.rpg; S.days = K.days; if (K.su) S.shieldUsed = K.su; else delete S.shieldUsed; commit({ skipXp: true });
   return r; });
 ok('talent trees: points only from feats, gated by points + tier + node above + a real deed; counts from the day taken; abilities recharge; reset refunds without taking XP back; old perks kept', Object.values(tt).every(Boolean), JSON.stringify(tt));
+const chs = await page.evaluate(async () => { const w = ms => new Promise(r => setTimeout(r, ms)), r = {};
+  document.querySelectorAll('#lvs, .modal, #g-sheet').forEach(e => e.remove());
+  go('gym'); await w(300); document.querySelector('.ar-chip')?.click(); await w(500);
+  r.chipToTree = view === 'evolve' && chTab === 'skills' && skArea === 'BODY' && !!document.querySelector('#view .tt-map') && !document.getElementById('g-sheet');
+  r.areaTabs = document.querySelectorAll('.ch-ats button').length === 7;
+  document.querySelectorAll('.ch-ats button')[4].click(); await w(300); r.switch = skArea === AREAS[4].k && !!document.querySelector('#view .tt-map');
+  tAreaTab = 'feats'; render(); await w(200); r.feats = !document.querySelector('#view .tt-map') && document.getElementById('view').innerHTML.length > 2000; tAreaTab = 'tree';
+  document.querySelector('#view .tt-n')?.click(); await w(300); const back = [...document.querySelectorAll('#g-sheet .linkbtn')].find(b => /tree/.test(b.textContent)); back?.click(); await w(400);
+  r.nodeBack = !document.getElementById('g-sheet') && chTab === 'skills';
+  charGo('overview'); await w(300); const rows = [...document.querySelectorAll('.ch-row')];
+  r.rows = rows.length === 7 && rows.every(x => /LV \d/.test(x.textContent) && x.querySelector('.ch-bar u'));
+  const ems = [...document.querySelectorAll('.ch-row em')].map(e => e.textContent.trim()); r.stats = ['STR', 'CHA', 'DEX', 'INT', 'WIS', 'LUCK'].every(k => ems.some(t => new RegExp('^' + k + ' \\d+$').test(t))); r.statList = ems.length === 7;
+  r.head = /XP to Lv|Max level/.test(document.querySelector('.ch-hd')?.textContent || '') && !document.querySelector('.ch-chips');   // streak/shields/gold/season stay in the pills only
+  chTab = 'look'; render(); await w(300); r.look = !!document.querySelector('#view .seg') && document.getElementById('view').innerHTML.length > 3000;
+  chTab = 'collection'; render(); await w(300); r.coll = document.querySelectorAll('.ch-tile').length === 6;
+  stMode = 'settings'; setTab = 'trophies'; render(); await w(300); r.oldCards = chTab === 'collection' && stMode === 'progress';
+  stMode = 'settings'; setTab = 'app'; render(); await w(300); r.settings = /Character/.test(document.querySelector('#view .linkbtn')?.textContent || '');
+  stMode = 'progress'; document.querySelector('.pills .pill:nth-child(2), .pills .pill + .pill')?.click(); await w(300);
+  r.lvPill = view === 'evolve';
+  go('today'); return r; });
+ok('Character screen: area chip → its tree on the page; 7 area tabs; feats a tap away; one row per area (level + stat + 30 days); Look, Collection, Settings and old links all land there', Object.values(chs).every(Boolean), JSON.stringify(chs));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
