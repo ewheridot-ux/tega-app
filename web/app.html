@@ -591,6 +591,9 @@ html.kb-open .modal .card{padding-bottom:16px}
 .tt-heads{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:12px;text-align:center}.tt-heads span{display:grid;justify-items:center;gap:1px;font-family:var(--hf);font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--lc)}.tt-heads i{font-style:normal;font-size:18px}.tt-heads em{font-style:normal;font-size:11px;font-weight:600;color:var(--mut,rgba(255,255,255,.5))}
 .tt-map{position:relative;margin:2px -4px 0}.tt-map svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 .tt-map path{fill:none;stroke:var(--ln);stroke-width:var(--lw);stroke-linecap:round;vector-effect:non-scaling-stroke}.tt-map path.trunk{stroke-width:calc(var(--lw) * 2.2)}
+.tt-map path.tw{stroke-width:calc(var(--lw) * .55)}.tt-map path.root{stroke-width:calc(var(--lw) * .8)}.tt-map ellipse.lf{fill:var(--ln);stroke:none}.tt-map ellipse.lf.on{fill:var(--half)}
+.tt .tt-map .tt-halo{position:absolute;left:50%;width:104px;height:104px;transform:translate(-50%,-50%);border-radius:50%!important;border:1px dashed var(--ln);box-shadow:0 0 30px color-mix(in srgb,var(--acc) 14%,transparent);pointer-events:none}
+.tt .tt-n.el small{left:-4px;transform:none;text-align:left}.tt .tt-n.er small{left:auto;right:-4px;transform:none;text-align:right}
 .tt-map path.half{stroke:var(--half)}.tt-map path.lit{stroke:var(--lit);filter:drop-shadow(0 0 5px var(--glow,transparent))}
 html body .app .tt .tt-map button.tt-n.tt-n.tt-n,.tt .tt-map button.tt-n.tt-n{position:absolute;width:var(--sz);height:var(--sz);transform:translate(-50%,-50%);padding:0!important;margin:0;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;color:var(--ic);cursor:pointer;display:grid;place-items:center;z-index:2;-webkit-tap-highlight-color:transparent;min-height:0!important;min-width:0!important}
 .tt .tt-n .sh{position:absolute;inset:0;background:var(--nb);border:var(--nbw) solid var(--nbc);border-radius:var(--rad)!important;transform:rotate(var(--rot));transition:box-shadow .2s}
@@ -613,7 +616,7 @@ html body .app .tt .tt-map button.tt-n.tt-n.tt-n,.tt .tt-map button.tt-n.tt-n{po
 .tt[data-th=money] .tt-n.max .sh{box-shadow:inset 0 0 0 4px rgba(255,255,255,.25),0 0 16px rgba(245,197,66,.6)}
 /* Body — a neon "system" tree: purple energy, diamond nodes */
 .tt[data-th=body]{--bg:radial-gradient(ellipse at 50% 100%,rgba(150,37,255,.32),transparent 55%),#09020a;--ink:#f6e8ff;--acc:#c58bff;--mut:#7c5a94;--ln:rgba(150,37,255,.22);--half:#7d3fc7;--lit:#e4c8ff;--glow:#9625ff;--nb:#120417;--nbc:#3b1652;--rad:6px;--rot:45deg;--sz:44px;--own:linear-gradient(135deg,#5b16a8,#2a0848);--ownb:#e4c8ff;--ownc:#fff;--opn:#c58bff;--deed:#ffcf6b;--ic:#8a62a8;--hf:'Rajdhani',sans-serif;--lf:'Rajdhani',sans-serif;--lsz:13px;--lc:#f6e8ff;--plq:rgba(9,2,10,.85);--lw:3}
-.tt[data-th=body] .tt-hud b,.tt[data-th=body] .tt-n small,.tt[data-th=body] .tt-heads span{text-transform:uppercase;letter-spacing:.06em}
+.tt[data-th=body] .tt-hud b,.tt[data-th=body] .tt-heads span{text-transform:uppercase;letter-spacing:.06em}.tt[data-th=body] .tt-n small{text-transform:uppercase;letter-spacing:.01em;font-size:11.5px;max-width:86px}
 .tt[data-th=body] .tt-map path{filter:drop-shadow(0 0 3px rgba(150,37,255,.5))}
 .tt[data-th=body] .tt-n small{top:calc(100% + 12px)}.tt[data-th=body] .tt-n.cap{--sz:58px}
 /* Modeling — holographic glass: thin light, iridescent nodes */
@@ -636,9 +639,9 @@ html body .app .tt .tt-map button.tt-n.tt-n.tt-n,.tt .tt-map button.tt-n.tt-n{po
 .tt[data-th=street] .tt-n small{text-transform:uppercase;font-weight:800;letter-spacing:.02em}
 .tt[data-th=street] .tt-n.max .sh{box-shadow:3px 3px 0 #000}.tt[data-th=street] .tt-n:nth-child(odd of .tt-n) .sh{--rot:5deg}
 /* Mind — a notebook: ruled paper, inked limbs, hand-drawn rings */
-.tt[data-th=ink]{--bg:repeating-linear-gradient(180deg,transparent 0 27px,rgba(255,154,213,.07) 27px 28px),#15121a;--ink:#f6eef4;--acc:#ff9ad5;--mut:#9a8aa0;--ln:rgba(255,154,213,.2);--half:rgba(255,154,213,.55);--lit:#ff9ad5;--glow:rgba(255,154,213,.6);--nb:#1d1822;--nbc:rgba(255,154,213,.35);--nbw:2px;--rad:46% 54% 50% 48% / 52% 46% 54% 48%;--own:#ff9ad5;--ownb:#fff;--ownc:#2a0f20;--opn:#ff9ad5;--deed:#ffd59a;--ic:#9a8aa0;--hf:'Caveat',cursive;--lf:'Caveat',cursive;--lsz:17px;--lc:#f6eef4;--plq:rgba(21,18,26,.85);--lw:3}
+.tt[data-th=ink]{--bg:repeating-linear-gradient(180deg,transparent 0 27px,rgba(255,154,213,.07) 27px 28px),#15121a;--ink:#f6eef4;--acc:#ff9ad5;--mut:#9a8aa0;--ln:rgba(255,154,213,.2);--half:rgba(255,154,213,.55);--lit:#ff9ad5;--glow:rgba(255,154,213,.6);--nb:#1d1822;--nbc:rgba(255,154,213,.35);--nbw:2px;--rad:46% 54% 50% 48% / 52% 46% 54% 48%;--own:#ff9ad5;--ownb:#fff;--ownc:#2a0f20;--opn:#ff9ad5;--deed:#ffd59a;--ic:#9a8aa0;--hf:'Caveat',cursive;--lf:'Caveat',cursive;--lsz:15px;--lc:#f6eef4;--plq:rgba(21,18,26,.85);--lw:3}
 .tt[data-th=ink] .tt-hud b{font-size:24px;font-weight:700}.tt[data-th=ink] .tt-hud small{font-family:'Inter',sans-serif}.tt[data-th=ink] .tt-heads span{font-size:18px;letter-spacing:0}
-.tt[data-th=ink] .tt-n small{font-weight:700;line-height:.95}
+.tt[data-th=ink] .tt-n small{font-weight:700;line-height:.95;max-width:84px}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -6847,29 +6850,36 @@ function tSpec(a){ const T=TTREES[a], by=[0,0,0]; for (const n of T.nodes) if (n
    stars    — a constellation you climb from the bottom up to the capstone star (Cinzel)
    dungeon  — a living tree growing out of the ground, gems on bark branches, gilded frame (Jacquard 12)
    gameboy  — a 4-shade green tech tree you scroll left → right (Silkscreen / Press Start) */
-// b328: one shape for every area — a trunk that splits into three limbs (the specializations) growing up to a crown (the capstone) —
-// drawn in the look of the area's own page. Side limbs sit lower than the middle one so labels never collide.
+// b328: one shape for every area, grown like a real tree — roots and a trunk at the bottom, one fork into three limbs (the
+// specializations) that spread wider as they climb, twigs sprouting off them, and the capstone floating above the canopy as its crown.
+// Limbs never come back together. Side limbs sit lower than the middle one so labels never collide. The look comes from the area's page.
 const TT_TH={MONEY:'money',BODY:'body',MODEL:'holo',DATUM:'chrome',CONTENT:'vf',SOCIAL:'street',MIND:'ink'};
-function ttGeo(){ const H=700, base={x:50,y:H-8}, split={x:50,y:604}, crown={x:50,y:84};
-  const L=[[25,566],[14,454],[13,344],[21,236]], C=[[50,506],[50,398],[50,290],[50,182]];
+function ttGeo(){ const H=690, base={x:50,y:H-4}, fork={x:50,y:604}, crown={x:50,y:64};
+  const L=[[33,562],[23,448],[15,336],[12,226]], C=[[50,464],[50,364],[50,264],[50,166]], tipL={x:8,y:150}, tipC={x:50,y:124};
   const pos=(b,t)=>{ const q=(b===1?C:L)[t-1]; return {x:b===2?100-q[0]:q[0], y:q[1]}; };
-  return {H, base, split, crown, pos}; }
+  const tip=b=>b===1?tipC:{x:b===2?100-tipL.x:tipL.x, y:tipL.y};
+  return {H, base, fork, crown, pos, tip}; }
 function ttCurve(P){ // Catmull-Rom → one cubic per segment, so each segment can light up on its own
   return P.slice(0,-1).map((p,i)=>{ const a=P[i-1]||p, b=P[i+1], c=P[i+2]||b; const c1={x:p.x+(b.x-a.x)/6, y:p.y+(b.y-a.y)/6}, c2={x:b.x-(c.x-p.x)/6, y:b.y-(c.y-p.y)/6};
     return `M${p.x.toFixed(1)} ${p.y.toFixed(1)} C${c1.x.toFixed(1)} ${c1.y.toFixed(1)}, ${c2.x.toFixed(1)} ${c2.y.toFixed(1)}, ${b.x.toFixed(1)} ${b.y.toFixed(1)}`; }); }
 function tTree(a){ const T=TTREES[a], A=AREAS.find(x=>x.k===a), free=tFree(a), inv=tInvested(a), th=TT_TH[a]||'money', G=ttGeo();
   const st=Object.fromEntries(T.nodes.map(n=>[n.id,tState(n.id)])), cap=T.nodes.find(n=>n.t===5), own=id=>st[id].r>0;
-  const segs=[`<path class="trunk ${inv?'lit':''}" d="M50 ${G.base.y} L50 ${G.split.y}"/>`];
-  for (const b of [0,1,2]){ const ns=[1,2,3,4].map(t=>T.nodes.find(n=>n.b===b&&n.t===t)), P=[G.split,...ns.map(n=>G.pos(b,n.t)),G.crown], ids=[null,...ns.map(n=>n.id),cap.id];
-    ttCurve(P).forEach((d,i)=>{ const u=ids[i], v=ids[i+1], on=u?own(u):inv>0, both=on&&own(v); segs.push(`<path class="${both?'lit':on||own(v)?'half':''}" d="${d}"/>`); }); }
-  const node=n=>{ const s0=st[n.id], p=n.t===5?G.crown:G.pos(n.b,n.t), pips=n.r>1?`<i class="tt-pips">${Array.from({length:n.r},(_,i)=>`<u class="${i<s0.r?'on':''}"></u>`).join('')}</i>`:'';
-    return `<button class="tt-n ${s0.cls} ${n.fx.ab?'ab':''} ${n.t===5?'cap':''}" style="left:${p.x}%;top:${p.y}px" onclick="tOpen('${n.id}')" aria-label="${esc(n.n)}, ${s0.r} of ${n.r}${s0.cls==='open'?', ready to learn':s0.cls==='lk'?', locked':''}"><i class="sh"></i><span>${s0.cls==='lk'?'🔒':n.ic}</span>${pips}${n.fx.ab?'<b class="tt-ab">⚡</b>':''}<small>${esc(n.n)}</small></button>`; };
+  const segs=[`<path class="trunk ${inv?'lit':''}" d="M50 ${G.base.y} L50 ${G.fork.y}"/>`,
+    `<path class="root" d="M50 ${G.base.y-6} C46 ${G.base.y-2}, 41 ${G.base.y}, 36 ${G.base.y+2}"/>`,`<path class="root" d="M50 ${G.base.y-6} C54 ${G.base.y-2}, 59 ${G.base.y}, 64 ${G.base.y+2}"/>`], twigs=[];
+  for (const b of [0,1,2]){ const ns=[1,2,3,4].map(t=>T.nodes.find(n=>n.b===b&&n.t===t)), P=[G.fork,...ns.map(n=>G.pos(b,n.t)),G.tip(b)], ids=[null,...ns.map(n=>n.id),null];
+    ttCurve(P).forEach((d,i)=>{ const u=ids[i], v=ids[i+1], on=u?own(u):inv>0, both=on&&v&&own(v), cls=v?(both?'lit':on||own(v)?'half':''):(on?'half':'');
+      segs.push(`<path class="${cls}${v?'':' tw'}" d="${d}"/>`);
+      if (i>0&&i<5){ const p=P[i], q=P[i+1], mx=(p.x+q.x)/2, my=(p.y+q.y)/2, side=b===0?-1:b===2?1:(i%2?1:-1), ex=mx+side*(b===1?9:6), ey=my-26;   // a twig off the limb, leaning outward
+        twigs.push(`<path class="tw ${both?'half':''}" d="M${mx.toFixed(1)} ${my.toFixed(1)} Q${(mx+side*2).toFixed(1)} ${(my-16).toFixed(1)}, ${ex.toFixed(1)} ${ey.toFixed(1)}"/>`);
+        twigs.push(`<ellipse class="lf ${both?'on':''}" cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" rx="1.5" ry="4.5"/>`); } }); }
+  const node=n=>{ const s0=st[n.id], p=n.t===5?G.crown:G.pos(n.b,n.t), edge=p.x<=16?' el':p.x>=84?' er':'', pips=n.r>1?`<i class="tt-pips">${Array.from({length:n.r},(_,i)=>`<u class="${i<s0.r?'on':''}"></u>`).join('')}</i>`:'';
+    return `<button class="tt-n ${s0.cls} ${n.fx.ab?'ab':''} ${n.t===5?'cap':''}${edge}" style="left:${p.x}%;top:${p.y}px" onclick="tOpen('${n.id}')" aria-label="${esc(n.n)}${n.t===5?' (capstone)':''}, ${s0.r} of ${n.r}${s0.cls==='open'?', ready to learn':s0.cls==='lk'?', locked':''}"><i class="sh"></i><span>${s0.cls==='lk'?'🔒':n.ic}</span>${pips}${n.fx.ab?'<b class="tt-ab">⚡</b>':''}<small>${esc(n.n)}</small></button>`; };
   const spec=tSpec(a);
   return `<div class="tt" data-th="${th}" style="--c:${A.c}"><div class="tt-hud"><div><small>${esc(A.n)} · talents</small><b>${spec?`${spec[1]} ${esc(spec[0])}`:'No specialization yet'}</b></div><div class="tt-pts ${free?'on':''}"><b>${free}</b><small>point${free===1?'':'s'}</small></div></div>
     <div class="tt-heads">${T.br.map(([nm,ic],b)=>`<span><i>${ic}</i>${esc(nm)}<em>${T.nodes.filter(n=>n.b===b).reduce((s,n)=>s+tRank(n.id),0)} in</em></span>`).join('')}</div>
     <div class="tt-map" style="height:${G.H}px"><svg viewBox="0 0 100 ${G.H}" preserveAspectRatio="none" aria-hidden="true"><defs>
       <linearGradient id="tbg-holo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb3f0"/><stop offset=".35" stop-color="#b8c8ff"/><stop offset=".7" stop-color="#9ff7ff"/><stop offset="1" stop-color="#ffe6a8"/></linearGradient>
-      <linearGradient id="tbg-chrome" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d8996"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#7d8996"/></linearGradient></defs>${segs.join('')}</svg>
+      <linearGradient id="tbg-chrome" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d8996"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#7d8996"/></linearGradient></defs>${twigs.join('')}${segs.join('')}</svg><i class="tt-halo" style="top:${G.crown.y}px"></i>
       ${T.nodes.map(node).join('')}</div>
     <div class="tt-foot">${tEarned(a)} earned from ${esc(A.n)} feats · ${tCost(a)} spent${T.nodes.some(n=>tGift(n.id))?' · old perks kept free':''}</div></div>`; }
 function tOpen(id){ const s0=tState(id), n=s0.n, A=AREAS.find(x=>x.k===n.a), T=TTREES[n.a], br=n.t===5?['Capstone','👑']:T.br[n.b];
