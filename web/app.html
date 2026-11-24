@@ -556,32 +556,8 @@ html.kb-open .modal .card{padding-bottom:16px}
 .lt-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.lt-acts button{display:grid;gap:2px;text-align:left;border:0;border-radius:14px;padding:12px;background:var(--card2);color:var(--fg);cursor:pointer;font:inherit}.lt-acts i{font-style:normal;font-size:20px}.lt-acts b{font-size:14px}.lt-acts small{font-size:12px;color:var(--muted)}
 .lt-fb{margin-top:12px;padding:12px;border-radius:12px;background:var(--card2);display:grid;gap:6px;font-size:14px}
 .lt-boss{font-size:56px;text-align:center;margin:10px 0}.lt-boss img.pxe{width:64px;height:64px}.lt-boss.lk{filter:grayscale(1);opacity:.6}
-/* b325: talent trees — 8-bit game screen */
-.tt{background-color:#0b0916;color:#efeaff;border-radius:16px;padding:14px 12px 12px;box-shadow:inset 0 0 0 2px #2a2250;
-  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),radial-gradient(circle at 50% 0,color-mix(in srgb,var(--c) 28%,transparent),transparent 65%);background-size:16px 16px,16px 16px,100% 100%}
-.tt-hud{display:flex;justify-content:space-between;align-items:center;gap:10px}.tt-hud small{font-family:var(--px);font-size:8px;letter-spacing:.08em;color:var(--c)}.tt-hud b{display:block;font-size:15px;margin-top:4px}
-.tt-pts{flex:none;display:grid;place-items:center;padding:6px 10px;background:#1d1838;box-shadow:0 -3px 0 #3a3266,0 3px 0 #3a3266,-3px 0 0 #3a3266,3px 0 0 #3a3266}.tt-pts b{font-family:var(--px);font-size:16px;margin:0}.tt-pts small{font-family:var(--vt);font-size:15px;color:#a79fc9;letter-spacing:0}
-.tt-pts.on{box-shadow:0 -3px 0 #ffd23f,0 3px 0 #ffd23f,-3px 0 0 #ffd23f,3px 0 0 #ffd23f;animation:ltPulse 1.4s steps(4) infinite}.tt-pts.on b{color:#ffd23f}
-.tt-heads{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:12px;text-align:center}.tt-heads span{display:grid;justify-items:center;gap:2px;font-family:var(--px);font-size:7.5px;letter-spacing:.06em;text-transform:uppercase;color:#d9d2ff}.tt-heads i{font-style:normal;font-size:20px}.tt-heads em{font-style:normal;font-family:var(--vt);font-size:15px;color:#a79fc9}
-.tt-map{position:relative;margin:4px -4px 0}.tt-map svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.tt-map path{fill:none;stroke:#3a3266;stroke-width:5;stroke-dasharray:6 6;vector-effect:non-scaling-stroke;shape-rendering:crispEdges}.tt-map path.half{stroke:color-mix(in srgb,var(--c) 55%,#3a3266);stroke-dasharray:none}.tt-map path.lit{stroke:#ffd23f;stroke-dasharray:none;filter:drop-shadow(0 0 4px rgba(255,210,63,.5))}
-.tt-band{position:absolute;left:0;right:0;height:0;border-top:2px dashed rgba(255,255,255,.08)}.tt-band span{position:absolute;right:4px;top:-9px;font-family:var(--px);font-size:7px;letter-spacing:.08em;color:#5d5585;background:#0b0916;padding:2px 4px}.tt-band.on span{color:#ffd23f}
-.tt-n{position:absolute;transform:translate(-50%,-50%);width:56px;height:56px;border:0;padding:0;cursor:pointer;display:grid;place-items:center;font-size:24px;background:#1a1530;color:#fff;z-index:1;-webkit-tap-highlight-color:transparent;
-  box-shadow:0 -4px 0 #3a3266,0 4px 0 #3a3266,-4px 0 0 #3a3266,4px 0 0 #3a3266,inset 0 -6px 0 rgba(0,0,0,.4),inset 0 4px 0 rgba(255,255,255,.06)}
-.tt-n>span{display:grid;place-items:center;line-height:1}.tt-n img.pxe{width:28px;height:28px}
-.tt-n small{position:absolute;top:calc(100% + 9px);left:50%;transform:translateX(-50%);width:max-content;max-width:104px;padding:1px 5px 0;background:#0b0916;font-family:var(--vt);font-size:15px;line-height:.95;color:#d9d2ff;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-height:2.05em}
-.tt-pips{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);display:flex;gap:2px}.tt-pips u{width:6px;height:4px;background:#3a3266}.tt-pips u.on{background:#ffd23f}
+/* b328: the node card keeps these */
 .tt-pips.big{position:static;transform:none;justify-content:center;gap:4px;margin:6px 0}.tt-pips.big u{width:18px;height:8px}
-.tt-ab{position:absolute;top:-10px;right:-10px;font-size:12px;background:#b98cff;color:#1a0f2e;width:18px;height:18px;display:grid;place-items:center;font-style:normal}
-.tt-n.part{background:#0f2d36;box-shadow:0 -4px 0 #5ee6ff,0 4px 0 #5ee6ff,-4px 0 0 #5ee6ff,4px 0 0 #5ee6ff,inset 0 -6px 0 rgba(0,0,0,.35)}
-.tt-n.max{background:#3b2e05;box-shadow:0 -4px 0 #ffd23f,0 4px 0 #ffd23f,-4px 0 0 #ffd23f,4px 0 0 #ffd23f,inset 0 -6px 0 rgba(0,0,0,.35),inset 0 4px 0 rgba(255,255,255,.15)}
-.tt-n.open{background:#24203f;box-shadow:0 -4px 0 #fff,0 4px 0 #fff,-4px 0 0 #fff,4px 0 0 #fff,inset 0 -6px 0 rgba(0,0,0,.35),0 0 16px 3px color-mix(in srgb,var(--c) 60%,transparent);animation:ttOpen 1.2s steps(3) infinite}
-.tt-n.deed{opacity:.85}.tt-n.deed>span{filter:grayscale(.7)}.tt-n.deed::after{content:'';position:absolute;inset:-4px;box-shadow:inset 0 0 0 2px rgba(255,183,3,.6)}
-.tt-n.lk{opacity:.55;filter:saturate(.2)}.tt-n.ab:not(.lk):not(.deed){--ab:#b98cff}.tt-n.ab.max,.tt-n.ab.part{background:#2a1645;box-shadow:0 -4px 0 #b98cff,0 4px 0 #b98cff,-4px 0 0 #b98cff,4px 0 0 #b98cff,inset 0 -6px 0 rgba(0,0,0,.35),0 0 14px 2px rgba(185,140,255,.4)}
-.tt-n.cap{width:72px;height:72px;font-size:32px}.tt-n.cap img.pxe{width:38px;height:38px}.tt-n.cap small{font-family:var(--px);font-size:8px;line-height:1.5;letter-spacing:.06em;max-width:140px}
-@keyframes ttOpen{50%{box-shadow:0 -4px 0 #fff,0 4px 0 #fff,-4px 0 0 #fff,4px 0 0 #fff,inset 0 -6px 0 rgba(0,0,0,.35),0 0 4px 1px color-mix(in srgb,var(--c) 40%,transparent)}}
-@media (prefers-reduced-motion:reduce){.tt-n.open,.tt-pts.on{animation:none}}
-.tt-foot{font-family:var(--vt);font-size:16px;color:#8a83ad;text-align:center;margin-top:4px}
 .tt-sh .tt-big{width:84px;height:84px;margin:14px auto 10px;display:grid;place-items:center;font-size:40px;background:#1a1530;box-shadow:0 -5px 0 #3a3266,0 5px 0 #3a3266,-5px 0 0 #3a3266,5px 0 0 #3a3266,inset 0 -8px 0 rgba(0,0,0,.35)}
 .tt-sh .tt-big img.pxe{width:46px;height:46px}.tt-big.max{background:#3b2e05;box-shadow:0 -5px 0 #ffd23f,0 5px 0 #ffd23f,-5px 0 0 #ffd23f,5px 0 0 #ffd23f,inset 0 -8px 0 rgba(0,0,0,.35)}.tt-big.part{box-shadow:0 -5px 0 #5ee6ff,0 5px 0 #5ee6ff,-5px 0 0 #5ee6ff,5px 0 0 #5ee6ff}.tt-big.open{box-shadow:0 -5px 0 #fff,0 5px 0 #fff,-5px 0 0 #fff,5px 0 0 #fff}.tt-big.ab.max,.tt-big.ab.part{box-shadow:0 -5px 0 #b98cff,0 5px 0 #b98cff,-5px 0 0 #b98cff,5px 0 0 #b98cff}.tt-big.lk,.tt-big.deed{filter:grayscale(.6)}
 .tt-eff{text-align:center;font-size:16px;font-weight:600;margin-top:6px;display:grid;gap:4px}.tt-eff .sub{font-weight:400;font-size:13px}
@@ -607,84 +583,62 @@ html.kb-open .modal .card{padding-bottom:16px}
 .ch-sk .tt{margin:0 -4px}
 .ch-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.ch-tile{position:relative;display:grid;gap:2px;justify-items:center;text-align:center;border:0;border-radius:14px;padding:12px 6px;background:var(--card);color:var(--fg);cursor:pointer;font:inherit}
 .ch-tile span{font-size:22px}.ch-tile b{font-size:12.5px}.ch-tile small{font-size:11px;color:var(--muted)}.ch-tile i{position:absolute;top:6px;right:6px;font-style:normal;background:#ffd23f;color:#1a1300;border-radius:99px;padding:0 6px;font-size:10.5px;font-weight:800}
-/* b327: talent tree styles */
-.tt[data-ts]:not([data-ts=arcade]){font-size-adjust:none;background-size:auto!important}.tt[data-ts]:not([data-ts=arcade]) *{word-spacing:normal}
-/* beat the skins' button corners (they use !important with long selectors) */
-.app .tt[data-ts=jrpg] .tt-map button.tt-n.tt-n{border-radius:10px!important}.app .tt[data-ts=stars] .tt-map button.tt-n.tt-n,.app .tt[data-ts=dungeon] .tt-map button.tt-n.tt-n{border-radius:50%!important}.app .tt[data-ts=gameboy] .tt-map button.tt-n.tt-n{border-radius:0!important}
-.app .tt[data-ts=jrpg] div.tt-pts.tt-pts{border-radius:8px!important}.app .tt[data-ts=stars] div.tt-pts.tt-pts{border-radius:50%!important}
-.tt-styles{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 0 10px;padding:2px 0}.tt-styles::-webkit-scrollbar{display:none}
-.tt-styles button{flex:none;display:flex;gap:6px;align-items:center;border:0;border-radius:10px;padding:7px 11px;background:var(--card2);color:var(--fg);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;box-shadow:inset 0 0 0 1.5px transparent}
-.tt-styles button.on{box-shadow:inset 0 0 0 1.5px var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--card2))}
-.tt-scroll{overflow-x:auto;margin:4px -12px 0;padding:0 12px;scrollbar-width:thin}.tt-scroll .tt-map{margin:0}.tt-hint{font-size:11px;text-align:right;opacity:.7;margin-top:2px}
-/* — JRPG: a 16-bit menu window — */
-.tt[data-ts=jrpg]{background:linear-gradient(180deg,#3046b8 0%,#18237a 45%,#0d144d 100%);border:3px solid #f4f4ff;border-radius:12px;box-shadow:0 0 0 3px #0d144d,0 0 0 5px #8a93d8,inset 0 0 0 2px #0d144d;padding:14px 12px;font-family:'DotGothic16',var(--vt);color:#fff;background-image:none}
-.tt[data-ts=jrpg]{background:linear-gradient(180deg,#3046b8 0%,#18237a 45%,#0d144d 100%)}
-.tt[data-ts=jrpg] .tt-hud small{font-family:'Pixelify Sans',var(--px);font-size:11px;letter-spacing:.12em;color:#ffe66d}.tt[data-ts=jrpg] .tt-hud b{font-family:'Pixelify Sans',sans-serif;font-size:19px;font-weight:600;text-shadow:2px 2px 0 #0d144d}
-.tt[data-ts=jrpg] .tt-pts{background:#0d144d;border:2px solid #fff;border-radius:8px;box-shadow:none;animation:none}.tt[data-ts=jrpg] .tt-pts b{font-family:'Pixelify Sans';font-size:20px;color:#ffe66d}.tt[data-ts=jrpg] .tt-pts small{font-family:'DotGothic16';color:#c9cdf5}
-.tt[data-ts=jrpg] .tt-heads span{font-family:'Pixelify Sans';font-size:12px;letter-spacing:.06em;color:#fff}.tt[data-ts=jrpg] .tt-heads em{font-family:'DotGothic16';color:#ffe66d}
-.tt[data-ts=jrpg] .tt-map path{stroke:rgba(255,255,255,.28);stroke-width:4;stroke-dasharray:none}.tt[data-ts=jrpg] .tt-map path.half{stroke:#8fa0ff}.tt[data-ts=jrpg] .tt-map path.lit{stroke:#ffe66d;filter:none}
-.tt[data-ts=jrpg] .tt-band{border-top:1px solid rgba(255,255,255,.14)}.tt[data-ts=jrpg] .tt-band span{font-family:'DotGothic16';font-size:11px;letter-spacing:.04em;background:#18237a;color:#8a93d8;top:-10px}.tt[data-ts=jrpg] .tt-band.on span{color:#ffe66d}
-.tt[data-ts=jrpg] .tt-n{border-radius:10px;background:#0d144d;border:3px solid #6d77c4;box-shadow:inset 0 -4px 0 rgba(0,0,0,.3);animation:none}
-.tt[data-ts=jrpg] .tt-n small{font-family:'DotGothic16';font-size:13px;line-height:1.1;background:none;color:#fff;text-shadow:1px 1px 0 #0d144d,-1px -1px 0 #0d144d,1px -1px 0 #0d144d,-1px 1px 0 #0d144d;max-height:2.3em}
-.tt[data-ts=jrpg] .tt-n.max{border-color:#ffe66d;background:#3a2f00}.tt[data-ts=jrpg] .tt-n.part{border-color:#7ee0ff}.tt[data-ts=jrpg] .tt-n.open{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.25)}
-.tt[data-ts=jrpg] .tt-n.open::before{content:'▶';position:absolute;left:-26px;top:50%;transform:translateY(-50%);font-size:16px;color:#fff;animation:ttCur .8s steps(2) infinite}
-.tt[data-ts=jrpg] .tt-n.ab.max,.tt[data-ts=jrpg] .tt-n.ab.part{border-color:#d7a8ff;box-shadow:none;background:#2a1050}.tt[data-ts=jrpg] .tt-n.lk{opacity:.5}.tt[data-ts=jrpg] .tt-n.deed::after{inset:-3px;border-radius:10px;box-shadow:inset 0 0 0 2px rgba(255,200,80,.7)}
-.tt[data-ts=jrpg] .tt-pips u{border-radius:2px}.tt[data-ts=jrpg] .tt-n.cap small{font-family:'Pixelify Sans';font-size:12px}.tt[data-ts=jrpg] .tt-foot{font-family:'DotGothic16';font-size:13px;color:#c9cdf5}
-@keyframes ttCur{50%{transform:translate(4px,-50%)}}
-/* — Stars: a constellation — */
-.tt[data-ts=stars]{border-radius:14px;color:#eef2ff;box-shadow:inset 0 0 0 1px rgba(200,215,255,.22),0 0 0 1px rgba(0,0,0,.4);
-  background-color:#050817;background-image:radial-gradient(1px 1px at 12% 18%,#fff 50%,transparent),radial-gradient(1px 1px at 72% 9%,#fff 50%,transparent),radial-gradient(1.5px 1.5px at 38% 44%,#cfe0ff 50%,transparent),radial-gradient(1px 1px at 88% 61%,#fff 50%,transparent),radial-gradient(1px 1px at 22% 77%,#fff 50%,transparent),radial-gradient(1.5px 1.5px at 61% 86%,#ffe9b8 50%,transparent),radial-gradient(1px 1px at 52% 27%,#fff 50%,transparent),radial-gradient(1px 1px at 6% 52%,#fff 50%,transparent),radial-gradient(1px 1px at 94% 33%,#fff 50%,transparent),radial-gradient(120% 70% at 50% 0%,rgba(90,110,220,.35),transparent 70%),radial-gradient(90% 60% at 50% 100%,color-mix(in srgb,var(--c) 25%,transparent),transparent 70%)}
-.tt[data-ts=stars] .tt-hud small{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.3em;color:#c8d3ff}.tt[data-ts=stars] .tt-hud b{font-family:'Cinzel',serif;font-weight:800;font-size:18px;letter-spacing:.06em}
-.tt[data-ts=stars] .tt-pts{background:none;box-shadow:none;border:1px solid rgba(255,233,168,.5);border-radius:50%;width:58px;height:58px;padding:0;animation:none}.tt[data-ts=stars] .tt-pts b{font-family:'Cinzel';font-size:20px;color:#ffe9a8}.tt[data-ts=stars] .tt-pts small{font-family:'Cinzel';font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:#c8d3ff}
-.tt[data-ts=stars] .tt-heads span{font-family:'Cinzel';font-size:10px;letter-spacing:.2em;color:#dfe6ff}.tt[data-ts=stars] .tt-heads em{font-family:'Cinzel'}
-.tt[data-ts=stars] .tt-map path{stroke:rgba(190,205,255,.22);stroke-width:1.5;stroke-dasharray:2 5;shape-rendering:auto}.tt[data-ts=stars] .tt-map path.half{stroke:rgba(190,205,255,.55);stroke-dasharray:none}.tt[data-ts=stars] .tt-map path.lit{stroke:#ffe9a8;stroke-width:2;stroke-dasharray:none;filter:drop-shadow(0 0 4px rgba(255,233,168,.8))}
-.tt[data-ts=stars] .tt-n{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),rgba(255,255,255,.02) 70%);box-shadow:0 0 0 1px rgba(200,215,255,.35);font-size:18px;animation:none}
-.tt[data-ts=stars] .tt-n img.pxe{width:22px;height:22px;opacity:.9}
-.tt[data-ts=stars] .tt-n small{font-family:'Cinzel',serif;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;line-height:1.25;background:none;color:#dfe6ff;text-shadow:0 0 6px #050817,0 0 2px #050817;max-height:2.6em;top:calc(100% + 6px)}
-.tt[data-ts=stars] .tt-n.max{background:radial-gradient(circle,#fff6d8 0%,#ffd76a 30%,rgba(255,200,80,.25) 60%,transparent 72%);box-shadow:0 0 18px 6px rgba(255,220,120,.45)}
-.tt[data-ts=stars] .tt-n.part{background:radial-gradient(circle,#e6f0ff 0%,#8fb4ff 35%,rgba(120,160,255,.2) 62%,transparent 72%);box-shadow:0 0 14px 4px rgba(140,180,255,.4)}
-.tt[data-ts=stars] .tt-n.open{box-shadow:0 0 0 1.5px #fff,0 0 16px 4px rgba(255,255,255,.35);animation:ttTw 1.6s ease-in-out infinite}.tt[data-ts=stars] .tt-n.lk{opacity:.35;filter:none}.tt[data-ts=stars] .tt-n.lk>span{font-size:12px;opacity:.6}
-.tt[data-ts=stars] .tt-n.deed::after{inset:-3px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,200,120,.6)}
-.tt[data-ts=stars] .tt-n.ab.max,.tt[data-ts=stars] .tt-n.ab.part{background:radial-gradient(circle,#f3e6ff 0%,#c49bff 35%,rgba(180,130,255,.2) 62%,transparent 72%);box-shadow:0 0 16px 5px rgba(190,140,255,.45)}
-.tt[data-ts=stars] .tt-ab{border-radius:50%;width:16px;height:16px;font-size:10px;top:-6px;right:-6px}.tt[data-ts=stars] .tt-pips{bottom:-6px}.tt[data-ts=stars] .tt-pips u{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.25)}.tt[data-ts=stars] .tt-pips u.on{background:#ffe9a8}
-.tt[data-ts=stars] .tt-n.cap{width:64px;height:64px}.tt[data-ts=stars] .tt-n.cap small{font-size:12px;font-family:'Cinzel'}.tt[data-ts=stars] .tt-foot{font-family:'Cinzel';font-size:11px;letter-spacing:.08em;color:#aab6e8}
-@keyframes ttTw{50%{box-shadow:0 0 0 1.5px #fff,0 0 6px 1px rgba(255,255,255,.2)}}
-/* — Dungeon: a tree growing out of stone, gems on bark — */
-.tt[data-ts=dungeon]{border:4px double #c9a14a;border-radius:6px;color:#f3e3c0;box-shadow:0 0 0 2px #2a1d0e,inset 0 0 40px rgba(0,0,0,.7);
-  background-color:#17110b;background-image:radial-gradient(80% 50% at 50% 100%,color-mix(in srgb,var(--c) 18%,transparent),transparent 70%),repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 2px,transparent 2px 22px),repeating-linear-gradient(90deg,rgba(0,0,0,.25) 0 2px,transparent 2px 44px)}
-.tt[data-ts=dungeon]::before,.tt[data-ts=dungeon]::after{content:'◆';position:absolute;top:6px;font-size:12px;color:#c9a14a}.tt[data-ts=dungeon]{position:relative}.tt[data-ts=dungeon]::before{left:8px}.tt[data-ts=dungeon]::after{right:8px}
-.tt[data-ts=dungeon] .tt-hud{padding:0 14px}.tt[data-ts=dungeon] .tt-hud small{font-family:'Jacquard 12',serif;font-size:16px;letter-spacing:.06em;color:#c9a14a}.tt[data-ts=dungeon] .tt-hud b{font-family:'Jacquard 12',serif;font-size:26px;font-weight:400;color:#ffe2a0;text-shadow:0 2px 0 #000}
-.tt[data-ts=dungeon] .tt-pts{background:#2a1d0e;box-shadow:0 0 0 2px #c9a14a,0 0 0 4px #2a1d0e;animation:none}.tt[data-ts=dungeon] .tt-pts b{font-family:'Jacquard 12';font-size:26px;color:#ffe2a0}.tt[data-ts=dungeon] .tt-pts small{font-family:'Jacquard 12';font-size:14px;color:#c9a14a}
-.tt[data-ts=dungeon] .tt-heads span{font-family:'Jacquard 12';font-size:17px;letter-spacing:.02em;text-transform:none;color:#f3e3c0}.tt[data-ts=dungeon] .tt-heads em{font-family:'Jacquard 12';font-size:16px;color:#c9a14a}
-.tt[data-ts=dungeon] .tt-map path{stroke:#4a3018;stroke-width:9;stroke-dasharray:none;stroke-linecap:round;shape-rendering:auto}.tt[data-ts=dungeon] .tt-map path.half{stroke:#6b4521}.tt[data-ts=dungeon] .tt-map path.lit{stroke:#b88a3a;filter:drop-shadow(0 0 5px rgba(255,200,90,.5))}
-.tt-ground{position:absolute;left:-12px;right:-12px;bottom:0;height:24px;z-index:0;pointer-events:none;background:linear-gradient(180deg,transparent,#0c0805 60%);border-top:2px solid #3a2714}
-.tt[data-ts=dungeon] .tt-n{width:50px;height:50px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#3d2c1a,#120c06);border:3px solid #6b5124;box-shadow:inset 0 -4px 0 rgba(0,0,0,.4),0 3px 0 #000;font-size:22px;animation:none}
-.tt[data-ts=dungeon] .tt-n img.pxe{width:26px;height:26px}
-.tt[data-ts=dungeon] .tt-n small{font-family:'Jacquard 12',serif;font-size:16px;line-height:.95;max-width:76px;background:rgba(23,17,11,.85);color:#f3e3c0;padding:1px 6px;border:1px solid #4a3018;max-height:2.3em}
-.tt[data-ts=dungeon] .tt-n.max{border-color:#ffd27a;background:radial-gradient(circle at 35% 30%,#ffe9a8,#c98a1e 55%,#5a3a08);box-shadow:0 0 16px 4px rgba(255,190,80,.45),0 3px 0 #000}
-.tt[data-ts=dungeon] .tt-n.part{border-color:#7fd9c4;background:radial-gradient(circle at 35% 30%,#bff5e6,#2f9a85 55%,#0b3a31)}
-.tt[data-ts=dungeon] .tt-n.open{border-color:#fff2cf;box-shadow:0 0 0 3px rgba(255,226,160,.25),0 0 14px 3px color-mix(in srgb,var(--c) 50%,transparent);animation:ttOpenD 1.4s ease-in-out infinite}
-.tt[data-ts=dungeon] .tt-n.lk{opacity:.45;filter:grayscale(1)}.tt[data-ts=dungeon] .tt-n.deed::after{inset:-6px;border-radius:50%;box-shadow:inset 0 0 0 2px rgba(220,140,40,.7)}
-.tt[data-ts=dungeon] .tt-n.ab.max,.tt[data-ts=dungeon] .tt-n.ab.part{border-color:#d8b3ff;background:radial-gradient(circle at 35% 30%,#f1e2ff,#8a4fd6 55%,#2c0d55);box-shadow:0 0 14px 4px rgba(180,120,255,.45)}
-.tt[data-ts=dungeon] .tt-ab{border-radius:50%;background:#c9a14a;color:#1a1000}.tt[data-ts=dungeon] .tt-pips{bottom:-9px}.tt[data-ts=dungeon] .tt-pips u{background:#3a2714;width:7px;height:5px}.tt[data-ts=dungeon] .tt-pips u.on{background:#ffd27a}
-.tt[data-ts=dungeon] .tt-n.cap{width:70px;height:70px;border-width:4px}.tt[data-ts=dungeon] .tt-n.cap small{font-family:'Jacquard 12';font-size:20px;letter-spacing:0;line-height:1}.tt[data-ts=dungeon] .tt-foot{font-family:'Jacquard 12';font-size:17px;color:#c9a14a}
-@keyframes ttOpenD{50%{box-shadow:0 0 0 3px rgba(255,226,160,.1),0 0 6px 1px color-mix(in srgb,var(--c) 30%,transparent)}}
-/* — Game Boy: 4 shades of green, left → right — */
-.tt[data-ts=gameboy]{background:#9bbc0f;color:#0f380f;border-radius:6px;border:4px solid #0f380f;box-shadow:inset 0 0 0 4px #8bac0f,0 6px 0 #306230;background-image:none}
-.tt[data-ts=gameboy] .tt-hud small{font-family:'Press Start 2P',monospace;font-size:8px;letter-spacing:.06em;color:#306230}.tt[data-ts=gameboy] .tt-hud b{font-family:'Silkscreen',monospace;font-size:17px;font-weight:700;color:#0f380f}
-.tt[data-ts=gameboy] .tt-pts{background:#0f380f;box-shadow:none;border-radius:0;animation:none}.tt[data-ts=gameboy] .tt-pts b{font-family:'Press Start 2P';font-size:15px;color:#9bbc0f}.tt[data-ts=gameboy] .tt-pts small{font-family:'Silkscreen';font-size:11px;color:#8bac0f}
-.tt[data-ts=gameboy] .tt-heads span{font-family:'Silkscreen';font-size:11px;color:#0f380f}.tt[data-ts=gameboy] .tt-heads em{font-family:'Press Start 2P';font-size:9px;color:#306230}
-.tt[data-ts=gameboy] img.pxe{filter:grayscale(1) contrast(1.4) brightness(.9) sepia(1) hue-rotate(40deg) saturate(2.4)}
-.tt[data-ts=gameboy] .tt-map path{stroke:#8bac0f;stroke-width:5;stroke-dasharray:none;filter:none}.tt[data-ts=gameboy] .tt-map path.half{stroke:#306230;stroke-dasharray:5 5}.tt[data-ts=gameboy] .tt-map path.lit{stroke:#0f380f;filter:none}
-.tt[data-ts=gameboy] .tt-n{width:50px;height:50px;background:#8bac0f;border:4px solid #0f380f;box-shadow:4px 4px 0 #306230;color:#0f380f;animation:none}
-.tt[data-ts=gameboy] .tt-n small{font-family:'Silkscreen',monospace;font-size:11px;line-height:1.05;background:none;color:#0f380f;max-width:118px;max-height:2.2em;top:calc(100% + 8px)}
-.tt[data-ts=gameboy] .tt-n.max{background:#0f380f;box-shadow:4px 4px 0 #306230}.tt[data-ts=gameboy] .tt-n.max img.pxe{filter:grayscale(1) contrast(1.4) brightness(1.6) sepia(1) hue-rotate(40deg) saturate(2.4)}
-.tt[data-ts=gameboy] .tt-n.part{background:#306230}.tt[data-ts=gameboy] .tt-n.open{background:#9bbc0f;animation:ttGB .6s steps(2) infinite}.tt[data-ts=gameboy] .tt-n.lk{opacity:.5;filter:none;border-style:dashed}
-.tt[data-ts=gameboy] .tt-n.deed::after{inset:-8px;box-shadow:inset 0 0 0 2px #306230}.tt[data-ts=gameboy] .tt-n.ab.max,.tt[data-ts=gameboy] .tt-n.ab.part{background:#306230;box-shadow:4px 4px 0 #0f380f}
-.tt[data-ts=gameboy] .tt-ab{background:#0f380f;color:#9bbc0f}.tt[data-ts=gameboy] .tt-pips u{background:#8bac0f;outline:1px solid #0f380f}.tt[data-ts=gameboy] .tt-pips u.on{background:#9bbc0f}
-.tt[data-ts=gameboy] .tt-n.cap{width:64px;height:64px}.tt[data-ts=gameboy] .tt-n.cap small{font-family:'Press Start 2P';font-size:8px;line-height:1.5}.tt[data-ts=gameboy] .tt-foot,.tt[data-ts=gameboy] .tt-hint{font-family:'Silkscreen';font-size:11px;color:#306230}
-@keyframes ttGB{50%{background:#0f380f}}
-@media (prefers-reduced-motion:reduce){.tt .tt-n{animation:none!important}}
+/* b328: every talent tree is a branching tree — trunk, three limbs, a crown — grown in its own page's look */
+.tt{--ln:rgba(255,255,255,.14);--lit:#ffd23f;--half:rgba(255,255,255,.35);--nb:#151520;--nbc:rgba(255,255,255,.18);--nbw:2px;--rad:50%;--rot:0deg;--own:#3b2e05;--ownb:#ffd23f;--ownc:#ffe9a6;--opn:#fff;--deed:#ffb703;--lk:rgba(255,255,255,.35);--ic:rgba(255,255,255,.75);--lw:5;--hf:inherit;--lf:inherit;--lsz:12px;--lc:rgba(255,255,255,.85);--plq:rgba(0,0,0,.55);--sz:50px;
+  position:relative;overflow:hidden;border-radius:18px;padding:14px 12px 12px;color:var(--ink,#fff);background:var(--bg,#111)}
+.tt-hud{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:10px}.tt-hud small{font-family:var(--hf);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--acc)}.tt-hud b{display:block;font-family:var(--hf);font-size:19px;margin-top:3px;line-height:1.1}
+.tt-pts{flex:none;display:grid;place-items:center;min-width:54px;padding:6px 10px;border-radius:14px;background:var(--plq);box-shadow:inset 0 0 0 1.5px var(--ln)}.tt-pts b{font-family:var(--hf);font-size:20px;margin:0}.tt-pts small{font-size:11px;letter-spacing:0;color:var(--lc);text-transform:none}.tt-pts.on{box-shadow:inset 0 0 0 2px var(--acc)}.tt-pts.on b{color:var(--acc)}
+.tt-heads{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:12px;text-align:center}.tt-heads span{display:grid;justify-items:center;gap:1px;font-family:var(--hf);font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--lc)}.tt-heads i{font-style:normal;font-size:18px}.tt-heads em{font-style:normal;font-size:11px;font-weight:600;color:var(--mut,rgba(255,255,255,.5))}
+.tt-map{position:relative;margin:2px -4px 0}.tt-map svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.tt-map path{fill:none;stroke:var(--ln);stroke-width:var(--lw);stroke-linecap:round;vector-effect:non-scaling-stroke}.tt-map path.trunk{stroke-width:calc(var(--lw) * 2.2)}
+.tt-map path.half{stroke:var(--half)}.tt-map path.lit{stroke:var(--lit);filter:drop-shadow(0 0 5px var(--glow,transparent))}
+html body .app .tt .tt-map button.tt-n.tt-n.tt-n,.tt .tt-map button.tt-n.tt-n{position:absolute;width:var(--sz);height:var(--sz);transform:translate(-50%,-50%);padding:0!important;margin:0;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;color:var(--ic);cursor:pointer;display:grid;place-items:center;z-index:2;-webkit-tap-highlight-color:transparent;min-height:0!important;min-width:0!important}
+.tt .tt-n .sh{position:absolute;inset:0;background:var(--nb);border:var(--nbw) solid var(--nbc);border-radius:var(--rad)!important;transform:rotate(var(--rot));transition:box-shadow .2s}
+.tt-n>span{position:relative;display:grid;place-items:center;line-height:1}.tt-n img.pxe{width:24px;height:24px}
+.tt-n small{position:absolute;top:calc(100% + 7px);left:50%;transform:translateX(-50%);width:max-content;max-width:98px;padding:1px 6px 2px;border-radius:6px;background:var(--plq);font-family:var(--lf);font-size:var(--lsz);font-weight:700;line-height:1.1;text-align:center;color:var(--lc);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tt-n.max .sh{background:var(--own);border-color:var(--ownb);box-shadow:0 0 16px var(--glow,transparent)}.tt-n.max{color:var(--ownc)}.tt-n.max small{color:var(--acc)}
+.tt-n.part .sh{border-color:var(--half)}.tt-n.part{color:var(--lc)}
+.tt-n.open .sh{border-color:var(--opn);box-shadow:0 0 0 4px color-mix(in srgb,var(--opn) 18%,transparent),0 0 18px color-mix(in srgb,var(--opn) 45%,transparent);animation:tbOpen 1.6s ease-in-out infinite}.tt-n.open{color:var(--opn)}
+.tt-n.deed .sh{border-style:dashed;border-color:var(--deed)}.tt-n.deed{color:var(--deed)}
+.tt-n.lk{opacity:.5}.tt-n.lk small{opacity:.8}
+.tt-n.cap{--sz:68px}.tt-n.cap img.pxe{width:32px;height:32px}.tt-n.cap small{font-size:calc(var(--lsz) + 1px)}
+.tt-n .tt-pips{position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);display:flex;gap:2px;z-index:1}.tt-n .tt-pips u{width:7px;height:4px;border-radius:2px;background:var(--plq);box-shadow:0 0 0 1px var(--ln)}.tt-n .tt-pips u.on{background:var(--lit)}
+.tt-ab{position:absolute;top:-8px;right:-8px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-style:normal;background:#b98cff;color:#1a0f2e;z-index:1}
+.tt-foot{position:relative;z-index:1;font-size:12px;color:var(--mut,rgba(255,255,255,.5));text-align:center;margin-top:2px}
+@keyframes tbOpen{50%{box-shadow:0 0 0 7px color-mix(in srgb,var(--opn) 8%,transparent),0 0 8px color-mix(in srgb,var(--opn) 30%,transparent)}}
+@media (prefers-reduced-motion:reduce){.tt-n.open .sh{animation:none}}
+/* Money — a money tree: mint limbs, gold coins */
+.tt[data-th=money]{--bg:radial-gradient(ellipse at 50% 100%,rgba(124,240,197,.18),transparent 55%),#05261e;--ink:#effff8;--acc:#7cf0c5;--mut:#8fc7b3;--ln:rgba(124,240,197,.16);--half:rgba(124,240,197,.55);--lit:#f5c542;--glow:rgba(245,197,66,.6);--nb:#0b3a2f;--nbc:rgba(124,240,197,.3);--own:radial-gradient(circle at 35% 30%,#ffe9a0,#d9a520 60%,#8a6410);--ownb:#ffe9a0;--ownc:#3a2a05;--opn:#7cf0c5;--deed:#f5c542;--ic:#8fc7b3;--hf:'Manrope',sans-serif;--lf:'Manrope',sans-serif;--lc:#effff8;--plq:rgba(5,38,30,.85);--lw:6}
+.tt[data-th=money] .tt-n .sh{box-shadow:inset 0 0 0 4px #05261e,inset 0 0 0 5px rgba(124,240,197,.25)}
+.tt[data-th=money] .tt-n.max .sh{box-shadow:inset 0 0 0 4px rgba(255,255,255,.25),0 0 16px rgba(245,197,66,.6)}
+/* Body — a neon "system" tree: purple energy, diamond nodes */
+.tt[data-th=body]{--bg:radial-gradient(ellipse at 50% 100%,rgba(150,37,255,.32),transparent 55%),#09020a;--ink:#f6e8ff;--acc:#c58bff;--mut:#7c5a94;--ln:rgba(150,37,255,.22);--half:#7d3fc7;--lit:#e4c8ff;--glow:#9625ff;--nb:#120417;--nbc:#3b1652;--rad:6px;--rot:45deg;--sz:44px;--own:linear-gradient(135deg,#5b16a8,#2a0848);--ownb:#e4c8ff;--ownc:#fff;--opn:#c58bff;--deed:#ffcf6b;--ic:#8a62a8;--hf:'Rajdhani',sans-serif;--lf:'Rajdhani',sans-serif;--lsz:13px;--lc:#f6e8ff;--plq:rgba(9,2,10,.85);--lw:3}
+.tt[data-th=body] .tt-hud b,.tt[data-th=body] .tt-n small,.tt[data-th=body] .tt-heads span{text-transform:uppercase;letter-spacing:.06em}
+.tt[data-th=body] .tt-map path{filter:drop-shadow(0 0 3px rgba(150,37,255,.5))}
+.tt[data-th=body] .tt-n small{top:calc(100% + 12px)}.tt[data-th=body] .tt-n.cap{--sz:58px}
+/* Modeling — holographic glass: thin light, iridescent nodes */
+.tt[data-th=holo]{--bg:radial-gradient(circle at 15% 20%,rgba(140,110,255,.3),transparent 40%),radial-gradient(circle at 85% 60%,rgba(255,110,200,.22),transparent 40%),radial-gradient(circle at 40% 95%,rgba(90,200,255,.2),transparent 45%),#0d0b14;--ink:#fff;--acc:#c9b8ff;--mut:rgba(255,255,255,.5);--ln:rgba(255,255,255,.12);--half:rgba(255,255,255,.4);--lit:url(#tbg-holo);--glow:rgba(200,170,255,.7);--nb:rgba(255,255,255,.06);--nbc:rgba(255,255,255,.22);--nbw:1px;--own:conic-gradient(from 200deg,#ffb3f0,#b8c8ff,#9ff7ff,#ffe6a8,#ffb3f0);--ownb:rgba(255,255,255,.8);--ownc:#1a1030;--opn:#fff;--deed:#ffd59a;--ic:rgba(255,255,255,.6);--hf:'Rajdhani',sans-serif;--lf:'Rajdhani',sans-serif;--lsz:13px;--lc:#fff;--plq:rgba(20,16,32,.6);--lw:2.5}
+.tt[data-th=holo] .tt-n .sh{backdrop-filter:blur(6px)}
+/* Datum — chrome: silver limbs, gem settings */
+.tt[data-th=chrome]{--bg:radial-gradient(ellipse at 50% 0,rgba(160,190,220,.16),transparent 55%),#05080c;--ink:#eef6ff;--acc:#dfe8f2;--mut:#7d8996;--ln:#2a3642;--half:#7d8996;--lit:url(#tbg-chrome);--glow:rgba(223,232,242,.5);--nb:radial-gradient(circle at 35% 30%,#1e2a36,#0a1118 70%);--nbc:#39444f;--own:radial-gradient(circle at 35% 30%,#ffffff,#b9c4cf 45%,#5b6672);--ownb:#f4f8fc;--ownc:#0a1118;--opn:#eef6ff;--deed:#ffcf6b;--ic:#7d8996;--hf:'Unbounded',sans-serif;--lf:'Inter',sans-serif;--lc:#eef6ff;--plq:rgba(5,8,12,.85);--lw:5}
+.tt[data-th=chrome] .tt-n .sh{box-shadow:0 0 0 2px #0a1118,0 0 0 4px #39444f}.tt[data-th=chrome] .tt-n.max .sh{box-shadow:0 0 0 2px #0a1118,0 0 0 4px #dfe8f2,0 0 16px rgba(223,232,242,.45)}
+.tt[data-th=chrome] .tt-hud b{font-size:16px;letter-spacing:.04em}
+/* Content — a viewfinder: film-strip limbs, framed shots */
+.tt[data-th=vf]{--bg:repeating-linear-gradient(0deg,rgba(77,216,255,.03) 0 1px,transparent 1px 4px),#05070a;--ink:#e8f6ff;--acc:#4dd8ff;--mut:#6c8ea0;--ln:#1f3a4a;--half:#2f7fa3;--lit:#4dd8ff;--glow:rgba(77,216,255,.6);--nb:#0b141b;--nbc:rgba(77,216,255,.13);--nbw:1px;--rad:2px;--own:linear-gradient(160deg,#0e4a63,#082331);--ownb:#4dd8ff;--ownc:#e8f6ff;--opn:#4dd8ff;--deed:#ffcf6b;--ic:#3d5a6b;--hf:'Archivo',sans-serif;--lf:'Archivo',sans-serif;--lc:#e8f6ff;--plq:rgba(5,7,10,.9);--lw:3;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(77,216,255,.13)}
+.tt[data-th=vf] .tt-map path{stroke-dasharray:8 6}.tt[data-th=vf] .tt-map path.lit{stroke-dasharray:none}
+.tt[data-th=vf] .tt-n .sh::before,.tt[data-th=vf] .tt-n .sh::after{content:'';position:absolute;width:12px;height:12px;border:2px solid var(--nbc)}
+.tt[data-th=vf] .tt-n .sh::before{left:-4px;top:-4px;border-width:2px 0 0 2px}.tt[data-th=vf] .tt-n .sh::after{right:-4px;bottom:-4px;border-width:0 2px 2px 0}
+.tt[data-th=vf] .tt-n.max .sh::before,.tt[data-th=vf] .tt-n.max .sh::after,.tt[data-th=vf] .tt-n.open .sh::before,.tt[data-th=vf] .tt-n.open .sh::after{border-color:#4dd8ff}
+.tt[data-th=vf] .tt-hud small::before{content:'● ';color:#ff5a6e}
+/* Social — street poster: fat marker limbs, sticker nodes */
+.tt[data-th=street]{--bg:#161616;--ink:#f4f1ea;--acc:#ff6a00;--mut:#8a8a8a;--ln:#2e2e2e;--half:#8a3a00;--lit:#ff6a00;--glow:transparent;--nb:#1f1f1f;--nbc:#3a3a3a;--nbw:2px;--rad:12px;--rot:-4deg;--own:#ff6a00;--ownb:#f4f1ea;--ownc:#160800;--opn:#ff6a00;--deed:#f4c06a;--ic:#8a8a8a;--hf:'Anton',sans-serif;--lf:'Inter',sans-serif;--lsz:11.5px;--lc:#f4f1ea;--plq:#161616;--lw:9}
+.tt[data-th=street] .tt-hud b{font-size:26px;text-transform:uppercase;letter-spacing:.01em;font-weight:400}.tt[data-th=street] .tt-heads span{font-weight:400;font-size:15px;letter-spacing:.04em}
+.tt[data-th=street] .tt-n small{text-transform:uppercase;font-weight:800;letter-spacing:.02em}
+.tt[data-th=street] .tt-n.max .sh{box-shadow:3px 3px 0 #000}.tt[data-th=street] .tt-n:nth-child(odd of .tt-n) .sh{--rot:5deg}
+/* Mind — a notebook: ruled paper, inked limbs, hand-drawn rings */
+.tt[data-th=ink]{--bg:repeating-linear-gradient(180deg,transparent 0 27px,rgba(255,154,213,.07) 27px 28px),#15121a;--ink:#f6eef4;--acc:#ff9ad5;--mut:#9a8aa0;--ln:rgba(255,154,213,.2);--half:rgba(255,154,213,.55);--lit:#ff9ad5;--glow:rgba(255,154,213,.6);--nb:#1d1822;--nbc:rgba(255,154,213,.35);--nbw:2px;--rad:46% 54% 50% 48% / 52% 46% 54% 48%;--own:#ff9ad5;--ownb:#fff;--ownc:#2a0f20;--opn:#ff9ad5;--deed:#ffd59a;--ic:#9a8aa0;--hf:'Caveat',cursive;--lf:'Caveat',cursive;--lsz:17px;--lc:#f6eef4;--plq:rgba(21,18,26,.85);--lw:3}
+.tt[data-th=ink] .tt-hud b{font-size:24px;font-weight:700}.tt[data-th=ink] .tt-hud small{font-family:'Inter',sans-serif}.tt[data-th=ink] .tt-heads span{font-size:18px;letter-spacing:0}
+.tt[data-th=ink] .tt-n small{font-weight:700;line-height:.95}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -2270,7 +2224,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b327';
+const BUILD='b328';
 /* b316: bottom sheets sit above the iPhone keyboard — the sheet follows the visible part of the screen (visualViewport),
    and the field you tap scrolls into view inside it. Before, the keyboard slid over “New quest” and every other sheet. */
 (function(){ const v=window.visualViewport, R=document.documentElement; if (!v) return;
@@ -6893,36 +6847,31 @@ function tSpec(a){ const T=TTREES[a], by=[0,0,0]; for (const n of T.nodes) if (n
    stars    — a constellation you climb from the bottom up to the capstone star (Cinzel)
    dungeon  — a living tree growing out of the ground, gems on bark branches, gilded frame (Jacquard 12)
    gameboy  — a 4-shade green tech tree you scroll left → right (Silkscreen / Press Start) */
-const TT_STYLES=[['arcade','🕹️','Arcade'],['jrpg','🗡️','JRPG'],['stars','✨','Stars'],['dungeon','🏰','Dungeon'],['gameboy','🟩','Game Boy']];
-const ttStyle=()=>TT_STYLES.some(z=>z[0]===S.ttStyle)?S.ttStyle:'arcade';
-function ttSetStyle(k){ S.ttStyle=k; commit({skipXp:true}); }
-function ttLayout(T,sty){ const P={}, E=[]; let H, W=null, kind='step';
-  const prevOf=n=>T.nodes.find(q=>q.b===n.b&&q.t===n.t-1);
-  for (const n of T.nodes){ if (n.t===5){ for (const b of [0,1,2]) E.push([T.nodes.find(q=>q.b===b&&q.t===4), n]); } else if (n.t>1) E.push([prevOf(n), n]); }
-  const jit=(id,r)=>(hashN(id)%(2*r+1))-r;
-  if (sty==='stars'){ kind='line'; const base=[22,50,78]; H=640;
-    for (const n of T.nodes) P[n.id]= n.t===5?{x:50,y:72}:{x:base[n.b]+jit(n.id,7)+(n.b===1?0:(n.b===0?-1:1)*(n.t-1)*2), y:560-(n.t-1)*118+jit(n.id+'y',14)}; }
-  else if (sty==='dungeon'){ kind='curve'; H=650; const X=[[24,20,17,15],[50,50,50,50],[76,80,83,85]];
-    for (const n of T.nodes) P[n.id]= n.t===5?{x:50,y:78}:{x:X[n.b][n.t-1], y:550-(n.t-1)*112};
-    E.unshift(...[0,1,2].map(b=>[{root:1}, T.nodes.find(q=>q.b===b&&q.t===1)])); P.__root={x:50,y:640}; }
-  else if (sty==='gameboy'){ kind='hstep'; W=720; H=372; const X=[62,202,342,482,640];
-    for (const n of T.nodes) P[n.id]= n.t===5?{x:X[4]/W*100,y:186}:{x:X[n.t-1]/W*100, y:66+n.b*120}; }
-  else { const X=[18,50,82], Y=t=>88+(t-1)*124+(t===5?22:0); H=Y(5)+96; for (const n of T.nodes) P[n.id]={x:n.t===5?50:X[n.b], y:Y(n.t)}; P.__Y=Y; }
-  return {P,E,H,W,kind}; }
-function tTree(a){ const T=TTREES[a], A=AREAS.find(x=>x.k===a), free=tFree(a), inv=tInvested(a), sty=ttStyle(), L=ttLayout(T,sty), P=L.P;
-  const st=Object.fromEntries(T.nodes.map(n=>[n.id,tState(n.id)]));
-  const path=(p,q)=>L.kind==='line'?`M${p.x} ${p.y} L${q.x} ${q.y}`:L.kind==='curve'?`M${p.x} ${p.y} C${p.x} ${(p.y+q.y)/2}, ${q.x} ${(p.y+q.y)/2}, ${q.x} ${q.y}`
-    :L.kind==='hstep'?`M${p.x} ${p.y} H${(p.x+q.x)/2} V${q.y} H${q.x}`:(q.y-p.y>130&&p.x!==q.x?`M${p.x} ${p.y} V${q.y-46} H${q.x} V${q.y}`:`M${p.x} ${p.y} V${q.y}`);
-  const lines=L.E.map(([u,v])=>{ const p=u.root?P.__root:P[u.id], q=P[v.id], on=u.root?true:st[u.id].r>0, both=on&&st[v.id].r>0; return `<path d="${path(p,q)}" class="${both?'lit':on?'half':''}"/>`; }).join('');
-  const bands=sty==='arcade'||sty==='jrpg'?[2,3,4,5].map(t=>`<div class="tt-band ${inv>=T_TIER[t]?'on':''}" style="top:${P.__Y(t)-(t===5?62:46)}px"><span>${t===5?'CAPSTONE':'TIER '+t} · ${T_TIER[t]} PTS</span></div>`).join(''):'';
-  const node=n=>{ const s0=st[n.id], p=P[n.id], pips=n.r>1?`<i class="tt-pips">${Array.from({length:n.r},(_,i)=>`<u class="${i<s0.r?'on':''}"></u>`).join('')}</i>`:'';
-    return `<button class="tt-n ${s0.cls} ${n.fx.ab?'ab':''} ${n.t===5?'cap':''}" style="left:${p.x}%;top:${p.y}px" onclick="tOpen('${n.id}')" aria-label="${esc(n.n)}, ${s0.r}/${n.r}"><span>${s0.cls==='lk'?'🔒':n.ic}</span>${pips}${n.fx.ab?'<b class="tt-ab">⚡</b>':''}<small>${esc(n.n)}</small></button>`; };
-  const spec=tSpec(a), map=`<div class="tt-map" style="height:${L.H}px${L.W?`;width:${L.W}px`:''}">${bands}${sty==='dungeon'?'<i class="tt-ground"></i>':''}<svg viewBox="0 0 100 ${L.H}" preserveAspectRatio="none" aria-hidden="true">${lines}</svg>${T.nodes.map(node).join('')}</div>`;
-  return `<div class="tt" data-ts="${sty}" style="--c:${A.c}"><div class="tt-hud"><div><small>${esc(A.n.toUpperCase())} · TALENTS</small><b>${spec?`${spec[1]} ${esc(spec[0])}`:'No specialization yet'}</b></div><div class="tt-pts ${free?'on':''}"><b>${free}</b><small>point${free===1?'':'s'}</small></div></div>
-    <div class="tt-heads">${T.br.map(([nm,ic],b)=>`<span><i>${ic}</i>${esc(nm)}<em>${T.nodes.filter(n=>n.b===b).reduce((s,n)=>s+tRank(n.id),0)}</em></span>`).join('')}</div>
-    ${L.W?`<div class="tt-scroll">${map}</div><div class="tt-hint">scroll → to the capstone</div>`:map}
+// b328: one shape for every area — a trunk that splits into three limbs (the specializations) growing up to a crown (the capstone) —
+// drawn in the look of the area's own page. Side limbs sit lower than the middle one so labels never collide.
+const TT_TH={MONEY:'money',BODY:'body',MODEL:'holo',DATUM:'chrome',CONTENT:'vf',SOCIAL:'street',MIND:'ink'};
+function ttGeo(){ const H=700, base={x:50,y:H-8}, split={x:50,y:604}, crown={x:50,y:84};
+  const L=[[25,566],[14,454],[13,344],[21,236]], C=[[50,506],[50,398],[50,290],[50,182]];
+  const pos=(b,t)=>{ const q=(b===1?C:L)[t-1]; return {x:b===2?100-q[0]:q[0], y:q[1]}; };
+  return {H, base, split, crown, pos}; }
+function ttCurve(P){ // Catmull-Rom → one cubic per segment, so each segment can light up on its own
+  return P.slice(0,-1).map((p,i)=>{ const a=P[i-1]||p, b=P[i+1], c=P[i+2]||b; const c1={x:p.x+(b.x-a.x)/6, y:p.y+(b.y-a.y)/6}, c2={x:b.x-(c.x-p.x)/6, y:b.y-(c.y-p.y)/6};
+    return `M${p.x.toFixed(1)} ${p.y.toFixed(1)} C${c1.x.toFixed(1)} ${c1.y.toFixed(1)}, ${c2.x.toFixed(1)} ${c2.y.toFixed(1)}, ${b.x.toFixed(1)} ${b.y.toFixed(1)}`; }); }
+function tTree(a){ const T=TTREES[a], A=AREAS.find(x=>x.k===a), free=tFree(a), inv=tInvested(a), th=TT_TH[a]||'money', G=ttGeo();
+  const st=Object.fromEntries(T.nodes.map(n=>[n.id,tState(n.id)])), cap=T.nodes.find(n=>n.t===5), own=id=>st[id].r>0;
+  const segs=[`<path class="trunk ${inv?'lit':''}" d="M50 ${G.base.y} L50 ${G.split.y}"/>`];
+  for (const b of [0,1,2]){ const ns=[1,2,3,4].map(t=>T.nodes.find(n=>n.b===b&&n.t===t)), P=[G.split,...ns.map(n=>G.pos(b,n.t)),G.crown], ids=[null,...ns.map(n=>n.id),cap.id];
+    ttCurve(P).forEach((d,i)=>{ const u=ids[i], v=ids[i+1], on=u?own(u):inv>0, both=on&&own(v); segs.push(`<path class="${both?'lit':on||own(v)?'half':''}" d="${d}"/>`); }); }
+  const node=n=>{ const s0=st[n.id], p=n.t===5?G.crown:G.pos(n.b,n.t), pips=n.r>1?`<i class="tt-pips">${Array.from({length:n.r},(_,i)=>`<u class="${i<s0.r?'on':''}"></u>`).join('')}</i>`:'';
+    return `<button class="tt-n ${s0.cls} ${n.fx.ab?'ab':''} ${n.t===5?'cap':''}" style="left:${p.x}%;top:${p.y}px" onclick="tOpen('${n.id}')" aria-label="${esc(n.n)}, ${s0.r} of ${n.r}${s0.cls==='open'?', ready to learn':s0.cls==='lk'?', locked':''}"><i class="sh"></i><span>${s0.cls==='lk'?'🔒':n.ic}</span>${pips}${n.fx.ab?'<b class="tt-ab">⚡</b>':''}<small>${esc(n.n)}</small></button>`; };
+  const spec=tSpec(a);
+  return `<div class="tt" data-th="${th}" style="--c:${A.c}"><div class="tt-hud"><div><small>${esc(A.n)} · talents</small><b>${spec?`${spec[1]} ${esc(spec[0])}`:'No specialization yet'}</b></div><div class="tt-pts ${free?'on':''}"><b>${free}</b><small>point${free===1?'':'s'}</small></div></div>
+    <div class="tt-heads">${T.br.map(([nm,ic],b)=>`<span><i>${ic}</i>${esc(nm)}<em>${T.nodes.filter(n=>n.b===b).reduce((s,n)=>s+tRank(n.id),0)} in</em></span>`).join('')}</div>
+    <div class="tt-map" style="height:${G.H}px"><svg viewBox="0 0 100 ${G.H}" preserveAspectRatio="none" aria-hidden="true"><defs>
+      <linearGradient id="tbg-holo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb3f0"/><stop offset=".35" stop-color="#b8c8ff"/><stop offset=".7" stop-color="#9ff7ff"/><stop offset="1" stop-color="#ffe6a8"/></linearGradient>
+      <linearGradient id="tbg-chrome" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d8996"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#7d8996"/></linearGradient></defs>${segs.join('')}</svg>
+      ${T.nodes.map(node).join('')}</div>
     <div class="tt-foot">${tEarned(a)} earned from ${esc(A.n)} feats · ${tCost(a)} spent${T.nodes.some(n=>tGift(n.id))?' · old perks kept free':''}</div></div>`; }
-function ttStylePicker(){ const cur=ttStyle(); return `<div class="tt-styles" role="radiogroup" aria-label="Tree style">${TT_STYLES.map(([k,ic,l])=>`<button role="radio" aria-checked="${cur===k}" class="${cur===k?'on':''}" onclick="ttSetStyle('${k}')"><span>${ic}</span>${l}</button>`).join('')}</div>`; }
 function tOpen(id){ const s0=tState(id), n=s0.n, A=AREAS.find(x=>x.k===n.a), T=TTREES[n.a], br=n.t===5?['Capstone','👑']:T.br[n.b];
   const chk=(ok,t)=>`<div class="tt-req ${ok?'ok':''}"><i>${ok?'✓':'✗'}</i><span>${t}</span></div>`;
   const reqs=s0.r>=n.r?'':`${chk(s0.free>0,`1 ${esc(A.n)} point <span class="sub">· you have ${s0.free}</span>`)}${n.t>1?chk(s0.tierOk,`${s0.need} points already in ${esc(A.n)} <span class="sub">· you have ${s0.inv}</span>`):''}${s0.prev?chk(s0.prevOk,`${esc(s0.prev.n)} learned`):''}
@@ -12568,7 +12517,7 @@ function charSkillsTab(){ const a=AREAS.some(x=>x.k===skArea)?skArea:AREAS[0].k;
   return `<div class="ch-ats sec" role="tablist">${AREAS.map(x=>`<button role="tab" aria-selected="${x.k===a}" class="${x.k===a?'on':''}" style="--c:${x.c}" onclick="skArea='${x.k}';render()">${esc(x.n.split(' ')[0])}${tFree(x.k)?`<i>${tFree(x.k)}</i>`:''}</button>`).join('')}</div>
     <div class="card sec ch-sk"><div class="row between" style="align-items:baseline;margin-bottom:10px"><div><b style="font-size:17px">${esc(A.n)}</b> <span class="sub">LV ${A.lvl} · ${esc(A.rank||'')}</span></div>${go?`<button class="linkbtn" onclick="go('${go}')">Go to ${esc(A.n==='Social'?'Circle':A.n.split(' ')[0])} ›</button>`:''}</div>
       <div class="seg tt-seg" role="tablist" style="margin:0 0 10px"><button role="tab" aria-selected="${tAreaTab==='tree'}" class="${tAreaTab==='tree'?'on':''}" onclick="tAreaTab='tree';render()">🌳 Talents</button><button role="tab" aria-selected="${tAreaTab!=='tree'}" class="${tAreaTab!=='tree'?'on':''}" onclick="tAreaTab='feats';render()">🏅 Feats · ${A.on}/${A.tot}</button></div>
-      ${tAreaTab==='tree'?ttStylePicker()+tTree(a)+`<div class="help" style="margin-top:8px">Feats pay the points (${A.toNext>0?`${A.toNext} more feat${A.toNext===1?'':'s'} to LV ${A.lvl+1}`:'max level'}); each talent also needs a real deed. Tap a node.</div>`:vSkills()}</div>
+      ${tAreaTab==='tree'?tTree(a)+`<div class="help" style="margin-top:8px">Feats pay the points (${A.toNext>0?`${A.toNext} more feat${A.toNext===1?'':'s'} to LV ${A.lvl+1}`:'max level'}); each talent also needs a real deed. Tap a node.</div>`:vSkills()}</div>
     ${areaExtra(a)}
     ${cls?`<div class="card sec"><div class="hdr"><h2>Class · ${THIS_Q}</h2><span class="chip">${cls.ic} ${cls.name}</span></div><div class="sub">${esc(cls.sig)}</div>${cq?`<div class="row between" style="font-size:13px;margin-top:8px"><span>🗡️ Class quest · ${esc(cq.label)}</span><b class="num">${cq.n}/${cq.target}</b></div>`:''}<div class="help" style="margin-top:6px">From next quarter your specializations above do this job.</div></div>`:''}`; }
 function charLookTab(){ if (!['build','custom'].includes(chMode)) chMode='build';

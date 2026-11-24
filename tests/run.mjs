@@ -690,6 +690,15 @@ const chs = await page.evaluate(async () => { const w = ms => new Promise(r => s
   r.lvPill = view === 'evolve';
   go('today'); return r; });
 ok('Character screen: area chip → its tree on the page; 7 area tabs; feats a tap away; one row per area (level + stat + 30 days); Look, Collection, Settings and old links all land there', Object.values(chs).every(Boolean), JSON.stringify(chs));
+// b328: every area's talent tree is a branching tree (trunk → 3 limbs → crown) in its own page's look; nothing overlaps; the skin can't put a frame on the nodes
+const tbr = await page.evaluate(async () => { const r = {}, want = { MONEY: 'money', BODY: 'body', MODEL: 'holo', DATUM: 'chrome', CONTENT: 'vf', SOCIAL: 'street', MIND: 'ink' };
+  for (const a of Object.keys(want)) { tAreaTab = 'tree'; charGo('skills', a); await new Promise(z => setTimeout(z, 150)); const t = document.querySelector('#view .tt');
+    const B = [...t.querySelectorAll('.tt-n')].flatMap((n, i) => [[i, n.querySelector('.sh').getBoundingClientRect()], [i, n.querySelector('small').getBoundingClientRect()]]);
+    let hits = 0; for (let i = 0; i < B.length; i++) for (let j = i + 1; j < B.length; j++) { if (B[i][0] === B[j][0]) continue; const x = B[i][1], y = B[j][1]; if (x.left < y.right - 2 && y.left < x.right - 2 && x.top < y.bottom - 2 && y.top < x.bottom - 2) hits++; }
+    const n0 = t.querySelector('.tt-n'), cs = getComputedStyle(n0);
+    r[a] = t.dataset.th === want[a] && t.querySelectorAll('.tt-n').length === 13 && t.querySelectorAll('.tt-map path').length === 16 && hits === 0 && cs.borderTopWidth === '0px' && cs.backgroundColor === 'rgba(0, 0, 0, 0)' ? true : { th: t.dataset.th, hits, border: cs.borderTopWidth }; }
+  go('today'); return r; });
+ok('talent trees: every area a branching tree in its own look (Money coins, Body diamonds, Modeling glass, Datum chrome, Content frames, Social stickers, Mind notebook), no overlaps', Object.values(tbr).every(v => v === true), JSON.stringify(tbr));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');
