@@ -28,3 +28,9 @@ Rules that never bend:
 - Circle (b318): Close the day "Saw anyone?" logs a hangout for today (counts as an event: XP, SOCIAL, Plaza, Hermit King); calendar plans "with Sam" update people.
 - Activities link by words (b317): stretch/mobility/yoga, gym/workout, guitar/practice, bench/Datum, post/film, read (books), study/lesson/learn — matching habits and Top 3 tick themselves.
 
+- Learning skill tree (b324): every subject is a tree of its own steps (lessons, Datum resources, Drawing stages, every 5 project hours) with a Proof of skill boss every 5 steps. Nothing is ticked twice — the tree reads the same records the subject already keeps.
+  - XP: quiz 5 per right answer (best score per step), flashcards 2 per card you get right (max 30 a day), teach-back 15 (once per step), proof of skill 60 + a win, rank-up 30 per rank (Novice → Apprentice → Adept → Expert → Master, from skill points) + a win, Daily 10 5 per day with any learning.
+  - Goals: Daily 10 days, flashcards reviewed, quiz answers right, teach-backs, proofs of skill (all generated, Learning track).
+  - Habits / Top 3: "study / learn / lesson / Daily 10 / flashcards" tick on any learning day.
+  - Fog boss: quiz 2, 5+ flashcards 2, teach-back 3, proof of skill 8 (crit).
+  - Home shows one Daily 10 line (+ cards due); Life → Next up opens the next step of whatever you were last on; the weekly recap shows on Learning on Sunday (this week) and Monday (last week).

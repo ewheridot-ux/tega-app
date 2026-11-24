@@ -543,10 +543,10 @@ ok('night stretch ticks the gym daily quest, a stretch habit and a stretch Top 3
 ok('a goal counting a switched-off habit switches it back on', lk.habitBack, JSON.stringify(lk));
 // Life → “Next up” opens that subject's lessons even when you're already on the Learning page
 const nxu = await page.evaluate(async () => { const keep = JSON.stringify(S.learn), r = {}; const subs = lrSubs(); subs.unshift({ id: 'NXS', name: 'Piano', icon: '🎹', kind: 'custom', lessons: [{ id: 'L1', t: 'C major scale', url: 'https://example.com', mins: 10 }], log: [] });
-  commit({ skipXp: true }); location.hash = 'learn'; await new Promise(r => setTimeout(r, 300)); lrTab = 'goals'; render(); const nx = lifeNext(); r.points = /lrGoNext\('NXS'\)/.test(nx.go);
-  (0, eval)(nx.go); await new Promise(r => setTimeout(r, 300)); r.opened = lrTab === 'NXS' && !!document.getElementById('lr-upnext') && document.getElementById('view').innerHTML.includes('C major scale');
+  commit({ skipXp: true }); location.hash = 'learn'; await new Promise(r => setTimeout(r, 300)); lrTab = 'goals'; render(); const nx = lifeNext(), c = lrContinue(); r.points = nx.go === 'lrContinueGo()' && nx.t.startsWith(c.s.t);   // b324: whatever you were last on
+  (0, eval)(nx.go); await new Promise(r => setTimeout(r, 400)); r.opened = lrTab === c.x.id && !!document.getElementById('lr-upnext') && (document.getElementById('g-sheet')?.textContent || '').includes(c.s.t); gSheetClose();
   S.learn = JSON.parse(keep); commit({ skipXp: true }); location.hash = 'today'; await new Promise(r => setTimeout(r, 200)); return r; });
-ok('Life “Next up” opens the subject and its lesson, even from the Learning page', nxu.points && nxu.opened, JSON.stringify(nxu));
+ok('Life “Next up” opens the subject you were last on, straight to its next step — even from the Learning page', nxu.points && nxu.opened, JSON.stringify(nxu));
 // Keyboard open (visible screen shrinks) → the New quest sheet and its text box stay above the keyboard
 const kb = await page.evaluate(async () => { const R = document.documentElement;
   openQuick(); await new Promise(r => setTimeout(r, 450)); R.style.setProperty('--vvt', '0px'); R.style.setProperty('--vvh', '380px'); R.classList.add('kb-open'); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); const m = [...document.querySelectorAll('.modal')].pop(), c = m && m.querySelector('.card'), inp = m && m.querySelector('input,textarea');
@@ -607,6 +607,39 @@ const ywc = await page.evaluate(() => { const keepV = YVID, keepC = window.claud
   window.claude = Object.assign({}, window.claude, { native: {} }); r.phoneFrame = /iframe/.test(yLoop(id));
   ytOpen = realOpen; window.claude = keepC; YVID = keepV; return r; });
 ok('web copy: pose demos never show as black boxes (drawing stays, ▶ opens YouTube); the phone still plays them in place', ywc.noFrame && ywc.opens && ywc.noSheet && ywc.phoneFrame, JSON.stringify(ywc));
+// b324 Learning: skill tree, ranks, quiz → cards, spaced review, teach-back, proof of skill, Daily 10 — and all of it pays XP, moves goals, ticks habits, hits the Fog
+const lt = await page.evaluate(async () => { const r = {}, keepAI = sampleLib, keepWins = S.wins.length; const xp0 = computeXP0();
+  const id = 's' + uid(); lrSubs().push({ id, name: 'Test Spanish', icon: '🗣️', type: 'language', kind: 'custom', lessons: [], log: [] }); const x = lrSub(id);
+  for (let i = 0; i < 7; i++) x.lessons.push({ id: 'L' + i, t: 'Lesson ' + i, url: 'https://example.com/' + i, mins: 10 });
+  for (let i = 0; i < 5; i++) x.lessons[i].done = addDays(TODAY, -6 + i); commit({ skipXp: true }); lrTab = id; go('learn'); await new Promise(z => setTimeout(z, 200));
+  const nodes = [...document.querySelectorAll('.lt .lt-n')]; r.tree = nodes.length === 8 && nodes.filter(n => n.classList.contains('on')).length === 5 && nodes[5].classList.contains('big') && nodes[5].classList.contains('boss') && nodes[6].classList.contains('nx');
+  r.rank = lrRank(x).name === 'Apprentice';
+  // quiz: AI stand-in, 2 of 3 right
+  sampleLib = { json: async p => /multiple-choice/.test(p) ? { qs: [0, 1, 2].map(k => ({ q: 'Q' + k, o: ['a', 'b', 'c', 'd'], a: 1, why: 'because' })) } : /explained/.test(p) ? { score: 4, good: 'clear', missed: 'gender' } : { t: 'Order a coffee', how: 'Do it in Spanish.' } };
+  const xq0 = lrXtraXP(); await lrQuiz(id, 'L4'); lrQzPick(1); lrQz.i++; lrQz.pick = null; lrQzDraw(); lrQzPick(1); lrQz.i++; lrQz.pick = null; lrQzDraw(); lrQzPick(0); lrQz.i++; lrQz.pick = null; lrQzDraw();
+  const cs = lrCards().filter(c => c.sid === id); r.quiz = x.qz.L4.r === 2 && cs.length === 3 && cs.filter(c => c.due === addDays(TODAY, 1)).length === 1 && lrXtraXP() - xq0 >= 2 * LX.quizQ;
+  // review: the missed card is due tomorrow — pretend it's due now and get it right
+  cs.forEach(c => c.due = TODAY); const xr0 = lrXtraXP(); lrRv = { ids: cs.map(c => c.id), i: 0, show: true, ok: 0 }; lrRvGrade(1); lrRvGrade(1); lrRvGrade(0);
+  r.review = S.learn.rev[TODAY].n >= 3 && cs[0].box === 1 && cs[0].due === addDays(TODAY, 3) && cs[2].due === addDays(TODAY, 1) && lrXtraXP() - xr0 >= 2 * LX.card;
+  // teach-back
+  const xt0 = lrXtraXP(); const f = document.createElement('form'); f.innerHTML = '<textarea name="t">Ser is for what something is</textarea>'; await lrTeach({ preventDefault() {}, target: f }, id, 'L4');
+  await new Promise(z => setTimeout(z, 50)); r.teach = x.teach.length === 1 && x.teach[0].fb && x.teach[0].fb.score === 4 && lrXtraXP() - xt0 >= LX.teach;
+  await lrTeach({ preventDefault() {}, target: f }, id, 'L4'); r.teachOnce = lrXtraXP() - xt0 < 2 * LX.teach + LX.rank;   // a second teach-back of the same step adds no more XP
+  // proof of skill
+  const w0 = S.wins.length, xp0b = lrXtraXP(); await lrProofGet(id, 1); r.proofAI = x.proofs[1].t === 'Order a coffee'; lrProofDone(id, 1);
+  r.proof = !!x.proofs[1].done && S.wins.length > w0 && S.wins.some(w => /Proof of skill/.test(w.text)) && lrXtraXP() - xp0b >= LX.proof;
+  // Daily 10, goals, habits, Fog, Home
+  r.d10 = lrActDays().has(TODAY) && lrStreak() >= 1 && KSRC.find(k => k[1] === 'lrd10')[5](TODAY, TODAY) === 1 && KSRC.find(k => k[1] === 'lrproof')[5](TODAY, TODAY) === 1 && KSRC.find(k => k[1] === 'lrcards')[5](TODAY, TODAY) >= 3;
+  r.habit = actDoneOn('Study Spanish', TODAY) && actDoneOn('Daily 10', TODAY);
+  r.fog = aBossEvents('mind', TODAY.slice(0, 7)).some(e => /Proof of skill/.test(e.l)) && aBossEvents('mind', TODAY.slice(0, 7)).some(e => /Quiz/.test(e.l));
+  go('today'); await new Promise(z => setTimeout(z, 100)); r.home = /Daily 10/.test(document.querySelector('.lt-home')?.textContent || '');
+  x.rankSeen = 0; lrRankCheck(true); r.rankWin = S.wins.some(w => /Test Spanish: \w+ rank/.test(w.text)) && x.rankSeen === lrRank(x).i; lrRankCheck(true); r.rankOnce = S.wins.filter(w => /Test Spanish: \w+ rank/.test(w.text)).length === 1;
+  // Life “Next up” goes straight to the step card of whatever you were last on
+  lifeNext().go === 'lrContinueGo()' && lrContinueGo(); await new Promise(z => setTimeout(z, 300)); r.cont = /Lesson 5/.test(document.getElementById('g-sheet')?.textContent || '');
+  r.xpUp = computeXP0() >= xp0;
+  gSheetClose(); sampleLib = keepAI; S.learn.subjects = S.learn.subjects.filter(z => z.id !== id); S.learn.cards = lrCards().filter(c => c.sid !== id); delete S.learn.rev[TODAY]; S.wins = S.wins.slice(0, keepWins); commit({ skipXp: true }); go('today');
+  return r; });
+ok('Learning skill tree: steps, NEXT, proof-of-skill boss every 5; ranks; quiz → cards; spaced review; teach-back; proof; Daily 10 → goals, habits, Fog, Home; Next up opens the step', Object.values(lt).every(Boolean), JSON.stringify(lt));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

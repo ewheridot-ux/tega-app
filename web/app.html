@@ -508,6 +508,54 @@ html.kb-open .modal .card{padding-bottom:16px}
 /* b308: recently deleted pictures */
 .pictr-th{width:40px;height:40px;object-fit:cover;border-radius:8px;flex:none;background:var(--card2)}
 [data-hold] input,[data-hold] textarea,[data-hold] select{-webkit-user-select:text;user-select:text}
+/* b324: Learning skill tree — an 8-bit game screen */
+.card.lt{background-color:#0c0a18;color:#efeaff;border:0;box-shadow:inset 0 0 0 2px #2a2250;position:relative;overflow:hidden;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px),radial-gradient(circle at 50% -10%,rgba(140,110,255,.25),transparent 60%);background-size:16px 16px,16px 16px,100% 100%}
+.card.lt h2,.card.lt b{color:inherit}
+.lt .sub,.lt small{color:#a79fc9}.lt .btn{background:#ffd23f;color:#1a1300}.lt .btn.ghost{background:#1d1838;color:#efeaff}.lt details summary{color:#efeaff}.lt .inp{background:#16122b;color:#fff;border-color:#2f2858}
+.lt-hud{display:flex;gap:12px;align-items:center}
+.lt-crest{flex:none;width:52px;height:52px;display:grid;place-items:center;font-size:26px;background:#1d1838;box-shadow:0 -3px 0 #ffd23f,0 3px 0 #ffd23f,-3px 0 0 #ffd23f,3px 0 0 #ffd23f,inset 0 -5px 0 rgba(0,0,0,.35)}
+.lt-crest.r0{box-shadow:0 -3px 0 #6fd36f,0 3px 0 #6fd36f,-3px 0 0 #6fd36f,3px 0 0 #6fd36f,inset 0 -5px 0 rgba(0,0,0,.35)}.lt-crest.r1{box-shadow:0 -3px 0 #5ee6ff,0 3px 0 #5ee6ff,-3px 0 0 #5ee6ff,3px 0 0 #5ee6ff,inset 0 -5px 0 rgba(0,0,0,.35)}.lt-crest.r2{box-shadow:0 -3px 0 #b98cff,0 3px 0 #b98cff,-3px 0 0 #b98cff,3px 0 0 #b98cff,inset 0 -5px 0 rgba(0,0,0,.35)}.lt-crest.r3{box-shadow:0 -3px 0 #ff6b6b,0 3px 0 #ff6b6b,-3px 0 0 #ff6b6b,3px 0 0 #ff6b6b,inset 0 -5px 0 rgba(0,0,0,.35)}
+.lt-hud-t{flex:1;min-width:0;display:grid;gap:3px}.lt-rk{font-family:var(--px);font-size:9px;letter-spacing:.08em;color:#ffd23f}.lt-hud-t b{font-family:var(--px);font-size:13px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lt-hud-t small{font-family:var(--vt);font-size:16px;line-height:1}
+.lt-bar{height:10px;background:#1d1838;box-shadow:0 -2px 0 #3a3266,0 2px 0 #3a3266,-2px 0 0 #3a3266,2px 0 0 #3a3266;margin:4px 2px}.lt-bar u{display:block;height:100%;background:repeating-linear-gradient(90deg,#ffd23f 0 6px,#ffb703 6px 8px)}
+.lt-due{flex:none;border:0;background:#1d1838;color:#fff;padding:6px 8px;cursor:pointer;display:grid;box-shadow:0 -2px 0 #5ee6ff,0 2px 0 #5ee6ff,-2px 0 0 #5ee6ff,2px 0 0 #5ee6ff}.lt-due b{font-family:var(--px);font-size:13px}.lt-due small{font-family:var(--vt);font-size:14px}
+.lt-tree{position:relative;margin:14px -6px 0}.lt-tree svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.lt-tree path{fill:none;stroke:#3a3266;stroke-width:5;stroke-dasharray:6 6;vector-effect:non-scaling-stroke;shape-rendering:crispEdges}.lt-tree path.lit{stroke:#ffd23f;stroke-dasharray:none;filter:drop-shadow(0 0 4px rgba(255,210,63,.55))}
+.lt-n{position:absolute;transform:translate(-50%,-50%);width:54px;height:54px;border:0;padding:0;cursor:pointer;display:grid;place-items:center;font-size:24px;background:#221c40;color:#fff;z-index:1;
+  box-shadow:0 -4px 0 #3a3266,0 4px 0 #3a3266,-4px 0 0 #3a3266,4px 0 0 #3a3266,inset 0 -6px 0 rgba(0,0,0,.4),inset 0 4px 0 rgba(255,255,255,.08);-webkit-tap-highlight-color:transparent}
+.lt-n>span{display:grid;place-items:center;line-height:1}.lt-n img.pxe{width:28px;height:28px}
+.lt-n small{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:max-content;max-width:120px;padding:1px 5px 0;max-height:2.05em;background:#0c0a18;font-family:var(--vt);font-size:16px;line-height:.95;color:#d9d2ff;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 2px 0 #000}
+.lt-n.on{background:#3b2e05;box-shadow:0 -4px 0 #ffd23f,0 4px 0 #ffd23f,-4px 0 0 #ffd23f,4px 0 0 #ffd23f,inset 0 -6px 0 rgba(0,0,0,.35),inset 0 4px 0 rgba(255,255,255,.15)}
+.lt-n.nx{background:#0f3340;box-shadow:0 -4px 0 #5ee6ff,0 4px 0 #5ee6ff,-4px 0 0 #5ee6ff,4px 0 0 #5ee6ff,inset 0 -6px 0 rgba(0,0,0,.35),0 0 18px 4px rgba(94,230,255,.45);animation:ltPulse 1.4s steps(4) infinite}
+.lt-n.nx small{color:#fff}.lt-go{font-family:var(--px);font-size:18px;color:#5ee6ff}
+.lt-n em{position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);font-style:normal;font-family:var(--px);font-size:8px;letter-spacing:.1em;background:#5ee6ff;color:#06222b;padding:3px 5px}
+.lt-n.lk{filter:saturate(.3);opacity:.75}.lt-n.lk small{color:#8a83ad}
+.lt-n.big{width:70px;height:70px;font-size:32px;background:#3a0f1f;box-shadow:0 -5px 0 #ff5d73,0 5px 0 #ff5d73,-5px 0 0 #ff5d73,5px 0 0 #ff5d73,inset 0 -8px 0 rgba(0,0,0,.4),inset 0 5px 0 rgba(255,255,255,.12)}
+.lt-n.big img.pxe{width:36px;height:36px}.lt-n.big small{font-family:var(--px);font-size:8px;line-height:1.5;letter-spacing:.06em;color:#ff9aa8;width:140px}
+.lt-n.big.boss{animation:ltBoss 1.2s steps(3) infinite}.lt-n.big.won{background:#3b2e05;box-shadow:0 -5px 0 #ffd23f,0 5px 0 #ffd23f,-5px 0 0 #ffd23f,5px 0 0 #ffd23f,inset 0 -8px 0 rgba(0,0,0,.35),0 0 22px 4px rgba(255,210,63,.4)}.lt-n.big.won small{color:#ffd23f}
+.lt-n.big.lk{background:#1a1530;box-shadow:0 -5px 0 #3a3266,0 5px 0 #3a3266,-5px 0 0 #3a3266,5px 0 0 #3a3266,inset 0 -8px 0 rgba(0,0,0,.4)}.lt-n.big.lk small{color:#8a83ad}
+@keyframes ltPulse{50%{box-shadow:0 -4px 0 #5ee6ff,0 4px 0 #5ee6ff,-4px 0 0 #5ee6ff,4px 0 0 #5ee6ff,inset 0 -6px 0 rgba(0,0,0,.35),0 0 6px 1px rgba(94,230,255,.25)}}
+@keyframes ltBoss{50%{transform:translate(-50%,calc(-50% - 3px))}}
+@media (prefers-reduced-motion:reduce){.lt-n.nx,.lt-n.big.boss{animation:none}}
+.lt-more{position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:2;border:0;background:#1d1838;color:#d9d2ff;font-family:var(--vt);font-size:17px;padding:4px 12px;cursor:pointer;box-shadow:0 -2px 0 #3a3266,0 2px 0 #3a3266,-2px 0 0 #3a3266,2px 0 0 #3a3266}
+.lt-empty{font-family:var(--vt);font-size:18px;text-align:center;color:#d9d2ff;margin-top:6px}
+.lt-key{display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:center;margin-top:12px;font-family:var(--vt);font-size:15px;color:#8a83ad}
+.lt-top{display:grid;gap:8px;margin:6px 0 12px}
+.lt-chips{display:flex;gap:6px;flex-wrap:wrap}.lt-d10,.lt-chip{font-size:13px;padding:6px 10px;border-radius:99px;background:var(--card2);color:var(--fg);border:0;font:inherit;font-size:13px}.lt-d10.on{background:var(--good);color:#06210f;font-weight:700}.lt-chip{cursor:pointer;font-weight:600}
+.lt-home{display:flex;gap:8px;margin-top:14px}.lt-hd{flex:1;min-width:0;display:flex;gap:10px;align-items:center;text-align:left;border:0;cursor:pointer;padding:11px 14px;border-radius:14px;background:var(--card);color:var(--fg);box-shadow:inset 3px 0 0 #5ee6ff}
+.lt-hd i{font-style:normal;font-size:20px}.lt-hd span{min-width:0;display:grid}.lt-hd small{color:var(--muted);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lt-hd.on{box-shadow:inset 3px 0 0 var(--good)}
+.lt-hc{flex:none;border:0;cursor:pointer;border-radius:14px;padding:8px 12px;background:var(--card);color:var(--fg);display:grid;place-items:center}.lt-hc b{font-size:18px}.lt-hc small{font-size:11px;color:var(--muted)}
+.lt-rc-g{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.lt-rc-g div{background:var(--card2);border-radius:12px;padding:10px;display:grid;gap:2px}.lt-rc-g b{font-size:20px}.lt-rc-g small{font-size:11px;color:var(--muted)}.lt-rc-w{margin-top:10px;font-size:14px}
+.lt-sh .g-sh-t{margin-top:4px}.lt-clear{font-family:var(--px);font-size:10px;letter-spacing:.08em;color:#1a1300;background:#ffd23f;padding:8px;text-align:center;margin-bottom:12px}
+.lt-load{font-family:var(--vt);font-size:18px;color:var(--muted);margin-top:12px;animation:ltBlink 1s steps(2) infinite}@keyframes ltBlink{50%{opacity:.4}}
+.lt-card-q{font-size:19px;font-weight:700;line-height:1.3;margin:10px 0 4px}.lt-card-a{font-size:16px;line-height:1.4;padding:12px;border-radius:12px;background:var(--card2);margin-top:12px}
+.lt-opts{display:grid;gap:8px;margin-top:12px}.lt-opts button{text-align:left;border:2px solid var(--line);background:var(--card2);color:var(--fg);font:inherit;font-size:15px;padding:12px;border-radius:12px;cursor:pointer}
+.lt-opts .right{border-color:var(--good);background:color-mix(in srgb,var(--good) 18%,var(--card2))}.lt-opts .wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 15%,var(--card2))}.lt-opts .dim{opacity:.5}
+.lt-why{margin-top:10px;font-size:14px}.lt-score,.lt-stars{font-size:28px;letter-spacing:4px;text-align:center;color:#ffb703}.lt-stars{font-size:18px;text-align:left}
+.lt-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.lt-acts button{display:grid;gap:2px;text-align:left;border:0;border-radius:14px;padding:12px;background:var(--card2);color:var(--fg);cursor:pointer;font:inherit}.lt-acts i{font-style:normal;font-size:20px}.lt-acts b{font-size:14px}.lt-acts small{font-size:12px;color:var(--muted)}
+.lt-fb{margin-top:12px;padding:12px;border-radius:12px;background:var(--card2);display:grid;gap:6px;font-size:14px}
+.lt-boss{font-size:56px;text-align:center;margin:10px 0}.lt-boss img.pxe{width:64px;height:64px}.lt-boss.lk{filter:grayscale(1);opacity:.6}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -2093,7 +2141,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b323';
+const BUILD='b324';
 /* b316: bottom sheets sit above the iPhone keyboard — the sheet follows the visible part of the screen (visualViewport),
    and the field you tap scrolls into view inside it. Before, the keyboard slid over “New quest” and every other sheet. */
 (function(){ const v=window.visualViewport, R=document.documentElement; if (!v) return;
@@ -2473,7 +2521,7 @@ function learnXP(){ let x=0; const D=ensureDatum();
   x+=Object.values(D.learnDone||{}).filter(d=>String(d)>=GAME_START).length*LXP.lesson + (D.learning||[]).filter(l=>l.output&&(l.d||'')>=GAME_START).length*LXP.out;
   x+=Object.values(S.drawLearn||{}).filter(d=>String(d)>=GAME_START).length*LXP.stage;
   const byDay={}; for (const sb of ((S.learn||{}).subjects||[])){ x+=(sb.lessons||[]).filter(l=>l.done).length*LXP.lesson + (sb.log||[]).filter(g=>g.out).length*LXP.out + (sb.finished&&sb.finished>=GAME_START?LXP.book:0); for (const it of sb.inspo||[]) byDay[it.d]=(byDay[it.d]||0)+1; }
-  for (const n of Object.values(byDay)) x+=Math.min(LXP.inspoDay,n)*LXP.inspo; return x; }
+  for (const n of Object.values(byDay)) x+=Math.min(LXP.inspoDay,n)*LXP.inspo; try { x+=lrXtraXP(); } catch(e){} return x; }
 // a hangout that happened (logged, pasted, shared or from the calendar once its day passes) is worth 20
 function socialXP(){ try { return socAll().filter(e=>e.d>=GAME_START&&e.d<=TODAY).length*LXP.hang; } catch(e){ return 0; } }
 function lrLessonsDone(a,b){ const D=ensureDatum(), inr=d=>{ d=String(d||''); return d>=a&&d<=b; }; let n=Object.values(D.learnDone||{}).filter(inr).length+Object.values(S.drawLearn||{}).filter(inr).length;
@@ -3372,7 +3420,7 @@ let lLast = 'social';
 let gLast = 'week';
 
 /* b297: Life = Streetwear · Safety Orange. One header for Circle · Hustle · Learning: the three numbers and what's next, live */
-function lifeNext(){ try { const cur=lrSubs().filter(x=>!x.archived&&x.kind==='custom'); for (const x of cur){ const l=(x.lessons||[]).find(z=>!z.done); if (l) return {t:`${l.t} · ${x.name}${l.mins?` · ${l.mins} min`:''}`, go:`lrGoNext('${x.id}')`}; }
+function lifeNext(){ try { const c=lrContinue(); if (c) return {t:`${c.s.t} · ${c.x.name}${c.s.mins?` · ${c.s.mins} min`:''}`, go:'lrContinueGo()'};   // b324: whatever you were last on, straight to its step card
   const h=socAll().filter(e=>e.d>TODAY).sort((a,b)=>a.d.localeCompare(b.d))[0]; if (h) return {t:`${h.name} · ${nice(h.d)}`, go:"go('social')"}; } catch(e){} return null; }
 // b315: “Next up” opens that subject and scrolls to its lesson list — before, on the Learning page itself it only scrolled to the top
 function lrGoNext(id){ lrTab=id; const jump=()=>setTimeout(()=>{ const c=document.getElementById('lr-upnext'); if (c) c.scrollIntoView({behavior:'smooth', block:'start'}); }, 80);
@@ -4379,6 +4427,171 @@ function lrProg(x){ if (x.kind==='project'){ const P=projStore(x), [qs]=qRange(T
   if (x.kind==='datum'){ const D=ensureDatum(); D.learnDone ||= {}; const n=LEARN_RES.filter(r=>D.learnDone[r.url]).length; return [n,LEARN_RES.length]; }
   if (x.kind==='draw'){ const L=S.drawLearn||{}; return [DRAW_PATH.filter(z=>L[z.k]).length, DRAW_PATH.length]; }
   const ls=x.lessons||[]; return [ls.filter(l=>l.done).length, ls.length]; }
+/* b324: Learning, levelled up — every subject is a skill tree you climb. Steps come from what each subject already has (lessons, Datum
+   resources, Drawing stages, project hours), every 5th step a Proof of skill boss. Ranks, quick quizzes, flashcards that come back on a
+   schedule, teach-it-back, Daily 10 and a Continue button all build on the same records — nothing is counted twice, all of it pays XP,
+   moves the Learning track and goals, ticks habits and hits the Fog. */
+const LX={quizQ:5, card:2, cardDay:30, teach:15, proof:60, rank:30, d10:5};
+const LR_RANKS=[['Novice','🌱',0],['Apprentice','📗',5],['Adept','🧭',15],['Expert','⚔️',30],['Master','👑',50]];
+const LR_BOX=[1,3,7,14,30,60,120], LR_PROOF_EVERY=5;
+function lrSteps(x){ try {
+  if (x.kind==='custom') return (x.lessons||[]).map(l=>({id:l.id, t:l.t, done:l.done||null, url:l.url, mins:+l.mins||0}));
+  if (x.kind==='datum'){ const D=ensureDatum(), L=D.learnDone||{}; return LEARN_RES.map(r=>({id:'r'+hashS(r.url), t:r.title, done:L[r.url]?String(L[r.url]).slice(0,10):null, url:r.url, res:r})); }
+  if (x.kind==='draw'){ const L=S.drawLearn||{}; return DRAW_PATH.map(z=>({id:'d_'+z.k, t:z.n, done:L[z.k]?String(L[z.k]).slice(0,10):null, k:z.k, ic:z.ic})); }
+  if (x.kind==='project'){ const P=projStore(x), log=(P.log||[]).filter(l=>(+l.mins||0)>0).slice().sort((a,b)=>a.d.localeCompare(b.d)), out=[]; let m=0, n=1;
+    for (const l of log){ m+=+l.mins||0; while (m>=n*300){ out.push({id:'h'+n, t:`${n*5} hours in`, done:l.d, hrs:n*5}); n++; } }
+    for (let k=0;k<3;k++,n++) out.push({id:'h'+n, t:`${n*5} hours in`, done:null, hrs:n*5}); return out; }
+} catch(e){} return []; }
+function hashS(t){ let h=7; for (const c of String(t)) h=(h*31+c.charCodeAt(0))|0; return (h>>>0).toString(36); }
+const lrStep=(x,id)=>lrSteps(x).find(z=>z.id===id);
+function lrSP(x){ const st=lrSteps(x), qz=Object.values(x.qz||{});
+  return st.filter(z=>z.done).length + 3*Object.values(x.proofs||{}).filter(p=>p.done).length + new Set((x.teach||[]).map(t=>t.step)).size + Math.floor(qz.reduce((a,q)=>a+(+q.r||0),0)/3); }
+function lrRank(x){ const sp=lrSP(x); let i=0; LR_RANKS.forEach((r,j)=>{ if (sp>=r[2]) i=j; }); const nx=LR_RANKS[i+1];
+  return {i, sp, name:LR_RANKS[i][0], ic:LR_RANKS[i][1], next:nx, need:nx?nx[2]-sp:0, pct:nx?(sp-LR_RANKS[i][2])/(nx[2]-LR_RANKS[i][2]):1}; }
+// a rank-up is a win (once). The first look at a subject just records where it already is.
+function lrRankCheck(quiet){ let ch=false; for (const x of lrSubs()){ const r=lrRank(x); if (x.rankSeen==null){ x.rankSeen=r.i; ch=true; continue; }
+    if (r.i>x.rankSeen){ x.rankSeen=r.i; ch=true; S.wins.push({id:uid(), d:TODAY, text:`${r.ic} ${x.name}: ${r.name} rank`}); if (!quiet) setTimeout(()=>{ try { confetti(); } catch(e){} toast(`${r.ic} ${x.name} — ${r.name}! +${LX.rank} XP`); },350); } }
+  return ch; }
+// every day you did any learning at all — the Daily 10
+function lrActDays(){ return rpgC('lrAct',()=>{ const A=new Set(), add=d=>{ if (d) A.add(String(d).slice(0,10)); }, L=S.learn||{};
+  for (const [d,r] of Object.entries(L.rev||{})) if ((+r.n||0)>=5) add(d);
+  for (const x of (L.subjects||[])){ for (const z of lrSteps(x)) add(z.done); for (const q of Object.values(x.qz||{})) add(q.d); for (const t of x.teach||[]) add(t.d);
+    for (const p of Object.values(x.proofs||{})) add(p.done); for (const g of x.log||[]) if (g.out||x.kind==='project') add(g.d); }
+  for (const l of (ensureDatum().learning||[])) if (l.output) add(l.d); return A; }); }
+function lrStreak(){ const A=lrActDays(); let k=A.has(TODAY)?TODAY:addDays(TODAY,-1), n=0; while (A.has(k)){ n++; k=addDays(k,-1); } return n; }
+function lrXtraXP(){ return rpgC('lrXP',()=>{ let x=0; const L=S.learn||{}, GS=GAME_START;
+  for (const [d,r] of Object.entries(L.rev||{})) if (d>=GS) x+=Math.min(LX.cardDay,+r.ok||0)*LX.card;
+  for (const sb of (L.subjects||[])){ for (const q of Object.values(sb.qz||{})) if ((q.d||'')>=GS) x+=(+q.r||0)*LX.quizQ;
+    const tk=new Set(); for (const t of sb.teach||[]) if (t.d>=GS && !tk.has(t.step)){ tk.add(t.step); x+=LX.teach; }
+    for (const p of Object.values(sb.proofs||{})) if ((p.done||'')>=GS) x+=LX.proof;
+    x+=lrRank(sb).i*LX.rank; }
+  for (const d of lrActDays()) if (d>=GS && d<=TODAY) x+=LX.d10; return x; }); }
+// ---- flashcards: every quiz leaves cards; they come back after 1, 3, 7, 14, 30… days
+const lrCards=()=>((S.learn ||= {}).cards ||= []);
+const lrDue=()=>lrCards().filter(c=>!c.gone && (c.due||TODAY)<=TODAY);
+function lrCardAdd(sid,step,q,a,soon){ const C=lrCards(); if (C.some(c=>c.q===q&&c.sid===sid)) return; C.push({id:uid(), sid, step, q:String(q).slice(0,200), a:String(a).slice(0,300), box:0, due:addDays(TODAY,soon?1:3), made:TODAY}); }
+let lrRv=null;
+function lrReview(){ const due=lrDue(); if (!due.length) return toast('No cards due — they come back on their own'); lrRv={ids:due.slice(0,40).map(c=>c.id), i:0, show:false, ok:0}; lrRvDraw(); }
+function lrRvDraw(){ const R=lrRv, c=R&&lrCards().find(z=>z.id===R.ids[R.i]);
+  if (!c){ const n=R?R.ids.length:0; gSheet(`<div class="lt-sh"><span class="tag">Flashcards</span><h2 class="g-sh-t">Done · ${R?R.ok:0}/${n}</h2><div class="sub">They’ll come back when you’re about to forget them. +${Math.min(LX.cardDay,R?R.ok:0)*LX.card} XP</div><button class="btn" style="width:100%;justify-content:center;margin-top:14px" onclick="gSheetClose();render()">Close</button></div>`); lrRv=null; return; }
+  const x=lrSub(c.sid);
+  gSheet(`<div class="lt-sh"><span class="tag">${esc(x?x.name:'Card')} · ${R.i+1}/${R.ids.length}</span><div class="lt-card-q">${esc(c.q)}</div>
+    ${R.show?`<div class="lt-card-a">${esc(c.a)}</div><div class="row" style="gap:8px;margin-top:14px;flex-wrap:nowrap"><button class="btn ghost" style="flex:1;justify-content:center" onclick="lrRvGrade(0)">✗ Missed it</button><button class="btn" style="flex:1;justify-content:center" onclick="lrRvGrade(1)">✓ Got it</button></div>`
+    :`<button class="btn" style="width:100%;justify-content:center;margin-top:16px" onclick="lrRv.show=true;lrRvDraw()">Show answer</button>`}</div>`); }
+function lrRvGrade(ok){ const R=lrRv, c=lrCards().find(z=>z.id===R.ids[R.i]); if (!c) return;
+  c.box=ok?Math.min(LR_BOX.length-1,(c.box||0)+1):0; c.due=addDays(TODAY,ok?LR_BOX[c.box]:1); c.last=TODAY;
+  const V=((S.learn ||= {}).rev ||= {}), d=(V[TODAY] ||= {n:0, ok:0}); d.n++; if (ok){ d.ok++; R.ok++; }
+  R.i++; R.show=false; commit(); lrRvDraw(); }
+function lrCardNew(ev,sid){ ev.preventDefault(); const f=ev.target; if (!f.q.value.trim()||!f.a.value.trim()) return false; lrCardAdd(sid,'',f.q.value.trim(),f.a.value.trim(),true); commit({skipXp:true}); f.reset(); toast('Card made — first review tomorrow'); return false; }
+// ---- the AI helper (same one that builds lesson plans)
+async function lrAI(ask){ if (typeof sampleLib==='undefined'||!sampleLib||!sampleLib.json) throw new Error('Tega’s AI isn’t reachable here'); const r=await sampleLib.json(ask), o=r&&typeof r==='object'?r:{};
+  for (const k of ['value','data','result']) if (o[k]&&typeof o[k]==='object'&&!o.qs&&!o.t&&!o.score) return o[k]; return o; }
+function lrTake(x,z){ if (x.kind==='custom') return (x.log||[]).filter(g=>g.t===z.t).pop()||null; if (x.kind==='datum') return (ensureDatum().learning||[]).filter(l=>l.resource===z.t).map(l=>({id:l.id, out:l.output, dat:1})).pop()||null; return null; }
+function lrTakeSet(sid,stepId,v){ const x=lrSub(sid), z=lrStep(x,stepId); v=v.trim(); if (!x||!z) return; const g=lrTake(x,z);
+  if (x.kind==='datum'){ const L=(ensureDatum().learning||[]).filter(l=>l.resource===z.t).pop(); if (L) L.output=v; else (ensureDatum().learning ||= []).push({id:uid(), d:z.done||TODAY, skill:'', resource:z.t, output:v}); }
+  else if (g) g.out=v; else (x.log ||= []).push({id:uid(), d:z.done||TODAY, t:z.t, out:v});
+  commit(); toast(v?'Saved to your notebook':'Cleared'); }
+// ---- quick check: 3 questions after a step; wrong answers come back tomorrow as cards, right ones in 3 days
+let lrQz=null;
+async function lrQuiz(sid,stepId){ const x=lrSub(sid), z=lrStep(x,stepId); if (!z) return; const tk=lrTake(x,z);
+  gSheet(`<div class="lt-sh"><span class="tag">${esc(x.name)} · quick check</span><h2 class="g-sh-t">${esc(z.t)}</h2><div class="lt-load">Building 3 questions…</div></div>`);
+  try { const o=await lrAI(`Write 3 short multiple-choice questions that check someone really understood this lesson. Subject: "${x.name}". Lesson: "${z.t}".${tk&&tk.out?` What they said they got out of it: "${tk.out}".`:''} Practical, not trivia. Each question under 120 characters, exactly 4 options under 60 characters each, one right answer. Return JSON only: {"qs":[{"q":"question","o":["a","b","c","d"],"a":0,"why":"one short sentence on why"}]}`);
+    const qs=(o.qs||[]).filter(q=>q&&q.q&&Array.isArray(q.o)&&q.o.length>=2&&q.o[+q.a]!=null).slice(0,3); if (!qs.length) throw new Error('no questions came back');
+    lrQz={sid, step:stepId, qs, i:0, r:0, pick:null}; lrQzDraw(); } catch(e){ gSheet(`<div class="lt-sh"><span class="tag">Quick check</span><div class="empty">${esc(String(e&&e.message||e).slice(0,80))}. Try again in a bit.</div></div>`); } }
+function lrQzDraw(){ const Q=lrQz, x=lrSub(Q.sid), q=Q.qs[Q.i];
+  if (!q){ const st=(x.qz ||= {}), prev=st[Q.step]; if (!prev||Q.r>(+prev.r||0)) st[Q.step]={d:prev?prev.d:TODAY, r:Q.r, n:Q.qs.length};
+    for (const z of Q.qs) lrCardAdd(Q.sid,Q.step,z.q,z.o[+z.a]+(z.why?` — ${z.why}`:''),!z.ok);
+    const gain=prev?Math.max(0,Q.r-(+prev.r||0))*LX.quizQ:Q.r*LX.quizQ; commit(); lrRankCheck();
+    gSheet(`<div class="lt-sh"><span class="tag">${esc(x.name)} · quick check</span><div class="lt-score">${'★'.repeat(Q.r)}${'☆'.repeat(Q.qs.length-Q.r)}</div><h2 class="g-sh-t" style="text-align:center">${Q.r}/${Q.qs.length} right${gain?` · +${gain} XP`:''}</h2><div class="sub" style="text-align:center">${Q.qs.length} cards added — ${Q.qs.filter(z=>!z.ok).length?'the ones you missed come back tomorrow':'they come back in 3 days'}.</div><button class="btn" style="width:100%;justify-content:center;margin-top:14px" onclick="lrNode('${Q.sid}','${Q.step}')">Back</button></div>`); lrQz=null; return; }
+  gSheet(`<div class="lt-sh"><span class="tag">${esc(x.name)} · question ${Q.i+1}/${Q.qs.length}</span><div class="lt-card-q">${esc(q.q)}</div>
+    <div class="lt-opts">${q.o.map((t,j)=>`<button class="${Q.pick==null?'':j===+q.a?'right':j===Q.pick?'wrong':'dim'}" ${Q.pick==null?`onclick="lrQzPick(${j})"`:'disabled'}>${esc(t)}</button>`).join('')}</div>
+    ${Q.pick==null?'':`<div class="lt-why">${Q.pick===+q.a?'✓ Right. ':'✗ '}${esc(q.why||'')}</div><button class="btn" style="width:100%;justify-content:center;margin-top:12px" onclick="lrQz.i++;lrQz.pick=null;lrQzDraw()">${Q.i+1<Q.qs.length?'Next':'Finish'}</button>`}</div>`); }
+function lrQzPick(j){ const Q=lrQz, q=Q.qs[Q.i]; Q.pick=j; q.ok=j===+q.a; if (q.ok) Q.r++; lrQzDraw(); }
+// ---- teach it back: explain it in your own words, Tega says what you nailed and what you missed
+async function lrTeach(ev,sid,stepId){ ev.preventDefault(); const x=lrSub(sid), z=lrStep(x,stepId), text=ev.target.t.value.trim(); if (!text) return false; const T=(x.teach ||= []);
+  const e={id:uid(), d:TODAY, step:stepId, text:text.slice(0,1500), fb:null}; T.push(e); commit(); lrRankCheck(); lrNode(sid,stepId);
+  try { const o=await lrAI(`The user is learning "${x.name}". They explained "${z.t}" in their own words: "${e.text}". Be a warm, honest coach. Return JSON only: {"score":1,"good":"what they got right, one short sentence","missed":"the most important thing missing or off, one short sentence, empty if nothing"} where score is 1-5.`);
+    e.fb={score:Math.max(1,Math.min(5,+o.score||3)), good:String(o.good||'').slice(0,240), missed:String(o.missed||'').slice(0,240)}; commit({skipXp:true}); } catch(err){ e.fb={err:1}; }
+  if (document.getElementById('g-sheet')) lrNode(sid,stepId); return false; }
+// ---- proof of skill: a small real-world challenge every 5 steps — the boss of each stretch
+async function lrProofGet(sid,pn){ const x=lrSub(sid), st=lrSteps(x), P=(x.proofs ||= {}), last=st.slice(Math.max(0,pn*LR_PROOF_EVERY-LR_PROOF_EVERY),pn*LR_PROOF_EVERY).map(z=>z.t);
+  const fall={language:['Two-minute voice note','Record yourself saying 6 things you can now say, out loud, without notes.'], book:['Explain it to someone','Tell a friend the main idea of what you’ve read so far in 5 sentences.'], project:['Ship a small piece','Finish one small thing from this stretch and show it to someone.']}[x.type||(x.kind==='project'?'project':'')]||['Make something with it','Make one small thing using what you learned in the last 5 steps and show it to someone.'];
+  P[pn]={t:fall[0], how:fall[1], at:TODAY}; commit({skipXp:true}); lrProof(sid,pn,true);
+  try { const o=await lrAI(`The user is learning "${x.name}"${x.type?` (${x.type})`:''}. They just finished: ${JSON.stringify(last)}. Give one small real-world challenge (15-45 minutes) that proves they can actually do it — something they make, perform, or explain to someone. Return JSON only: {"t":"short title, max 6 words","how":"what to do and what counts as done, 2 short sentences"}`);
+    if (o&&o.t){ P[pn]={...P[pn], t:String(o.t).slice(0,60), how:String(o.how||'').slice(0,300)}; commit({skipXp:true}); } } catch(e){}
+  if (document.getElementById('g-sheet')) lrProof(sid,pn); }
+function lrProofDone(sid,pn){ const x=lrSub(sid), p=(x.proofs||{})[pn]; if (!p) return; if (p.done){ p.done=null; commit(); return lrProof(sid,pn); }
+  p.done=TODAY; p.note=(document.getElementById('lt-pnote')?.value||'').trim().slice(0,200); S.wins.push({id:uid(), d:TODAY, text:`⚔️ Proof of skill · ${x.name}: ${p.t}`}); commit(); lrRankCheck();
+  gSheetClose(); setTimeout(()=>{ try { confetti(); } catch(e){} toast(`⚔️ Boss down · +${LX.proof} XP`); },200); }
+function lrProof(sid,pn,busy){ const x=lrSub(sid), done=lrSteps(x).filter(z=>z.done).length, open=done>=pn*LR_PROOF_EVERY, p=(x.proofs||{})[pn];
+  gSheet(`<div class="lt-sh"><span class="tag">${esc(x.name)} · proof of skill ${pn}</span><div class="lt-boss ${p&&p.done?'won':open?'':'lk'}">${p&&p.done?'🏆':open?'⚔️':'🔒'}</div>
+    ${!open?`<h2 class="g-sh-t" style="text-align:center">Locked</h2><div class="sub" style="text-align:center">Clear ${pn*LR_PROOF_EVERY-done} more step${pn*LR_PROOF_EVERY-done===1?'':'s'} to open this challenge.</div>`
+    :!p?`<h2 class="g-sh-t" style="text-align:center">Prove it</h2><div class="sub" style="text-align:center">A small real-world challenge that shows you can actually do what you just learned. +${LX.proof} XP and 3 skill points.</div><button class="btn" style="width:100%;justify-content:center;margin-top:14px" onclick="lrProofGet('${sid}',${pn})">⚔️ Get my challenge</button>`
+    :`<h2 class="g-sh-t" style="text-align:center">${esc(p.t)}</h2><div style="font-size:15px;text-align:center;margin-top:6px">${esc(p.how||'')}</div>${busy?'<div class="lt-load">Tega is tailoring it to you…</div>':''}
+      ${p.done?`<div class="sub" style="text-align:center;margin-top:10px">Cleared ${nice(p.done)}${p.note?` · “${esc(p.note)}”`:''}</div><button class="btn ghost sm" style="width:100%;justify-content:center;margin-top:12px" onclick="lrProofDone('${sid}',${pn})">Undo</button>`
+      :`<input class="inp" id="lt-pnote" style="width:100%;margin-top:14px" placeholder="How did it go? (optional)"><button class="btn" style="width:100%;justify-content:center;margin-top:10px" onclick="lrProofDone('${sid}',${pn})">✓ Done it · +${LX.proof} XP</button><button class="linkbtn" style="display:block;margin:10px auto 0" onclick="lrProofGet('${sid}',${pn})">Different challenge</button>`}`}</div>`); }
+// ---- one step: open it, clear it, write what stuck, quiz yourself, teach it back
+function lrStepDone(sid,stepId){ const x=lrSub(sid), z=lrStep(x,stepId); if (!z) return;
+  if (x.kind==='custom') return lrDone(sid,stepId);
+  if (x.kind==='datum'){ learnDone(z.url,z.t,z.res.bucket); } else if (x.kind==='draw'){ drawDone(z.k); }
+  lrRankCheck(); if (lrStep(x,stepId)?.done) setTimeout(()=>lrNode(sid,stepId,1),120); else gSheetClose(); }
+function lrNode(sid,stepId,fresh){ const x=lrSub(sid); if (!x) return; if (/^P\d+$/.test(stepId)) return lrProof(sid,+stepId.slice(1));
+  const st=lrSteps(x), i=st.findIndex(z=>z.id===stepId), z=st[i]; if (!z) return; const next=st.findIndex(q=>!q.done), tk=lrTake(x,z), qz=(x.qz||{})[stepId], T=(x.teach||[]).filter(t=>t.step===stepId), te=T[T.length-1];
+  const status=z.done?`Cleared ${nice(z.done)}`:i===next?'Up next':'Ahead — you can still do it now';
+  const act=x.kind==='project'?`<button class="btn" style="width:100%;justify-content:center" onclick="gSheetClose();document.querySelector('.hz-st')?.scrollIntoView({behavior:'smooth',block:'center'})">Log a session</button>`
+    :`<div class="row" style="gap:8px;flex-wrap:nowrap">${z.url?`<a class="btn ghost" style="flex:1;justify-content:center" href="${esc(z.url)}" target="_blank" rel="noopener">▶ Open</a>`:x.kind==='draw'?`<button class="btn ghost" style="flex:1;justify-content:center" onclick="gSheetClose();document.querySelector('.dp-cur,.dp')?.scrollIntoView({behavior:'smooth',block:'start'})">✎ Lesson</button>`:''}<button class="btn ${z.done?'ghost':''}" style="flex:1;justify-content:center" onclick="lrStepDone('${sid}','${stepId}')">${z.done?'Undo':`✓ Clear · +${LXP.lesson}`}</button></div>`;
+  const extra=!z.done||x.kind==='project'?'':`
+    ${x.kind==='draw'?'':`<div class="tag" style="margin:16px 0 6px">What stuck · one line</div><input class="inp" style="width:100%" value="${esc(tk&&tk.out||'')}" placeholder="What can you do now that you couldn’t before?" onchange="lrTakeSet('${sid}','${stepId}',this.value)">`}
+    <div class="lt-acts"><button onclick="lrQuiz('${sid}','${stepId}')"><i>❓</i><b>${qz?`Quiz ${qz.r}/${qz.n}`:'Quick check'}</b><small>${qz?'retake for a better score':`3 questions · up to +${3*LX.quizQ}`}</small></button>
+      <button onclick="document.getElementById('lt-teach').hidden=false;document.querySelector('#lt-teach textarea').focus()"><i>🎓</i><b>${te?'Taught it':'Teach it back'}</b><small>${te?'try again any time':`explain it · +${LX.teach}`}</small></button></div>
+    ${te?`<div class="lt-fb"><div class="sub">You said: “${esc(te.text.slice(0,160))}${te.text.length>160?'…':''}”</div>${te.fb&&!te.fb.err?`<div class="lt-stars">${'★'.repeat(te.fb.score)}${'☆'.repeat(5-te.fb.score)}</div><div>✓ ${esc(te.fb.good)}</div>${te.fb.missed?`<div>→ ${esc(te.fb.missed)}</div>`:''}`:te.fb?'<div class="sub">Saved. Tega couldn’t review it right now.</div>':'<div class="lt-load">Tega is reading it…</div>'}</div>`:''}
+    <form id="lt-teach" hidden onsubmit="return lrTeach(event,'${sid}','${stepId}')"><textarea class="inp" name="t" rows="4" style="width:100%;margin-top:10px" placeholder="Explain ${esc(z.t)} like you’re teaching a friend"></textarea><button class="btn" style="width:100%;justify-content:center;margin-top:8px">Check my explanation</button></form>`;
+  gSheet(`<div class="lt-sh">${fresh?`<div class="lt-clear">STEP CLEARED · +${LXP.lesson} XP</div>`:''}<span class="tag">${esc(x.name)} · step ${i+1}${z.mins?` · ~${z.mins} min`:''}</span><h2 class="g-sh-t">${esc(z.t)}</h2><div class="sub" style="margin-bottom:12px">${status}</div>${act}${extra}</div>`); }
+// ---- the tree
+let lrTreeAll={};
+function lrTree(x){ const st=lrSteps(x); if (!st.length && x.kind!=='custom') return ''; const R=lrRank(x), next=st.findIndex(z=>!z.done), doneN=st.filter(z=>z.done).length;
+  const seq=[]; st.forEach((z,i)=>{ seq.push({...z, n:i}); if ((i+1)%LR_PROOF_EVERY===0) seq.push({id:'P'+((i+1)/LR_PROOF_EVERY), proof:(i+1)/LR_PROOF_EVERY}); });
+  const firstShow=lrTreeAll[x.id]||seq.length<=14?0:Math.max(0, seq.findIndex(n=>!n.proof&&n.n===Math.max(0,(next<0?st.length:next)-2)));
+  const view=seq.slice(firstShow), XS=[50,24,50,76]; let y=firstShow?70:44; const pos=[];
+  view.forEach((n,k)=>{ const big=!!n.proof; pos.push({n, x:big?50:XS[n.n%4], y, big}); y+=big?132:116; });
+  const H=y-30, P=x.proofs||{};
+  const nodeHtml=({n,x:px,y:py,big})=>{ if (big){ const p=P[n.proof], open=doneN>=n.proof*LR_PROOF_EVERY, cls=p&&p.done?'won':open?'boss':'lk';
+      return `<button class="lt-n big ${cls}" style="left:${px}%;top:${py}px" onclick="lrNode('${x.id}','${n.id}')" aria-label="Proof of skill ${n.proof}, ${cls==='won'?'cleared':open?'open':'locked'}"><span>${cls==='won'?'🏆':open?'⚔️':'🔒'}</span><small>${p&&p.done?esc(p.t):'PROOF OF SKILL'}</small></button>`; }
+    const cls=n.done?'on':n.n===next?'nx':'lk', hold=x.kind==='custom'?`data-hold="lesson:${x.id}|${n.id}"`:'';
+    return `<button class="lt-n ${cls}" ${hold} style="left:${px}%;top:${py}px" onclick="lrNode('${x.id}','${n.id}')" aria-label="${esc(n.t)}, ${cls==='on'?'cleared':cls==='nx'?'up next':'ahead'}"><span>${n.done?((x.qz||{})[n.id]?.r===3?'🌟':'⭐'):n.n===next?'<b class="lt-go">▶</b>':(n.ic&&x.kind==='draw'?esc(n.ic):'🔒')}</span><small>${esc(n.t)}</small>${n.n===next?'<em>NEXT</em>':''}</button>`; };
+  const lines=pos.slice(1).map((b,k)=>{ const a=pos[k], lit=(a.n.done||a.n.proof&&(P[a.n.proof]||{}).done||a.n.proof&&doneN>=a.n.proof*LR_PROOF_EVERY)&&(b.n.done||b.n.n===next||b.n.proof&&doneN>=b.n.proof*LR_PROOF_EVERY), ym=Math.round((a.y+b.y)/2);
+    return `<path d="M${a.x} ${a.y} V${b.y-(b.big?52:44)} H${b.x} V${b.y}" class="${lit?'lit':''}"/>`; }).join('');
+  const due=lrCards().filter(c=>c.sid===x.id&&!c.gone&&c.due<=TODAY).length;
+  return `<div class="card sec lt" id="lr-upnext">
+    <div class="lt-hud"><div class="lt-crest r${R.i}">${R.ic}</div><div class="lt-hud-t"><span class="lt-rk">${R.name.toUpperCase()}</span><b>${esc(x.name)}</b>
+      <div class="lt-bar"><u style="width:${Math.round(R.pct*100)}%"></u></div><small>${R.sp} SP${R.next?` · ${R.need} to ${R.next[0]}`:' · max rank'} · ${doneN}/${st.length} steps</small></div>
+      ${due?`<button class="lt-due" onclick="lrReview()"><b>${due}</b><small>cards</small></button>`:''}</div>
+    <div class="lt-tree" style="height:${H}px">${firstShow?`<button class="lt-more" onclick="lrTreeAll['${x.id}']=1;render()">▲ ${firstShow} cleared above</button>`:''}<svg viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true">${lines}</svg>${pos.map(nodeHtml).join('')}</div>
+    ${!st.length?'<div class="lt-empty">No steps yet — let Tega line up your path.</div>':next<0&&x.kind!=='project'?'<div class="lt-empty">Path cleared. Line up the next stretch.</div>':''}
+    ${x.kind==='custom'?`<button class="btn sm" style="width:100%;justify-content:center;margin-top:12px" onclick="lrSuggest('${x.id}')">${lrBusy?'Thinking…':'✦ Extend the path'}</button>
+    ${infold('lra_'+x.id,'Add a step','a video, article, or a song to learn',`<form onsubmit="return lrAddLesson(event,'${x.id}')" class="stack" style="gap:6px"><input class="inp" name="t" placeholder="What to learn (e.g. F barre chord)" required><input class="inp" name="u" placeholder="Link (optional — leave blank to search YouTube)"><div class="row" style="gap:6px;flex-wrap:nowrap"><input class="inp num" name="m" type="number" min="0" placeholder="min" style="width:80px"><button class="btn sm" style="flex:1;justify-content:center">Add</button></div></form>`)}`:''}
+    <div class="lt-key"><span>⭐ cleared</span><span>🌟 perfect quiz</span><span>⚔️ proof of skill</span><span>hold a step to delete</span></div></div>`; }
+// ---- Continue: the next step of whatever you were last on
+function lrLastAct(x){ let d=''; for (const z of lrSteps(x)) if (z.done&&z.done>d) d=z.done; for (const g of x.log||[]) if (g.d>d) d=g.d; for (const q of Object.values(x.qz||{})) if ((q.d||'')>d) d=q.d; return d; }
+function lrContinue(){ const L=lrSubs().filter(x=>!x.archived&&x.kind!=='project').map(x=>({x, s:lrSteps(x).find(z=>!z.done), d:lrLastAct(x)})).filter(o=>o.s); L.sort((a,b)=>b.d.localeCompare(a.d)); return L[0]||null; }
+function lrContinueGo(){ const c=lrContinue(); if (!c) return go('learn'); lrGoNext(c.x.id); setTimeout(()=>lrNode(c.x.id,c.s.id),140); }
+// ---- weekly recap (Sunday for this week, Monday for last week)
+function lrRecap(){ const dow=parseD(TODAY).getDay(); if (dow!==0&&dow!==1) return ''; const a=dow===0?weekMonday(THIS_WEEK):addDays(weekMonday(THIS_WEEK),-7), b=addDays(a,6), inr=d=>d&&d>=a&&d<=b, L=S.learn||{};
+  let steps=0, mins=0, q=0, tk=0, te=0, pf=0; const per={};
+  for (const x of lrSubs()){ for (const z of lrSteps(x)) if (inr(z.done)){ steps++; mins+=z.mins||0; per[x.id]=(per[x.id]||0)+1; } for (const v of Object.values(x.qz||{})) if (inr(v.d)) q+=+v.r||0;
+    tk+=(x.log||[]).filter(g=>inr(g.d)&&g.out).length; te+=(x.teach||[]).filter(t=>inr(t.d)).length; pf+=Object.values(x.proofs||{}).filter(p=>inr(p.done)).length; }
+  const cards=Object.entries(L.rev||{}).filter(([d])=>inr(d)).reduce((s,[,r])=>s+(+r.n||0),0), days=[...lrActDays()].filter(inr).length, c=lrContinue();
+  const ranks=(S.wins||[]).filter(w=>inr(w.d)&&/ rank$/.test(w.text||'')).map(w=>w.text);
+  const cell=(v,l)=>`<div><b class="num">${v}</b><small>${l}</small></div>`;
+  return `<div class="card sec lt-rc"><div class="hdr"><h2>${dow===0?'This week':'Last week'} in learning</h2><span class="sub">${nice(a)} – ${nice(b)}</span></div>
+    <div class="lt-rc-g">${cell(days+'/7','Daily 10')}${cell(steps,'steps')}${cell(mins?fmtMins(mins):'—','est. time')}${cell(cards,'cards')}${cell(q,'quiz right')}${cell(tk+te,'notes')}</div>
+    ${pf||ranks.length?`<div class="lt-rc-w">${pf?`⚔️ ${pf} proof${pf===1?'':'s'} of skill`:''}${pf&&ranks.length?' · ':''}${ranks.map(esc).join(' · ')}</div>`:''}
+    ${c?`<button class="nextup" style="margin-top:10px" onclick="lrContinueGo()"><span class="nu-ic">🎯</span><span class="nu-t"><b>Next week: ${esc(c.x.name)}</b><small>start with ${esc(c.s.t)}</small></span><span class="nu-go">›</span></button>`:''}</div>`; }
+// ---- the top of Learning, and the one line on Home
+function lrTopStrip(){ const due=lrDue().length, on=lrActDays().has(TODAY), st=lrStreak();
+  return `<div class="lt-top"><div class="lt-chips"><span class="lt-d10 ${on?'on':''}">${on?'✓':'○'} Daily 10${st?` · 🔥 ${st}`:''}</span>${due?`<button class="lt-chip" onclick="lrReview()">🃏 ${due} card${due===1?'':'s'} due</button>`:''}</div></div>`; }
+function learnToday(){ try { if (!lrSubs().some(x=>!x.archived)) return ''; const due=lrDue().length, on=lrActDays().has(TODAY), st=lrStreak(), c=lrContinue();
+  return `<div class="lt-home sec"><button class="lt-hd ${on?'on':''}" onclick="${c?'lrContinueGo()':"go('learn')"}"><i>${on?'✓':'📚'}</i><span><b>Daily 10${on?' · done':''}</b><small>${c?`▶ ${esc(c.s.t)}`:'one small thing from Learning'}${st?` · 🔥 ${st}`:''}</small></span></button>${due?`<button class="lt-hc" onclick="lrReview()"><b class="num">${due}</b><small>card${due===1?'':'s'} due</small></button>`:''}</div>`; } catch(e){ return ''; } }
 /* b317: Grow — one place for anything you're getting better at. Pick a type when you add it; each gets its own plan,
    and all of it pays the same XP, moves the Learning track and your goals, and hits the Fog. */
 const LR_TYPES={skill:['✦','Skill','What do you want to learn? (e.g. Photoshop)'], book:['📖','Book','Book title (e.g. Atomic Habits)'], language:['🗣️','Language','Which language? (e.g. Spanish)'], hobby:['🎨','Hobby','Which hobby? (e.g. guitar, painting)'], project:['🛠️','Project','What are you building? (e.g. Etsy shop)']};
@@ -4394,7 +4607,7 @@ function lrRename(id,v){ const x=lrSub(id); if (x&&v.trim()){ x.name=v.trim().sl
 function lrAddLesson(ev,id){ ev.preventDefault(); const f=ev.target, t=f.t.value.trim(); if (!t) return false; let u=f.u.value.trim(); if (u&&!/^https?:/i.test(u)) u='https://'+u;
   (lrSub(id).lessons ||= []).push({id:uid(), t:t.slice(0,90), url:u||'https://www.youtube.com/results?search_query='+encodeURIComponent(t+' '+lrSub(id).name), src:u?'':'YouTube search', mins:+f.m.value||0}); commit({skipXp:true}); return false; }
 function lrDone(id,lid){ const x=lrSub(id), l=(x.lessons||[]).find(z=>z.id===lid); if (!l) return; l.done=l.done?null:TODAY;
-  if (x.type==='book' && l.done && (x.lessons||[]).every(z=>z.done) && !x.finished){ x.finished=TODAY; S.wins.push({id:uid(), d:TODAY, text:`📖 Finished ${x.name}`}); setTimeout(()=>{ confetti(); toast(`📖 Finished ${x.name} · +${LXP.book} XP`); },300); } if (l.done) (x.log ||= []).push({id:uid(), d:TODAY, t:l.t, out:''}); else x.log=(x.log||[]).filter(g=>!(g.t===l.t&&g.d===TODAY&&!g.out)); commit(); if (l.done) toast('Nice — add what you got out of it below'); }
+  if (x.type==='book' && l.done && (x.lessons||[]).every(z=>z.done) && !x.finished){ x.finished=TODAY; S.wins.push({id:uid(), d:TODAY, text:`📖 Finished ${x.name}`}); setTimeout(()=>{ confetti(); toast(`📖 Finished ${x.name} · +${LXP.book} XP`); },300); } if (l.done) (x.log ||= []).push({id:uid(), d:TODAY, t:l.t, out:''}); else x.log=(x.log||[]).filter(g=>!(g.t===l.t&&g.d===TODAY&&!g.out)); commit(); lrRankCheck(); if (l.done) setTimeout(()=>lrNode(id,lid,1),120); else if (document.getElementById('g-sheet')) lrNode(id,lid); }
 function lrDelLesson(id,lid){ const x=lrSub(id); x.lessons=(x.lessons||[]).filter(z=>z.id!==lid); commit({skipXp:true}); }
 function lrLogOut(id,gid,v){ const g=(lrSub(id).log||[]).find(z=>z.id===gid); if (g){ g.out=v.trim(); commit(); } }
 function lrLogAdd(ev,id){ ev.preventDefault(); const f=ev.target; if (!f.t.value.trim()) return false; (lrSub(id).log ||= []).push({id:uid(), d:TODAY, t:f.t.value.trim().slice(0,90), out:f.o.value.trim()}); commit(); return false; }
@@ -4412,15 +4625,13 @@ async function lrSuggest(id){ const x=lrSub(id); if (lrBusy) return; if (typeof 
   lrBusy=false; render(); }
 function lrLinked(x){ if (x.link!=='guitar'||!S.gtr) return ''; const G=S.gtr, wk=weekMonday(THIS_WEEK), mins=(G.log||[]).filter(l=>l.d>=wk).reduce((a,l)=>a+(+l.mins||0),0), lrn=(G.songs||[]).filter(z=>z.status===0);
   return `<button class="card sec lr-link" onclick="crMode='guitar';ctTab='create';go('content')"><span><b>🎸 Practice</b><small>${mins} min this week${lrn.length?` · learning ${lrn.slice(0,2).map(z=>esc(z.t||z.name||'')).join(', ')}`:''}</small></span><i>›</i></button>`; }
-function lrCustom(x){ const ls=x.lessons||[], todo=ls.filter(l=>!l.done), done=ls.filter(l=>l.done), log=(x.log||[]).slice().reverse();
-  return `${lrLinked(x)}<div class="card sec" id="lr-upnext"><div class="hdr"><h2>Up next</h2><span class="sub">${done.length}/${ls.length} done</span></div>
-    <div class="stack">${todo.map(l=>`<div class="res" data-hold="lesson:${x.id}|${l.id}"><div class="res-ic">▶</div><div style="min-width:0"><a class="res-t" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.t)}</a><div class="sub">${esc(l.src||'')}${l.mins?` · ~${l.mins} min`:''}${lrEdit?` · <button class="linkbtn" onclick="lrDelLesson('${x.id}','${l.id}')">remove</button>`:''}</div></div><button class="btn ghost sm" style="align-self:center" onclick="lrDone('${x.id}','${l.id}')">Done · +${LXP.lesson}</button></div>`).join('')||'<div class="empty">Nothing queued. Add a lesson or let Tega line some up.</div>'}</div>
-    <button class="btn sm" style="width:100%;justify-content:center;margin-top:10px" onclick="lrSuggest('${x.id}')">${lrBusy?'Thinking…':'✦ Suggest what’s next'}</button>
-    ${infold('lra_'+x.id,'Add a lesson','a video, article, or a song to learn',`<form onsubmit="return lrAddLesson(event,'${x.id}')" class="stack" style="gap:6px"><input class="inp" name="t" placeholder="What to learn (e.g. F barre chord)" required><input class="inp" name="u" placeholder="Link (optional — leave blank to search YouTube)"><div class="row" style="gap:6px;flex-wrap:nowrap"><input class="inp num" name="m" type="number" min="0" placeholder="min" style="width:80px"><button class="btn sm" style="flex:1;justify-content:center">Add</button></div></form>`)}
-    ${done.length?infold('lrd_'+x.id,'Done',`${done.length}`,`<div class="stack" style="gap:6px">${done.map(l=>`<div class="row between" style="flex-wrap:nowrap;gap:8px;font-size:14px"><span style="min-width:0">✓ ${esc(l.t)} <span class="sub">· ${nice(l.done)}</span></span><button class="linkbtn" onclick="lrDone('${x.id}','${l.id}')">undo</button></div>`).join('')}</div>`):''}</div>
-  <div class="card sec lr-log"><div class="hdr"><h2>Log</h2><span class="sub">what each one gave you</span></div>
+function lrCustom(x){ const log=(x.log||[]).slice().reverse(), T=(x.teach||[]).slice().reverse();
+  return `${lrLinked(x)}
+<div class="card sec lr-log"><div class="hdr"><h2>Notebook</h2><span class="sub">what stuck from each step</span></div>
     <div class="stack">${log.map(g=>`<div class="check ${g.out?'on':''}" style="cursor:default"><div class="box" style="${g.out?'':'border-color:var(--warn)'}">${g.out?'✓':'!'}</div><div class="txt" style="text-decoration:none;color:var(--fg);min-width:0"><b>${esc(g.t)}</b> <span class="sub">· ${nice(g.d)}</span>${g.out?`<div style="font-size:13px">${esc(g.out)}</div>`:`<input class="inp" style="margin-top:6px;width:100%" placeholder="What can you do now? (e.g. clean D→A change)" onchange="lrLogOut('${x.id}','${g.id}',this.value)">`}</div></div>`).join('')||'<div class="empty">Finish a lesson and it lands here.</div>'}</div>
-    ${infold('lrl_'+x.id,'Log something else','',`<form class="inline" onsubmit="return lrLogAdd(event,'${x.id}')"><input class="inp" name="t" placeholder="what you learned" required><input class="inp" name="o" placeholder="what you can do now"><button class="btn sm">+ Log</button></form>`)}</div>`; }
+    ${T.length?infold('lrt_'+x.id,'Teach-backs',`${T.length}`,`<div class="stack" style="gap:8px">${T.map(t=>`<div style="font-size:14px"><b>${esc((lrStep(x,t.step)||{}).t||'')}</b> <span class="sub">· ${nice(t.d)}${t.fb&&t.fb.score?` · ${'★'.repeat(t.fb.score)}`:''}</span><div class="sub">${esc(t.text.slice(0,200))}</div></div>`).join('')}</div>`):''}
+    ${infold('lrl_'+x.id,'Log something else','',`<form class="inline" onsubmit="return lrLogAdd(event,'${x.id}')"><input class="inp" name="t" placeholder="what you learned" required><input class="inp" name="o" placeholder="what you can do now"><button class="btn sm">+ Log</button></form>`)}
+    ${infold('lrc_'+x.id,'Make a flashcard',`${lrCards().filter(c=>c.sid===x.id&&!c.gone).length} cards`,`<form class="stack" style="gap:6px" onsubmit="return lrCardNew(event,'${x.id}')"><input class="inp" name="q" placeholder="Front — a question" required><input class="inp" name="a" placeholder="Back — the answer" required><button class="btn sm" style="justify-content:center">＋ Card</button></form>`)}</div>`; }
 
 /* b294: Inspo — every subject opens with the same strip: photos, videos, links that pull you toward it. Save from Photos, a link, or Share → Tega.exe */
 const LR_INSP_HINT={datum:'grillz & jewelry references',draw:'artists & references to study',guitar:'songs, players & riffs'};
@@ -4473,15 +4684,16 @@ function vLearning(){ lrNewsLoad(); const SUB=lrSubs(), live=SUB.filter(x=>!x.ar
   const subT=live.map(x=>{ const [n,t]=lrProg(x); return tile(x.id,x.icon||'✦',x.name,`${n}<small>/${t}</small>`,t?n/t:0).replace('<button ',`<button data-hold="lrsub:${x.id}" `); }).join('');
   const goals=`<div class="card sec"><div class="hdr"><h2>Learning goals · ${THIS_Q}</h2><button class="btn ghost sm" onclick="curQ=THIS_Q;qAdd=true;qAddTrack='learning';go('quarter')">＋ Goal</button></div>${objs.length?objs.map(o=>`<button class="hz-o" onclick="curQ='${THIS_Q}';qOpen='${o.id}';go('quarter')"><span><b>${esc(o.title)}</b><small>${(o.krs||[]).map(k=>`${esc(k.text)} ${k.target===1?(krHit(k)?'✓':'—'):`${k.current||0}/${k.target}`}`).join(' · ')}</small></span><em class="num">${Math.round(objPct(o)*100)}%</em></button>`).join(''):'<div class="empty">No Learning goals this quarter. Add one and every lesson you finish moves it.</div>'}</div>`;
   const cur=live.find(x=>x.id===lrTab);
-  const body=lrTab==='goals'?goals:lrTab==='news'?lrNewsHtml():lrTab==='foryou'?lrForYouHtml():!cur?'':lrInspo(cur)+(cur.kind==='datum'?dLearn():cur.kind==='draw'?vLearn():cur.kind==='project'?vProject(cur):lrCustom(cur));
+  setTimeout(()=>{ try { if (lrRankCheck()) commit({skipXp:true}); } catch(e){} },0);
+  const body=lrTab==='goals'?goals:lrTab==='news'?lrNewsHtml():lrTab==='foryou'?lrForYouHtml():!cur?'':lrTree(cur)+lrInspo(cur)+(cur.kind==='datum'?dLearn():cur.kind==='draw'?vLearn():cur.kind==='project'?vProject(cur):lrCustom(cur));
   const edit=lrEdit?`<div class="lr-edit">${SUB.map(x=>`<div class="row" style="gap:6px;flex-wrap:nowrap"><span style="width:22px;text-align:center">${esc(x.icon||'✦')}</span><input class="inp" style="flex:1;min-width:0" value="${esc(x.name)}" onchange="lrRename('${x.id}',this.value)"><button class="btn ghost sm" onclick="lrArchive('${x.id}')">${x.archived?'Restore':'Archive'}</button></div>`).join('')}</div>`:'';
-  return `<div class="card sec lr-hero"><div class="lr-top"><div class="lr-k">Learning · ${new Date(TODAY+'T12:00').toLocaleDateString('en-US',{month:'long'})}</div></div><h2 class="lr-h">Subjects</h2>
+  return `<div class="card sec lr-hero"><div class="lr-top"><div class="lr-k">Learning · ${new Date(TODAY+'T12:00').toLocaleDateString('en-US',{month:'long'})}</div></div>${lrTopStrip()}<h2 class="lr-h">Subjects</h2>
     <div class="lr-tiles lr-subs" role="tablist">${subT}</div>
     ${''}${lrAdding?`<div class="lr-types" role="tablist">${Object.entries(LR_TYPES).map(([k,[ic,l]])=>`<button type="button" class="${lrNewType===k?'on':''}" onclick="lrNewType='${k}';render()">${ic} ${l}</button>`).join('')}</div><form class="row lr-new" onsubmit="return lrAddSub(event)"><input class="inp" name="ic" placeholder="${LR_TYPES[lrNewType][0]}" style="width:48px;text-align:center;padding-left:4px;padding-right:4px"><input class="inp" name="n" placeholder="${LR_TYPES[lrNewType][2]}" style="flex:1;min-width:0" required><button class="btn sm">Add</button></form>${['skill','book','language'].includes(lrNewType)?'<div class="help" style="margin-top:6px">Tega builds the plan for you right after.</div>':''}`:''}
     <div class="lr-tiles lr-more" role="tablist">${[['goals','★','Goals',op==null?'':op+'%'],['news','◉','News',lrNews?nwN:''],['foryou','✦','For you',lrNews&&fyN?fyN:'']].map(([k,ic,l,n])=>`<button role="tab" aria-selected="${lrTab===k}" class="${lrTab===k?'on':''}" onclick="lrTab='${k}';render()"><i>${ic}</i><span style="color:var(--lr-ink);font-weight:600">${l}</span>${n!==''?`<small class="num lr-n">${n}</small>`:''}</button>`).join('')}</div>
     ${owed?`<div class="lr-owe">✍️ ${owed} lesson${owed===1?'':'s'} still need what you got out of ${owed===1?'it':'them'} — see each subject’s log</div>`:''}
     <div class="row" style="gap:14px;margin-top:8px"><button class="linkbtn" style="font-size:12px" onclick="lrAdding=!lrAdding;render()">${lrAdding?'Cancel':'＋ Subject'}</button><button class="linkbtn" style="font-size:12px" onclick="lrEdit=!lrEdit;render()">${lrEdit?'Done editing':`Edit subjects${arch.length?` · ${arch.length} archived`:''}`}</button></div>${edit}</div>
-  ${body}`; }
+  ${lrRecap()}${body}`; }
 function vLearn(){ const L=S.drawLearn||{}, done=DRAW_PATH.filter(x=>L[x.k]).length, cur=DRAW_PATH.find(x=>!L[x.k]), tip=DRAW_TIPS[dayHash(TODAY)%DRAW_TIPS.length];
   const drills=k=>(S.art||[]).filter(a=>(a.title||'').startsWith('Drill · '+DRAW_PATH.find(x=>x.k===k).n)).length;
   return `<div class="card sec"><div class="hdr"><h2>Learn to draw</h2><span class="sub">${done} of ${DRAW_PATH.length} stages</span></div>${bar(done/DRAW_PATH.length,'#ff8fc7')}
@@ -4794,7 +5006,7 @@ function vToday(){
     
     ${habitsBlock}${homeWins(isToday)}${isToday && hr>=17 ? `<button class="btn ${d.close?.at?'ghost':''}" style="width:100%;justify-content:center;margin-top:14px" onclick="closeDayOpen()">${d.close?.at?'🌙 Day closed · edit':'🌙 Close the day'}</button>` : ''}
   </div>
-  ${isToday?yogaToday()+rpgStrip()+homeStrips()+homeAgenda():''}
+  ${isToday?yogaToday()+learnToday()+rpgStrip()+homeStrips()+homeAgenda():''}
   ${isToday?homeQuests():''}${S.datum&&S.datum.session?benchCard():''}`;
 }
 /* b313: home shows quests again — side quests, this week (initiatives + money quest) and one season line; the old “More” fold is gone */
@@ -8817,6 +9029,11 @@ const KSRC = [
   ['Learning','learnout','Lessons with what you got out of them','✍️','',(a,b)=>lrOutputs(a,b)],
   ['Learning','datumlessons','Datum craft lessons','◆','',(a,b)=>Object.values(ensureDatum().learnDone||{}).filter(d=>d>=a&&d<=b).length],
   ['Learning','drawstages','Drawing stages done','✏️','',(a,b)=>Object.values(S.drawLearn||{}).filter(d=>d>=a&&d<=b).length],
+  ['Learning','lrd10','Daily 10 days (any learning)','🔥','',(a,b)=>[...lrActDays()].filter(d=>d>=a&&d<=b).length],
+  ['Learning','lrcards','Flashcards reviewed','🃏','',(a,b)=>Object.entries((S.learn||{}).rev||{}).filter(([d])=>d>=a&&d<=b).reduce((n,[,r])=>n+(+r.n||0),0)],
+  ['Learning','lrquiz','Quiz answers right','❓','',(a,b)=>lrSubs().reduce((n,x)=>n+Object.values(x.qz||{}).filter(q=>q.d>=a&&q.d<=b).reduce((m,q)=>m+(+q.r||0),0),0)],
+  ['Learning','lrteach','Teach-backs','🎓','',(a,b)=>lrSubs().reduce((n,x)=>n+(x.teach||[]).filter(t=>t.d>=a&&t.d<=b).length,0)],
+  ['Learning','lrproof','Proofs of skill','⚔️','',(a,b)=>lrSubs().reduce((n,x)=>n+Object.values(x.proofs||{}).filter(p=>p.done&&p.done>=a&&p.done<=b).length,0)],
   ['Learning','inspo','Inspo saved','✦','',(a,b)=>((S.learn||{}).subjects||[]).reduce((n,x)=>n+(x.inspo||[]).filter(i=>i.d>=a&&i.d<=b).length,0)],
   ['Days','yoga','Night stretches','🌙','',(a,b)=>Y_().log.filter(x=>x.d>=a&&x.d<=b).length],
   ['Days','art','Art pieces','🎨','',(a,b)=>(S.art||[]).filter(x=>x.d>=a&&x.d<=b).length],
@@ -9785,7 +10002,7 @@ const ACT_LINKS=[
   [/bench|datum|wax|carv/i, k=>(ensureDatum().prototypes||[]).some(p=>(p.log||[]).some(l=>l.d===k)) || (ensureDatum().road||[]).some(r=>r.d===k)],
   [/\bpost(ed)?\b|film/i, k=>(S.logs||[]).some(l=>l.kind==='post'&&l.d===k)],
   [/\bread/i, k=>((S.learn||{}).subjects||[]).some(x=>x.type==='book'&&(x.lessons||[]).some(l=>l.done===k))],   // reading = a book session
-  [/study|lesson|learn/i, k=>((S.learn||{}).subjects||[]).some(x=>(x.lessons||[]).some(l=>l.done===k))],
+  [/study|lesson|learn|daily ?10|flash ?card/i, k=>lrActDays().has(k)],
 ];
 const actDoneOn = (text, k) => ACT_LINKS.some(([re,f])=>{ try { return re.test(text||'') && f(k); } catch(e){ return false; } });
 function autoLinks(){ for (const k of [TODAY, addDays(TODAY,-1)]){ const d=S.days?.[k]; if (!d) continue; d.habits ||= {}; d.hAuto ||= {};
@@ -10739,7 +10956,7 @@ const ABOSS={
     attack:['Isolation','10 days with no hangout → he heals 15'], loot:'Crown of the Hermit · 300 XP', go:"go('social')"},
   mind:{area:'MIND', c:'#ff9ad5', ic:'🌫️', name:'The Fog', title:'Eater of Mornings', hp:0,
     lore:'It rolls in when the routine slips — snoozing, scrolling, forgetting why. Clear days burn it off.',
-    phases:['Thick','Thinning','Patchy','Clear Skies'], hits:[['Check-in','2'],['Read 30 min','2'],['Journal','2'],['Morning routine','2'],['Night stretch (yoga)','4'],['Lesson done (Learning)','3'],['Project session','up to 10'],['Perfect day (all Top 3)','4 · crit'],['Weekly review','10']],
+    phases:['Thick','Thinning','Patchy','Clear Skies'], hits:[['Check-in','2'],['Read 30 min','2'],['Journal','2'],['Morning routine','2'],['Night stretch (yoga)','4'],['Lesson done (Learning)','3'],['Quiz / 5+ flashcards','2'],['Teach it back','3'],['Proof of skill','8 · crit'],['Project session','up to 10'],['Perfect day (all Top 3)','4 · crit'],['Weekly review','10']],
     attack:['Lost Day','a past day with no check-in → it heals 3'], loot:'Lantern of Clear Days · 300 XP', go:"go('today')"}
 };
 const monthDays = m => new Date(+m.slice(0,4), +m.slice(5,7), 0).getDate();
@@ -10763,7 +10980,11 @@ function aBossEvents(k, m){ const E=[], inM=d=>d&&String(d).slice(0,7)===m, past
     for (const y of (S.yoga?.log||[])) if (inM(y.d)) E.push({d:y.d, dmg:4, l:'Night stretch'});
     // b317: learning hits the Fog too — every lesson done, every project session
     for (const x of ((S.learn||{}).subjects||[])){ for (const l of (x.lessons||[])) if (l.done && inM(l.done)) E.push({d:l.done, dmg:3, l:`Lesson · ${x.name}`});
-      if (x.kind==='project') for (const l of projStore(x).log) if (inM(l.d) && (+l.mins||0)>0) E.push({d:l.d, dmg:Math.min(10,Math.round((+l.mins||0)/60*5)), l:`${x.name} ${fmtMins(+l.mins||0)}`}); }
+      if (x.kind==='project') for (const l of projStore(x).log) if (inM(l.d) && (+l.mins||0)>0) E.push({d:l.d, dmg:Math.min(10,Math.round((+l.mins||0)/60*5)), l:`${x.name} ${fmtMins(+l.mins||0)}`});
+      for (const q of Object.values(x.qz||{})) if (inM(q.d)) E.push({d:q.d, dmg:2, l:`Quiz · ${x.name}`});
+      const tk=new Set(); for (const t of x.teach||[]) if (inM(t.d) && !tk.has(t.step)){ tk.add(t.step); E.push({d:t.d, dmg:3, l:`Taught it back · ${x.name}`}); }
+      for (const p of Object.values(x.proofs||{})) if (inM(p.done)) E.push({d:p.done, dmg:8, l:`Proof of skill · ${x.name}`, crit:1}); }
+    for (const [d,r] of Object.entries((S.learn||{}).rev||{})) if (inM(d) && (+r.n||0)>=5) E.push({d, dmg:2, l:`${r.n} flashcards`});
     const first=m+'-01', last=m===TODAY.slice(0,7)?addDays(TODAY,-1):m+'-'+monthDays(m); for (let d=first; d<=last; d=addDays(d,1)) if (d>='2026-10-01' && !(S.days[d]||{}).checkin) E.push({d, dmg:-3, l:'Lost Day', heal:1}); }
   return E.filter(e=>e.d<=TODAY && e.dmg).sort((a,b)=>b.d.localeCompare(a.d)); }
 function heals(E, m, dates, gap, amt, label){ const first=m+'-01', end=m===TODAY.slice(0,7)?TODAY:m+'-'+monthDays(m); let lastHit=dates.filter(d=>d<first).pop()||addDays(first,-1);
