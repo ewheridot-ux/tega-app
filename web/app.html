@@ -668,10 +668,33 @@ html body .app .tt .tt-map button.tt-n.k-rl{--sz:26px;font-size:13px}
 .tt-sn{flex:1 1 0;min-width:0;display:grid;justify-items:center;gap:5px;border:0;background:none;color:var(--lc);padding:0;cursor:pointer;font:inherit;min-height:0!important}
 html body .app .tt .tt-sn i{width:36px;height:36px;border-radius:50%!important;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:800;background:var(--nb);box-shadow:0 0 0 2px var(--half),0 0 0 4px var(--plq)}
 html body .app .tt .tt-sn.on i{background:var(--own);color:var(--ownc);box-shadow:0 0 0 2px var(--ownb),0 0 12px var(--glow,transparent)}
-.tt-sn small{overflow-wrap:anywhere;max-width:100%;font-size:10px;line-height:1.15;text-align:center;color:var(--lc);opacity:.85;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tt-sn small{overflow-wrap:break-word;max-width:100%;font-size:10px;line-height:1.15;text-align:center;color:var(--lc);opacity:.85;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 html body .app .tt .tt-sn.rl i{font-size:17px;box-shadow:0 0 0 2px var(--acc),0 0 0 4px var(--plq);border-radius:0!important;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}.tt-sn.rl{cursor:default}
 .tt[data-th=ink] .tt .tt-n small,.tt[data-th=ink] .tt-n small{text-transform:none;letter-spacing:0;font-size:var(--lsz);max-width:112px;line-height:1}
 .tt-sea-f{font-size:12.5px;line-height:1.35;color:var(--lc);opacity:.9}
+/* b329b: presentable pass — one line-icon style, grooved glowing links, sockets with depth, no muddy fade on locked nodes, clean labels */
+.tt{font-family:'Inter',system-ui,sans-serif}
+.tt .tt-map .tt-art{position:absolute;inset:0 -12px;pointer-events:none;z-index:0;background:repeating-radial-gradient(circle at 50% 722px,transparent 0 69px,color-mix(in srgb,var(--acc) 9%,transparent) 69px 70px),radial-gradient(ellipse 70% 45% at 50% 60%,color-mix(in srgb,var(--acc) 10%,transparent),transparent 70%);-webkit-mask:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent)}
+.tt .tt-map svg{z-index:1}.tt .tt-map .tt-n{z-index:2}
+.tt-map path.gv{stroke:rgba(0,0,0,.55);stroke-width:calc(var(--tlw) + 6px);filter:none}
+.tt-map path:not(.gv){stroke-width:var(--tlw)}.tt-map path.x{stroke-width:2px;stroke-dasharray:2 6}
+.tt{--tlw:3px}.tt[data-th=street]{--tlw:5px}.tt[data-th=money]{--tlw:4px}
+.tt-map path.lit{filter:drop-shadow(0 0 4px var(--glow,transparent)) drop-shadow(0 0 10px var(--glow,transparent))}
+html body .app .tt .tt-map button.tt-n.tt-n.tt-n.max{color:var(--ownc)}html body .app .tt .tt-map button.tt-n.tt-n.tt-n.open{color:var(--opn)}html body .app .tt .tt-map button.tt-n.tt-n.tt-n.deed{color:var(--deed)}html body .app .tt .tt-map button.tt-n.tt-n.tt-n.part,html body .app .tt .tt-map button.tt-n.tt-n.tt-n.lk{color:var(--lc)}
+.tt .tt-map .tt-n svg.ti *{stroke:currentColor!important;stroke-width:2!important;stroke-dasharray:none!important;fill:none!important;filter:none!important;vector-effect:none!important}
+.tt .tt-map .tt-n svg.ti{position:static!important;inset:auto!important;transform:none!important}
+.tt .tt-n .ti{width:var(--is,16px);height:var(--is,16px);fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;display:block}
+.tt .tt-n.k-root,.tt .tt-n.k-nt{--is:22px}.tt .tt-n.k-ks{--is:26px}.tt .tt-n.k-st{--is:28px}.tt .tt-n.k-cap{--is:30px}.tt .tt-n.k-rl{--is:13px}
+.tt .tt-map .tt-n:not(.max) .sh{background-image:radial-gradient(circle at 50% 28%,rgba(255,255,255,.13),transparent 62%)}
+.tt .tt-map .tt-n.lk{opacity:1;color:var(--lc)}.tt .tt-map .tt-n.lk>span{opacity:.6}.tt .tt-map .tt-n.lk .sh{filter:brightness(.75)}.tt .tt-map .tt-n.lk small{opacity:.7}
+.tt .tt-map .tt-n.deed>span{opacity:.8}
+.tt .tt-map .tt-n small{background:none;padding:0;text-shadow:0 1px 2px #000,0 0 6px #000,0 0 12px #000;letter-spacing:.08em;font-weight:800}
+.tt .tt-map .tt-tier{opacity:.85;z-index:2;text-shadow:0 0 6px #000,0 0 12px #000}
+.tt .tt-map .tt-halo{border-style:solid;border-color:color-mix(in srgb,var(--acc) 25%,transparent);box-shadow:0 0 40px color-mix(in srgb,var(--acc) 22%,transparent),inset 0 0 30px color-mix(in srgb,var(--acc) 12%,transparent)}
+.tt .tt-sea{background:linear-gradient(180deg,color-mix(in srgb,var(--acc) 10%,transparent),transparent 80%);box-shadow:none;border-top:2px solid var(--acc);border-radius:4px 4px 14px 14px}
+.tt .tt-sea-row{position:relative}.tt .tt-sea-row::before{content:'';position:absolute;left:8%;right:8%;top:18px;border-top:2px dashed var(--half);z-index:0}.tt .tt-sn{position:relative;z-index:1}
+.tt .tt-foot{opacity:.8}
+html body .app .tt .tt-sn,html body .app .tt .tt-sn *{font-family:'Inter',system-ui,sans-serif}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -6933,6 +6956,33 @@ function tSpec(a){ const T=TTREES[a], by=[0,0,0]; for (const n of T.nodes) if (n
 // specializations) that spread wider as they climb, twigs sprouting off them, and the capstone floating above the canopy as its crown.
 // Limbs never come back together. Side limbs sit lower than the middle one so labels never collide. The look comes from the area's page.
 const TT_TH={MONEY:'money',BODY:'body',MODEL:'holo',DATUM:'chrome',CONTENT:'vf',SOCIAL:'street',MIND:'ink'};
+// b329b: one line-icon set for the trees (game trees use one icon style, not mixed pictures)
+const TI={dumbbell:'<path d="M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12"/>',flame:'<path d="M12 3c1 4 6 6 6 11a6 6 0 0 1-12 0c0-3 2-4 2-7 2 1 3 3 3 5 1-2 1-6 1-9z"/>',heart:'<path d="M12 20s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 9c0 6-8 11-8 11z"/>',
+  moon:'<path d="M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z"/>',walk:'<circle cx="13" cy="4" r="2"/><path d="M10 21l2-6 3 3v4M8 12l3-4 4 2 2 3M11 8l-1 5"/>',shield:'<path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/>',bolt:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+  crown:'<path d="M3 18h18L19 7l-4 4-3-6-3 6-4-4z"/>',star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',coin:'<circle cx="12" cy="12" r="8"/><path d="M14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.5 0-2.5.8-2.5 2s1 1.6 2.5 2 2.5.8 2.5 2-1 2-2.5 2c-1 0-2-.5-2.5-1.5M12 6.5v11"/>',
+  chart:'<path d="M3 20h18M5 16l5-5 4 3 6-7"/><path d="M15 7h5v5"/>',gem:'<path d="M6 4h12l3 5-9 11L3 9z"/><path d="M3 9h18M9 4l3 16M15 4l-3 16"/>',pencil:'<path d="M4 20l1-5L16 4l4 4L9 19z"/><path d="M14 6l4 4"/>',
+  music:'<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',camera:'<rect x="3" y="7" width="18" height="13"/><circle cx="12" cy="13.5" r="3.5"/><path d="M8 7l2-3h4l2 3"/>',mail:'<rect x="3" y="5" width="18" height="14"/><path d="M3 7l9 6 9-6"/>',
+  chat:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8"/>',mega:'<path d="M3 10v4h4l7 5V5L7 10z"/><path d="M17 9a4 4 0 0 1 0 6"/>',book:'<path d="M5 3h12v18H7a2 2 0 0 1-2-2z"/><path d="M9 7h5M9 11h5"/>',bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/>',
+  building:'<path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/>',case:'<rect x="3" y="7" width="18" height="13"/><path d="M9 7V4h6v3M3 12h18"/>',folder:'<path d="M3 6h6l2 2h10v11H3z"/>',gift:'<rect x="3" y="9" width="18" height="12"/><path d="M3 13h18M12 9v12M12 9C10 5 6 5 7 8M12 9c2-4 6-4 5-1"/>',
+  map:'<path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/>',loop:'<path d="M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2"/><path d="M20 4v5h-5M4 20v-5h5"/>',lock:'<rect x="5" y="11" width="14" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',leaf:'<path d="M5 19C5 9 11 4 20 4c0 9-5 15-15 15z"/><path d="M5 19l8-8"/>',
+  brush:'<path d="M18 3l3 3-9 9-3-3z"/><path d="M9 12c-3 0-5 2-5 5 0 2-1 3-2 3 4 1 8 0 8-4"/>',people:'<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 3-5 6-5s6 2 6 5"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14c3 0 5 2 5 5"/>',
+  plane:'<path d="M3 11l18-8-8 18-2-8z"/><path d="M11 13L21 3"/>',hammer:'<path d="M14 4l6 6-3 3-6-6z"/><path d="M12 9L4 17l3 3 8-8"/>',target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>',key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/>',wind:'<path d="M3 8h11a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h8"/>'};
+const TI_C={any:'star',gym:'dumbbell',stretch:'moon',move:'walk',pr:'star',gymweek:'flame',good:'heart',checkin:'heart',early:'sun',journal:'pencil',top3:'target',learn:'book',datum:'gem',order:'coin',longbench:'clock',benchphoto:'camera',
+  cast:'case',job:'camera',road:'plane',outreach:'mail',post:'mega',art:'brush',guitar:'music',make:'bulb',hang:'people',party:'heart',parents:'chat',pay:'coin',money:'chart',budget:'shield'};
+const TI_ID={grip:'dumbbell',warmup:'flame',limber:'moon',prhunter:'star',ironlungs:'wind',ironwill:'shield',titan:'hammer',adrenaline:'bolt',phoenix:'sun',apex:'crown',
+  frugal:'shield',compound:'chart',hustler:'coin',taxward:'key',jackpot:'gift',closer:'case',vaultkeeper:'lock',dividend:'chart',windfall:'bolt',freedom:'crown',
+  camera:'camera',silver:'chat',reachout:'mail',runway:'walk',roadwarrior:'plane',buzz:'mega',spotlight:'bulb',bookedsolid:'book',bigname:'star',theface:'crown',
+  steady:'hammer',firstsale:'coin',sketchbook:'pencil',flow:'clock',shopkeep:'building',cadwiz:'gem',mwhands:'star',rushorder:'flame',shotlist:'camera',jeweler:'crown',
+  poster:'mega',dailysketch:'brush',calluses:'music',algohacker:'eye',gallery:'building',riffvault:'folder',goviral:'bolt',musemode:'bulb',encore:'star',creator:'crown',
+  makeplans:'people',loyal:'heart',foodie:'leaf',lifeparty:'star',callhome:'chat',explorer:'map',hermitslayer:'shield',rally:'mega',crewnight:'moon',connector:'crown',
+  quick:'book',earlybird:'sun',sage:'leaf',polymath:'bulb',deepwork:'target',innervoice:'pencil',eureka:'bolt',fogcutter:'wind',clarity:'eye',enlightened:'crown',
+  ironbody:'dumbbell',secondwind:'wind',deepsleep:'moon',calm:'leaf',fortune:'leaf',lucky:'gift',headliner:'star',callback:'loop',portfolio:'folder',cobweb:'shield',golemslayer:'flame',moodboard:'folder',
+  ideamachine:'bulb',processshots:'camera',repertoire:'music',magnetic:'moon',neveralone:'shield',nightowl:'moon',strategist:'target',sight:'eye'};
+const TI_A={BODY:'dumbbell',MONEY:'coin',MODEL:'camera',DATUM:'gem',CONTENT:'mega',SOCIAL:'people',MIND:'book'};
+const tIco=k=>`<svg class="ti" viewBox="0 0 24 24" aria-hidden="true">${TI[k]||TI.star}</svg>`;
+const tIcoOf=n=>tIco(TI_ID[n.id]||TI_C[n.fx.c]||TI_A[n.a]);
 // b329 layout: bottom-up like the games — START at the root, each branch fans out and closes twice, middle branch a step higher
 const TT_POS={root:[[17,622],[50,604],[83,622]], m1:[[8,520],[41,502],[73,520]], m2:[[27,520],[59,502],[92,520]], nt:[[17,410],[50,392],[83,410]],
   m3:[[8,306],[41,288],[73,306]], m4:[[27,306],[59,288],[92,306]], ks:[[17,186],[50,166],[83,186]]};
@@ -6940,21 +6990,21 @@ const TT_H=800, TT_START={x:50,y:722}, TT_CAP={x:50,y:52};
 const ttXY=n=>n.k==='cap'?TT_CAP:{x:TT_POS[n.k][n.b][0], y:TT_POS[n.k][n.b][1]};
 function tTree(a){ const T=TTREES[a], A=AREAS.find(x=>x.k===a), free=tFree(a), inv=tInvested(a), th=TT_TH[a]||'money';
   const st=Object.fromEntries(T.nodes.map(n=>[n.id,tState(n.id)])), own=id=>st[id].r>0, reach=id=>own(id)||st[id].cls==='open', P=id=>ttXY(TNODE[id]);
-  const ln=(p,q,cls)=>`<path class="${cls}" d="M${p.x} ${p.y} L${q.x} ${q.y}"/>`, E=[];
+  const G=[], ln=(p,q,cls)=>{ const d=`M${p.x} ${p.y} L${q.x} ${q.y}`; if (!/\bx\b/.test(cls)) G.push(`<path class="gv" d="${d}"/>`); return `<path class="${cls}" d="${d}"/>`; }, E=[];
   for (const n of T.nodes){ if (n.k==='cap') continue; if (n.k==='root') E.push(ln(TT_START,ttXY(n),own(n.id)?'lit':reach(n.id)?'half':''));
     for (const pid of n.p) if (TNODE[pid].b===n.b && TNODE[pid].t<n.t) E.push(ln(P(pid),ttXY(n),own(pid)&&own(n.id)?'lit':own(pid)&&reach(n.id)?'half':'')); }
   for (const [u,v] of T.x) E.push(ln(P(u),P(v),`x ${own(u)&&own(v)?'lit':own(u)||own(v)?'half':''}`));
   const lab=n=>n.k==='root'?T.br[n.b][0]:['nt','ks','cap'].includes(n.k)?n.n:'';
   const node=n=>{ const s0=st[n.id], p=ttXY(n), L=lab(n), pips=n.r>1?`<i class="tt-pips">${Array.from({length:n.r},(_,i)=>`<u class="${i<s0.r?'on':''}"></u>`).join('')}</i>`:'';
-    return `<button class="tt-n ${s0.cls} k-${n.k} ${n.fx.ab?'ab':''}" style="left:${p.x}%;top:${p.y}px" onclick="tOpen('${n.id}')" aria-label="${esc(n.n)} (${TT_KIND[n.k]}), ${s0.r} of ${n.r}${s0.cls==='open'?', ready to learn':s0.cls==='lk'?', locked':''}"><i class="sh"></i><span>${n.ic}</span>${pips}${n.fx.ab?'<b class="tt-ab">⚡</b>':''}${L?`<small>${esc(L)}</small>`:''}</button>`; };
-  const R=tRelics(a), rel=R.map((r,i)=>{ const [nm,ic]=tSeaName(r.q), x=50+(i%2?1:-1)*(16+Math.floor(i/2)*9); return `<button class="tt-n max k-rl" style="left:${x}%;top:${TT_START.y+8}px" onclick="toast('${ic} ${nm} relic · +5% XP on ${TCN[TT_COND[a]]} since ${nice(r.at)} · +1 point')" aria-label="${nm} relic"><i class="sh"></i><span>${ic}</span></button>`; }).join('');
+    return `<button class="tt-n ${s0.cls} k-${n.k} ${n.fx.ab?'ab':''}" style="left:${p.x}%;top:${p.y}px" onclick="tOpen('${n.id}')" aria-label="${esc(n.n)} (${TT_KIND[n.k]}), ${s0.r} of ${n.r}${s0.cls==='open'?', ready to learn':s0.cls==='lk'?', locked':''}"><i class="sh"></i><span>${tIcoOf(n)}</span>${pips}${n.fx.ab?'<b class="tt-ab">⚡</b>':''}${L?`<small>${esc(L)}</small>`:''}</button>`; };
+  const R=tRelics(a), rel=R.map((r,i)=>{ const [nm,ic]=tSeaName(r.q), x=50+(i%2?1:-1)*(16+Math.floor(i/2)*9); return `<button class="tt-n max k-rl" style="left:${x}%;top:${TT_START.y+8}px" onclick="toast('${ic} ${nm} relic · +5% XP on ${TCN[TT_COND[a]]} since ${nice(r.at)} · +1 point')" aria-label="${nm} relic"><i class="sh"></i><span>${tIco('gem')}</span></button>`; }).join('');
   const spec=tSpec(a);
   return `<div class="tt" data-th="${th}" style="--c:${A.c}"><div class="tt-hud"><div><small>${esc(A.n)} · skill tree</small><b>${spec?`${spec[1]} ${esc(spec[0])}`:'Pick a path'}</b></div><div class="tt-pts ${free?'on':''}"><b>${free}</b><small>point${free===1?'':'s'}</small></div></div>
     <div class="tt-map" style="height:${TT_H}px"><svg viewBox="0 0 100 ${TT_H}" preserveAspectRatio="none" aria-hidden="true"><defs>
       <linearGradient id="tbg-holo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb3f0"/><stop offset=".35" stop-color="#b8c8ff"/><stop offset=".7" stop-color="#9ff7ff"/><stop offset="1" stop-color="#ffe6a8"/></linearGradient>
-      <linearGradient id="tbg-chrome" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d8996"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#7d8996"/></linearGradient></defs>${E.join('')}</svg>
+      <linearGradient id="tbg-chrome" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d8996"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#7d8996"/></linearGradient></defs>${G.join('')}${E.join('')}</svg><i class="tt-art"></i>
       <i class="tt-halo" style="top:${TT_CAP.y}px"></i><span class="tt-tier" style="top:${TT_POS.ks[0][1]-58}px">Keystones</span><span class="tt-tier" style="top:${TT_POS.nt[0][1]-52}px">Notables</span>
-      ${T.nodes.map(node).join('')}<button class="tt-n max k-st" style="left:${TT_START.x}%;top:${TT_START.y}px" onclick="toast('${free?`${free} ${esc(A.n)} point${free===1?'':'s'} to spend`:`Earn ${esc(A.n)} points with its feats`}')" aria-label="${esc(A.n)} start"><i class="sh"></i><span>${(T.br.find((b,i)=>spec&&b===spec)||T.br[0])[1]}</span><small>${esc(A.n)}</small></button>${rel}</div>
+      ${T.nodes.map(node).join('')}<button class="tt-n max k-st" style="left:${TT_START.x}%;top:${TT_START.y}px" onclick="toast('${free?`${free} ${esc(A.n)} point${free===1?'':'s'} to spend`:`Earn ${esc(A.n)} points with its feats`}')" aria-label="${esc(A.n)} start"><i class="sh"></i><span>${tIco(TI_A[a])}</span><small>${esc(A.n)}</small></button>${rel}</div>
     ${tSeaHtml(a)}
     <div class="tt-foot">${tEarned(a)} earned from ${esc(A.n)} feats${R.length?` · ${R.length} from relics`:''} · ${tCost(a)} spent${T.nodes.some(n=>tGift(n.id))?' · old perks kept free':''}</div></div>`; }
 function tSeaHtml(a){ const s=tSeason(a), A=AREAS.find(x=>x.k===a), [nm,ic]=tSeaName(s.q), left=Math.max(0,daysBetween(TODAY,qRange(s.q)[1])), dn=s.nodes.filter(x=>x.done).length;
