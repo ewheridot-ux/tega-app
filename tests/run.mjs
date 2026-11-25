@@ -738,6 +738,20 @@ const sk = await page.evaluate(async () => { const r = {}, w = ms => new Promise
   go('gym'); await w(100); const before = { xp: computeXP() - 15, lvl: levelFor(computeXP()), badges: Object.keys(S.badges).length }; celebrateDiff(before); const el = document.getElementById('toast'); r.chip = /\+15 XP · Body/.test(el.textContent);
   toast('Workout logged · +15 XP'); r.once = (el.textContent.match(/XP/g) || []).length === 1 && /Workout logged/.test(el.textContent); go('today'); return r; });
 ok('every page: area chip → tabs → page; XP shows once, as "+N XP · Area"', Object.values(sk).every(Boolean), JSON.stringify(sk));
+// b330: one app — doorways between pages (each opens its page + tab), a timeline from every page, the coach knows the page, the brief nudges Learning
+const one = await page.evaluate(async () => { const r = {}, w = ms => new Promise(z => setTimeout(z, ms));
+  go('money'); await w(150); const xl = [...document.querySelectorAll('#view .xl button')]; r.money = xl.length >= 3; xl[0].click(); await w(200); r.toModel = view === 'model' && mTab === 'book';
+  r.back = !![...document.querySelectorAll('#view .xl button')].find(b => /Checks in Money/.test(b.textContent));
+  S.wins.push({ id: 'tlw', d: TODAY, text: 'timeline test win' }); charGo('overview'); await w(200); r.timeline = !!document.querySelector('#view .act') && actItems(TODAY).some(x => /timeline test win/.test(x.t)); S.wins = S.wins.filter(x => x.id !== 'tlw');
+  go('money'); await w(120); coachOpen(); await w(120); r.coach = /Money/.test(document.querySelector('#g-sheet')?.textContent || '') && /taxes|spend/i.test(document.querySelector('#g-sheet')?.textContent || '') && /Money page/.test(coachWhere()); gSheetClose();
+  const B = tegaBrief(TODAY); r.brief = Array.isArray(B) || typeof B === 'object' || typeof B === 'string'; go('today'); return r; });
+ok('one app: doorways between pages both ways, a timeline from every page, a page-aware coach', Object.values(one).every(Boolean), JSON.stringify(one));
+// b330: nothing a page draws ends up outside #view (an extra </div> once pushed Character's cards out of the page)
+const leak = await page.evaluate(async () => { const bad = [], w = ms => new Promise(z => setTimeout(z, ms));
+  for (const v of ['today', 'week', 'quarter', 'year', 'vision', 'social', 'learn', 'model', 'content', 'datum', 'gym', 'money', 'city', 'bosses']) { go(v); await w(120); const x = [...document.getElementById('app').children].filter(e => !['topbar', 'pills', 'nav', 'sw-ghost'].some(c => e.classList.contains(c)) && e.id !== 'view'); if (x.length) bad.push(v + ':' + x[0].className); }
+  for (const t of ['overview', 'skills', 'look', 'collection']) { chTab = t; go('evolve'); render(); await w(150); const x = [...document.getElementById('app').children].filter(e => !['topbar', 'pills', 'nav', 'sw-ghost'].some(c => e.classList.contains(c)) && e.id !== 'view'); if (x.length) bad.push('evolve/' + t + ':' + x[0].className); }
+  go('today'); return bad; });
+ok('every page stays inside #view', leak.length === 0, JSON.stringify(leak));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

@@ -755,6 +755,11 @@ html[data-skin="crt"] h3{font-weight:600;font-size:15px}
 .sh-sec{margin-top:14px}.sh-goal{display:flex;align-items:center;gap:12px;width:100%;margin-top:6px;padding:12px 14px;border:0;border-radius:14px;background:var(--card2);color:var(--fg);font:inherit;text-align:left;cursor:pointer}.sh-goal b{font-size:24px;font-weight:800}.sh-goal span{font-size:13px;color:var(--muted)}
 .sh-rows{display:grid;gap:4px;margin-top:6px}.sh-r{display:grid;grid-template-columns:84px 1fr auto;align-items:center;gap:10px;width:100%;padding:9px 12px;border:0;border-radius:12px;background:var(--card2);color:var(--fg);font:inherit;text-align:left;cursor:pointer;box-shadow:inset 3px 0 0 var(--c)}
 .sh-r b{font-size:14px}.sh-pips{display:flex;gap:4px;flex-wrap:wrap}.sh-pips i{width:14px;height:14px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--c);opacity:.7}.sh-pips i.on{background:var(--c);opacity:1}.sh-pips small{font-size:12px;color:var(--muted)}.sh-r em{font-style:normal;font-size:12.5px;font-weight:700;color:var(--muted)}
+.act-d{padding:8px 0;border-top:1px solid var(--line)}.act-d:first-of-type{border-top:0}.act-h{display:flex;justify-content:space-between;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.act-i{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:13.5px}.act-i>i{flex:none;width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-style:normal;font-size:12px;background:color-mix(in srgb,var(--c) 18%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 45%,transparent)}
+.act-i>span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.act-i>em{flex:none;font-style:normal;font-size:11px;font-weight:700;color:var(--c)}
+.xl{margin-top:18px}.xl>small{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 2px 6px}.xl>div{display:flex;flex-wrap:wrap;gap:6px}
+.xl button{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:0;border-radius:99px;background:var(--card2);color:var(--fg);font:inherit;font-size:13px;font-weight:600;cursor:pointer}.xl button i{font-style:normal}.xl button em{font-style:normal;color:var(--muted)}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -3562,6 +3567,20 @@ function lifeNext(){ try { const c=lrContinue(); if (c) return {t:`${c.s.t} · $
 // b315: “Next up” opens that subject and scrolls to its lesson list — before, on the Learning page itself it only scrolled to the top
 function lrGoNext(id){ lrTab=id; const jump=()=>setTimeout(()=>{ const c=document.getElementById('lr-upnext'); if (c) c.scrollIntoView({behavior:'smooth', block:'start'}); }, 80);
   if (view==='learn'){ render(); jump(); } else { location.hash='learn'; jump(); } }
+/* b330: two-way doorways — the bottom of each page links to the pages that feed it and the pages it feeds, so a booking, a sale or a
+   payment is one tap from everywhere it matters. Labels only: each number lives on its own page. Add a page → add its line here. */
+const XLINKS={
+  money:[['📸','Modeling statement',"mTab='book';go('model')"],['◆','Datum orders',"dView='biz';go('datum')"],['📅','Bills & deadlines','dlSheetOpen()'],['🎯','Money goals',"go('quarter')"]],
+  model:[['💵','Checks in Money',"moneyTab='now';go('money')"],['🧾','Taxes',"moneyTab='taxes';go('money')"],['📅','Calendar','dlSheetOpen()'],['📱','Post from a shoot',"ctTab='plan';go('content')"]],
+  datum:[['💵','Revenue in Money',"moneyTab='now';go('money')"],['📚','Datum craft lessons',"lrTab='datum';go('learn')"],['📱','Post a piece',"ctTab='plan';go('content')"],['🎯','Datum goals',"go('quarter')"]],
+  content:[['📸','Shoots',"mTab='now';go('model')"],['◆','Datum pieces',"dView='bench';go('datum')"],['✏️','Drawing lessons',"lrTab='draw';go('learn')"],['🎸','Guitar lessons',"lrTab='guitar';go('learn')"]],
+  gym:[['🧘','Night stretch',"gTab='recovery';go('gym')"],['🌳','Body tree',"tAreaTab='tree';charGo('skills','BODY')"],['📅','This week',"go('week')"]],
+  learn:[['◆','Datum bench',"dView='bench';go('datum')"],['🎨','Art & guitar',"ctTab='create';go('content')"],['🎯','Learning goals',"lrTab='goals';go('learn')"]],
+  social:[['📅','Calendar','dlSheetOpen()'],['📸','Shoots & travel',"mTab='now';go('model')"],['🎯','Circle goals',"go('quarter')"]],
+  quarter:[['❄️','Season hub','seasonOpen()'],['🌳','Skill trees',"charGo('skills')"]],
+  week:[['📅','Calendar','dlSheetOpen()'],['❄️','Season hub','seasonOpen()']],
+  today:[['📅','Calendar','dlSheetOpen()'],['❄️','Season hub','seasonOpen()'],['🧭','Timeline',"charGo('overview')"]]};
+function xlinks(){ const L=XLINKS[view]; if (!L) return ''; return `<div class="xl sec"><small>Connected to</small><div>${L.map(([ic,t,go])=>`<button onclick="${go.replace(/"/g,'&quot;')}"><i>${ic}</i>${esc(t)}<em>›</em></button>`).join('')}</div></div>`; }
 /* b330: every page has the same skeleton — (Life's header) → the area chip → the page's tabs → the page. A page's own hero sits under
    its tabs, so the tabs are always in the same place when you move between pages. Done once after each render, for every page. */
 function pageSkeleton(){ const v=document.getElementById('view'); if (!v) return; const K=[...v.children], chip=K.find(e=>e.classList.contains('ar-chip')), tabs=K.find(e=>e.matches('.seg.sec')&&e.querySelector('button.on'));
@@ -3620,7 +3639,7 @@ function render(){
     <div class="nav" data-hl="${LIFE.some(([k])=>k===view)?'study':({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab'})[view]||'crt'}">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='today'&&GOALS.some(([k])=>k===view))||(v==='life'&&LIFE.some(([k])=>k===view))?'on':''}" data-tab="${v}" onclick="if(!navHeld())go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
     <div id="view">${view==='today'?goalsTabs():GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):LIFE.some(([k])=>k===view)?lifeHero()+lifeTabs():''}${AREA_VIEW[view]?areaChip(AREA_VIEW[view]):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve,social:vSocial,bosses:vBosses,city:vCity,hustle:()=>{ setTimeout(()=>{ lrTab=(lrSubs().find(x=>x.link==='hustle')||{}).id||lrTab; location.hash='learn'; },0); return ''; },learn:vLearning})[view]()}</div>`;
   if (window.__avPaint==null) try { const p=document.querySelector('.pfp-sm img, .pfp-sm svg'); if (p){ const first=(window.__r1||0)===1, t=()=>{ if (window.__avPaint==null){ window.__avPaint=performance.now(); window.__avFirst=first; } }; if (p.tagName!=='IMG'||p.complete) t(); else p.addEventListener('load',t,{once:true}); } } catch(e){}
-  try { pageSkeleton(); } catch(e){}
+  try { pageSkeleton(); const v=document.getElementById('view'); if (v && XLINKS[view] && !v.querySelector(':scope > .xl')) v.insertAdjacentHTML('beforeend', xlinks()); } catch(e){}
   dlSheetRefresh(); try { if (_swAnim) swAnimApply(); else if (_pgLast!==view){ const v=document.getElementById('view'); if (v&&_pgLast&&!pgDissolve(_oldR&&_oldV, _oldR)){ v.classList.remove('pg-in'); void v.offsetWidth; v.classList.add('pg-in'); } } _pgLast=view; } catch(e){}
   try { swRememberSoon(); } catch(e){}
   checkEvo();
@@ -9033,9 +9052,17 @@ function coachData(){ const out=[], T=TODAY; const tryp=f=>{ try { const v=f(); 
   return out.join('\n'); }
 let coachBusy=false;
 function C_(){ return (S.coach ||= {msgs:[]}); }
-function coachOpen(){ gSheet(coachHTML()); const s=document.querySelector('#g-sheet .g-sheet'); if (s) s.classList.add('co-sheet'); setTimeout(()=>{ const l=document.getElementById('co-list'); if(l) l.scrollTop=l.scrollHeight; },30); }
-function coachHTML(){ const M=C_().msgs.slice(-30), sugg=['How much spending money do I have left?','When is my next shoot?','Add a quest: edit Datum photos','Add a learning goal for this quarter','Something in the app is broken'];
-  return `<div class="row" style="gap:10px;align-items:center;flex-wrap:nowrap">${pfpMini(stageOf(levelFor(computeXP())))}<div style="min-width:0"><h2 class="g-sh-t" style="margin:0">Talk to Tega</h2><small class="sub">Sees your whole app · can change it for you</small></div></div>
+/* b330: the coach knows where you are — it opens with suggestions for the page you were on and tells the model which page/tab it is */
+const PAGE_NAME={today:'Today',week:'Week',quarter:'OKRs',year:'Year goals',vision:'5-year vision',social:'Circle',learn:'Learning',model:'Modeling',content:'Content',datum:'Datum',gym:'Gym',money:'Money',evolve:'Character',city:'City',bosses:'Bosses'};
+const PAGE_SUGG={money:['How much can I spend this week?','How much should go to taxes from my next check?'],model:['When is my next shoot?','Who still owes me money?'],learn:['What should I learn today?','Quiz me on what I learned last'],
+  gym:['What should I train today?','How has my training been this month?'],content:['Give me 3 post ideas for this week','What did my best post have in common?'],datum:['What’s my next step at the bench?','How do I price my next order?'],
+  social:['Who haven’t I seen in a while?','Plan a hangout for this weekend'],quarter:['Am I on track this quarter?','Which goal is furthest behind?'],week:['Plan my week','What should my one thing be?'],evolve:['What should I spend skill points on?','Which area is weakest?']};
+let coachFrom=null;
+function coachWhere(){ const f=coachFrom; if (!f||!PAGE_NAME[f.v]) return ''; return `He opened you from the ${PAGE_NAME[f.v]} page${f.tab?` (${f.tab} tab)`:''} — start from that if his question is vague.`; }
+function coachOpen(){ if (!document.getElementById('g-sheet')||!document.querySelector('#g-sheet .co-list')) { let tab=''; try { const I=swInfo(); if (I) tab=I.B[I.i].textContent.trim().replace(/\s+\d+$/,'').slice(0,20); } catch(e){} coachFrom={v:view, tab:tab&&tab!==(PAGE_NAME[view]||'')?tab:''}; }
+  gSheet(coachHTML()); const s=document.querySelector('#g-sheet .g-sheet'); if (s) s.classList.add('co-sheet'); setTimeout(()=>{ const l=document.getElementById('co-list'); if(l) l.scrollTop=l.scrollHeight; },30); }
+function coachHTML(){ const M=C_().msgs.slice(-30), here=coachFrom&&PAGE_SUGG[coachFrom.v]||[], sugg=[...here,...['How much spending money do I have left?','When is my next shoot?','Add a quest: edit Datum photos','Add a learning goal for this quarter','Something in the app is broken'].filter(x=>!here.includes(x))].slice(0,5);
+  return `<div class="row" style="gap:10px;align-items:center;flex-wrap:nowrap">${pfpMini(stageOf(levelFor(computeXP())))}<div style="min-width:0"><h2 class="g-sh-t" style="margin:0">Talk to Tega</h2><small class="sub">Sees your whole app${coachFrom&&PAGE_NAME[coachFrom.v]?` · you’re on ${esc(PAGE_NAME[coachFrom.v])}${coachFrom.tab?' · '+esc(coachFrom.tab):''}`:' · can change it for you'}</small></div></div>
   <div class="co-list" id="co-list">${M.length?M.map((m,ix)=>{ const mi=C_().msgs.length-M.length+ix; return `<div class="co-m ${m.r}">${esc(m.t).replace(/\n/g,'<br>')}${m.acts&&m.acts.length?`<div class="co-acts ${m.undone?'undone':''}">${m.acts.map(x=>`<span>✓ ${esc(x)}</span>`).join('')}${m.undo&&!m.undone&&agUndo&&agUndo.i===mi?`<button onclick="agUndoRun()">↩︎ Undo</button>`:''}${m.undone?'<small>undone</small>':''}</div>`:''}${m.pend&&m.pend.length?`<div class="co-pend">${m.pend.map((p,pi)=>`<button class="${p.go?'':'danger'}" onclick="agConfirm(${mi},${pi})">${esc(p.label)}</button>`).join('')}</div>`:''}</div>`; }).join(''):`<div class="co-sugg">${sugg.map(s=>`<button onclick="coachSend(${JSON.stringify(s).replace(/"/g,'&quot;')})">${s}</button>`).join('')}</div>`}${coachBusy?'<div class="co-m a co-typing"><i></i><i></i><i></i></div>':''}</div>
   <form class="co-f" onsubmit="event.preventDefault();coachSend(document.getElementById('co-in').value)"><input id="co-in" class="inp" placeholder="Ask anything…" autocomplete="off" enterkeyhint="send"><button class="btn" aria-label="Send">↑</button></form>
   ${M.length?`<button class="co-clear" onclick="C_().msgs=[];commit({skipXp:true});coachOpen()">Clear chat</button>`:''}`; }
@@ -9094,7 +9121,7 @@ function agDo(a){ const A=a.args||a, t=a.tool||a.type;
 async function coachSend(t){ t=String(t||'').trim(); if(!t||coachBusy) return; const C=C_(); C.msgs.push({r:'u',t,at:Date.now()}); coachBusy=true; coachOpen();
   if (!sampleLib){ C.msgs.push({r:'a',t:'I can’t think right now — no connection. Try again in a bit.'}); coachBusy=false; commit({skipXp:true}); coachOpen(); return; }
   const hist=C.msgs.slice(-14).map(m=>(m.r==='u'?'Tega: ':'You: ')+m.t+(m.acts?.length?` [you did: ${m.acts.join('; ')}${m.undone?' — he undid it':''}]`:'')).join('\n');
-  const prompt=`You are Tega — the agent living inside Tega.exe, his life-OS app. He's a young fashion model (${ME.client} regular, ${ME.agency}, Chicago + NY), building a grillz business (Datum), posting content, lifting to stay lean, and getting his money in order (32.2% of income goes to the tax buffer). You can SEE everything below and you can CHANGE the app with actions. Talk like a smart, funny friend: direct, casual, short (under 80 words unless he asks for a plan or long text). Use only the real numbers below — never invent amounts or dates; if something isn't in the data, say you don't see it.
+  const prompt=`You are Tega — the agent living inside Tega.exe, his life-OS app. He's a young fashion model (${ME.client} regular, ${ME.agency}, Chicago + NY), building a grillz business (Datum), posting content, lifting to stay lean, and getting his money in order (32.2% of income goes to the tax buffer). ${coachWhere()} You can SEE everything below and you can CHANGE the app with actions. Talk like a smart, funny friend: direct, casual, short (under 80 words unless he asks for a plan or long text). Use only the real numbers below — never invent amounts or dates; if something isn't in the data, say you don't see it.
 
 WHAT YOU CAN DO (actions):
 - add_objective {level:"quarter"|"year", period?:"2026-Q4"|"2027", track, title, why, done, krs:[{text,target,unit:""|"$",due:"YYYY-MM-DD"|""}]}
@@ -9268,6 +9295,7 @@ window.tegaBrief = function(k){ const L=[]; try {
     for (const x of (S.money.checks||[])) if (!x.got && x.d===k) L.push('💸 Check expected today');
     const dl=(typeof dlAll==='function'?dlAll():[]).filter(x=>!x.done&&x.src!=='check'), due=dl.filter(x=>x.d===k), late=dl.filter(x=>x.d<k);
     if (due.length) L.push(`📌 Due: ${due.slice(0,2).map(x=>x.text).join(', ')}`); if (late.length) L.push(`⏰ ${late.length} overdue`);
+    try { const due=lrDue().length, c=lrContinue(); if (due) L.push(`🃏 ${due} card${due===1?'':'s'} to review`); else if (c) L.push(`📚 Learn: ${c.s.t.slice(0,48)}`); } catch(e){}
     const y=addDays(k,-1); if (!(S.days[y]&&S.days[y].checkin)) L.push('Yesterday was missed — don’t make it two');
   } catch(e){} return L.slice(0,4).join('\n'); };
 window.tegaReminders = function(){ const out=[]; prepUpcoming(14).forEach((e,i)=>{ const [y,m,d]=addDays(e.start,-1).split('-').map(Number), at=new Date(y,m-1,d,20,0,0); if (at>new Date()) out.push({id:5000+i, title:`Tomorrow: ${e.c}`, body:`${((MT[e.t]||[e.t])[0]||e.t)}${e.loc?' · '+e.loc:''} · open your prep checklist`, at}); }); 
@@ -12685,7 +12713,28 @@ function charHead(){ const xp=computeXP(), lv=levelFor(xp), lo=xpForLevel(lv), h
   return `<div class="card sec ch-hd"><div class="ch-hd-r"><button class="avatar ringed ch-av" style="--ringc:${ringCss(lv)}" onclick="levelScene(${lv})" aria-label="Replay your level-up">${avatarSVG(stageOf(lv),'smile',84,S.evo||{})}<span class="lvlpip num">${lv}</span></button>
     <button class="iconbtn ch-gear" onclick="stMode='settings';setTab='app';render();window.scrollTo(0,0)" aria-label="Settings">⚙️</button>
     <div class="ch-hd-t"><b>Lv ${lv} · ${esc(titleOf(lv))}</b>${titleNow()?`<div class="ttl-now">« ${esc(titleNow())} »</div>`:''}<div class="ch-xp"><u style="width:${pct}%"></u></div><small class="sub">${lv>=MAXLVL?'Max level':`${(hi-xp).toLocaleString()} XP to Lv ${lv+1} · ${weekXp(THIS_WEEK).toLocaleString()} this week`}</small></div></div>
-    </div></div>`; }
+    </div>`; }
+/* b330: one timeline — everything you did, from every page, newest first, coloured by area. Built from the records each page already
+   keeps (nothing new is stored, nothing counted twice): wins, gym and stretch sessions, Top 3 done, posts and outreach, art, guitar,
+   lessons, days on set, check-ins. */
+let actN=7;
+function actItems(from){ const out=[], A=k=>AREAS.find(x=>x.k===k)||{c:'#888',n:''}, add=(d,a,ic,t)=>{ if (d&&d>=from&&d<=TODAY&&t) out.push({d,a,ic,t:String(t).slice(0,90)}); };
+  try { for (const w of S.wins||[]) add(w.d,null,'★',w.text); } catch(e){}
+  try { for (const g of (S.gym||{}).sessions||[]) add(g.d,'BODY','🏋️',g.name||g.title||`Workout${(g.prs||[]).length?` · ${(g.prs||[]).length} PR`:''}`); } catch(e){}
+  try { for (const y of (S.yoga||{}).log||[]) add(y.d,'BODY','🌙',`Night stretch${y.mins?` · ${y.mins} min`:''}`); } catch(e){}
+  try { for (const [k,D] of Object.entries(S.days)) { if (k<from) continue; for (const t of D.top3||[]) if (t.done&&(t.text||'').trim()) add(k, tTrackArea(t.track), '✓', t.text); if (D.checkin) add(k,'MIND','☀️','Checked in'); } } catch(e){}
+  try { for (const l of S.logs||[]) add(l.d, l.kind==='post'?'CONTENT':'MODEL', l.kind==='post'?'📱':'📨', `${l.kind==='post'?'Posted':l.kind==='proposal'?'Sent a proposal':'Outreach'}${l.text||l.t?` · ${l.text||l.t}`:''}`); } catch(e){}
+  try { for (const a of S.art||[]) add(a.d,'CONTENT','🎨',a.title||'Art'); } catch(e){}
+  try { for (const g of (S.gtr||{}).log||[]) add(g.d,'CONTENT','🎸',`Guitar · ${g.mins} min${g.t?` · ${g.t}`:''}`); } catch(e){}
+  try { for (const x of lrSubs()) for (const z of lrSteps(x)) if (z.done) add(String(z.done).slice(0,10),'MIND','📚',`${x.name} · ${z.t}`); } catch(e){}
+  try { for (const e of liveBookings()) if (e.t==='job') for (const d of e.d||[]) add(d,'MODEL','📸',`On set · ${e.c||''}`); } catch(e){}
+  return out.map(x=>({...x, A:x.a?A(x.a):null})).sort((p,q)=>q.d.localeCompare(p.d)); }
+function actFeed(){ const from=addDays(TODAY,-(actN-1)), L=actItems(from); if (!L.length) return '';
+  const by={}; for (const x of L) (by[x.d] ||= []).push(x);
+  return `<div class="card sec act"><div class="hdr"><h2>Timeline</h2><span class="sub">everything you did · ${actN} days</span></div>
+    ${Object.entries(by).map(([d,xs])=>`<div class="act-d"><div class="act-h">${d===TODAY?'Today':d===addDays(TODAY,-1)?'Yesterday':esc(new Date(d+'T12:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}))}<small>${xs.length}</small></div>
+      ${xs.slice(0,8).map(x=>`<div class="act-i" style="--c:${x.A?x.A.c:'var(--muted)'}"><i>${esc(x.ic)}</i><span>${esc(x.t)}</span>${x.A?`<em>${esc(x.A.n.split(' ')[0])}</em>`:''}</div>`).join('')}${xs.length>8?`<div class="sub" style="padding:4px 0 0 34px">+${xs.length-8} more</div>`:''}</div>`).join('')}
+    <button class="btn ghost sm" style="width:100%;justify-content:center;margin-top:8px" onclick="actN=${actN>=30?7:actN*2>30?30:actN*2};render()">${actN>=30?'Show less':'Show more'}</button></div>`; }
 function charAreas(){ const L=statAttrs(), A30=Object.fromEntries(L.map(a=>[a.n,a])), top=L.slice().sort((x,y)=>y.v-x.v)[0], low=L.slice().sort((x,y)=>x.v-y.v)[0];
   const rows=AREAS.map(x=>{ const I=areaInfo(x.k), a=A30[x.k]||{v:0,sub:''}, stk=Object.keys(T_STAT).find(k=>T_STAT[k].includes(x.k)), f=tFree(x.k);
     const rank=x.k==='MONEY'?(()=>{ try { return moneyRank().r[1]; } catch(e){ return I.rank||''; } })():(I.rank||'');
@@ -12721,7 +12770,7 @@ function vEvolve(){
   const pts=ptsFree(), T=[['overview','Overview'],['skills',`Skills${pts?` <i class="ch-tp">${pts}</i>`:''}`],['look','Look'],['collection','Collection']];
   const seg=`<div class="seg sec ch-tabs" role="tablist" style="display:flex;width:100%;overflow:hidden">${T.map(([k,l])=>`<button role="tab" aria-selected="${chTab===k}" class="${chTab===k?'on':''}" style="flex:1 1 auto;min-width:0;padding:9px 4px;font-size:12px" onclick="chTab='${k}';render();window.scrollTo(0,0)">${l}</button>`).join('')}</div>`;
   const body = chTab==='skills'?charSkillsTab():chTab==='look'?charLookTab():chTab==='collection'?charCollTab():
-    charHead()+charAreas()+foldCards(statDrop(vStats(),['Furthest behind','Money','Bench time'])+tellsCard()+rivalCard(), ['Consistency','XP per week','Shadow','Your tells','Records'], '', {Consistency:`${[...Array(30)].filter((_,i)=>dayActive(addDays(TODAY,-i))).length} of the last 30 days`, Records:`best streak ${bestDailyStreak()}`})
+    charHead()+charAreas()+actFeed()+foldCards(statDrop(vStats(),['Furthest behind','Money','Bench time'])+tellsCard()+rivalCard(), ['Consistency','XP per week','Shadow','Your tells','Records'], '', {Consistency:`${[...Array(30)].filter((_,i)=>dayActive(addDays(TODAY,-i))).length} of the last 30 days`, Records:`best streak ${bestDailyStreak()}`})
     +`<button class="btn ghost sm sec" style="width:100%;justify-content:center;margin-top:4px" onclick="stMode='settings';setTab='app';render();window.scrollTo(0,0)">⚙️ Settings</button>`;
   return seg+body;
 }
