@@ -658,7 +658,7 @@ const tt = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ rpg
   tLearn('grip'); tLearn('grip'); r.maxed = tRank('grip') === 3 && tState('grip').cls === 'max';
   tLearn('warmup'); tLearn('secondwind'); r.tierOpens = tRank('secondwind') === 1;   // 3+ points in Body opens tier 2
   // abilities: Phoenix gives a shield, then recharges; Iron Will lifts the cap
-  for (const id of ['limber', 'deepsleep', 'ironwill', 'phoenix']) tLearn(id); const sh0 = shieldsLeft(); tUse('phoenix'); r.ability = shieldsLeft() === Math.min(shieldCap(), sh0 + 1) && !tAbReady('phoenix') && shieldCap() === 4;
+  for (const id of ['limber', 'deepsleep', 'ironwill', 'mobility', 'phoenix']) tLearn(id); const sh0 = shieldsLeft(); tUse('phoenix'); r.ability = shieldsLeft() === Math.min(shieldCap(), sh0 + 1) && !tAbReady('phoenix') && shieldCap() === 4;
   // reset: points back, XP already earned stays
   const xpBefore = computeXP0(); const back = tRespec(); r.respec = back >= 9 && tRank('grip') === 0 && tFree('BODY') === 40 && computeXP0() >= xpBefore - Object.values(perksOn(TODAY)).length * 0 && rpgFx(y).every(f => f.id !== 't_grip');
   r.xpKept = computeXP0() >= xpY0;
@@ -690,16 +690,33 @@ const chs = await page.evaluate(async () => { const w = ms => new Promise(r => s
   r.lvPill = view === 'evolve';
   go('today'); return r; });
 ok('Character screen: area chip → its tree on the page; 7 area tabs; feats a tap away; one row per area (level + stat + 30 days); Look, Collection, Settings and old links all land there', Object.values(chs).every(Boolean), JSON.stringify(chs));
-// b328: every area's talent tree grows like a real tree (one trunk forking into 3 limbs that spread wider as they climb, capstone floating above) in its own page's look; nothing overlaps; the skin can't put a frame on the nodes
+// b329: every area's talent tree is a real game skill tree (START → 3 roots → 2 minors → notable → 2 minors → hexagon keystone, dashed
+// cross-links, capstone above) in its own page's look; nothing overlaps; the skin can't frame the nodes; a season branch from this quarter's KRs
 const tbr = await page.evaluate(async () => { const r = {}, want = { MONEY: 'money', BODY: 'body', MODEL: 'holo', DATUM: 'chrome', CONTENT: 'vf', SOCIAL: 'street', MIND: 'ink' };
   for (const a of Object.keys(want)) { tAreaTab = 'tree'; charGo('skills', a); await new Promise(z => setTimeout(z, 150)); const t = document.querySelector('#view .tt');
-    const B = [...t.querySelectorAll('.tt-n')].flatMap((n, i) => [[i, n.querySelector('.sh').getBoundingClientRect()], [i, n.querySelector('small').getBoundingClientRect()]]);
+    const B = [...t.querySelectorAll('.tt-map .tt-n')].flatMap((n, i) => [[i, n.querySelector('.sh').getBoundingClientRect()], ...(n.querySelector('small') ? [[i, n.querySelector('small').getBoundingClientRect()]] : [])]);
     let hits = 0; for (let i = 0; i < B.length; i++) for (let j = i + 1; j < B.length; j++) { if (B[i][0] === B[j][0]) continue; const x = B[i][1], y = B[j][1]; if (x.left < y.right - 2 && y.left < x.right - 2 && x.top < y.bottom - 2 && y.top < x.bottom - 2) hits++; }
-    const n0 = t.querySelector('.tt-n'), cs = getComputedStyle(n0);
-    const X = id => parseFloat(t.querySelector(`[onclick="tOpen('${id}')"]`)?.style.left), T4 = TTREES[a].nodes.filter(n => n.t === 4 && n.b !== 1), T1 = TTREES[a].nodes.filter(n => n.t === 1 && n.b !== 1), spread = Math.abs(X(T4[1].id) - X(T4[0].id)) > Math.abs(X(T1[1].id) - X(T1[0].id));
-    r[a] = t.dataset.th === want[a] && t.querySelectorAll('.tt-n').length === 13 && t.querySelectorAll('.tt-map path').length >= 18 && spread && hits === 0 && cs.borderTopWidth === '0px' && cs.backgroundColor === 'rgba(0, 0, 0, 0)' ? true : { th: t.dataset.th, hits, border: cs.borderTopWidth }; }
+    const n0 = t.querySelector('.tt-n'), cs = getComputedStyle(n0), T = TTREES[a];
+    const shape = T.nodes.length === 22 && ['root', 'm1', 'm2', 'nt', 'm3', 'm4', 'ks'].every(k => T.nodes.filter(n => n.k === k).length === 3) && T.x.length === 4
+      && T.nodes.filter(n => n.k === 'nt').every(n => n.p.length === 2) && T.nodes.filter(n => n.k === 'ks').every(n => n.p.length === 2);
+    const hex = getComputedStyle(t.querySelector('.tt-n.k-ks .sh')).clipPath.startsWith('polygon');
+    r[a] = t.dataset.th === want[a] && shape && hex && !!t.querySelector('.tt-n.k-st') && t.querySelectorAll('.tt-n.k-cap').length === 1 && t.querySelectorAll('.tt-map path').length >= 31 && t.querySelectorAll('.tt-map path.x').length === 4
+      && !!t.querySelector('.tt-sea') && hits === 0 && cs.borderTopWidth === '0px' && cs.backgroundColor === 'rgba(0, 0, 0, 0)' ? true : { th: t.dataset.th, shape, hex, hits, border: cs.borderTopWidth }; }
   go('today'); return r; });
-ok('talent trees: every area a real branching tree — one trunk, limbs spreading wider as they climb — in its own look (Money coins, Body diamonds, Modeling glass, Datum chrome, Content frames, Social stickers, Mind notebook), no overlaps', Object.values(tbr).every(v => v === true), JSON.stringify(tbr));
+ok('skill trees: every area a real game skill tree — start, three roots, minors that meet at notables, hexagon keystones, dashed cross-links, capstone — in its own look, no overlaps, season branch under it', Object.values(tbr).every(v => v === true), JSON.stringify(tbr));
+// b329: season branch — nodes are this quarter's KRs for the area; hitting all of them grafts a relic once (+1 point, +5% XP on that area's days from the day it's granted); XP never drops
+const sea = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ rpg: S.rpg, q: S.quarters[THIS_Q], wins: S.wins.length });
+  const Q = S.quarters[THIS_Q] ||= { objectives: [] }; Q.objectives ||= []; const o = { id: 'tsea', track: 'fitness', text: 'test', krs: [{ id: 'k1', text: 'Gym 10', target: 10, current: 3, unit: '' }, { id: 'k2', text: 'Stretch 5', target: 5, current: 5, unit: '' }] };
+  Q.objectives.push(o); const T = TT_(); T.relics = (T.relics || []).filter(x => !(x.q === THIS_Q && x.a === 'BODY'));
+  const s0 = tSeason('BODY'); r.nodes = s0.nodes.length >= 2 && !s0.done; const f0 = tFree('BODY'), xp0 = computeXP0(), y = addDays(TODAY, -1);
+  S.days[TODAY] ||= day(TODAY); S.days[TODAY].habits.gym = true; S.days[y] ||= day(y); S.days[y].habits.gym = true; const my0 = rpgMult(y);
+  for (const x of Q.objectives.filter(z => tTrackArea(z.track) === 'BODY')) for (const k of x.krs) k.current = Math.max(+k.current || 0, +k.target || 1), k.target ||= 1;
+  commit({ skipXp: true }); r.relic = tRelics('BODY').filter(x => x.q === THIS_Q).length === 1 && tFree('BODY') === f0 + 1;
+  commit({ skipXp: true }); r.once = tRelics('BODY').filter(x => x.q === THIS_Q).length === 1;
+  r.fx = rpgFx(TODAY).some(f => f.id.startsWith('t_relic_')) && rpgMult(y) === my0 && computeXP0() >= xp0;
+  r.panel = /Relic won/.test(tSeaHtml('BODY'));
+  const K = JSON.parse(keep); S.rpg = K.rpg; S.quarters[THIS_Q] = K.q; S.wins = S.wins.slice(0, K.wins); commit({ skipXp: true }); go('today'); return r; });
+ok('season branch: KRs become nodes, all hit → one relic (+1 point, +5% XP from that day only), never twice', Object.values(sea).every(Boolean), JSON.stringify(sea));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

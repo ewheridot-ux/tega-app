@@ -642,6 +642,36 @@ html body .app .tt .tt-map button.tt-n.tt-n.tt-n,.tt .tt-map button.tt-n.tt-n{po
 .tt[data-th=ink]{--bg:repeating-linear-gradient(180deg,transparent 0 27px,rgba(255,154,213,.07) 27px 28px),#15121a;--ink:#f6eef4;--acc:#ff9ad5;--mut:#9a8aa0;--ln:rgba(255,154,213,.2);--half:rgba(255,154,213,.55);--lit:#ff9ad5;--glow:rgba(255,154,213,.6);--nb:#1d1822;--nbc:rgba(255,154,213,.35);--nbw:2px;--rad:46% 54% 50% 48% / 52% 46% 54% 48%;--own:#ff9ad5;--ownb:#fff;--ownc:#2a0f20;--opn:#ff9ad5;--deed:#ffd59a;--ic:#9a8aa0;--hf:'Caveat',cursive;--lf:'Caveat',cursive;--lsz:15px;--lc:#f6eef4;--plq:rgba(21,18,26,.85);--lw:3}
 .tt[data-th=ink] .tt-hud b{font-size:24px;font-weight:700}.tt[data-th=ink] .tt-hud small{font-family:'Inter',sans-serif}.tt[data-th=ink] .tt-heads span{font-size:18px;letter-spacing:0}
 .tt[data-th=ink] .tt-n small{font-weight:700;line-height:.95;max-width:84px}
+/* b329: the real skill tree — sizes by kind (minor · root/notable · hexagon keystone · start · capstone), straight links, dashed cross-links,
+   names only on the big nodes (tap any node for the rest), and the season branch panel under it */
+.tt .tt-map{--u:1px}.tt[data-th=body] .tt-map{--u:.84px}
+html body .app .tt .tt-map button.tt-n.k-m1,html body .app .tt .tt-map button.tt-n.k-m2,html body .app .tt .tt-map button.tt-n.k-m3,html body .app .tt .tt-map button.tt-n.k-m4{--sz:calc(var(--u) * 34);font-size:15px}
+html body .app .tt .tt-map button.tt-n.k-root,html body .app .tt .tt-map button.tt-n.k-nt{--sz:calc(var(--u) * 48);font-size:21px}
+html body .app .tt .tt-map button.tt-n.k-ks{--sz:60px;font-size:25px}
+html body .app .tt .tt-map button.tt-n.k-st{--sz:calc(var(--u) * 62);font-size:26px}
+html body .app .tt .tt-map button.tt-n.k-cap{--sz:calc(var(--u) * 64);font-size:28px}
+html body .app .tt .tt-map button.tt-n.k-rl{--sz:26px;font-size:13px}
+.tt .tt-n.k-nt .sh,.tt .tt-n.k-root .sh,.tt .tt-n.k-cap .sh{outline:2px solid var(--nbc);outline-offset:3px}
+.tt .tt-n.max.k-nt .sh,.tt .tt-n.max.k-root .sh,.tt .tt-n.max.k-cap .sh,.tt .tt-n.k-st .sh{outline-color:var(--ownb)}.tt .tt-n.open.k-nt .sh,.tt .tt-n.open.k-root .sh{outline-color:var(--opn)}
+.tt .tt-n.k-ks .sh{border:0;border-radius:0!important;transform:none;background:var(--nbc);clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);box-shadow:none;animation:none}
+.tt .tt-n.k-ks .sh::after,.tt[data-th] .tt-n.k-ks .sh::after{content:'';position:absolute;inset:3px;width:auto;height:auto;border:0;background:var(--nb);clip-path:inherit}.tt[data-th] .tt-n.k-ks .sh::before{display:none}
+.tt .tt-n.k-ks.max .sh{background:var(--ownb)}.tt .tt-n.k-ks.max .sh::after{background:var(--own)}.tt .tt-n.k-ks.open .sh{background:var(--opn)}.tt .tt-n.k-ks.deed .sh{background:var(--deed)}
+.tt .tt-n.k-ks.max,.tt .tt-n.k-ks.open,.tt .tt-n.k-st{filter:drop-shadow(0 0 10px var(--glow,transparent))}
+.tt .tt-n.k-ks>span,.tt .tt-n.k-ks>small{z-index:1}
+.tt .tt-n small{top:calc(100% + 8px);text-transform:uppercase;letter-spacing:.06em;font-size:calc(var(--lsz) - 1px);max-width:96px}
+.tt .tt-n.k-root small{color:var(--acc)}.tt .tt-n.k-st small{color:var(--acc);font-size:var(--lsz)}
+.tt-map path.x{stroke-width:calc(var(--lw) * .5);stroke-dasharray:3 6}
+.tt-tier{position:absolute;left:4px;font-family:var(--hf);font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--mut,rgba(255,255,255,.45));pointer-events:none}
+.tt-sea{position:relative;z-index:1;font-family:'Inter',system-ui,sans-serif;margin:6px 0 8px;padding:12px;border-radius:14px;background:var(--plq);box-shadow:inset 0 0 0 1.5px var(--acc)}
+.tt-sea-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.tt-sea-h b{font-family:var(--hf);font-size:15px;white-space:nowrap;color:var(--acc)}.tt-sea-h small{font-size:12px;color:var(--mut,rgba(255,255,255,.5))}
+.tt-sea-row{display:flex;gap:7px;margin:10px 0 8px}.tt-sea-row::-webkit-scrollbar{display:none}
+.tt-sn{flex:1 1 0;min-width:0;display:grid;justify-items:center;gap:5px;border:0;background:none;color:var(--lc);padding:0;cursor:pointer;font:inherit;min-height:0!important}
+html body .app .tt .tt-sn i{width:36px;height:36px;border-radius:50%!important;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:800;background:var(--nb);box-shadow:0 0 0 2px var(--half),0 0 0 4px var(--plq)}
+html body .app .tt .tt-sn.on i{background:var(--own);color:var(--ownc);box-shadow:0 0 0 2px var(--ownb),0 0 12px var(--glow,transparent)}
+.tt-sn small{overflow-wrap:anywhere;max-width:100%;font-size:10px;line-height:1.15;text-align:center;color:var(--lc);opacity:.85;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+html body .app .tt .tt-sn.rl i{font-size:17px;box-shadow:0 0 0 2px var(--acc),0 0 0 4px var(--plq);border-radius:0!important;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}.tt-sn.rl{cursor:default}
+.tt[data-th=ink] .tt .tt-n small,.tt[data-th=ink] .tt-n small{text-transform:none;letter-spacing:0;font-size:var(--lsz);max-width:112px;line-height:1}
+.tt-sea-f{font-size:12.5px;line-height:1.35;color:var(--lc);opacity:.9}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -2227,7 +2257,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b328';
+const BUILD='b329';
 /* b316: bottom sheets sit above the iPhone keyboard — the sheet follows the visible part of the screen (visualViewport),
    and the field you tap scrolls into view inside it. Before, the keyboard slid over “New quest” and every other sheet. */
 (function(){ const v=window.visualViewport, R=document.documentElement; if (!v) return;
@@ -2535,6 +2565,7 @@ function sbossSync(){ if (!richness(S)) return; const R=R_(); for (const q of se
 function commit(opts={}){
   _mVer++; try { undoCapture(opts); } catch(e){}
   deriveAll();
+  try { tSeasonCheck(); } catch(e){ console.warn('season',e); }
   try { window.native?.syncReminders?.(S); } catch(e){}
   const before = opts.skipXp ? null : (lastProg || snapshotProgress());
   if (!before) evalBadges();
@@ -6800,7 +6831,41 @@ const TTREES={
     N('earlybird',1,1,'🌅','Early Bird',3,['early',5],{m:.02,c:'early'}), N('strategist',1,2,'♟️','Strategist',1,['perfect',5],{legacy:1},'+10% XP when all Top 3 are done'), N('deepwork',1,3,'🎯','Deep Work',2,['pWeeks',2],{x:20,c:'top3'}), N('fogcutter',1,4,'🌫️','Fog Cutter',2,['active',60],{boss:.15},'Hits on The Fog land 15% harder per rank'),
     N('sage',2,1,'🦉','Sage',1,['journal',10],{legacy:1},'+5% XP on check-in days'), N('sight',2,2,'👁️','Second Sight',1,['resets',4],{legacy:1},'Your weekly review shows a hidden pattern'), N('innervoice',2,3,'✍️','Inner Voice',2,['journal',30],{x:10,c:'journal'}), N('clarity',2,4,'🕯️','Clarity',1,['resets',12],{ab:1,cd:14,give:'shield'}),
     N('enlightened',3,5,'👑','Enlightened',1,['learn',150],{m:.1,c:'learn'})]}};
-const T_TIER=[0,0,2,4,7,12];   // points already in a tree before a tier opens (capstone = 12)
+// b329: the real skill tree — START → three roots → two minors each → a notable → two more minors → a hexagon keystone, with dashed
+// cross-links between neighbouring branches so a path can hop over. The old talents keep their ids and ranks (root, first minor, notable,
+// keystone); the new minors fill the gaps. Any one learned parent opens a node. The capstone floats above as the 5-year crown.
+const TT_MORE={
+  BODY:[N('musclemem',0,2,'💪','Muscle Memory',2,['gym',10],{x:10,c:'gym'}), N('heavychains',0,4,'⛓️','Heavy Chains',1,['prs',10],{x:25,c:'pr'}), N('spotter',0,4,'🤜','Spotter',2,['gym',50],{m:.03,c:'gym'}),
+    N('longstride',1,2,'👟','Long Stride',2,['active',20],{m:.02,c:'move'}), N('pacer',1,4,'⏱️','Pacer',2,['gymWeeks',6],{x:15,c:'gymweek'}), N('marathon',1,4,'🏃','Marathon',1,['active',60],{m:.03,c:'move'}),
+    N('boxbreath',2,2,'🫧','Box Breath',2,['yoga',6],{x:10,c:'stretch'}), N('mobility',2,4,'🤸','Mobility',2,['yoga',20],{m:.02,c:'stretch'}), N('restday',2,4,'🛌','Rest Day',1,['yoga',25],{x:15,c:'good'})],
+  MONEY:[N('envelope',0,2,'✉️','Envelopes',2,['split',2],{x:10,c:'budget'}), N('rainyday',0,4,'☂️','Rainy Day',2,['ef',1000],{m:.02,c:'budget'}), N('nospend',0,4,'🚫','No-Spend',1,['split',8],{x:15,c:'budget'}),
+    N('autopilot',1,2,'🤖','Autopilot',2,['roth',1500],{x:10,c:'pay'}), N('bluechip',1,4,'🏛️','Blue Chip',2,['roth',3500],{m:.01,c:'any'}), N('snowball',1,4,'⛄','Snowball',1,['net',20000],{x:25,c:'pay'}),
+    N('invoice',2,2,'🧾','Invoice',2,['landed',2],{x:10,c:'pay'}), N('raise',2,4,'📊','Raise',2,['income',15000],{x:20,c:'pay'}), N('rainmaker',2,4,'🌦️','Rainmaker',1,['landed',10],{m:.03,c:'money'})],
+  MODEL:[N('angles',0,2,'🎞️','Good Angles',2,['setDays',5],{x:10,c:'job'}), N('covershot',0,4,'📰','Cover Shot',1,['setDays',30],{x:30,c:'job'}), N('iconstat',0,4,'✨','Icon Status',2,['setDays',35],{m:.03,c:'job'}),
+    N('fittings',1,2,'🧥','Fittings',2,['castings',5],{x:10,c:'cast'}), N('jetset',1,4,'✈️','Jet Set',1,['castings',30],{m:.03,c:'road'}), N('dayrate',1,4,'💼','Day Rate',2,['mIncome',10000],{x:25,c:'job'}),
+    N('slidein',2,2,'💬','Slide In',2,['outreach',10],{x:10,c:'outreach'}), N('agencylove',2,4,'🤝','Agency Love',1,['pitches',8],{x:30,c:'outreach'}), N('verified',2,4,'☑️','Verified',1,['igF',10000],{m:.03,c:'post'})],
+  DATUM:[N('waxcarver',0,2,'🕯️','Wax Carver',2,['benchSess',5],{x:10,c:'datum'}), N('mirror',0,4,'✨','Mirror Polish',2,['done',3],{m:.03,c:'datum'}), N('benchmara',0,4,'🪨','Bench Marathon',1,['benchH',50],{x:25,c:'longbench'}),
+    N('repeatbuy',1,2,'🔁','Repeat Buyer',2,['sold',2],{x:15,c:'order'}), N('premium',1,4,'🏷️','Premium',2,['revenue',5000],{x:20,c:'order'}), N('waitlist',1,4,'📋','Waitlist',1,['sold',8],{m:.03,c:'datum'}),
+    N('firstrender',2,2,'🧊','First Render',2,['pieces',3],{x:10,c:'datum'}), N('collectn',2,4,'🗃️','Collection',1,['pieces',15],{m:.03,c:'datum'}), N('lookbook',2,4,'📖','Lookbook',2,['shot',5],{x:20,c:'benchphoto'})],
+  CONTENT:[N('hook',0,2,'🪝','Hook',2,['posts',10],{x:10,c:'post'}), N('batchday',0,4,'🎬','Batch Day',2,['ideasShot',15],{x:20,c:'post'}), N('commun',0,4,'💬','Community',1,['igF',3000],{m:.03,c:'post'}),
+    N('linework',1,2,'🖊️','Linework',2,['art',8],{x:10,c:'art'}), N('digibrush',1,4,'🖌️','Digital Brush',2,['digi',15],{x:15,c:'art'}), N('artseries',1,4,'🗂️','Series',1,['artBest',5],{m:.03,c:'art'}),
+    N('chords',2,2,'🎵','Chord Shapes',2,['gSess',12],{x:10,c:'guitar'}), N('cleantakes',2,4,'🎧','Clean Takes',2,['clean',3],{x:20,c:'guitar'}), N('longjam',2,4,'🥁','Long Jam',1,['gLong',60],{m:.03,c:'guitar'})],
+  SOCIAL:[N('groupchat',0,2,'📱','Group Chat',2,['hang',6],{x:10,c:'hang'}), N('dinnerhost',0,4,'🍽️','Dinner Host',2,['hang',30],{x:20,c:'hang'}), N('afterparty',0,4,'🪩','Afterparty',1,['hang',35],{m:.03,c:'hang'}),
+    N('heartcheck',1,2,'💌','Check In',2,['people',4],{x:10,c:'party'}), N('rideordie',1,4,'🚗','Ride or Die',2,['people',7],{m:.03,c:'party'}), N('dayone',1,4,'🤞','Day One',1,['hang',50],{x:25,c:'party'}),
+    N('newspot',2,2,'📍','New Spot',2,['nights',6],{x:10,c:'hang'}), N('passport',2,4,'🛂','Passport',1,['nights',25],{m:.03,c:'road'}), N('localguide',2,4,'🗺️','Local Guide',2,['nights',30],{x:20,c:'hang'})],
+  MIND:[N('margin',0,2,'🗒️','Margin Notes',2,['learnOut',5],{x:10,c:'learn'}), N('library',0,4,'🏛️','Library',2,['learn',60],{m:.02,c:'learn'}), N('teachback',0,4,'🧑‍🏫','Teach Back',1,['learnOut',20],{x:25,c:'learn'}),
+    N('timebox',1,2,'⏲️','Timebox',2,['early',10],{x:10,c:'early'}), N('monkmode',1,4,'📵','Monk Mode',1,['perfect',20],{m:.04,c:'top3'}), N('lockedin',1,4,'🌊','Locked In',2,['streak',14],{x:15,c:'checkin'}),
+    N('gratitude',2,2,'🙏','Gratitude',2,['journal',5],{x:10,c:'journal'}), N('stillwater',2,4,'🪷','Still Water',2,['journal',45],{m:.02,c:'checkin'}), N('mirrorwork',2,4,'🪞','Mirror Work',1,['resets',8],{x:30,c:'journal'})]};
+const TT_COND={BODY:'move',MONEY:'money',MODEL:'road',DATUM:'datum',CONTENT:'make',SOCIAL:'hang',MIND:'learn'};   // the days a season relic boosts
+for (const [a,T] of Object.entries(TTREES)){ for (const n of T.nodes) n.t=n.t===5?6:n.t===4?5:n.t; T.nodes.push(...(TT_MORE[a]||[]));
+  const at=(b,t)=>T.nodes.filter(n=>n.b===b&&n.t===t), K=(n,k,p)=>n&&Object.assign(n,{k,p});
+  for (const b of [0,1,2]){ const [rt]=at(b,1), [m1,m2]=at(b,2), [nt]=at(b,3), [m3,m4]=at(b,4), [ks]=at(b,5);
+    K(rt,'root',[]); K(m1,'m1',[rt.id]); K(m2,'m2',[rt.id]); K(nt,'nt',[m1.id,m2.id]); K(m3,'m3',[nt.id]); K(m4,'m4',[nt.id]); K(ks,'ks',[m3.id,m4.id]); }
+  const sl=(b,k)=>T.nodes.find(n=>n.b===b&&n.k===k);
+  T.x=[[0,'m2',1,'m1'],[1,'m2',2,'m1'],[0,'m4',1,'m3'],[1,'m4',2,'m3']].map(([b1,k1,b2,k2])=>{ const u=sl(b1,k1), v=sl(b2,k2); u.p.push(v.id); v.p.push(u.id); return [u.id,v.id]; });
+  for (const n of T.nodes) if (n.t===6) Object.assign(n,{k:'cap',p:[]}); }
+const T_TIER=[0,0,1,3,5,8,12];   // points already in a tree before a tier opens (keystones 8, capstone 12)
+const TT_KIND={root:'root',m1:'minor',m2:'minor',nt:'notable',m3:'minor',m4:'minor',ks:'keystone',cap:'capstone'};
 const TNODE={}; for (const [a,T] of Object.entries(TTREES)) for (const n of T.nodes) TNODE[n.id]={...n, a};
 function tDesc(n,r){ const f=n.fx, k=Math.max(1,r||1); if (n.d) return n.d; if (f.ab) return `Trigger: ${f.m?`${1+f.m}× XP for the rest of today`:f.x?`+${f.x} XP`:f.give==='shield'?'get a streak shield':f.bomb?`drop a bomb on ${ABOSS[f.bomb]?.name||'the boss'} (25 damage)`:''}. Every ${f.cd} days.`;
   if (f.m) return `+${Math.round(f.m*k*100)}% XP on ${TCN[f.c]||f.c}`; if (f.x) return `+${f.x*k} XP on ${TCN[f.c]||f.c}`; return ''; }
@@ -6814,13 +6879,26 @@ function tGift(id){ return TT_().log.some(e=>e.id===id&&e.gift); }
 function tEarned(a){ try { const A=areaInfo(a); if (!A||!A.tot) return 0; return Math.min(40, Math.max(A.on?1:0, Math.round(A.on*40/A.tot))); } catch(e){ return 0; } }
 function tCost(a){ let s=0; for (const n of TTREES[a].nodes){ const r=tRank(n.id), g=tGift(n.id)?1:0; s+=Math.max(0,r-g); } return s; }
 function tInvested(a){ return TTREES[a].nodes.reduce((s,n)=>s+tRank(n.id),0); }
-const tFree=a=>Math.max(0,tEarned(a)-tCost(a));
+const tFree=a=>Math.max(0,tEarned(a)+tRelics(a).length-tCost(a));
+/* b329: season branches. Each quarter, every area grows a branch from that quarter's goals (its KRs). A node fills in by itself when its
+   KR hits target. Finish the whole branch and a relic grafts onto the tree for good: +1 point there and +5% XP on that area's days, counted
+   only from the day it's granted. An unfinished branch melts when the quarter ends — XP already earned stays. */
+const TT_TRK={learning:'MIND',hustle:'MIND',cad:'DATUM'};
+const tTrackArea=t=>(AREAS.find(A=>A.track===t)||{}).k||TT_TRK[t]||null;
+const T_SEA=[['Winter','❄️'],['Spring','🌸'],['Summer','☀️'],['Fall','🍂']];
+const tSeaName=q=>{ const [y,n]=q.split('-Q'); const s=T_SEA[(+n||1)-1]; return [`${s[0]} ’${String(y).slice(2)}`, s[1]]; };
+function tRelics(a){ return (TT_().relics||[]).filter(r=>!a||r.a===a); }
+function tSeason(a,q=THIS_Q){ const krs=[]; for (const o of (S.quarters?.[q]?.objectives||[])) if (tTrackArea(o.track)===a) for (const k of (o.krs||[])) if ((k.text||'').trim()) krs.push(k);
+  const nodes=krs.slice(0,6).map(k=>({k, pct:krPct(k), done:krPct(k)>=1})); return {q, nodes, done:nodes.length>0&&nodes.every(x=>x.done), relic:tRelics(a).find(r=>r.q===q)}; }
+function tSeasonCheck(){ const T=TT_(), got=[]; T.relics ||= []; for (const A of AREAS){ const s=tSeason(A.k); if (!s.done||s.relic) continue;
+    T.relics.push({q:THIS_Q, a:A.k, at:TODAY}); const [nm,ic]=tSeaName(THIS_Q); S.wins.push({id:uid(), d:TODAY, text:`${ic} ${nm} relic · ${A.n} season branch complete`}); got.push(`${ic} ${A.n} · ${nm} relic`); }
+  if (got.length) setTimeout(()=>{ try { confetti(); } catch(e){} toast(`${got.join(' · ')} — +5% XP for good`); },300); }
 function tState(id){ const n=TNODE[id], r=tRank(id), M=tMet(), inv=tInvested(n.a), gv=+M[n.g[0]]||0, deed=gv>=n.g[1], tierOk=inv>=T_TIER[n.t],
-    prev=n.t>1&&n.t<5?TTREES[n.a].nodes.find(z=>z.b===n.b&&z.t===n.t-1):null, prevOk=!prev||tRank(prev.id)>0, free=tFree(n.a);
+    prev=(n.p||[]).map(id=>TNODE[id]), prevOk=!prev.length||prev.some(z=>tRank(z.id)>0), free=tFree(n.a);
   const can=r<n.r && deed && tierOk && prevOk && free>0, cls=r>=n.r?'max':r>0?'part':can?'open':tierOk&&prevOk?'deed':'lk';
   return {n, r, gv, deed, tierOk, prev, prevOk, free, can, cls, need:T_TIER[n.t], inv}; }
-function tLearn(id){ const S0=tState(id); if (!S0.can) return toast(!S0.deed?`Needs ${S0.n.g[1].toLocaleString('en-US')} ${tUnit(S0.n.g[0])} first`:!S0.tierOk?`Put ${S0.need} points into ${AREAS.find(x=>x.k===S0.n.a).n} first`:!S0.prevOk?`Learn ${S0.prev.n} first`:'No points left here — earn more with feats');
-  TT_().log.push({id, d:TODAY, r:S0.r+1}); commit(); try { sprPlay('hype'); } catch(e){} if (S0.n.t===5||S0.r+1===S0.n.r) try { confetti(); } catch(e){}
+function tLearn(id){ const S0=tState(id); if (!S0.can) return toast(!S0.deed?`Needs ${S0.n.g[1].toLocaleString('en-US')} ${tUnit(S0.n.g[0])} first`:!S0.tierOk?`Put ${S0.need} points into ${AREAS.find(x=>x.k===S0.n.a).n} first`:!S0.prevOk?`Learn ${S0.prev.map(z=>z.n).join(' or ')} first`:'No points left here — earn more with feats');
+  TT_().log.push({id, d:TODAY, r:S0.r+1}); commit(); try { sprPlay('hype'); } catch(e){} if (S0.n.t>=5||S0.r+1===S0.n.r) try { confetti(); } catch(e){}
   toast(`${S0.n.ic} ${S0.n.n}${S0.n.r>1?` ${S0.r+1}/${S0.n.r}`:''} learned`); tOpen(id); }
 function tRespec(){ const T=TT_(); let n=0; for (const id of Object.keys(TNODE)){ const r=tRank(id), g=tGift(id)?1:0; if (r>g){ T.log.push({id, d:TODAY, r:g}); n+=r-g; } } return n; }
 // abilities
@@ -6835,6 +6913,7 @@ const shieldCap=()=>3+(perksOn(TODAY).ironwill?1:0);
 function tFxDay(k){ const P=perksOn(k), out=[]; for (const [id,r] of Object.entries(P)){ const n=TNODE[id]; if (!n||n.fx.legacy) continue; const f=n.fx;
     if (f.ab){ if (f.m && tAbOn(id,k)) out.push({id:'t_'+id, ic:n.ic, n:n.n, b:1, m:f.m, t:'Ability'}); continue; }
     if (f.m && TCOND[f.c]?.(k)) out.push({id:'t_'+id, ic:n.ic, n:n.n, b:1, m:f.m*r, t:tDesc(n,r)}); }
+  for (const R of (TT_().relics||[])) if (R.at<=k && TCOND[TT_COND[R.a]]?.(k)){ const [nm,ic]=tSeaName(R.q); out.push({id:`t_relic_${R.q}_${R.a}`, ic, n:`${nm} relic`, b:1, m:.05, t:`+5% XP on ${TCN[TT_COND[R.a]]}`}); }
   return out; }
 function tFlatDay(k){ const P=perksOn(k); let x=0; for (const [id,r] of Object.entries(P)){ const n=TNODE[id]; if (!n||n.fx.legacy||!n.fx.x) continue; if (n.fx.ab){ if (tAbOn(id,k)) x+=n.fx.x; } else if (TCOND[n.fx.c]?.(k)) x+=n.fx.x*r; } return x; }
 function tBossMult(boss,k){ let m=1; for (const [id,r] of Object.entries(perksOn(k))){ const n=TNODE[id]; if (n&&n.fx.boss&&TTREES[n.a].boss===boss) m+=n.fx.boss*r; } return m; }
@@ -6854,47 +6933,50 @@ function tSpec(a){ const T=TTREES[a], by=[0,0,0]; for (const n of T.nodes) if (n
 // specializations) that spread wider as they climb, twigs sprouting off them, and the capstone floating above the canopy as its crown.
 // Limbs never come back together. Side limbs sit lower than the middle one so labels never collide. The look comes from the area's page.
 const TT_TH={MONEY:'money',BODY:'body',MODEL:'holo',DATUM:'chrome',CONTENT:'vf',SOCIAL:'street',MIND:'ink'};
-function ttGeo(){ const H=690, base={x:50,y:H-4}, fork={x:50,y:604}, crown={x:50,y:64};
-  const L=[[33,562],[23,448],[15,336],[12,226]], C=[[50,464],[50,364],[50,264],[50,166]], tipL={x:8,y:150}, tipC={x:50,y:124};
-  const pos=(b,t)=>{ const q=(b===1?C:L)[t-1]; return {x:b===2?100-q[0]:q[0], y:q[1]}; };
-  const tip=b=>b===1?tipC:{x:b===2?100-tipL.x:tipL.x, y:tipL.y};
-  return {H, base, fork, crown, pos, tip}; }
-function ttCurve(P){ // Catmull-Rom → one cubic per segment, so each segment can light up on its own
-  return P.slice(0,-1).map((p,i)=>{ const a=P[i-1]||p, b=P[i+1], c=P[i+2]||b; const c1={x:p.x+(b.x-a.x)/6, y:p.y+(b.y-a.y)/6}, c2={x:b.x-(c.x-p.x)/6, y:b.y-(c.y-p.y)/6};
-    return `M${p.x.toFixed(1)} ${p.y.toFixed(1)} C${c1.x.toFixed(1)} ${c1.y.toFixed(1)}, ${c2.x.toFixed(1)} ${c2.y.toFixed(1)}, ${b.x.toFixed(1)} ${b.y.toFixed(1)}`; }); }
-function tTree(a){ const T=TTREES[a], A=AREAS.find(x=>x.k===a), free=tFree(a), inv=tInvested(a), th=TT_TH[a]||'money', G=ttGeo();
-  const st=Object.fromEntries(T.nodes.map(n=>[n.id,tState(n.id)])), cap=T.nodes.find(n=>n.t===5), own=id=>st[id].r>0;
-  const segs=[`<path class="trunk ${inv?'lit':''}" d="M50 ${G.base.y} L50 ${G.fork.y}"/>`,
-    `<path class="root" d="M50 ${G.base.y-6} C46 ${G.base.y-2}, 41 ${G.base.y}, 36 ${G.base.y+2}"/>`,`<path class="root" d="M50 ${G.base.y-6} C54 ${G.base.y-2}, 59 ${G.base.y}, 64 ${G.base.y+2}"/>`], twigs=[];
-  for (const b of [0,1,2]){ const ns=[1,2,3,4].map(t=>T.nodes.find(n=>n.b===b&&n.t===t)), P=[G.fork,...ns.map(n=>G.pos(b,n.t)),G.tip(b)], ids=[null,...ns.map(n=>n.id),null];
-    ttCurve(P).forEach((d,i)=>{ const u=ids[i], v=ids[i+1], on=u?own(u):inv>0, both=on&&v&&own(v), cls=v?(both?'lit':on||own(v)?'half':''):(on?'half':'');
-      segs.push(`<path class="${cls}${v?'':' tw'}" d="${d}"/>`);
-      if (i>0&&i<5){ const p=P[i], q=P[i+1], mx=(p.x+q.x)/2, my=(p.y+q.y)/2, side=b===0?-1:b===2?1:(i%2?1:-1), ex=mx+side*(b===1?9:6), ey=my-26;   // a twig off the limb, leaning outward
-        twigs.push(`<path class="tw ${both?'half':''}" d="M${mx.toFixed(1)} ${my.toFixed(1)} Q${(mx+side*2).toFixed(1)} ${(my-16).toFixed(1)}, ${ex.toFixed(1)} ${ey.toFixed(1)}"/>`);
-        twigs.push(`<ellipse class="lf ${both?'on':''}" cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" rx="1.5" ry="4.5"/>`); } }); }
-  const node=n=>{ const s0=st[n.id], p=n.t===5?G.crown:G.pos(n.b,n.t), edge=p.x<=16?' el':p.x>=84?' er':'', pips=n.r>1?`<i class="tt-pips">${Array.from({length:n.r},(_,i)=>`<u class="${i<s0.r?'on':''}"></u>`).join('')}</i>`:'';
-    return `<button class="tt-n ${s0.cls} ${n.fx.ab?'ab':''} ${n.t===5?'cap':''}${edge}" style="left:${p.x}%;top:${p.y}px" onclick="tOpen('${n.id}')" aria-label="${esc(n.n)}${n.t===5?' (capstone)':''}, ${s0.r} of ${n.r}${s0.cls==='open'?', ready to learn':s0.cls==='lk'?', locked':''}"><i class="sh"></i><span>${s0.cls==='lk'?'🔒':n.ic}</span>${pips}${n.fx.ab?'<b class="tt-ab">⚡</b>':''}<small>${esc(n.n)}</small></button>`; };
+// b329 layout: bottom-up like the games — START at the root, each branch fans out and closes twice, middle branch a step higher
+const TT_POS={root:[[17,622],[50,604],[83,622]], m1:[[8,520],[41,502],[73,520]], m2:[[27,520],[59,502],[92,520]], nt:[[17,410],[50,392],[83,410]],
+  m3:[[8,306],[41,288],[73,306]], m4:[[27,306],[59,288],[92,306]], ks:[[17,186],[50,166],[83,186]]};
+const TT_H=800, TT_START={x:50,y:722}, TT_CAP={x:50,y:52};
+const ttXY=n=>n.k==='cap'?TT_CAP:{x:TT_POS[n.k][n.b][0], y:TT_POS[n.k][n.b][1]};
+function tTree(a){ const T=TTREES[a], A=AREAS.find(x=>x.k===a), free=tFree(a), inv=tInvested(a), th=TT_TH[a]||'money';
+  const st=Object.fromEntries(T.nodes.map(n=>[n.id,tState(n.id)])), own=id=>st[id].r>0, reach=id=>own(id)||st[id].cls==='open', P=id=>ttXY(TNODE[id]);
+  const ln=(p,q,cls)=>`<path class="${cls}" d="M${p.x} ${p.y} L${q.x} ${q.y}"/>`, E=[];
+  for (const n of T.nodes){ if (n.k==='cap') continue; if (n.k==='root') E.push(ln(TT_START,ttXY(n),own(n.id)?'lit':reach(n.id)?'half':''));
+    for (const pid of n.p) if (TNODE[pid].b===n.b && TNODE[pid].t<n.t) E.push(ln(P(pid),ttXY(n),own(pid)&&own(n.id)?'lit':own(pid)&&reach(n.id)?'half':'')); }
+  for (const [u,v] of T.x) E.push(ln(P(u),P(v),`x ${own(u)&&own(v)?'lit':own(u)||own(v)?'half':''}`));
+  const lab=n=>n.k==='root'?T.br[n.b][0]:['nt','ks','cap'].includes(n.k)?n.n:'';
+  const node=n=>{ const s0=st[n.id], p=ttXY(n), L=lab(n), pips=n.r>1?`<i class="tt-pips">${Array.from({length:n.r},(_,i)=>`<u class="${i<s0.r?'on':''}"></u>`).join('')}</i>`:'';
+    return `<button class="tt-n ${s0.cls} k-${n.k} ${n.fx.ab?'ab':''}" style="left:${p.x}%;top:${p.y}px" onclick="tOpen('${n.id}')" aria-label="${esc(n.n)} (${TT_KIND[n.k]}), ${s0.r} of ${n.r}${s0.cls==='open'?', ready to learn':s0.cls==='lk'?', locked':''}"><i class="sh"></i><span>${n.ic}</span>${pips}${n.fx.ab?'<b class="tt-ab">⚡</b>':''}${L?`<small>${esc(L)}</small>`:''}</button>`; };
+  const R=tRelics(a), rel=R.map((r,i)=>{ const [nm,ic]=tSeaName(r.q), x=50+(i%2?1:-1)*(16+Math.floor(i/2)*9); return `<button class="tt-n max k-rl" style="left:${x}%;top:${TT_START.y+8}px" onclick="toast('${ic} ${nm} relic · +5% XP on ${TCN[TT_COND[a]]} since ${nice(r.at)} · +1 point')" aria-label="${nm} relic"><i class="sh"></i><span>${ic}</span></button>`; }).join('');
   const spec=tSpec(a);
-  return `<div class="tt" data-th="${th}" style="--c:${A.c}"><div class="tt-hud"><div><small>${esc(A.n)} · talents</small><b>${spec?`${spec[1]} ${esc(spec[0])}`:'No specialization yet'}</b></div><div class="tt-pts ${free?'on':''}"><b>${free}</b><small>point${free===1?'':'s'}</small></div></div>
-    <div class="tt-heads">${T.br.map(([nm,ic],b)=>`<span><i>${ic}</i>${esc(nm)}<em>${T.nodes.filter(n=>n.b===b).reduce((s,n)=>s+tRank(n.id),0)} in</em></span>`).join('')}</div>
-    <div class="tt-map" style="height:${G.H}px"><svg viewBox="0 0 100 ${G.H}" preserveAspectRatio="none" aria-hidden="true"><defs>
+  return `<div class="tt" data-th="${th}" style="--c:${A.c}"><div class="tt-hud"><div><small>${esc(A.n)} · skill tree</small><b>${spec?`${spec[1]} ${esc(spec[0])}`:'Pick a path'}</b></div><div class="tt-pts ${free?'on':''}"><b>${free}</b><small>point${free===1?'':'s'}</small></div></div>
+    <div class="tt-map" style="height:${TT_H}px"><svg viewBox="0 0 100 ${TT_H}" preserveAspectRatio="none" aria-hidden="true"><defs>
       <linearGradient id="tbg-holo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb3f0"/><stop offset=".35" stop-color="#b8c8ff"/><stop offset=".7" stop-color="#9ff7ff"/><stop offset="1" stop-color="#ffe6a8"/></linearGradient>
-      <linearGradient id="tbg-chrome" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d8996"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#7d8996"/></linearGradient></defs>${twigs.join('')}${segs.join('')}</svg><i class="tt-halo" style="top:${G.crown.y}px"></i>
-      ${T.nodes.map(node).join('')}</div>
-    <div class="tt-foot">${tEarned(a)} earned from ${esc(A.n)} feats · ${tCost(a)} spent${T.nodes.some(n=>tGift(n.id))?' · old perks kept free':''}</div></div>`; }
-function tOpen(id){ const s0=tState(id), n=s0.n, A=AREAS.find(x=>x.k===n.a), T=TTREES[n.a], br=n.t===5?['Capstone','👑']:T.br[n.b];
+      <linearGradient id="tbg-chrome" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d8996"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#7d8996"/></linearGradient></defs>${E.join('')}</svg>
+      <i class="tt-halo" style="top:${TT_CAP.y}px"></i><span class="tt-tier" style="top:${TT_POS.ks[0][1]-58}px">Keystones</span><span class="tt-tier" style="top:${TT_POS.nt[0][1]-52}px">Notables</span>
+      ${T.nodes.map(node).join('')}<button class="tt-n max k-st" style="left:${TT_START.x}%;top:${TT_START.y}px" onclick="toast('${free?`${free} ${esc(A.n)} point${free===1?'':'s'} to spend`:`Earn ${esc(A.n)} points with its feats`}')" aria-label="${esc(A.n)} start"><i class="sh"></i><span>${(T.br.find((b,i)=>spec&&b===spec)||T.br[0])[1]}</span><small>${esc(A.n)}</small></button>${rel}</div>
+    ${tSeaHtml(a)}
+    <div class="tt-foot">${tEarned(a)} earned from ${esc(A.n)} feats${R.length?` · ${R.length} from relics`:''} · ${tCost(a)} spent${T.nodes.some(n=>tGift(n.id))?' · old perks kept free':''}</div></div>`; }
+function tSeaHtml(a){ const s=tSeason(a), A=AREAS.find(x=>x.k===a), [nm,ic]=tSeaName(s.q), left=Math.max(0,daysBetween(TODAY,qRange(s.q)[1])), dn=s.nodes.filter(x=>x.done).length;
+  const row=s.nodes.map((x,i)=>`<button class="tt-sn ${x.done?'on':''}" onclick="tSeaKR('${a}',${i})"><i>${x.done?'✓':Math.round(x.pct*100)+'%'}</i><small>${esc((x.k.text||'').slice(0,34))}</small></button>`).join('');
+  return `<div class="tt-sea"><div class="tt-sea-h"><b>${ic} ${esc(nm)} branch</b><small>${s.nodes.length?`${dn}/${s.nodes.length} · `:''}${left} day${left===1?'':'s'} left</small></div>
+    ${s.nodes.length?`<div class="tt-sea-row">${row}<span class="tt-sn rl ${s.relic?'on':''}"><i>${ic}</i><small>${s.relic?'Relic won':'Relic'}</small></span></div>
+    <div class="tt-sea-f">${s.relic?`Grafted ${nice(s.relic.at)}: +1 point and +5% XP on ${TCN[TT_COND[a]]}, for good.`:`Hit every goal → relic: +1 point and +5% XP on ${TCN[TT_COND[a]]} for good. Unfinished nodes melt when the season ends.`}</div>`
+    :`<button class="btn ghost sm" style="width:100%;justify-content:center" onclick="go('quarter')">Set a ${esc(A.n)} goal to grow this season’s branch</button>`}</div>`; }
+function tSeaKR(a,i){ const x=tSeason(a).nodes[i]; if (!x) return; const k=x.k; toast(`${x.done?'✓':'◻'} ${k.text} · ${(+k.current||0).toLocaleString('en-US')}/${(+k.target||0).toLocaleString('en-US')}${k.unit?' '+k.unit:''}`); }
+function tOpen(id){ const s0=tState(id), n=s0.n, A=AREAS.find(x=>x.k===n.a), T=TTREES[n.a], br=n.t===6?['Capstone','👑']:T.br[n.b];
   const chk=(ok,t)=>`<div class="tt-req ${ok?'ok':''}"><i>${ok?'✓':'✗'}</i><span>${t}</span></div>`;
-  const reqs=s0.r>=n.r?'':`${chk(s0.free>0,`1 ${esc(A.n)} point <span class="sub">· you have ${s0.free}</span>`)}${n.t>1?chk(s0.tierOk,`${s0.need} points already in ${esc(A.n)} <span class="sub">· you have ${s0.inv}</span>`):''}${s0.prev?chk(s0.prevOk,`${esc(s0.prev.n)} learned`):''}
+  const reqs=s0.r>=n.r?'':`${chk(s0.free>0,`1 ${esc(A.n)} point <span class="sub">· you have ${s0.free}</span>`)}${n.t>1?chk(s0.tierOk,`${s0.need} points already in ${esc(A.n)} <span class="sub">· you have ${s0.inv}</span>`):''}${s0.prev.length?chk(s0.prevOk,`${s0.prev.map(z=>esc(z.n)).join(' or ')} learned`):''}
     ${chk(s0.deed,`${n.g[1].toLocaleString('en-US')} ${esc(tUnit(n.g[0]))} <span class="sub">· ${Math.min(s0.gv,n.g[1]).toLocaleString('en-US')} so far</span>`)}${s0.deed?'':`<div class="tt-bar"><u style="width:${Math.min(100,s0.gv/n.g[1]*100)}%"></u></div>`}`;
   const ab=n.fx.ab&&s0.r?(()=>{ const ready=tAbReady(id), l=tAbLast(id); return `<button class="btn" style="width:100%;justify-content:center;margin-top:12px" ${ready?`onclick="tUse('${id}')"`:'disabled'}>${ready?`⚡ Activate ${esc(n.n)}`:`Recharging · ready ${nice(addDays(l,n.fx.cd))}`}</button>${l?`<div class="sub" style="text-align:center;margin-top:6px">Last used ${nice(l)} · ${(TT_().ab[id]||[]).length}× total</div>`:''}`; })():'';
   gSheet(`<div class="tt-sh" style="--c:${A.c}"><button class="linkbtn" onclick="areaOpen('${n.a}')">‹ ${esc(A.n)} tree</button>
-    <div class="tt-big ${s0.cls} ${n.fx.ab?'ab':''}"><span>${n.ic}</span></div><span class="tag" style="display:block;text-align:center">${br[1]} ${esc(br[0])} · ${n.t===5?'capstone':'tier '+n.t}${n.fx.ab?' · ability':''}</span>
+    <div class="tt-big ${s0.cls} ${n.fx.ab?'ab':''}"><span>${n.ic}</span></div><span class="tag" style="display:block;text-align:center">${br[1]} ${esc(br[0])} · ${TT_KIND[n.k]||'tier '+n.t}${n.fx.ab?' · ability':''}</span>
     <h2 class="g-sh-t" style="text-align:center;margin-top:4px">${esc(n.n)}</h2>${n.r>1?`<div class="tt-pips big">${Array.from({length:n.r},(_,i)=>`<u class="${i<s0.r?'on':''}"></u>`).join('')}</div>`:''}
     <div class="tt-eff">${esc(tDesc(n,Math.max(1,s0.r)))}${n.r>1&&s0.r<n.r&&s0.r>0?`<div class="sub">Next rank: ${esc(tDesc(n,s0.r+1))}</div>`:''}${tGift(id)?'<div class="sub">Kept from your old perks — free</div>':''}</div>
     ${reqs?`<div class="tag" style="margin:14px 0 6px">${s0.r?'Next rank needs':'Needs'}</div>${reqs}`:''}
     ${s0.r<n.r?`<button class="btn" style="width:100%;justify-content:center;margin-top:14px" ${s0.can?`onclick="tLearn('${id}')"`:'disabled'}>${s0.can?`Learn${s0.r?' next rank':''} · 1 point`:s0.deed?'Not yet':'Do the work first'}</button>`:`<div class="tt-maxed">${s0.r?'MAXED':''}</div>`}${ab}</div>`); }
 function tHub(){ const rows=AREAS.map(A=>{ const I=areaInfo(A.k), f=tFree(A.k), sp=tSpec(A.k), own=TTREES[A.k].nodes.filter(n=>tRank(n.id)).length;
-    return `<button class="tt-hrow" style="--c:${A.c}" onclick="tAreaTab='tree';areaOpen('${A.k}')"><b>${esc(A.n)}</b><span>LV ${I.lvl} · ${esc(I.rank||'')}${sp?` · ${sp[1]} ${esc(sp[0])}`:''}</span><small>${own}/13 talents</small>${f?`<em>${f}</em>`:'<i>›</i>'}</button>`; }).join('');
+    return `<button class="tt-hrow" style="--c:${A.c}" onclick="tAreaTab='tree';areaOpen('${A.k}')"><b>${esc(A.n)}</b><span>LV ${I.lvl} · ${esc(I.rank||'')}${sp?` · ${sp[1]} ${esc(sp[0])}`:''}</span><small>${own}/${TTREES[A.k].nodes.length} talents</small>${f?`<em>${f}</em>`:'<i>›</i>'}</button>`; }).join('');
   const tot=AREAS.reduce((s,A)=>s+tFree(A.k),0);
   return `<div class="tt-sh"><span class="tag">Skills</span><h2 class="g-sh-t">Your talent trees</h2><div class="sub" style="margin-bottom:12px">Each area earns points from its own feats — real progress only. Spend them to shape who you’re becoming.${tot?` <b style="color:var(--gold)">${tot} to spend.</b>`:''}</div>
     <div class="tt-hub">${rows}</div><button class="btn ghost sm" style="width:100%;justify-content:center;margin-top:12px" onclick="charGo('overview')">Stats · titles ›</button></div>`; }
