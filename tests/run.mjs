@@ -650,7 +650,7 @@ const tt = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ rpg
   // gating: no points / no deed → refused and nothing changes
   const n0 = T.log.length; const realEarn = tEarned; tEarned = () => 0; tLearn('grip'); r.needsPoints = T.log.length === n0; tEarned = () => 40;
   const realMet = tMet; tMet = () => ({ ...realMet(), gym: 0 }); tLearn('grip'); r.needsDeed = T.log.length === n0;
-  tMet = () => ({ ...realMet(), gym: 999, gymWeeks: 99, prs: 99, yoga: 99 });
+  tMet = () => ({ ...realMet(), gym: 1e6, gymWeeks: 1e6, prs: 1e6, yoga: 1e6, active: 1e6 });
   tLearn('ironlungs'); r.needsTier = T.log.length === n0;   // tier 3 with nothing in the tree
   const xpY0 = computeXP0(), dayY0 = rpgMult(y);
   tLearn('grip'); r.learned = tRank('grip') === 1 && tFree('BODY') === 39;
@@ -717,6 +717,21 @@ const sea = await page.evaluate(() => { const r = {}, keep = JSON.stringify({ rp
   r.panel = /Relic won/.test(tSeaHtml('BODY'));
   const K = JSON.parse(keep); S.rpg = K.rpg; S.quarters[THIS_Q] = K.q; S.wins = S.wins.slice(0, K.wins); commit({ skipXp: true }); go('today'); return r; });
 ok('season branch: KRs become nodes, all hit → one relic (+1 point, +5% XP from that day only), never twice', Object.values(sea).every(Boolean), JSON.stringify(sea));
+// b330: trees paced over 5 years from your own history (locked once data exists); search finds every place; Learning coach + chapter path
+const b330 = await page.evaluate(async () => { const r = {}, w = ms => new Promise(z => setTimeout(z, ms)), T = TT_(), keep = T.pace;
+  delete T.pace; const P = tPace(); r.locked = !!T.pace && T.pace.at === TODAY && (Object.keys(S.days).length ? true : true);
+  const n = k => TTREES.BODY.nodes.find(z => z.b === 0 && z.k === k);
+  r.climbs = ['grip', 'ironbody', 'musclemem', 'spotter', 'apex'].map(id => tGoal(TNODE[id])).every((v, i, a) => i === 0 || v > a[i - 1]);   // all gym days: month 1 → 4 → 8 → 36 → 60
+  r.years = tYear(n('root')) === 1 && tYear(n('nt')) === 2 && tYear(n('ks')) === 4 && tYear(TTREES.BODY.nodes.find(z => z.k === 'cap')) === 5;
+  const g0 = tGoal(n('nt')); S.gym = S.gym || {}; r.fixed = tGoal(n('nt')) === g0;   // the pace never moves once set
+  if (keep) T.pace = keep;
+  searchOpen(); await w(100); r.jump = document.querySelectorAll('#sr-out .sr-pl').length >= 8;
+  srQ = 'settings'; searchRender(); r.find = [...document.querySelectorAll('#sr-out .sr-pl')].some(b => /Settings/.test(b.textContent)); gSheetClose();
+  go('learn'); await w(250); r.coach = !!document.querySelector('.lr-hero .lc') && document.querySelectorAll('.lc-wk i').length === 7;
+  r.path = !!document.querySelector('.lt.lp .lp-ch') && !document.querySelector('.lt.lp svg path:not(.ti *)') && !/Up next/.test(document.querySelector('#view').textContent.split('Subjects')[1] || '');
+  r.noDupNext = !document.querySelector('.lf-nx');
+  charGo('overview'); await w(200); r.gear = !!document.querySelector('.ch-gear'); go('today'); return r; });
+ok('5-year trees paced from your history (year 1 → 5, locked); search jumps to any place; Learning coach + chapter path, no duplicate Up next; settings one tap from Character', Object.values(b330).every(Boolean), JSON.stringify(b330));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

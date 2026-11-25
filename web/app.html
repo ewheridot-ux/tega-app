@@ -695,6 +695,55 @@ html body .app .tt .tt-map button.tt-n.tt-n.tt-n.max{color:var(--ownc)}html body
 .tt .tt-sea-row{position:relative}.tt .tt-sea-row::before{content:'';position:absolute;left:8%;right:8%;top:18px;border-top:2px dashed var(--half);z-index:0}.tt .tt-sn{position:relative;z-index:1}
 .tt .tt-foot{opacity:.8}
 html body .app .tt .tt-sn,html body .app .tt .tt-sn *{font-family:'Inter',system-ui,sans-serif}
+.tt .tt-map .tt-yr{position:absolute;left:-12px;right:-12px;height:0;border-top:1px dashed color-mix(in srgb,var(--acc) 22%,transparent);z-index:auto;pointer-events:none}
+.tt .tt-map .tt-yr b{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);padding:2px 8px;border-radius:99px;background:var(--plq);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--acc) 30%,transparent);font-family:'Inter',system-ui,sans-serif;font-size:9.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--mut,rgba(255,255,255,.55));white-space:nowrap;z-index:3}
+/* b330: nothing spills — long words wrap inside their box, one-line rows shrink their text instead of pushing past the edge */
+.app{overflow-wrap:break-word}
+.ql-line>b,.ql-line>span:not(.ok){min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ql-line>em,.ql-line>i,.ql-line>span.ok{flex:none}
+.home3 b{font-size:clamp(16px,5.6vw,22px);min-width:0;overflow-wrap:anywhere}
+.mm-agents{padding:0}.mm-agents>summary{padding:16px}.mm-agents .mm-ag{padding:0 16px}
+.sr-pls{display:grid;grid-template-columns:1fr 1fr;gap:6px}.sr-pls .sr-r{margin:0;background:var(--card2);border:0;border-radius:10px;padding:10px 12px}.sr-r.sr-pl{display:flex;justify-content:space-between;align-items:center;gap:8px}.sr-r.sr-pl small{flex:none}
+.ch-hd{position:relative}.ch-gear{position:absolute;top:10px;right:10px;font-size:18px}
+/* b330: Learning path + coach — clean course look in the Learning page's own palette (works in every Learning look) */
+html body .card.lt.lp{background:var(--card);color:var(--fg);box-shadow:var(--shadow,0 1px 0 var(--line));border-radius:var(--r,16px);padding:16px;font-family:var(--lr-body,Inter,system-ui,sans-serif)}
+.card.lt.lp .sub,.card.lt.lp small{color:var(--muted)}
+.lt.lp .lt-crest{width:48px;height:48px;border-radius:14px;font-size:24px;background:var(--card2);box-shadow:inset 0 0 0 2px var(--accent2,#e0564a)}
+.lt.lp .lt-rk{font-family:inherit;font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--accent2,#e0564a)}
+.lt.lp .lt-hud-t b{font-family:var(--lr-head,inherit);font-size:19px;line-height:1.2;white-space:normal}
+.lt.lp .lt-hud-t small{font-family:inherit;font-size:12.5px}
+.lt.lp .lt-bar{height:8px;border-radius:99px;background:var(--card2);box-shadow:none;margin:4px 0}.lt.lp .lt-bar u{border-radius:99px;background:var(--accent2,#e0564a)}
+.lt.lp .lt-due{border-radius:12px;background:var(--card2);color:var(--fg);box-shadow:inset 0 0 0 1.5px var(--accent2,#e0564a)}.lt.lp .lt-due b{font-family:inherit;font-size:17px}.lt.lp .lt-due small{font-family:inherit;font-size:11px}
+.lt.lp .lp-path{margin:14px 0 0;display:grid;gap:10px}
+.lp-ch{border-radius:14px;background:var(--card2);padding:12px}
+.lp-ch.cur{box-shadow:inset 0 0 0 2px var(--accent2,#e0564a)}
+.lp-hd{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:8px}.lp-hd>span:first-child{display:grid;min-width:0}
+.lp-hd small{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}.lp-hd b{font-family:var(--lr-head,inherit);font-size:17px;line-height:1.2}
+.lp-pr{flex:none;display:flex;align-items:center;gap:6px}.lp-pr u{display:block;width:56px;height:6px;border-radius:99px;background:linear-gradient(90deg,var(--accent2,#e0564a) var(--p),color-mix(in srgb,var(--fg) 12%,transparent) var(--p))}.lp-pr small{font-size:12px;font-weight:700}
+.lp-list{position:relative;display:grid}
+.lp-list::before{content:'';position:absolute;left:15px;top:18px;bottom:18px;width:2px;background:color-mix(in srgb,var(--fg) 14%,transparent)}
+html body .app .lt.lp button.lt-n{position:relative;transform:none;width:100%;height:auto;min-height:0;display:flex;align-items:center;gap:12px;padding:9px 0;margin:0;background:none!important;box-shadow:none!important;border:0;border-radius:0!important;color:var(--fg);text-align:left;font:inherit;font-size:14px;animation:none;filter:none;opacity:1;cursor:pointer}
+.lt.lp .lp-d{position:relative;z-index:1;flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:13px;font-weight:800;background:var(--card);color:var(--muted);box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--fg) 18%,transparent)}
+.lt.lp .lt-n.on .lp-d{background:var(--good,#2f7d4f);color:#fff;box-shadow:none}
+.lt.lp .lt-n.nx .lp-d{background:var(--accent2,#e0564a);color:#fff;box-shadow:0 0 0 4px color-mix(in srgb,var(--accent2,#e0564a) 22%,transparent)}
+.lt.lp .lp-t{flex:1;min-width:0;display:grid;gap:2px}.lt.lp .lp-t b{font-weight:650;font-size:14px;line-height:1.3;color:var(--fg)}.lt.lp .lp-t small{position:static;transform:none;width:auto;max-width:none;max-height:none;padding:0;background:none;font-family:inherit;font-size:12px;line-height:1.3;text-align:left;color:var(--muted);letter-spacing:0;display:block}
+.lt.lp .lt-n.on .lp-t b{color:var(--muted);font-weight:500}.lt.lp .lt-n.lk .lp-t b{opacity:.75}
+.lt.lp .lp-go{position:static;transform:none;flex:none;font-style:normal;font-family:inherit;font-size:12.5px;font-weight:800;letter-spacing:0;padding:7px 12px;border-radius:99px;background:var(--accent2,#e0564a);color:#fff}
+.lt.lp .lp-b .lp-d{border-radius:10px;font-size:16px;background:var(--card);box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--fg) 18%,transparent)}
+.lt.lp .lp-b.boss .lp-d{box-shadow:inset 0 0 0 2px #e0564a,0 0 0 4px rgba(224,86,74,.18)}.lt.lp .lp-b.won .lp-d{background:#ffd84a;box-shadow:none}
+.lt.lp .lp-b .lp-t b{font-weight:800;letter-spacing:.02em}.lt.lp .lp-b.boss .lp-go{background:#e0564a}
+.lp-fold,.lp-lk{display:flex;align-items:center;gap:12px;width:100%;border:0;color:var(--fg);font:inherit;text-align:left;cursor:pointer}.lp-fold>i,.lp-lk>i{flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:800;background:var(--good,#2f7d4f);color:#fff}
+.lp-lk{cursor:default;opacity:.7}.lp-lk>i{background:var(--card);font-size:13px}.lp-fold>span,.lp-lk>span{flex:1;min-width:0;display:grid}.lp-fold b,.lp-lk b{font-size:14px}.lp-fold small,.lp-lk small{font-size:12px;color:var(--muted)}.lp-fold em{font-style:normal;color:var(--muted)}
+.lt.lp svg.ti *{stroke:currentColor!important;stroke-width:2!important;stroke-dasharray:none!important;fill:none!important;filter:none!important;vector-effect:none!important}.lt.lp .lt-n *{text-shadow:none}
+.lt.lp .lt-n,.lt.lp .lt-n *{text-align:left}.lt.lp .lp-t{justify-items:start}.lt.lp svg.ti,.lp-lk svg.ti{position:static!important;inset:auto!important;transform:none!important;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.lt.lp .lt-key{font-family:inherit;font-size:12px;color:var(--muted);margin-top:10px}.lt.lp .lt-empty{font-family:inherit;font-size:14px;color:var(--muted)}
+.lc{display:grid;gap:8px;margin:8px 0 14px;padding:14px;border-radius:var(--r2,14px);background:var(--card2)}
+.lc-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.lc-h b{font-family:var(--lr-head,inherit);font-size:18px}.lc-h span{font-size:12.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+.lc-wk{display:flex;align-items:center;gap:5px}.lc-wk i{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-style:normal;font-size:10.5px;font-weight:800;background:color-mix(in srgb,var(--fg) 8%,transparent);color:var(--muted)}
+.lc-wk i.on{background:var(--good,#2f7d4f);color:#fff}.lc-wk i.td{box-shadow:inset 0 0 0 2px var(--accent2,#e0564a);color:var(--fg)}.lc-wk i.miss{opacity:.55}.lc-wk small{margin-left:6px;font-size:12px;color:var(--muted)}
+.lc-a{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:0;border-radius:12px;background:var(--card);color:var(--fg);font:inherit;text-align:left;cursor:pointer}
+.lc-a>i{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-style:normal;font-size:15px;background:var(--card2)}
+.lc-a>span{flex:1;min-width:0;display:grid;gap:1px}.lc-a b{font-size:14px;font-weight:650;line-height:1.25;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.lc-a small{font-size:12px;color:var(--muted)}
+.lc-a>em{flex:none;font-style:normal;color:var(--muted);font-weight:800}.lc-a.pri{box-shadow:inset 0 0 0 2px var(--accent2,#e0564a)}.lc-a.pri>em{padding:7px 12px;border-radius:99px;background:var(--accent2,#e0564a);color:#fff;font-size:12.5px}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -2280,7 +2329,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 /*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
-const BUILD='b329';
+const BUILD='b330';
 /* b316: bottom sheets sit above the iPhone keyboard — the sheet follows the visible part of the screen (visualViewport),
    and the field you tap scrolls into view inside it. Before, the keyboard slid over “New quest” and every other sheet. */
 (function(){ const v=window.visualViewport, R=document.documentElement; if (!v) return;
@@ -3520,7 +3569,7 @@ const LEARN_BUCKETS = {1:'Impressions & models',2:'Wax carving',3:'Casting',4:'F
 const LEARN_RES = [{"bucket": 1, "type": "video", "title": "PVS and Alginate Impression Techniques (playlist)", "source": "Shannon Pace Brinker (YouTube)", "url": "https://www.youtube.com/playlist?list=PLs3UF8ZPuTJh7VPBLxvE-j4kt_bqt37VM", "length": "16 videos", "why": "Clinical-grade alginate and PVS tray technique so impressions capture margins without voids or distortion."}, {"bucket": 1, "type": "article", "title": "How to Pour a Study Model and Take an Impression", "source": "Academy for Dental Assistants", "url": "https://academy4da.com/how-to-pour-a-study-model-and-take-an-impression-as-a-dental-assistant/", "length": "10-min read", "why": "Step-by-step alginate/PVS impression plus gypsum mixing, pouring and model removal — the exact two skills needed."}, {"bucket": 1, "type": "article", "title": "How to Make Grillz & Gold Teeth Sitting at Home", "source": "Custom Gold Grillz blog", "url": "https://www.customgoldgrillz.com/blogs/news/how-to-make-gold-teeth-grillz", "length": "6-min read", "why": "Grillz-specific overview of impression, die-stone pour, wax-up, casting and polish from a working grillz shop."}, {"bucket": 2, "type": "video", "title": "How To Make Grillz (playlist)", "source": "Grillz Germany (YouTube)", "url": "https://www.youtube.com/playlist?list=PLqgEiFhKtwGRD9RspQKHZ49SmrxVlRnhh", "length": "24 videos", "why": "Shop-floor grillz series: wax-up on the stone model, fit checks and casting prep for tooth caps."}, {"bucket": 2, "type": "article", "title": "By Hand! Wax Carving Tips, Tricks and Techniques", "source": "Kate Wolf · Santa Fe Symposium", "url": "https://www.santafesymposium.org/2019-santa-fe-symposium/2019-by-hand-wax-carving-tips-tricks-and-techniques", "length": "free paper (PDF)", "why": "A master carver's layout, thinning, detailing and flex-shaft wax methods — transfer directly to thin grill shells."}, {"bucket": 2, "type": "video", "title": "Wax Carving Tutorials and Videos (playlist)", "source": "Kabartsy Jewelry (YouTube)", "url": "https://www.youtube.com/playlist?list=PLsmUIjJnEmo4UDfObGppV-DmYtnPoDvC4", "length": "8 videos", "why": "Real-time carving demos for tool handling, wall-thickness control and clean edges before casting."}, {"bucket": 3, "type": "article", "title": "Tips for Avoiding Meltdown", "source": "Kate Wolf on Ganoksin", "url": "https://www.ganoksin.com/article/tips-avoiding-meltdown/", "length": "12-min read", "why": "How to vet a casting house, inspect waxes, allow for shrinkage and pack models so casts come back clean."}, {"bucket": 3, "type": "video", "title": "Wax Working Techniques for Lost Wax Casting (playlist)", "source": "Silver Beehive Studio (YouTube)", "url": "https://www.youtube.com/playlist?list=PLAwwvkHxPpzdDjCEwDrPLUSPDaT7nZwYr", "length": "5 videos", "why": "Sprueing, connecting and detailing wax models — the prep a caster expects before you send a grill."}, {"bucket": 3, "type": "article", "title": "Making Master Models: Duplicates & Details", "source": "Stuller Bench Jeweler", "url": "https://www.stuller.com/benchjeweler/resources/bencharticles/view/making-master-models-duplicates-and-details", "length": "5-min read", "why": "Why the casting can't be better than the pattern, and how to budget 12–15% shrinkage in models."}, {"bucket": 4, "type": "video", "title": "Polishing and Finishing (playlist)", "source": "Rio Grande (YouTube)", "url": "https://www.youtube.com/playlist?list=PLQ6Dbws9mbJRJZxj1eY_hAXFWR4SP4Xvs", "length": "16 videos", "why": "Supplier demos of buffs, compounds and flex-shaft finishing for a bright polish on cast silver and gold."}, {"bucket": 4, "type": "article", "title": "Finishing Jewelry", "source": "Nancy L T Hamilton", "url": "https://nancylthamilton.com/techniques/finishing-jewelry/", "length": "40-min reference", "why": "Exhaustive grit progression, cutting vs coloring compounds, wheel types and safety for mirror finishes."}, {"bucket": 4, "type": "article", "title": "Top Flexshaft Tips", "source": "Metalsmith Society", "url": "https://metalsmithsociety.com/blogs/news/metalsmith-societys-top-flexshaft-tips", "length": "20-min read", "why": "Flex-shaft attachments (radial discs, silicone wheels, dental 'greenies') ideal for tiny grill surfaces."}, {"bucket": 4, "type": "article", "title": "How to Polish Silver Jewelry: Tips and Advice", "source": "Pepetools blog", "url": "https://pepetools.com/blogs/news/how-to-polish-jewelry-tips-and-advice", "length": "12-min read", "why": "Sanding grits, Tripoli/rouge and modern compounds, and polishing-motor setup for silver."}, {"bucket": 5, "type": "video", "title": "Rhino 3D for Beginner (playlist)", "source": "PJ Chen Jewelry CAD (YouTube)", "url": "https://www.youtube.com/playlist?list=PLXeFqCRRSA3iL0IsFNa0fGsaDsQYGzcKM", "length": "132 videos", "why": "Jewelry-specific Rhino fundamentals from a veteran CAD designer — the standard on-ramp before grillz CAD."}, {"bucket": 5, "type": "course", "title": "Kickstart: From Idea to Creation", "source": "RhinoArtisan", "url": "https://www.rhinoartisan.com/course/kickstart/", "length": "free course · 43 lessons", "why": "Takes four pieces from blank file to production-ready using Rhino's jewelry plugin."}, {"bucket": 5, "type": "video", "title": "Blender 4.2 — Jewelry Design & 3D Printing for Casting (playlist)", "source": "The Jewelry and Watch Bench (YouTube)", "url": "https://www.youtube.com/playlist?list=PLXrICXvvkuZaaRmfB-Fq6tpKkEAQj5B7D", "length": "36 videos", "why": "Zero-cost CAD path: Blender plus the JewelCraft add-on, built for 3D-print-to-cast workflows."}, {"bucket": 6, "type": "article", "title": "Pricing Your Jewelry", "source": "Halstead", "url": "https://halsteadbead.com/articles/pricing-your-jewelry", "length": "6-min read + free webinar", "why": "Materials + labor + overhead formula with a pricing worksheet for one-off custom pieces."}, {"bucket": 6, "type": "article", "title": "Custom Jewelry Orders", "source": "Jewelry Making Journal", "url": "https://jewelrymakingjournal.com/custom-jewelry/", "length": "10-min read", "why": "Consultation-to-delivery workflow: quoting, written agreement, 50% non-refundable deposit, final payment."}, {"bucket": 6, "type": "article", "title": "Top Instagram Practices for Jewelry Businesses", "source": "Stuller blog", "url": "https://blog.stuller.com/top-instagram-practices-for-jewelry-businesses/", "length": "6-min read", "why": "Profile setup, posting cadence, content mix and analytics for a small jewelry brand."}];
 let learnFilter = 0;
 function learnDone(url, title, bucket){ const D=ensureDatum(); D.learnDone ||= {}; if (D.learnDone[url]) { delete D.learnDone[url]; commit({skipXp:true}); return; } D.learnDone[url]=TODAY; D.learning.push({id:uid(), d:TODAY, skill:LEARN_BUCKETS[bucket], resource:title, output:''}); commit(); toast('Logged — now add the output it produced'); }
-function dLearn(){
+function dLearn(inPath){
   const D=ensureDatum(); D.learnDone ||= {};
   const phaseFocus = {2:[1,2,3,4], 3:[6], 4:[6]}[dActivePhase().n] || [];
   const inFilter = r => learnFilter===-1 ? true : learnFilter ? r.bucket===learnFilter : (!phaseFocus.length || phaseFocus.includes(r.bucket));
@@ -3528,12 +3577,12 @@ function dLearn(){
   const doneN = LEARN_RES.filter(r=>D.learnDone[r.url]).length;
   const icon = t => t==='video'?'▶':t==='course'?'🎓':'📄';
   return `
-  <div class="card sec"><div class="hdr"><h2>Up next</h2><span class="sub">${doneN}/${LEARN_RES.length} done</span></div>
+  ${inPath?'':`  <div class="card sec"><div class="hdr"><h2>Up next</h2><span class="sub">${doneN}/${LEARN_RES.length} done</span></div>
     <div class="tchips" style="margin-bottom:12px"><button class="${learnFilter===0?'on':''}" onclick="learnFilter=0;learnN=3;render()">Phase ${dActivePhase().n}</button>${Object.entries(LEARN_BUCKETS).map(([k,l])=>`<button class="${learnFilter==k?'on':''}" onclick="learnFilter=${k};learnN=3;render()">${l}</button>`).join('')}<button class="${learnFilter===-1?'on':''}" onclick="learnFilter=-1;learnN=3;render()">All</button></div>
     <div class="stack">${show.map(r=>`<div class="res"><div class="res-ic">${icon(r.type)}</div><div style="min-width:0"><a href="${r.url}" target="_blank" rel="noopener" class="res-t">${esc(r.title)}</a><div class="sub">${esc(r.source)} · ${esc(r.length)} · ${LEARN_BUCKETS[r.bucket]}</div><div class="res-why">${esc(r.why)}</div></div><button class="btn ghost sm" style="align-self:center" onclick="learnDone(${JSON.stringify(r.url).replace(/"/g,'&quot;')},${JSON.stringify(r.title).replace(/"/g,'&quot;')},${r.bucket})">Done</button></div>`).join('')||'<div class="empty">Nothing left here. Pick another topic above.</div>'}</div>
     ${todo.length>learnN?`<button class="btn ghost sm" style="margin-top:10px;width:100%;justify-content:center" onclick="learnN+=3;render()">Show more · ${todo.length-learnN} left</button>`:''}
     <div class="help" style="margin-top:10px">Marking one done moves it into the log below, where you write what it produced.</div>
-  </div>
+  </div>`}
   <div class="card sec lr-log"><div class="hdr"><h2>Learning log</h2></div>
     <div class="stack">${D.learning.slice().reverse().map(l=>`<div class="check ${l.output?'on':''}" style="cursor:default" data-hold="dlearn:${l.id}"><div class="box" style="${l.output?'':'border-color:var(--warn)'}">${l.output?'✓':'!'}</div><div class="txt" style="text-decoration:none;color:var(--fg)"><b>${esc(l.skill)}</b> <span class="sub">· ${esc(l.resource)} · ${nice(l.d)}</span><div style="font-size:12px">${l.output?'→ '+esc(l.output):`<input class="inp" style="padding:3px 8px;margin-top:4px" placeholder="what did this produce? (link a prototype, a practice piece)" onchange="dSetLearn(&quot;${l.id}&quot;,this.value)">`}</div></div><button class="x" onclick="dDelLearn('${l.id}')">✕</button></div>`).join('')||'<div class="empty">Nothing logged yet.</div>'}</div>
     ${infold('ladd','Log something else','',`<form class="inline" onsubmit="return dAddLearn(event)"><input class="inp" placeholder="skill (e.g. margin carving)" required><input class="inp" placeholder="resource (video, book, person)"><input class="inp" placeholder="output — the piece it produced"><button class="btn sm">+ Log</button></form>`)}
@@ -3569,7 +3618,7 @@ function lifeHero(){ try { const [qs]=qRange(THIS_Q), wk=weekMonday(THIS_WEEK), 
   const rows=[['social','Circle','nights out this quarter',fact('events',qs,TODAY)],['learn','Learning','lessons + project hours this month',lrLessonsDone(mo,TODAY)+Math.round(fact('hustlehrs',mo,TODAY))]], nx=lifeNext();
   return `<div class="lf-hero"><span class="lf-stk">WK ${String(THIS_WEEK).split('W').pop()} · ${MON3[+TODAY.slice(5,7)-1].toUpperCase()}</span><h1 class="lf-h">LIFE <span>RN.</span></h1>
     ${rows.map(([k,n,sub,v])=>`<button class="lf-r ${view===k?'on':''}" onclick="go('${k}')"><span>${esc(n)}<small>${sub}</small></span><b class="num">${pad(v)}</b></button>`).join('')}
-    ${nx?`<button class="lf-r lf-nx" onclick="${nx.go}"><span>Next up<small>${esc(nx.t)}</small></span><b>→</b></button>`:''}</div>`; } catch(e){ return ''; } }
+    ${nx&&view!=='learn'?`<button class="lf-r lf-nx" onclick="${nx.go}"><span>Next up<small>${esc(nx.t)}</small></span><b>→</b></button>`:''}</div>`; } catch(e){ return ''; } }
 const lifeTabs = () => `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${LIFE.map(([k,l])=>`<button class="${view===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px" onclick="go('${k}')">${l}</button>`).join('')}</div>`;
 const goalsTabs = () => `<div class="seg sec" style="display:flex;width:100%;overflow:hidden">${[['today','Today'],...GOALS].map(([k,l])=>`<button class="${view===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px" onclick="go('${k}')">${l}</button>`).join('')}</div>`;
 const go = v => { if (v === view && location.hash.slice(1) === v) { window.scrollTo({top:0, behavior:'smooth'}); return; } location.hash = v; };
@@ -4689,28 +4738,49 @@ function lrNode(sid,stepId,fresh){ const x=lrSub(sid); if (!x) return; if (/^P\d
   gSheet(`<div class="lt-sh">${fresh?`<div class="lt-clear">STEP CLEARED · +${LXP.lesson} XP</div>`:''}<span class="tag">${esc(x.name)} · step ${i+1}${z.mins?` · ~${z.mins} min`:''}</span><h2 class="g-sh-t">${esc(z.t)}</h2><div class="sub" style="margin-bottom:12px">${status}</div>${act}${extra}</div>`); }
 // ---- the tree
 let lrTreeAll={};
-function lrTree(x){ const st=lrSteps(x); if (!st.length && x.kind!=='custom') return ''; const R=lrRank(x), next=st.findIndex(z=>!z.done), doneN=st.filter(z=>z.done).length;
-  const seq=[]; st.forEach((z,i)=>{ seq.push({...z, n:i}); if ((i+1)%LR_PROOF_EVERY===0) seq.push({id:'P'+((i+1)/LR_PROOF_EVERY), proof:(i+1)/LR_PROOF_EVERY}); });
-  const firstShow=lrTreeAll[x.id]||seq.length<=14?0:Math.max(0, seq.findIndex(n=>!n.proof&&n.n===Math.max(0,(next<0?st.length:next)-2)));
-  const view=seq.slice(firstShow), XS=[50,24,50,76]; let y=firstShow?70:44; const pos=[];
-  view.forEach((n,k)=>{ const big=!!n.proof; pos.push({n, x:big?50:XS[n.n%4], y, big}); y+=big?132:116; });
-  const H=y-30, P=x.proofs||{};
-  const nodeHtml=({n,x:px,y:py,big})=>{ if (big){ const p=P[n.proof], open=doneN>=n.proof*LR_PROOF_EVERY, cls=p&&p.done?'won':open?'boss':'lk';
-      return `<button class="lt-n big ${cls}" style="left:${px}%;top:${py}px" onclick="lrNode('${x.id}','${n.id}')" aria-label="Proof of skill ${n.proof}, ${cls==='won'?'cleared':open?'open':'locked'}"><span>${cls==='won'?'🏆':open?'⚔️':'🔒'}</span><small>${p&&p.done?esc(p.t):'PROOF OF SKILL'}</small></button>`; }
-    const cls=n.done?'on':n.n===next?'nx':'lk', hold=x.kind==='custom'?`data-hold="lesson:${x.id}|${n.id}"`:'';
-    return `<button class="lt-n ${cls}" ${hold} style="left:${px}%;top:${py}px" onclick="lrNode('${x.id}','${n.id}')" aria-label="${esc(n.t)}, ${cls==='on'?'cleared':cls==='nx'?'up next':'ahead'}"><span>${n.done?((x.qz||{})[n.id]?.r===3?'🌟':'⭐'):n.n===next?'<b class="lt-go">▶</b>':(n.ic&&x.kind==='draw'?esc(n.ic):'🔒')}</span><small>${esc(n.t)}</small>${n.n===next?'<em>NEXT</em>':''}</button>`; };
-  const lines=pos.slice(1).map((b,k)=>{ const a=pos[k], lit=(a.n.done||a.n.proof&&(P[a.n.proof]||{}).done||a.n.proof&&doneN>=a.n.proof*LR_PROOF_EVERY)&&(b.n.done||b.n.n===next||b.n.proof&&doneN>=b.n.proof*LR_PROOF_EVERY), ym=Math.round((a.y+b.y)/2);
-    return `<path d="M${a.x} ${a.y} V${b.y-(b.big?52:44)} H${b.x} V${b.y}" class="${lit?'lit':''}"/>`; }).join('');
+/* b330: the path, like a course in a real app — chapters of five steps, each closed by a Proof of skill (the boss). Cleared chapters fold
+   into one line, the chapter you're in is open with the next step highlighted, the one after is visible, later ones show as locked headers.
+   Full titles, where each step comes from and how long it takes. Same data, XP and quizzes as before. */
+function lrChapName(x,c,ci){ if (x.kind==='datum'){ const B={}; for (const z of c) if (z.res) B[z.res.bucket]=(B[z.res.bucket]||0)+1; const top=Object.entries(B).sort((p,q)=>q[1]-p[1])[0]; if (top) return LEARN_BUCKETS[top[0]]; }
+  return `Chapter ${ci+1}`; }
+function lrMeta(x,z){ if (z.res) return [z.res.source, z.res.length].filter(Boolean).join(' · '); if (z.mins) return `${z.mins} min`; if (x.kind==='draw') return 'rules, a drill, videos'; return ''; }
+function lrTree(x){ const st=lrSteps(x); if (!st.length && x.kind!=='custom') return ''; const R=lrRank(x), next=st.findIndex(z=>!z.done), doneN=st.filter(z=>z.done).length, P=x.proofs||{}, E=LR_PROOF_EVERY;
+  const C=[]; for (let i=0;i<st.length;i+=E) C.push(st.slice(i,i+E).map((z,k)=>({...z,n:i+k})));
+  const bossOpen=ci=>C[ci].length===E && C[ci].every(z=>z.done), won=ci=>!!(P[ci+1]&&P[ci+1].done);
+  let cur=C.findIndex((c,ci)=>c.some(z=>z.n===next) || (bossOpen(ci)&&!won(ci))); if (cur<0) cur=C.length-1;
+  const row=z=>{ const isN=z.n===next, cls=z.done?'on':isN?'nx':'lk', hold=x.kind==='custom'?`data-hold="lesson:${x.id}|${z.id}"`:'', q3=(x.qz||{})[z.id]?.r===3, m=lrMeta(x,z);
+    return `<button class="lt-n lp-s ${cls}" ${hold} onclick="lrNode('${x.id}','${z.id}')" aria-label="${esc(z.t)}, ${cls==='on'?'cleared':isN?'up next':'ahead'}"><i class="lp-d">${z.done?(q3?'★':'✓'):isN?'▶':z.n+1}</i><span class="lp-t"><b>${esc(z.t)}</b>${m?`<small>${esc(m)}</small>`:''}</span>${isN?'<em class="lp-go">Start</em>':''}</button>`; };
+  const boss=ci=>{ const k=ci+1, p=P[k], w=won(ci), o=bossOpen(ci), cls=w?'won':o?'boss':'lk';
+    return `<button class="lt-n big lp-b ${cls}" onclick="lrNode('${x.id}','P${k}')" aria-label="Proof of skill ${k}, ${w?'cleared':o?'open':'locked'}"><i class="lp-d">${tIco(w?'crown':o?'shield':'lock')}</i><span class="lp-t"><b>${w&&p.t?esc(p.t):'Proof of skill'}</b><small>${w?`cleared ${nice(p.done)}`:o?`boss ready · +${LX.proof} XP`:`unlocks after step ${k*E}`}</small></span>${o&&!w?'<em class="lp-go">Fight</em>':''}</button>`; };
+  const ch=(c,ci)=>{ const dn=c.filter(z=>z.done).length, full=c.length===E, nm=lrChapName(x,c,ci);
+    if (full && won(ci) && ci<cur && !lrTreeAll[x.id]) return `<button class="lp-ch lp-fold" onclick="lrTreeAll['${x.id}']=1;render()"><i>✓</i><span><b>${esc(nm)}</b><small>Chapter ${ci+1} · cleared · ${E} steps + proof</small></span><em>›</em></button>`;
+    if (ci>cur+1) return `<div class="lp-ch lp-lk"><i>${tIco('lock')}</i><span><b>${esc(nm)}</b><small>Chapter ${ci+1} · ${c.length} steps${full?' + proof':''}</small></span></div>`;
+    return `<div class="lp-ch ${ci===cur?'cur':''}"><div class="lp-hd"><span><small>Chapter ${ci+1}</small><b>${esc(nm)}</b></span><span class="lp-pr"><u style="--p:${Math.round(dn/c.length*100)}%"></u><small>${dn}/${c.length}</small></span></div>
+      <div class="lp-list">${c.map(row).join('')}${full?boss(ci):''}</div></div>`; };
   const due=lrCards().filter(c=>c.sid===x.id&&!c.gone&&c.due<=TODAY).length;
-  return `<div class="card sec lt" id="lr-upnext">
+  return `<div class="card sec lt lp" id="lr-upnext">
     <div class="lt-hud"><div class="lt-crest r${R.i}">${R.ic}</div><div class="lt-hud-t"><span class="lt-rk">${R.name.toUpperCase()}</span><b>${esc(x.name)}</b>
       <div class="lt-bar"><u style="width:${Math.round(R.pct*100)}%"></u></div><small>${R.sp} SP${R.next?` · ${R.need} to ${R.next[0]}`:' · max rank'} · ${doneN}/${st.length} steps</small></div>
       ${due?`<button class="lt-due" onclick="lrReview()"><b>${due}</b><small>cards</small></button>`:''}</div>
-    <div class="lt-tree" style="height:${H}px">${firstShow?`<button class="lt-more" onclick="lrTreeAll['${x.id}']=1;render()">▲ ${firstShow} cleared above</button>`:''}<svg viewBox="0 0 100 ${H}" preserveAspectRatio="none" aria-hidden="true">${lines}</svg>${pos.map(nodeHtml).join('')}</div>
+    <div class="lt-tree lp-path">${C.map(ch).join('')}</div>
     ${!st.length?'<div class="lt-empty">No steps yet — let Tega line up your path.</div>':next<0&&x.kind!=='project'?'<div class="lt-empty">Path cleared. Line up the next stretch.</div>':''}
     ${x.kind==='custom'?`<button class="btn sm" style="width:100%;justify-content:center;margin-top:12px" onclick="lrSuggest('${x.id}')">${lrBusy?'Thinking…':'✦ Extend the path'}</button>
     ${infold('lra_'+x.id,'Add a step','a video, article, or a song to learn',`<form onsubmit="return lrAddLesson(event,'${x.id}')" class="stack" style="gap:6px"><input class="inp" name="t" placeholder="What to learn (e.g. F barre chord)" required><input class="inp" name="u" placeholder="Link (optional — leave blank to search YouTube)"><div class="row" style="gap:6px;flex-wrap:nowrap"><input class="inp num" name="m" type="number" min="0" placeholder="min" style="width:80px"><button class="btn sm" style="flex:1;justify-content:center">Add</button></div></form>`)}`:''}
-    <div class="lt-key"><span>⭐ cleared</span><span>🌟 perfect quiz</span><span>⚔️ proof of skill</span><span>hold a step to delete</span></div></div>`; }
+    <div class="lt-key">★ perfect quiz · a Proof of skill closes every chapter${x.kind==='custom'?' · hold a step to delete':''}</div></div>`; }
+/* b330: the coach — Learning tells you what to do today instead of waiting to be asked: cards that are due first (fast, and what keeps
+   things in your head), a boss that's ready, the next step where you left off, and a subject you've let slide for a week. Each says what
+   it's worth. The week row shows the days you learned (Daily 10). */
+function lrCoach(){ try { const live=lrSubs().filter(x=>!x.archived&&x.kind!=='project'), due=lrDue().length, on=lrActDays().has(TODAY), st=lrStreak(), E=LR_PROOF_EVERY, acts=[];
+  if (due) acts.push({ic:'🃏', t:`Review ${due} card${due===1?'':'s'}`, s:`~${Math.max(1,Math.round(due*.3))} min · +${due*LX.card} XP`, go:'lrReview()'});
+  for (const x of live){ const dn=lrSteps(x).filter(z=>z.done).length, k=Math.floor(dn/E); if (k>=1 && !((x.proofs||{})[k]||{}).done){ acts.push({ic:'⚔️', t:`Proof of skill · ${x.name}`, s:`chapter ${k} boss · +${LX.proof} XP`, go:`lrTab='${x.id}';go('learn');setTimeout(()=>lrNode('${x.id}','P${k}'),160)`}); break; } }
+  const c=lrContinue(); if (c) acts.push({ic:'▶', t:c.s.t, s:`${c.x.name}${lrMeta(c.x,c.s)?` · ${lrMeta(c.x,c.s)}`:''} · +${LXP.lesson} XP`, go:'lrContinueGo()'});
+  const sl=live.map(x=>({x, d:lrLastAct(x), s:lrSteps(x).find(z=>!z.done)})).filter(o=>o.s && (!c||o.x.id!==c.x.id) && (!o.d || daysBetween(o.d,TODAY)>=7)).sort((p,q)=>(p.d||'').localeCompare(q.d||''))[0];
+  if (sl) acts.push({ic:sl.x.icon||'✦', t:`${sl.x.name} · ${sl.s.t}`, s:sl.d?`untouched for ${daysBetween(sl.d,TODAY)} days — keep it alive`:'not started yet — one step gets it going', go:`lrGoNext('${sl.x.id}');setTimeout(()=>lrNode('${sl.x.id}','${sl.s.id}'),140)`});
+  const wk=weekDays(THIS_WEEK), A=lrActDays(), n=wk.filter(k=>A.has(k)).length, goal=(S.learn||{}).wkGoal||5;
+  const head=on?'Daily 10 done':acts.length?'Today in Learning':'All caught up';
+  return `<div class="lc"><div class="lc-h"><b>${on?'✓ ':''}${head}</b><span>${st?`🔥 ${st} day${st===1?'':'s'}`:'no streak yet'}</span></div>
+    <div class="lc-wk">${wk.map(k=>`<i class="${A.has(k)?'on':k===TODAY?'td':k<TODAY?'miss':''}" title="${k}">${'MTWTFSS'[weekDays(THIS_WEEK).indexOf(k)]}</i>`).join('')}<small>${n}/${goal} days this week${n>=goal?' · goal hit':''}</small></div>
+    ${acts.slice(0,3).map((a,i)=>`<button class="lc-a ${i===0&&!on?'pri':''}" onclick="${a.go.replace(/"/g,'&quot;')}"><i>${esc(a.ic)}</i><span><b>${esc(a.t)}</b><small>${esc(a.s)}</small></span><em>${i===0&&!on?'Start':'›'}</em></button>`).join('')}</div>`; } catch(e){ return lrTopStrip(); } }
 // ---- Continue: the next step of whatever you were last on
 function lrLastAct(x){ let d=''; for (const z of lrSteps(x)) if (z.done&&z.done>d) d=z.done; for (const g of x.log||[]) if (g.d>d) d=g.d; for (const q of Object.values(x.qz||{})) if ((q.d||'')>d) d=q.d; return d; }
 function lrContinue(){ const L=lrSubs().filter(x=>!x.archived&&x.kind!=='project').map(x=>({x, s:lrSteps(x).find(z=>!z.done), d:lrLastAct(x)})).filter(o=>o.s); L.sort((a,b)=>b.d.localeCompare(a.d)); return L[0]||null; }
@@ -4825,9 +4895,9 @@ function vLearning(){ lrNewsLoad(); const SUB=lrSubs(), live=SUB.filter(x=>!x.ar
   const goals=`<div class="card sec"><div class="hdr"><h2>Learning goals · ${THIS_Q}</h2><button class="btn ghost sm" onclick="curQ=THIS_Q;qAdd=true;qAddTrack='learning';go('quarter')">＋ Goal</button></div>${objs.length?objs.map(o=>`<button class="hz-o" onclick="curQ='${THIS_Q}';qOpen='${o.id}';go('quarter')"><span><b>${esc(o.title)}</b><small>${(o.krs||[]).map(k=>`${esc(k.text)} ${k.target===1?(krHit(k)?'✓':'—'):`${k.current||0}/${k.target}`}`).join(' · ')}</small></span><em class="num">${Math.round(objPct(o)*100)}%</em></button>`).join(''):'<div class="empty">No Learning goals this quarter. Add one and every lesson you finish moves it.</div>'}</div>`;
   const cur=live.find(x=>x.id===lrTab);
   setTimeout(()=>{ try { if (lrRankCheck()) commit({skipXp:true}); } catch(e){} },0);
-  const body=lrTab==='goals'?goals:lrTab==='news'?lrNewsHtml():lrTab==='foryou'?lrForYouHtml():!cur?'':lrTree(cur)+lrInspo(cur)+(cur.kind==='datum'?dLearn():cur.kind==='draw'?vLearn():cur.kind==='project'?vProject(cur):lrCustom(cur));
+  const body=lrTab==='goals'?goals:lrTab==='news'?lrNewsHtml():lrTab==='foryou'?lrForYouHtml():!cur?'':lrTree(cur)+lrInspo(cur)+(cur.kind==='datum'?dLearn(true):cur.kind==='draw'?vLearn():cur.kind==='project'?vProject(cur):lrCustom(cur));
   const edit=lrEdit?`<div class="lr-edit">${SUB.map(x=>`<div class="row" style="gap:6px;flex-wrap:nowrap"><span style="width:22px;text-align:center">${esc(x.icon||'✦')}</span><input class="inp" style="flex:1;min-width:0" value="${esc(x.name)}" onchange="lrRename('${x.id}',this.value)"><button class="btn ghost sm" onclick="lrArchive('${x.id}')">${x.archived?'Restore':'Archive'}</button></div>`).join('')}</div>`:'';
-  return `<div class="card sec lr-hero"><div class="lr-top"><div class="lr-k">Learning · ${new Date(TODAY+'T12:00').toLocaleDateString('en-US',{month:'long'})}</div></div>${lrTopStrip()}<h2 class="lr-h">Subjects</h2>
+  return `<div class="card sec lr-hero"><div class="lr-top"><div class="lr-k">Learning · ${new Date(TODAY+'T12:00').toLocaleDateString('en-US',{month:'long'})}</div></div>${lrCoach()}<h2 class="lr-h">Subjects</h2>
     <div class="lr-tiles lr-subs" role="tablist">${subT}</div>
     ${''}${lrAdding?`<div class="lr-types" role="tablist">${Object.entries(LR_TYPES).map(([k,[ic,l]])=>`<button type="button" class="${lrNewType===k?'on':''}" onclick="lrNewType='${k}';render()">${ic} ${l}</button>`).join('')}</div><form class="row lr-new" onsubmit="return lrAddSub(event)"><input class="inp" name="ic" placeholder="${LR_TYPES[lrNewType][0]}" style="width:48px;text-align:center;padding-left:4px;padding-right:4px"><input class="inp" name="n" placeholder="${LR_TYPES[lrNewType][2]}" style="flex:1;min-width:0" required><button class="btn sm">Add</button></form>${['skill','book','language'].includes(lrNewType)?'<div class="help" style="margin-top:6px">Tega builds the plan for you right after.</div>':''}`:''}
     <div class="lr-tiles lr-more" role="tablist">${[['goals','★','Goals',op==null?'':op+'%'],['news','◉','News',lrNews?nwN:''],['foryou','✦','For you',lrNews&&fyN?fyN:'']].map(([k,ic,l,n])=>`<button role="tab" aria-selected="${lrTab===k}" class="${lrTab===k?'on':''}" onclick="lrTab='${k}';render()"><i>${ic}</i><span style="color:var(--lr-ink);font-weight:600">${l}</span>${n!==''?`<small class="num lr-n">${n}</small>`:''}</button>`).join('')}</div>
@@ -5828,7 +5898,7 @@ function mBook(E, P){
       <div class="spc-rule" style="margin-top:8px"><div><b class="num">${money0(gy)}</b><small>booked${unk?` +${unk}?`:''}</small></div><div><b class="num">${money0(gy*0.8)}</b><small>≈ yours</small></div><div><b class="num" style="color:var(--good)">${money0(depY)}</b><small>in bank*</small></div></div>
       <div class="help" style="margin-top:8px">*Bank feed starts in April. ${unk} job${unk===1?'':'s'} this year had no rate in the email.</div></div>
     <details class="card sec fold mm-fold"><summary><span>Rate card</span><span class="sub">›</span></summary><div class="more-in"><div class="card sec mm-list"><div class="tag mm-lab">Rate card · per day</div>${rates.map(([k,a,b,n])=>`<div class="mm-pay"><span>${esc(k)}</span><span class="sub">${n} job${n===1?'':'s'}</span><b class="num">${a===b?money0(a):money0(a)+'–'+money0(b).replace('$','')}</b><span></span></div>`).join('')}</div></div></details>
-    <details class="card sec mm-list fold"><summary><b>Agents</b><span class="sub">${MODEL_AGENTS.length}</span></summary>${MODEL_AGENTS.map((a,i)=>`<details class="mm-ag"><summary><b>${esc(a.n)}</b><small>${esc(a.r)}</small></summary>${a.c.filter(c=>c.email||c.phone).map(c=>`<div class="mm-ct"><div style="min-width:0"><b>${esc(c.name)}</b>${c.title?`<small>${esc(c.title)}</small>`:''}</div><div class="mm-cv">${c.email?`<span>${esc(c.email)}</span>`:''}${c.phone?`<span class="num">${esc(c.phone)}</span>`:''}</div></div>`).join('')}</details>`).join('')}</details>`;
+    <details class="card sec fold mm-fold mm-agents"><summary><b>Agents</b><span class="sub">${MODEL_AGENTS.length}</span></summary>${MODEL_AGENTS.map((a,i)=>`<details class="mm-ag"><summary><b>${esc(a.n)}</b><small>${esc(a.r)}</small></summary>${a.c.filter(c=>c.email||c.phone).map(c=>`<div class="mm-ct"><div style="min-width:0"><b>${esc(c.name)}</b>${c.title?`<small>${esc(c.title)}</small>`:''}</div><div class="mm-cv">${c.email?`<span>${esc(c.email)}</span>`:''}${c.phone?`<span class="num">${esc(c.phone)}</span>`:''}</div></div>`).join('')}</details>`).join('')}</details>`;
 }
 /* b320: Tape vault — casting tapes, selfies and digitals moved out of Photos into Tega's own folder on your iPhone.
    Pick → copied in → iOS asks before removing the originals (they wait 30 days in Recently Deleted). Tap to watch or send to your agent.
@@ -6887,6 +6957,33 @@ for (const [a,T] of Object.entries(TTREES)){ for (const n of T.nodes) n.t=n.t===
   const sl=(b,k)=>T.nodes.find(n=>n.b===b&&n.k===k);
   T.x=[[0,'m2',1,'m1'],[1,'m2',2,'m1'],[0,'m4',1,'m3'],[1,'m4',2,'m3']].map(([b1,k1,b2,k2])=>{ const u=sl(b1,k1), v=sl(b2,k2); u.p.push(v.id); v.p.push(u.id); return [u.id,v.id]; });
   for (const n of T.nodes) if (n.t===6) Object.assign(n,{k:'cap',p:[]}); }
+/* b330: every tree is paced over five years from YOUR history. The first time the trees open with your data, the app measures each thing
+   it tracks (gym days, bench hours, posts…) and how fast you've been doing it, then locks a pace: beat your own monthly rate by 25%, and never
+   below 75% of a sensible "with effort" rate (so something you haven't started still gets real goals). Each node's goal = where you were +
+   that pace × its month on the timeline: roots ~month 1, first minors by month 4–8 (year 1), notables ~month 18 (year 2), upper minors
+   months 28–36 (year 3), keystones ~month 48 (year 4), the capstone at month 60 (year 5). Records (longest session, best streak) climb a
+   ladder instead. The pace never moves once set, so goals don't shift under you; nodes you already own stay yours. */
+const TP={gym:12,gymWeeks:3,prs:2,active:20,yoga:10,split:1,tax:400,ef:300,roth:500,net:1500,landed:1,income:4000,
+  setDays:3,castings:4,mIncome:4000,outreach:8,pitches:2,igF:150,
+  benchH:10,benchSess:8,done:.5,sold:.5,revenue:600,sketches:2,pins:10,pieces:1,shot:.6,
+  posts:8,ideasShot:4,weeks2:2,art:6,process:2,artWeeks:2.5,digi:4,gSess:8,canPlay:.5,riffs:2,gH:4,clean:.3,
+  hang:6,people:.5,nights:2,learn:15,learnOut:6,lrProofs:.5,lrDays:15,early:12,perfect:6,pWeeks:1,journal:12,resets:3};
+const TP_MAX={benchLong:[90,120,150,180,240,300],gLong:[20,30,45,60,90,120],artBest:[2,3,4,5,6,8],streak:[7,14,21,30,60,100]};
+// only things you log day by day have a rate worth reading; career totals (set days, money) use the effort pace from where you are now
+const TP_LOG=new Set(['gym','gymWeeks','prs','active','yoga','benchH','benchSess','sketches','pins','posts','ideasShot','weeks2','art','process','artWeeks','digi','gSess','riffs','gH','hang','nights','learn','learnOut','lrDays','early','perfect','journal','resets','outreach','pitches']);
+const TP_MO={root:1,m1:4,m2:8,nt:18,m3:28,m4:36,ks:48,cap:60}, TP_STEP={root:0,m1:1,m2:1,nt:2,m3:3,m4:3,ks:4,cap:5};
+const tYear=n=>Math.max(1,Math.ceil((TP_MO[n.k]||12)/12));
+function tPace(){ const T=TT_(); if (T.pace && T.pace.v===1) return T.pace;
+  const M=tMet(), act=Object.keys(S.days||{}).filter(k=>{ try { return dayActive(k); } catch(e){ return false; } }).sort(), mo=Math.max(1.5, act.length?daysBetween(act[0],TODAY)/30.4:0), base={}, rate={};
+  for (const [m,p] of Object.entries(TP)){ const v=+M[m]||0; base[m]=v; rate[m]=+Math.max(TP_LOG.has(m)?v/mo*1.25:0, p*.75).toFixed(2); }
+  for (const m of Object.keys(TP_MAX)) base[m]=+M[m]||0;
+  const P={v:1, at:TODAY, mo:+mo.toFixed(1), base, rate}; if (act.length) T.pace=P; return P; }   // locked only once your data is in
+const tNice=x=>{ const a=Math.abs(x), st=a<20?1:a<100?5:a<1000?25:a<10000?250:a<100000?1000:5000; return Math.ceil(x/st)*st; };
+function tGoal(n){ const m=n.g[0], P=tPace(), b=+P.base[m]||0;
+  if (TP_MAX[m]){ const L=TP_MAX[m].filter(x=>x>b); while (L.length<6) L.push(Math.round((L[L.length-1]||Math.max(1,b))*1.5)); return L[TP_STEP[n.k]??0]; }
+  if (P.rate[m]==null) return n.g[1];
+  return Math.max(tNice(b+P.rate[m]*(TP_MO[n.k]||12)), (n.r>1&&b<0?0:Math.floor(b))+1); }
+const tGoalBy=n=>addDays(tPace().at, Math.round((TP_MO[n.k]||12)*30.4));
 const T_TIER=[0,0,1,3,5,8,12];   // points already in a tree before a tier opens (keystones 8, capstone 12)
 const TT_KIND={root:'root',m1:'minor',m2:'minor',nt:'notable',m3:'minor',m4:'minor',ks:'keystone',cap:'capstone'};
 const TNODE={}; for (const [a,T] of Object.entries(TTREES)) for (const n of T.nodes) TNODE[n.id]={...n, a};
@@ -6916,11 +7013,11 @@ function tSeason(a,q=THIS_Q){ const krs=[]; for (const o of (S.quarters?.[q]?.ob
 function tSeasonCheck(){ const T=TT_(), got=[]; T.relics ||= []; for (const A of AREAS){ const s=tSeason(A.k); if (!s.done||s.relic) continue;
     T.relics.push({q:THIS_Q, a:A.k, at:TODAY}); const [nm,ic]=tSeaName(THIS_Q); S.wins.push({id:uid(), d:TODAY, text:`${ic} ${nm} relic · ${A.n} season branch complete`}); got.push(`${ic} ${A.n} · ${nm} relic`); }
   if (got.length) setTimeout(()=>{ try { confetti(); } catch(e){} toast(`${got.join(' · ')} — +5% XP for good`); },300); }
-function tState(id){ const n=TNODE[id], r=tRank(id), M=tMet(), inv=tInvested(n.a), gv=+M[n.g[0]]||0, deed=gv>=n.g[1], tierOk=inv>=T_TIER[n.t],
+function tState(id){ const n=TNODE[id], r=tRank(id), M=tMet(), inv=tInvested(n.a), gv=+M[n.g[0]]||0, goal=tGoal(n), deed=gv>=goal, tierOk=inv>=T_TIER[n.t],
     prev=(n.p||[]).map(id=>TNODE[id]), prevOk=!prev.length||prev.some(z=>tRank(z.id)>0), free=tFree(n.a);
   const can=r<n.r && deed && tierOk && prevOk && free>0, cls=r>=n.r?'max':r>0?'part':can?'open':tierOk&&prevOk?'deed':'lk';
-  return {n, r, gv, deed, tierOk, prev, prevOk, free, can, cls, need:T_TIER[n.t], inv}; }
-function tLearn(id){ const S0=tState(id); if (!S0.can) return toast(!S0.deed?`Needs ${S0.n.g[1].toLocaleString('en-US')} ${tUnit(S0.n.g[0])} first`:!S0.tierOk?`Put ${S0.need} points into ${AREAS.find(x=>x.k===S0.n.a).n} first`:!S0.prevOk?`Learn ${S0.prev.map(z=>z.n).join(' or ')} first`:'No points left here — earn more with feats');
+  return {n, r, gv, goal, deed, tierOk, prev, prevOk, free, can, cls, need:T_TIER[n.t], inv}; }
+function tLearn(id){ const S0=tState(id); if (!S0.can) return toast(!S0.deed?`Needs ${S0.goal.toLocaleString('en-US')} ${tUnit(S0.n.g[0])} first`:!S0.tierOk?`Put ${S0.need} points into ${AREAS.find(x=>x.k===S0.n.a).n} first`:!S0.prevOk?`Learn ${S0.prev.map(z=>z.n).join(' or ')} first`:'No points left here — earn more with feats');
   TT_().log.push({id, d:TODAY, r:S0.r+1}); commit(); try { sprPlay('hype'); } catch(e){} if (S0.n.t>=5||S0.r+1===S0.n.r) try { confetti(); } catch(e){}
   toast(`${S0.n.ic} ${S0.n.n}${S0.n.r>1?` ${S0.r+1}/${S0.n.r}`:''} learned`); tOpen(id); }
 function tRespec(){ const T=TT_(); let n=0; for (const id of Object.keys(TNODE)){ const r=tRank(id), g=tGift(id)?1:0; if (r>g){ T.log.push({id, d:TODAY, r:g}); n+=r-g; } } return n; }
@@ -7003,7 +7100,7 @@ function tTree(a){ const T=TTREES[a], A=AREAS.find(x=>x.k===a), free=tFree(a), i
     <div class="tt-map" style="height:${TT_H}px"><svg viewBox="0 0 100 ${TT_H}" preserveAspectRatio="none" aria-hidden="true"><defs>
       <linearGradient id="tbg-holo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb3f0"/><stop offset=".35" stop-color="#b8c8ff"/><stop offset=".7" stop-color="#9ff7ff"/><stop offset="1" stop-color="#ffe6a8"/></linearGradient>
       <linearGradient id="tbg-chrome" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d8996"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#7d8996"/></linearGradient></defs>${G.join('')}${E.join('')}</svg><i class="tt-art"></i>
-      <i class="tt-halo" style="top:${TT_CAP.y}px"></i><span class="tt-tier" style="top:${TT_POS.ks[0][1]-58}px">Keystones</span><span class="tt-tier" style="top:${TT_POS.nt[0][1]-52}px">Notables</span>
+      <i class="tt-halo" style="top:${TT_CAP.y}px"></i>${[[118,'Year 5 ↑ · Year 4'],[258,'Year 3'],[345,'Year 2'],[470,'Year 1']].map(([y,t])=>`<span class="tt-yr" style="top:${y}px"><b>${t}</b></span>`).join('')}
       ${T.nodes.map(node).join('')}<button class="tt-n max k-st" style="left:${TT_START.x}%;top:${TT_START.y}px" onclick="toast('${free?`${free} ${esc(A.n)} point${free===1?'':'s'} to spend`:`Earn ${esc(A.n)} points with its feats`}')" aria-label="${esc(A.n)} start"><i class="sh"></i><span>${tIco(TI_A[a])}</span><small>${esc(A.n)}</small></button>${rel}</div>
     ${tSeaHtml(a)}
     <div class="tt-foot">${tEarned(a)} earned from ${esc(A.n)} feats${R.length?` · ${R.length} from relics`:''} · ${tCost(a)} spent${T.nodes.some(n=>tGift(n.id))?' · old perks kept free':''}</div></div>`; }
@@ -7013,20 +7110,21 @@ function tSeaHtml(a){ const s=tSeason(a), A=AREAS.find(x=>x.k===a), [nm,ic]=tSea
     ${s.nodes.length?`<div class="tt-sea-row">${row}<span class="tt-sn rl ${s.relic?'on':''}"><i>${ic}</i><small>${s.relic?'Relic won':'Relic'}</small></span></div>
     <div class="tt-sea-f">${s.relic?`Grafted ${nice(s.relic.at)}: +1 point and +5% XP on ${TCN[TT_COND[a]]}, for good.`:`Hit every goal → relic: +1 point and +5% XP on ${TCN[TT_COND[a]]} for good. Unfinished nodes melt when the season ends.`}</div>`
     :`<button class="btn ghost sm" style="width:100%;justify-content:center" onclick="go('quarter')">Set a ${esc(A.n)} goal to grow this season’s branch</button>`}</div>`; }
+const tMonth=k=>{ const d=parseD(k); return d.toLocaleDateString('en-US',{month:'short',year:'numeric'}); };
 function tSeaKR(a,i){ const x=tSeason(a).nodes[i]; if (!x) return; const k=x.k; toast(`${x.done?'✓':'◻'} ${k.text} · ${(+k.current||0).toLocaleString('en-US')}/${(+k.target||0).toLocaleString('en-US')}${k.unit?' '+k.unit:''}`); }
 function tOpen(id){ const s0=tState(id), n=s0.n, A=AREAS.find(x=>x.k===n.a), T=TTREES[n.a], br=n.t===6?['Capstone','👑']:T.br[n.b];
   const chk=(ok,t)=>`<div class="tt-req ${ok?'ok':''}"><i>${ok?'✓':'✗'}</i><span>${t}</span></div>`;
   const reqs=s0.r>=n.r?'':`${chk(s0.free>0,`1 ${esc(A.n)} point <span class="sub">· you have ${s0.free}</span>`)}${n.t>1?chk(s0.tierOk,`${s0.need} points already in ${esc(A.n)} <span class="sub">· you have ${s0.inv}</span>`):''}${s0.prev.length?chk(s0.prevOk,`${s0.prev.map(z=>esc(z.n)).join(' or ')} learned`):''}
-    ${chk(s0.deed,`${n.g[1].toLocaleString('en-US')} ${esc(tUnit(n.g[0]))} <span class="sub">· ${Math.min(s0.gv,n.g[1]).toLocaleString('en-US')} so far</span>`)}${s0.deed?'':`<div class="tt-bar"><u style="width:${Math.min(100,s0.gv/n.g[1]*100)}%"></u></div>`}`;
+    ${chk(s0.deed,`${s0.goal.toLocaleString('en-US')} ${esc(tUnit(n.g[0]))} <span class="sub">· ${Math.min(s0.gv,s0.goal).toLocaleString('en-US')} so far</span>`)}${s0.deed?'':`<div class="tt-bar"><u style="width:${Math.max(0,Math.min(100,s0.gv/s0.goal*100))}%"></u></div><div class="sub" style="margin:2px 0 0 26px">Year ${tYear(n)} goal · on pace by ${esc(tMonth(tGoalBy(n)))}</div>`}`;
   const ab=n.fx.ab&&s0.r?(()=>{ const ready=tAbReady(id), l=tAbLast(id); return `<button class="btn" style="width:100%;justify-content:center;margin-top:12px" ${ready?`onclick="tUse('${id}')"`:'disabled'}>${ready?`⚡ Activate ${esc(n.n)}`:`Recharging · ready ${nice(addDays(l,n.fx.cd))}`}</button>${l?`<div class="sub" style="text-align:center;margin-top:6px">Last used ${nice(l)} · ${(TT_().ab[id]||[]).length}× total</div>`:''}`; })():'';
   gSheet(`<div class="tt-sh" style="--c:${A.c}"><button class="linkbtn" onclick="areaOpen('${n.a}')">‹ ${esc(A.n)} tree</button>
-    <div class="tt-big ${s0.cls} ${n.fx.ab?'ab':''}"><span>${n.ic}</span></div><span class="tag" style="display:block;text-align:center">${br[1]} ${esc(br[0])} · ${TT_KIND[n.k]||'tier '+n.t}${n.fx.ab?' · ability':''}</span>
+    <div class="tt-big ${s0.cls} ${n.fx.ab?'ab':''}"><span>${n.ic}</span></div><span class="tag" style="display:block;text-align:center">${br[1]} ${esc(br[0])} · ${TT_KIND[n.k]||'tier '+n.t} · year ${tYear(n)}${n.fx.ab?' · ability':''}</span>
     <h2 class="g-sh-t" style="text-align:center;margin-top:4px">${esc(n.n)}</h2>${n.r>1?`<div class="tt-pips big">${Array.from({length:n.r},(_,i)=>`<u class="${i<s0.r?'on':''}"></u>`).join('')}</div>`:''}
     <div class="tt-eff">${esc(tDesc(n,Math.max(1,s0.r)))}${n.r>1&&s0.r<n.r&&s0.r>0?`<div class="sub">Next rank: ${esc(tDesc(n,s0.r+1))}</div>`:''}${tGift(id)?'<div class="sub">Kept from your old perks — free</div>':''}</div>
     ${reqs?`<div class="tag" style="margin:14px 0 6px">${s0.r?'Next rank needs':'Needs'}</div>${reqs}`:''}
     ${s0.r<n.r?`<button class="btn" style="width:100%;justify-content:center;margin-top:14px" ${s0.can?`onclick="tLearn('${id}')"`:'disabled'}>${s0.can?`Learn${s0.r?' next rank':''} · 1 point`:s0.deed?'Not yet':'Do the work first'}</button>`:`<div class="tt-maxed">${s0.r?'MAXED':''}</div>`}${ab}</div>`); }
 function tHub(){ const rows=AREAS.map(A=>{ const I=areaInfo(A.k), f=tFree(A.k), sp=tSpec(A.k), own=TTREES[A.k].nodes.filter(n=>tRank(n.id)).length;
-    return `<button class="tt-hrow" style="--c:${A.c}" onclick="tAreaTab='tree';areaOpen('${A.k}')"><b>${esc(A.n)}</b><span>LV ${I.lvl} · ${esc(I.rank||'')}${sp?` · ${sp[1]} ${esc(sp[0])}`:''}</span><small>${own}/${TTREES[A.k].nodes.length} talents</small>${f?`<em>${f}</em>`:'<i>›</i>'}</button>`; }).join('');
+    return `<button class="tt-hrow" style="--c:${A.c}" onclick="tAreaTab='tree';areaOpen('${A.k}')"><b>${esc(A.n)}</b><span>LV ${I.lvl} · ${esc(I.rank||'')}${sp?` · ${sp[1]} ${esc(sp[0])}`:''}</span><small>${own}/${TTREES[A.k].nodes.length} talents · 5-year tree</small>${f?`<em>${f}</em>`:'<i>›</i>'}</button>`; }).join('');
   const tot=AREAS.reduce((s,A)=>s+tFree(A.k),0);
   return `<div class="tt-sh"><span class="tag">Skills</span><h2 class="g-sh-t">Your talent trees</h2><div class="sub" style="margin-bottom:12px">Each area earns points from its own feats — real progress only. Spend them to shape who you’re becoming.${tot?` <b style="color:var(--gold)">${tot} to spend.</b>`:''}</div>
     <div class="tt-hub">${rows}</div><button class="btn ghost sm" style="width:100%;justify-content:center;margin-top:12px" onclick="charGo('overview')">Stats · titles ›</button></div>`; }
@@ -10769,10 +10867,25 @@ function zoomApply(){ let z=1; try { z=+localStorage.getItem('tega-zoom')||1; } 
 setTimeout(zoomApply, 0);
 // ---- search everything
 let srQ='';
-function searchOpen(){ srQ=''; gSheet(`<div class="sr-top"><input class="inp" id="sr-in" placeholder="Search clients, ideas, money, people…" autocomplete="off" oninput="srQ=this.value;searchRender()"></div><div id="sr-out" class="sr-out"></div>`); const m=document.getElementById('g-sheet'); if (m) m.dataset.k='search'; setTimeout(()=>document.getElementById('sr-in')?.focus(),50); searchRender(); }
-function searchRender(){ const out=document.getElementById('sr-out'); if (!out) return; const q=srQ.trim().toLowerCase(); if (q.length<2){ out.innerHTML='<div class="sub" style="padding:10px 2px">Type at least 2 letters.</div>'; return; }
+/* b330: every place in the app, findable by name — search shows these first, and an empty search lists the main ones.
+   Add a page or tab → add one line here. [name, extra words people might type, how to get there, shown when the box is empty] */
+const PLACES=[['Today','home day habits top 3 check in',"go('today')",1],['Week plan','weekly review sunday',"go('week')"],['OKRs','this quarter goals key results season goals',"go('quarter')",1],['Year goals','annual',"go('year')"],['5-year vision','vision five year',"go('vision')"],
+  ['Calendar','deadlines due late bills dates',"dlSheetOpen()",1],['Quests','quest log daily weekly',"questLogOpen()"],
+  ['Modeling · bookings','jobs castings options model',"mTab='now';go('model')"],['Modeling · clients','client brands',"mTab='clients';go('model')"],['Modeling · statement','book owed unpaid agency',"mTab='book';go('model')"],['Modeling · rate card','card comp',"mTab='card';go('model')"],['Modeling · tapes','self tape vault',"mTab='vault';go('model')"],
+  ['Content · plan','posts schedule',"ctTab='plan';go('content')"],['Content · ideas','idea bank',"ctTab='ideas';go('content')"],['Content · create','art drawing guitar',"ctTab='create';go('content')"],['Content · stats','instagram tiktok followers',"ctTab='stats';go('content')"],
+  ['Datum · roadmap','grillz phases',"dView='roadmap';go('datum')"],['Datum · bench','bench session timer',"dView='bench';go('datum')"],['Datum · casters','casting house',"dView='casters';go('datum')"],['Datum · orders','sales customers',"dView='biz';go('datum')"],
+  ['Gym','workout lift exercises body',"go('gym')",1],['Night stretch','yoga stretch mobility',"gTab='recovery';go('gym')"],
+  ['Money','now checks landed split',"moneyTab='now';go('money')",1],['Money · accounts','bank balances net worth',"moneyTab='accounts';go('money')"],['Money · spending','budget transactions',"moneyTab='spending';go('money')"],['Money · taxes','tax buffer deductions',"moneyTab='taxes';go('money')"],
+  ['Circle','friends people hangouts social',"go('social')",1],['Learning','learn lessons courses daily 10 review',"go('learn')",1],
+  ['Character','avatar level stats',"charGo('overview')",1],['Skill trees','talents skills points tree',"charGo('skills')",1],['Look','avatar outfit evolve style',"charGo('look')"],['Collection','loot chests trophies titles',"charGo('collection')"],
+  ['City','town map buildings',"go('city')"],['Bosses','boss fight',"go('bosses')"],['Shop','gold spend',"shopOpen()"],['Season','season pass tiers',"seasonOpen()"],
+  ['Settings','preferences app sync backup theme appearance text size',"stMode='settings';setTab='app';go('evolve')",1],['Coach','ask tega claude chat help',"coachOpen()"]];
+function searchOpen(){ srQ=''; gSheet(`<div class="sr-top"><input class="inp" id="sr-in" placeholder="Search anything…" autocomplete="off" oninput="srQ=this.value;searchRender()"></div><div id="sr-out" class="sr-out"></div>`); const m=document.getElementById('g-sheet'); if (m) m.dataset.k='search'; setTimeout(()=>document.getElementById('sr-in')?.focus(),50); searchRender(); }
+function searchRender(){ const out=document.getElementById('sr-out'); if (!out) return; const q=srQ.trim().toLowerCase(); const pl=L=>L.map(([t,,act])=>`<button class="sr-r sr-pl" onclick="gSheetClose();${act.replace(/"/g,'&quot;')}"><b>${esc(t)}</b><small>›</small></button>`).join('');
+  if (q.length<2){ out.innerHTML=`<div class="sr-g">Jump to</div><div class="sr-pls">${pl(PLACES.filter(x=>x[3]))}</div><div class="sub" style="padding:10px 2px">Or type anything — a client, a person, an idea, an amount.</div>`; return; }
   const has=t=>String(t||'').toLowerCase().includes(q), G=[], grp=(name,items)=>{ if (items.length) G.push(`<div class="sr-g">${name}</div>`+items.slice(0,6).map(([t,s,act])=>`<button class="sr-r" onclick="gSheetClose();${act.replace(/"/g,'&quot;')}"><b>${esc(t)}</b>${s?`<small>${esc(s)}</small>`:''}</button>`).join('')); };
   const J=v=>JSON.stringify(v);
+  { const P=PLACES.filter(([t,w])=>has(t)||has(w)); if (P.length) G.push(`<div class="sr-g">Places</div>${pl(P.slice(0,6))}`); }
   try { const E=mAll(); const cl=[...new Set(E.map(e=>e.c))].filter(has); grp('Clients', cl.map(c=>[c, E.filter(e=>e.c===c&&e.t==='job').length+' jobs', `mClient=${J(c)};mTab='now';mHist='jobs';go('model')`]));
     grp('Bookings', E.filter(e=>has(e.c)||has(e.p)).sort((a,b)=>String(b.start).localeCompare(a.start)).map(e=>[`${e.c}${e.p?' · '+e.p:''}`, `${(MT[e.t]||[e.t])[0]} · ${nice(e.start)}`, `go('model');setTimeout(()=>mSheet(${J(e.id)}),300)`])); } catch(e){}
   try { grp('Ideas', (S.ideas||[]).filter(x=>has(x.text)).map(x=>[x.text, ideaStage(x), `ctTab='ideas';go('content')`])); } catch(e){}
@@ -12644,6 +12757,7 @@ function charGo(t,a){ try { gSheetClose(); } catch(e){} chTab=t||'overview'; if 
 function charHead(){ const xp=computeXP(), lv=levelFor(xp), lo=xpForLevel(lv), hi=xpForLevel(Math.min(MAXLVL,lv+1));   // streak, shields, gold and season live in the pills up top — not repeated here
   const pct=lv>=MAXLVL?100:Math.round((xp-lo)/Math.max(1,hi-lo)*100);
   return `<div class="card sec ch-hd"><div class="ch-hd-r"><button class="avatar ringed ch-av" style="--ringc:${ringCss(lv)}" onclick="levelScene(${lv})" aria-label="Replay your level-up">${avatarSVG(stageOf(lv),'smile',84,S.evo||{})}<span class="lvlpip num">${lv}</span></button>
+    <button class="iconbtn ch-gear" onclick="stMode='settings';setTab='app';render();window.scrollTo(0,0)" aria-label="Settings">⚙️</button>
     <div class="ch-hd-t"><b>Lv ${lv} · ${esc(titleOf(lv))}</b>${titleNow()?`<div class="ttl-now">« ${esc(titleNow())} »</div>`:''}<div class="ch-xp"><u style="width:${pct}%"></u></div><small class="sub">${lv>=MAXLVL?'Max level':`${(hi-xp).toLocaleString()} XP to Lv ${lv+1} · ${weekXp(THIS_WEEK).toLocaleString()} this week`}</small></div></div>
     </div></div>`; }
 function charAreas(){ const L=statAttrs(), A30=Object.fromEntries(L.map(a=>[a.n,a])), top=L.slice().sort((x,y)=>y.v-x.v)[0], low=L.slice().sort((x,y)=>x.v-y.v)[0];
