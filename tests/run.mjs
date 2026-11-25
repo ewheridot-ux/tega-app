@@ -732,6 +732,12 @@ const b330 = await page.evaluate(async () => { const r = {}, w = ms => new Promi
   r.noDupNext = !document.querySelector('.lf-nx');
   charGo('overview'); await w(200); r.gear = !!document.querySelector('.ch-gear'); go('today'); return r; });
 ok('5-year trees paced from your history (year 1 → 5, locked); search jumps to any place; Learning coach + chapter path, no duplicate Up next; settings one tap from Character', Object.values(b330).every(Boolean), JSON.stringify(b330));
+// b330: one page skeleton (area chip → tabs → page) and one XP toast (+N XP · Area)
+const sk = await page.evaluate(async () => { const r = {}, w = ms => new Promise(z => setTimeout(z, ms));
+  for (const v of ['model', 'content', 'datum', 'money', 'learn']) { go(v); await w(150); const K = [...document.getElementById('view').children], c = K.findIndex(e => e.classList.contains('ar-chip')), t = K.findIndex(e => e.matches('.seg.sec') && e.querySelector('button.on')); r[v] = c >= 0 && t === c + 1; }
+  go('gym'); await w(100); const before = { xp: computeXP() - 15, lvl: levelFor(computeXP()), badges: Object.keys(S.badges).length }; celebrateDiff(before); const el = document.getElementById('toast'); r.chip = /\+15 XP · Body/.test(el.textContent);
+  toast('Workout logged · +15 XP'); r.once = (el.textContent.match(/XP/g) || []).length === 1 && /Workout logged/.test(el.textContent); go('today'); return r; });
+ok('every page: area chip → tabs → page; XP shows once, as "+N XP · Area"', Object.values(sk).every(Boolean), JSON.stringify(sk));
 ok('no errors anywhere', errors.length === 0, errors[0]);
 await browser.close();
 console.log(fails ? `\n${fails} check(s) failed` : '\nall checks passed');

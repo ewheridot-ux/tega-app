@@ -751,6 +751,7 @@ html[data-skin] body,html[data-skin] button,html[data-skin] input,html[data-skin
 html[data-skin] .btn,html[data-skin] .tag,html[data-skin] .seg button,html[data-skin] .chip,html[data-skin] .nav button span,html[data-skin] .sub,html[data-skin] h3{font-family:var(--ui);word-spacing:normal}
 html[data-skin="crt"] .btn{font-weight:700;letter-spacing:.04em;line-height:1.2}html[data-skin="crt"] .tag{letter-spacing:.12em;font-weight:700;font-size:11.5px}html[data-skin="crt"] .seg button,html[data-skin="crt"] .chip{letter-spacing:.06em;font-weight:600}
 html[data-skin="crt"] h3{font-weight:600;font-size:15px}
+.toast .tx{display:inline-block;margin-left:8px;padding:2px 9px;border-radius:99px;background:var(--c);color:#0b0b0b;font-weight:800;font-size:12.5px;font-family:var(--ui,Inter,sans-serif);vertical-align:1px}.toast.xp{padding:6px}.toast.xp .tx{margin:0;font-size:14px;padding:5px 12px}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -2801,6 +2802,7 @@ function snapshotProgress(){ return { xp:computeXP(), lvl:levelFor(computeXP()),
 function celebrateDiff(before){
   const newly = evalBadges();
   const xp = computeXP(), lvl = levelFor(xp);
+  if (xp > before.xp) xpChip(xp - before.xp);
   if (newly.length) { newly.forEach(b => toast(b.secret ? `🕵️ Secret badge found: ${b.name}` : `🏆 Badge unlocked: ${b.name}`)); confetti(); }
   if (lvl > before.lvl) { S.lvlAt ||= {}; for (let m=5;m<=MAXLVL;m+=5) if (m>before.lvl && m<=lvl && !S.lvlAt[m]) S.lvlAt[m]=TODAY; }
   if (lvl > before.lvl) { S.lvlSeen=lvl; levelScene(lvl); }
@@ -2809,8 +2811,17 @@ function celebrateDiff(before){
 let toastT, toastQ=[];
 // toast with one action button (e.g. Undo) — stays 5s
 function toastAct(m, lab, fn){ if (window._bulkQuiet) return; let el=document.getElementById('toast-act'); if (!el){ el=document.createElement('div'); el.id='toast-act'; el.className='toast-act'; document.body.appendChild(el); } el.innerHTML=`<span>${esc(m)}</span><button>${esc(lab)}</button>`; el.querySelector('button').onclick=()=>{ el.classList.remove('show'); fn(); }; el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),5000); }
-function toast(m){ if (window._bulkQuiet) return; const el=document.getElementById('toast'); el.textContent=m; el.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2200); }
-function toastXp(n){ toast(`+${n} XP`); }
+/* b330: one XP toast — every gain shows the same "+N XP · Area" badge in that area's colour; a message that comes with it keeps its words
+   and carries the badge (its own "+N XP" text is dropped so the number shows once). */
+let _xpChip=null;
+function toast(m){ if (window._bulkQuiet) return; const el=document.getElementById('toast'); const fresh=_xpChip && Date.now()-_xpChip.t<900;
+  if (fresh) m=String(m).replace(/\s*[·—–-]?\s*\+\s?\d[\d,]*\s*XP\b/,'').trim();
+  el.textContent=m; if (fresh) el.insertAdjacentHTML('beforeend',_xpChip.html); el.classList.remove('xp'); el.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),2200); }
+function xpChip(n){ if (window._bulkQuiet || !(n>0)) return; const a=AREAS.find(x=>x.k===(AREA_VIEW[view]||'')), el=document.getElementById('toast'); if (!el) return;
+  const html=`<b class="tx" style="--c:${a?a.c:'#39ff9f'}">+${Math.round(n).toLocaleString('en-US')} XP${a?` · ${esc(a.n.split(' ')[0])}`:''}</b>`; _xpChip={html, t:Date.now()};
+  if (el.classList.contains('show') && !el.querySelector('.tx')) { el.insertAdjacentHTML('beforeend',html); return; }
+  el.innerHTML=html; el.classList.add('show','xp'); clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show','xp'),1800); }
+function toastXp(n){ xpChip(n); }
 function confetti(){ const c=document.getElementById('confetti'); const cols=['#8b5cf6','#22d3ee','#fbbf24','#22c55e','#f97316','#ec4899']; for(let i=0;i<60;i++){ const p=document.createElement('i'); p.style.left=Math.random()*100+'vw'; p.style.background=cols[i%cols.length]; p.style.animationDelay=(Math.random()*.4)+'s'; p.style.transform=`rotate(${Math.random()*360}deg)`; c.appendChild(p); setTimeout(()=>p.remove(),2000);} }
 
 /* ===================== money engine ===================== */
@@ -3548,6 +3559,11 @@ function lifeNext(){ try { const c=lrContinue(); if (c) return {t:`${c.s.t} · $
 // b315: “Next up” opens that subject and scrolls to its lesson list — before, on the Learning page itself it only scrolled to the top
 function lrGoNext(id){ lrTab=id; const jump=()=>setTimeout(()=>{ const c=document.getElementById('lr-upnext'); if (c) c.scrollIntoView({behavior:'smooth', block:'start'}); }, 80);
   if (view==='learn'){ render(); jump(); } else { location.hash='learn'; jump(); } }
+/* b330: every page has the same skeleton — (Life's header) → the area chip → the page's tabs → the page. A page's own hero sits under
+   its tabs, so the tabs are always in the same place when you move between pages. Done once after each render, for every page. */
+function pageSkeleton(){ const v=document.getElementById('view'); if (!v) return; const K=[...v.children], chip=K.find(e=>e.classList.contains('ar-chip')), tabs=K.find(e=>e.matches('.seg.sec')&&e.querySelector('button.on'));
+  if (!tabs) return; if (chip && (tabs.compareDocumentPosition(chip)&Node.DOCUMENT_POSITION_FOLLOWING)) { tabs.before(chip); return; }
+  const at=chip||K.find(e=>e.classList.contains('lf-hero')); if (at && at.nextElementSibling!==tabs) at.after(tabs); }
 function lifeHero(){ try { const [qs]=qRange(THIS_Q), wk=weekMonday(THIS_WEEK), mo=TODAY.slice(0,7)+'-01', pad=n=>String(Math.round(+n||0)).padStart(2,'0');
   const rows=[['social','Circle','nights out this quarter',fact('events',qs,TODAY)],['learn','Learning','lessons + project hours this month',lrLessonsDone(mo,TODAY)+Math.round(fact('hustlehrs',mo,TODAY))]], nx=lifeNext();
   return `<div class="lf-hero"><span class="lf-stk">WK ${String(THIS_WEEK).split('W').pop()} · ${MON3[+TODAY.slice(5,7)-1].toUpperCase()}</span><h1 class="lf-h">LIFE <span>RN.</span></h1>
@@ -3601,6 +3617,7 @@ function render(){
     <div class="nav" data-hl="${LIFE.some(([k])=>k===view)?'study':({model:'holo',content:'vf',datum:'chrome',gym:'arise',money:'lab'})[view]||'crt'}">${nav.map(([v,l])=>v==='add'?`<button class="add" onclick="openQuick()" aria-label="${l}">${ICONS.add}<span>${l}</span></button>`:`<button class="${view===v||(v==='today'&&GOALS.some(([k])=>k===view))||(v==='life'&&LIFE.some(([k])=>k===view))?'on':''}" data-tab="${v}" onclick="if(!navHeld())go('${v}')" aria-label="${l}">${ICONS[v]||''}<span>${l}</span></button>`).join('')}</div>
     <div id="view">${view==='today'?goalsTabs():GOALS.some(([k])=>k===view)?goalsTabs()+goalRings(view):LIFE.some(([k])=>k===view)?lifeHero()+lifeTabs():''}${AREA_VIEW[view]?areaChip(AREA_VIEW[view]):''}${({today:vToday,quests:vQuests,week:vWeek,quarter:vQuarter,year:vYear,vision:vVision,datum:vDatum,model:vModel,money:vMoney,deadlines:vDeadlines,content:vContent,gym:vGym,trophies:vTrophies,evolve:vEvolve,social:vSocial,bosses:vBosses,city:vCity,hustle:()=>{ setTimeout(()=>{ lrTab=(lrSubs().find(x=>x.link==='hustle')||{}).id||lrTab; location.hash='learn'; },0); return ''; },learn:vLearning})[view]()}</div>`;
   if (window.__avPaint==null) try { const p=document.querySelector('.pfp-sm img, .pfp-sm svg'); if (p){ const first=(window.__r1||0)===1, t=()=>{ if (window.__avPaint==null){ window.__avPaint=performance.now(); window.__avFirst=first; } }; if (p.tagName!=='IMG'||p.complete) t(); else p.addEventListener('load',t,{once:true}); } } catch(e){}
+  try { pageSkeleton(); } catch(e){}
   dlSheetRefresh(); try { if (_swAnim) swAnimApply(); else if (_pgLast!==view){ const v=document.getElementById('view'); if (v&&_pgLast&&!pgDissolve(_oldR&&_oldV, _oldR)){ v.classList.remove('pg-in'); void v.offsetWidth; v.classList.add('pg-in'); } } _pgLast=view; } catch(e){}
   try { swRememberSoon(); } catch(e){}
   checkEvo();
