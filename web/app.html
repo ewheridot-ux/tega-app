@@ -2326,7 +2326,7 @@ body:has(#yg-ov) #g-sheet{z-index:10001}
 
 <script>/* b302: start decoding your saved avatar before the big script is even read, so it's ready for the first frame */try{var _pc=JSON.parse(localStorage.getItem('tega-pfp'));if(_pc&&_pc.url){window.__pfpPre=new Image();__pfpPre.decoding='sync';__pfpPre.src=_pc.url;}}catch(e){}</script>
 <script>
-/*SEED:BEGIN*/const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
+/*SEED:BEGIN*/const ME={client:'your top client', clientS:'Top client', clientRe:/(?!)/, agency:'your agency', ag:'Agency', agRe:/(?!)/, payer:'Agency', payRe:/(?!)/, employer:'your old employer', broker:'your brokerage', modelCtx:'', planCtx:'', debtCtx:''};const SEED_ACCTS={bills:{}, dl:[], roth:0, a1:[], a2:[]}, DEADLINES_SEED=[], OKR_SUGGEST={}, YEAR_SUGGEST={}, MALIAS=[];const SEED_INIT=(kr,obj)=>({v:2, updatedAt:0, vision:{statement:'', milestones:[]}, years:{[THIS_Y]:{objectives:[]}}, quarters:{[THIS_Q]:{objectives:['modeling','grillz','content','financial','personal','relationships','fitness','learning'].map(t=>obj(t,'Goal',[kr('Key result',10,'')])), review:{}}}, weeklyTemplate:[], habits:[{id:'gym',name:'Gym',icon:'💪'},{id:'content',name:'Filmed / posted',icon:'📱'},{id:'expense',name:'Logged expenses',icon:'💰'},{id:'datum',name:'Bench session',icon:'◆'},{id:'read',name:'Read 30 min',icon:'📖'},{id:'journal',name:'Journal',icon:'✍️'},{id:'morning',name:'Morning routine',icon:'🌅'},{id:'guitar',name:'Guitar / art',icon:'🎸'}], weeks:{}, days:{}, wins:[], badges:{}, evo:{}, rewards:{review4:'',gym4:'',post4:'',fullstack:'',closer:''}, money:{s:{taxRate:0.3,rent:0,car:0,grocW:0,elec:0,gas:0,ins:0,net:0,efMonthly:0,retMonthly:0,cushionMonthly:0,flexPerCheck:0,efMonths:6,rothLimit:7500,efNow:0,taxBufNow:0,rothYtd:0}, checks:[], taxPaid:[]}});const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};/*SEED:END*/
 var BLOBURL = window.BLOBURL || '/_blob/';
 
 const BUILD='b330';
@@ -2400,86 +2400,13 @@ const XP = { checkin:15, top3:10, habit:5, dayBonus:15, win:10, init:15, review:
 const QSIZE = { S:{name:'Small',xp:5,icon:'🗡️',hint:'under 30 min'}, M:{name:'Medium',xp:15,icon:'⚔️',hint:'an hour or two'}, B:{name:'Boss',xp:40,icon:'👹',hint:'a real fight · one at a time'} };
 
 const DUES = [['2027-01-15','Q4 2026 est. (size via A − B)'],['2027-04-15','2026 return + Q1 2027'],['2027-06-15','Q2 2027'],['2027-09-15','Q3 2027'],['2028-01-18','Q4 2027']];
-const DEADLINES = [['2026-10-02','Schneider 401k call'],['2026-10-06','Fidelity accounts + Tax Buffer bucket'],['2026-10-12','TikTok/IG handles + bios'],['2026-10-31','Own grillz set cast & fitting'],['2026-11-16','CPA intro calls done'],['2026-11-30','Datum price sheet · DBA · EIN'],['2026-12-28','Q4 review → write Q1 2027 OKRs'],['2026-12-31','5 Datum sales · first CAD delivery'],['2027-01-15','Q4 taxes due'],['2027-04-15','2026 return + Q1 est.'],['2027-06-15','Q2 est. taxes'],['2027-09-15','Q3 est. taxes'],['2028-01-18','Q4 2027 est. taxes']];
+const DEADLINES = DEADLINES_SEED;   // b330: your own dates live in the private seed
 
 /* ===================== seed state ===================== */
-function seed(){
+function seed(){   // b330: a new device's starting state (your vision, goals, money settings) lives in the private seed block
   const kr = (text,target,unit='',current=0) => ({id:uid(),text,target,current,unit});
   const obj = (track,title,krs) => ({id:uid(),track,title,krs});
-  return {
-    v:2, updatedAt:0,
-    vision:{
-      statement:'By 2031: engineering, modeling and Datum Grillz pay for a life I designed — a house in Chicago, a six-month cushion, and work nobody can take away from me.',
-      milestones:[
-        {id:uid(),year:'2027',track:'financial',text:'Emergency fund full ($15,347) → the $500/check becomes the House bucket',done:false},
-        {id:uid(),year:'2027',track:'grillz',text:'Datum Grillz: 20 orders, gold option, Shopify storefront',done:false},
-        {id:uid(),year:'2027',track:'financial',text:'SEP-IRA funded at 20% of net · CPA files the 2026 return',done:false},
-        {id:uid(),year:'2028',track:'modeling',text:'$40K+/yr modeling with 2–4 bookings a month',done:false},
-        {id:uid(),year:'2028',track:'content',text:'10K followers · "the engineer who makes grillz" is a known account',done:false},
-        {id:uid(),year:'2028',track:'grillz',text:'Datum Grillz LLC · $10K+/yr · referral network of dentists & jewelers',done:false},
-        {id:uid(),year:'2029',track:'financial',text:'House down payment saved ($40K+)',done:false},
-        {id:uid(),year:'2029',track:'learning',text:'Shipped one real software/hardware product of my own',done:false},
-        {id:uid(),year:'2030',track:'financial',text:'Own a home in Chicago',done:false},
-        {id:uid(),year:'2031',track:'financial',text:'$500K net worth · fully self-directed income',done:false},
-        {id:uid(),year:'2031',track:'relationships',text:'A real Chicago crew — people who show up',done:false},
-      ]
-    },
-    years:{
-      '2026':{objectives:[
-        obj('modeling','Make modeling the stable base',[kr('Modeling income (Sep–Dec)',16000,'$'),kr('Every check: 32.2% moved same day',8,'checks')]),
-        obj('grillz','Prove Datum Grillz is a real product',[kr('Sets made end-to-end',2,''),kr('Paid orders',5,''),kr('Revenue',500,'$')]),
-        obj('content','Start the account that owns the angle',[kr('Posts published',26,''),kr('Combined followers',100,'')]),
-        obj('financial','Run self-employment like a business',[kr('401(k) rolled to Fidelity',1,''),kr('SEP-IRA + Rollover IRA opened',1,''),kr('Tax Buffer bucket funded at 32.2%',1,''),kr('CPA engaged',1,'')]),
-        obj('personal','Organized, honest, consistent',[kr('Journal entries',60,''),kr('Books finished',1,'')]),
-        obj('relationships','Build the Chicago circle',[kr('Hangouts / events',8,''),kr('People seen twice',3,'')]),
-        obj('fitness','Gym is non-negotiable',[kr('Gym sessions',39,''),kr('Home-cooked meals',26,'')]),
-        obj('learning','Keep building',[kr('Coding/design project',1,''),kr('Course lessons',10,'')]),
-      ]}
-    },
-    quarters:{
-      '2026-Q4':{objectives:[
-        obj('modeling','$8K/mo in, taxes handled same day',[kr('Checks received',6,''),kr('32.2% moved same day',6,'checks'),kr('Client / agency outreach touches',24,'')]),
-        obj('grillz','MVP: make it twice, sell it 5 times',[kr('Own set cast & fitting (Oct 31)',1,''),kr('Friend prototype + price sheet (Nov 30)',1,''),kr('DBA · EIN · business checking',1,''),kr('Paid orders (Dec 31)',5,''),kr('Revenue',500,'$')]),
-        obj('content','2 posts a week, every week',[kr('Handles + bios + link (Oct 12)',1,''),kr('Posts published',26,''),kr('Weeks with 2 posts',13,''),kr('Combined followers',100,'')]),
-        obj('financial','Accounts, buffer, pro',[kr('Schneider 401(k) rolled over',1,''),kr('SEP-IRA + Rollover IRA open (Oct 6)',1,''),kr('Tax Buffer bucket created',1,''),kr('CPA intro calls (Nov 16)',2,''),kr('Jan 15 amount computed (A − B)',1,'')]),
-        obj('personal','Organize · journal · read',[kr('Journal days',40,''),kr('Weekly reviews done',13,''),kr('Book finished',1,'')]),
-        obj('relationships','3–5 real friends in Chicago',[kr('Hangouts / events',8,''),kr('New people met',5,'')]),
-        obj('fitness','Gym 3× · cook 2× · sleep',[kr('Gym sessions',39,''),kr('Home-cooked meals',26,'')]),
-        obj('learning','1 project · 1 course',[kr('Project sessions',10,''),kr('Course lessons',10,'')]),
-      ],review:{}}
-    },
-    weeklyTemplate:[
-      {id:uid(),track:'modeling',text:'Log every deposit · move 32.2% to Tax Buffer same day'},
-      {id:uid(),track:'modeling',text:'Reach out to 2 clients / update booking calendar'},
-      {id:uid(),track:'grillz',text:'2-hr Datum design / prototype session'},
-      {id:uid(),track:'grillz',text:'1 landing-page section or 1 product photo'},
-      {id:uid(),track:'content',text:'Film 2 pieces (Sunday batch)'},
-      {id:uid(),track:'content',text:'Post Tue + Fri · engage with 10 accounts'},
-      {id:uid(),track:'financial',text:'Log business expenses'},
-      {id:uid(),track:'financial',text:'Next step from the Master Action Plan'},
-      {id:uid(),track:'personal',text:'Journal 5× · organize the calendar'},
-      {id:uid(),track:'relationships',text:'Text 1 person · 1 hangout or event'},
-      {id:uid(),track:'fitness',text:'Gym ×3 · cook 2 home meals'},
-      {id:uid(),track:'learning',text:'1 project session or 1 course lesson'},
-    ],
-    habits:[
-      {id:'gym',name:'Gym',icon:'💪'},{id:'content',name:'Filmed / posted',icon:'📱'},{id:'expense',name:'Logged expenses',icon:'💰'},
-      {id:'datum',name:'Bench session',icon:'◆'},{id:'read',name:'Read 30 min',icon:'📖'},{id:'journal',name:'Journal',icon:'✍️'},{id:'morning',name:'Morning routine',icon:'🌅'},{id:'guitar',name:'Guitar / art',icon:'🎸'},
-    ],
-    weeks:{}, days:{}, wins:[], badges:{}, evo:{},
-    rewards:{review4:'',gym4:'',post4:'',fullstack:'',closer:'$20 to fun money (automatic)'},
-    money:{
-      s:{taxRate:0.322,rent:1409,car:307.85,grocW:150,elec:164,gas:80,ins:119.32,net:55.79,efMonthly:1000,retMonthly:1000,cushionMonthly:500,flexPerCheck:250,efMonths:6,rothLimit:7500,efNow:0,taxBufNow:0,rothYtd:0},
-      checks:[
-        ['2026-10-15',2559.71,'2025 leftover (¼)'],['2026-10-30',2559.71,'2025 leftover (¼)'],['2026-11-15',2559.71,'2025 leftover (¼)'],['2026-11-30',2559.72,'2025 leftover (¼)'],
-        ['2026-12-15',4000,'CK Jan 23 · INV-070141'],['2026-12-30',4000,'CK Feb 9 · INV-070356'],['2027-01-15',4000,'CK Feb 18 · INV-070484'],['2027-01-30',4800,'CK Mar 9 · INV-070780'],
-        ['2027-02-15',4800,'CK Mar 20 · INV-070970'],['2027-02-28',4764.34,'CK Mar 31 · INV-071092 (incl. $764 airfare)'],['2027-03-15',4000,'CK Jun 15 · INV-072180'],['2027-03-30',4496.81,'CK Jul 20 · INV-072702 (incl. $497 airfare)'],
-        ['2027-04-15',4800,'CK Jul 21 · INV-072703'],['2027-04-30',4000,'CK Jul 23 · INV-072846'],['2027-05-15',2900,'CK Jul 30 · INV-072940 (incl. $500 airfare)'],['2027-05-30',4000,'CK Aug 5 · INV-073142'],
-        ['2027-06-15',4000,'CK Sep 10 · INV-073528'],['2027-06-30',16000,'CK Sep 14–18 · INV-073715'],['2027-07-15',4300,'CK Sep 28 · INV-073795 (incl. $300 expense)'],
-      ].map(([d,amt,note])=>({id:uid(),d,amt,note,got:false})),
-      taxPaid:[],
-    },
-  };
+  return SEED_INIT(kr,obj);
 }
 
 /* ===================== state + persistence ===================== */
@@ -2524,8 +2451,8 @@ function migrate(st){ try { cadArchive(st); } catch(e){} try { hustleRetire(st);
   for (const t of st.money.budget.txns) if (!t.sc) t.sc = spendCat(t);
   if (!st.datum) st.datum = seedDatum();
   st.datum.session ||= null; for (const p of st.datum.prototypes){ p.log ||= []; p.stageAt ||= {}; }
-  if (!st.money.billsV){ Object.assign(st.money.s, {rent:1409, elec:164, gas:80, ins:119.32, net:55.79, car:307.85}); st.money.billsV = 1;
-    if (Array.isArray(st.dl)) for (const [d,text] of [['2026-10-10','PayPal: clear −$500 negative balance (collections warning)'],['2026-10-29','Nicor gas bill $236.22 due (includes past-due)']]) if (!st.dl.some(x=>x.text===text)) st.dl.push({id:uid(), d, text, type:'money', done:''}); }
+  if (!st.money.billsV){ Object.assign(st.money.s, SEED_ACCTS.bills||{}); st.money.billsV = 1;
+    if (Array.isArray(st.dl)) for (const [d,text] of (SEED_ACCTS.dl||[])) if (!st.dl.some(x=>x.text===text)) st.dl.push({id:uid(), d, text, type:'money', done:''}); }
   st.money.billPaid ||= {};
   if (!st.fillQ4){ st.fillQ4=1; const _S=S; try { S=st; fillQ4(); } catch(e){} S=_S; }
   if (!st.tplCut){ st.tplOld=st.weeklyTemplate||[]; st.weeklyTemplate=[]; st.tplCut=isoWeek(TODAY); }
@@ -2606,7 +2533,7 @@ function applyDeposit(id, dep){ sprPlay('money');
   if (best) { best.got = true; best.gotOn = d; best.d = d; best.amt = amt; best.note = (best.note||'') + ' · auto-detected'; }
   else S.money.checks.push({id:uid(), d, amt, note:(dep.desc||'deposit') + ' · auto-detected', got:true, gotOn:d});
   const q = S.quarters[quarterOf(d)]; const kr = q?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)&&!k.src); if (kr) kr.current++;
-  S.wins.push({id:uid(), d, text:`💵 ${money0(amt)} landed from ONE — move ${money0(amt*S.money.s.taxRate)} to Tax Buffer`});
+  S.wins.push({id:uid(), d, text:`💵 ${money0(amt)} landed from ${ME.ag} — move ${money0(amt*S.money.s.taxRate)} to Tax Buffer`});
   pendingToast = `💵 ${money0(amt)} landed. Move ${money0(amt*S.money.s.taxRate)} to Tax Buffer today.`;
 }
 let lastProg = null; // progress as of the last commit/load — the baseline celebrateDiff compares against
@@ -2805,7 +2732,7 @@ const BADGES = [
   {key:'ef',name:'Emergency Fund',icon:'🛡️',hint:'HYSA hits the 6-month target',auto:()=>bal('ef')>=efTarget(),prog:()=>[bal('ef'),efTarget()]},
   {key:'tax',name:'Tax Master',icon:'📊',hint:'Jan 15 payment logged, buffer funded',auto:()=>S.money.taxPaid.some(p=>p.d>='2027-01-01')},
   {key:'sale',name:'First Sale',icon:'💎',hint:'First paid Datum Grillz order',manual:true},
-  {key:'rolled',name:'Rolled Over',icon:'🏦',hint:'Schneider 401(k) lands at Fidelity',manual:true},
+  {key:'rolled',name:'Rolled Over',icon:'🏦',hint:(ME.employer+" 401(k) lands at "+ME.broker),manual:true},
   {key:'pro',name:'Hired a Pro',icon:'🤝',hint:'CPA engaged before Jan 31',manual:true},
   {key:'friend',name:'Friend Builder',icon:'🫂',hint:'3 people hung out with twice',manual:true},
   {key:'closer',name:'Quarter Closer',icon:'🏁',hint:'Quarterly review done on time',auto:()=>Object.values(S.quarters).some(q=>q.review?.closed)},
@@ -3880,11 +3807,11 @@ function observeAll(){
   const out=[], hr=new Date().getHours(), salt=dayHash(TODAY)+hr;
   const add=(...v)=>out.push(v[(salt+out.length)%v.length]);
   const C=S.money.checks, d=S.days[TODAY], y=addDays(TODAY,-1), keys=Object.keys(S.days);
-  try { const owe=mOwed(mPipe()); if (owe>20000) add(`ONE still owes you ${money0(owe)}. you work for free with extra steps.`, `${money0(owe)} owed. send the chase email. politely. menacingly.`, `they owe you ${money0(owe)} and you're checking your budget. make it make sense.`);
+  try { const owe=mOwed(mPipe()); if (owe>20000) add(`${ME.ag} still owes you ${money0(owe)}. you work for free with extra steps.`, `${money0(owe)} owed. send the chase email. politely. menacingly.`, `they owe you ${money0(owe)} and you're checking your budget. make it make sense.`);
     const tE=mAll().find(e=>e.d.includes(TODAY)&&!['cancelled','released','declined','nobook'].includes(e.s)); if (tE) add(`${tE.c} today. face card loading.`, `${(MT[tE.t]||[tE.t])[0].toLowerCase()} for ${tE.c} today. be on time. be him.`);
     const tmE=mAll().find(e=>e.d.includes(addDays(TODAY,1))&&!['cancelled','released','declined','nobook'].includes(e.s)); if (tmE) add(`${tE?'and ':''}${tmE.c} tomorrow. pack tonight, not at 6am.`);
     if (awayOn(TODAY) && !d?.habits?.datum) add('on the road ≠ off the hook. one datum road session. sketch counts.');
-    if (weekRecap(THIS_WEEK).posts===0 && parseD(TODAY).getDay()>=3) add('zero posts this week. the algorithm forgot you exist.', 'you shot calvin klein and posted nothing. explain.'); } catch(e){}
+    if (weekRecap(THIS_WEEK).posts===0 && parseD(TODAY).getDay()>=3) add('zero posts this week. the algorithm forgot you exist.', ("you shot "+ME.client+" and posted nothing. explain.")); } catch(e){}
   const landed=C.find(c=>c.got&&c.gotOn===TODAY);
   if (landed){ const a=money0(landed.amt); add(`${a} landed. 32% of that is not yours. be so fr.`, `${a} hit. the IRS felt it too. run the split.`, `me when the ${a} clears. ok now move it before you spend it.`); }
   const todo=C.find(c=>c.got&&c.gotOn!==TODAY&&openMoves(c).length);
@@ -4144,7 +4071,7 @@ function vRoom(){
       ${row(R.bm>0,'🕯️','Wax and carver on the desk',R.bm?'You’ve been at the bench this week':'Bench time this week puts tools on the desk')}
       ${row(R.artWk>0,'📱','The iPad',R.artWk?'You posted art this week':'Post art this week')}
       ${row(R.posts>0,'🤳','The phone',R.posts?'You logged a post this week':'Log a post this week')}
-      ${(()=>{ let ck=0, ord=0, owe=1; try { ck=mAll().filter(e=>e.t==='job'&&/calvin/i.test(e.c)&&e.s!=='cancelled').reduce((a,e)=>a+e.days,0); ord=ensureDatum().orders.filter(o=>['deposit','in-production','delivered','closed'].includes(o.status)).length; owe=mOwed(mPipe()); } catch(e){} return row(ck>=25,'🖤','Calvin Klein poster',ck>=25?`${ck} days on set for CK`:'25 Calvin Klein days')+row(ord>0,'🧾','First Datum receipt, framed',ord?`${ord} paid order${ord===1?'':'s'}`:'Your first paid Datum order')+row(owe<1,'💸','"Paid in full" letter from ONE',owe<1?'ONE is caught up':'ONE pays your balance down to $0'); })()}
+      ${(()=>{ let ck=0, ord=0, owe=1; try { ck=mAll().filter(e=>e.t==='job'&&ME.clientRe.test(e.c)&&e.s!=='cancelled').reduce((a,e)=>a+e.days,0); ord=ensureDatum().orders.filter(o=>['deposit','in-production','delivered','closed'].includes(o.status)).length; owe=mOwed(mPipe()); } catch(e){} return row(ck>=25,'🖤',(ME.client+" poster"),ck>=25?`${ck} days on set for ${ME.clientS}`:("25 "+ME.client+" days"))+row(ord>0,'🧾','First Datum receipt, framed',ord?`${ord} paid order${ord===1?'':'s'}`:'Your first paid Datum order')+row(owe<1,'💸',("\"Paid in full\" letter from "+ME.ag),owe<1?(ME.ag+" is caught up"):(ME.ag+" pays your balance down to $0")); })()}
     </div></div>`;
 }
 /* ---------- datum lookbook: a swipeable brand deck built from your own pieces ---------- */
@@ -5379,7 +5306,7 @@ function vYear(){
   return `
   <div class="hdr"><h2>${y} Annual OKRs</h2><div class="daynav"><button class="btn ghost sm" onclick="curY=String(+curY-1);render()">‹</button><button class="btn ghost sm" onclick="curY=String(+curY+1);render()">›</button></div></div>
   <div class="card sec"><div class="row between"><div><div class="tag">Year progress</div><h2 class="num">${Math.round(total*100)}%</h2></div><div class="row">${qs.map(q=>{const Q=S.quarters[q];const p=Q.objectives.length?Q.objectives.reduce((s,o)=>s+objPct(o),0)/Q.objectives.length:0;return `<div class="stat" style="cursor:pointer" onclick="curQ='${q}';go('quarter')"><b class="num">${Math.round(p*100)}%</b><small>${q.split('-')[1]}${Q.review?.closed?' ✓':''}</small></div>`;}).join('')}</div></div>${bar(total)}
-    <div class="help" style="margin-top:8px">${y==='2026'?'2026 is a hybrid year: Schneider W-2 Jan–Aug, self-employed from September. These objectives cover what\'s left of it — Q4 is the whole game.':'Update the status of each objective at every quarterly review. Once a year (December) reread the 5-year milestones; they\'ll be wrong — fix them.'}</div></div>
+    <div class="help" style="margin-top:8px">${y==='2026'?("2026 is a hybrid year: "+ME.employer+" W-2 Jan–Aug, self-employed from September. These objectives cover what's left of it — Q4 is the whole game."):'Update the status of each objective at every quarterly review. Once a year (December) reread the 5-year milestones; they\'ll be wrong — fix them.'}</div></div>
   ${yearFlow(y)}${y===THIS_Y&&TODAY.slice(5,7)>='10'&&!S.years[String(+y+1)]?`<button class="btn sec" style="width:100%;justify-content:center" onclick="openOkrSug('${+y+1}')">✨ Plan ${+y+1} with Tega</button>`:''}
   <div class="grid g2">
     ${Y.objectives.map(o=>{ const p=objPct(o); return `<div class="card obj" style="--tc:${tColor(o.track)}">
@@ -5433,19 +5360,13 @@ function seedBudget3(st){
   importTxns(HIST_SEED.BofA.map(([d,desc,amt])=>({d,desc,amt,acct:'BofA'})), st, true);
   importTxns(HIST_SEED.Discover.map(([d,desc,amt])=>({d,desc,amt,acct:'Discover'})), st, true);
   // agency checks that already landed → mark as received so the KR / flex math sees them
-  for (const t of st.money.budget.txns){ if (t.cat!=='income' || !/MODEL MANAGEME/i.test(t.desc)) continue;
+  for (const t of st.money.budget.txns){ if (t.cat!=='income' || !ME.payRe.test(t.desc)) continue;
     const have = st.money.checks.some(c => Math.abs(c.amt - t.amt) < 1 && Math.abs(daysBetween(c.d, t.d)) <= 7);
-    if (!have) st.money.checks.push({id:uid(), d:t.d, amt:t.amt, note:'1 Model Management · from bank', got:true, gotOn:t.d}); }
+    if (!have) st.money.checks.push({id:uid(), d:t.d, amt:t.amt, note:ME.payer+' · from bank', got:true, gotOn:t.d}); }
   st.money.checks.sort((a,b)=>a.d.localeCompare(b.d));
-  if (!st.money.s.rothYtd) st.money.s.rothYtd = 625.42; // Fidelity: cash contribution 2026-04-17
+  if (!st.money.s.rothYtd) st.money.s.rothYtd = SEED_ACCTS.roth||0;
   st.money.budget.start ||= '2026-09-01'; // flex accounting starts with the plan; older months stay visible in "Where it went"
-  st.money.budget.accounts = [
-    {name:'Bank of America checking ····6413', bal:462.21, asOf:'2026-10-02', note:'connected'},
-    {name:'Discover it Card ····5057', bal:-1487.04, asOf:'2026-10-02', note:'connected · statement balance'},
-    {name:'Capital One Savor One', bal:null, asOf:'', note:'connected · first sync still running'},
-    {name:'Fidelity Roth IRA ····6464', bal:675.03, asOf:'2026-10-01', note:'connected · $625 contributed Apr 17'},
-    {name:'PNC auto loan ····2671', bal:-12030.51, asOf:'2026-10-02', note:'connected · payoff balance'},
-  ];
+  st.money.budget.accounts = SEED_ACCTS.a1.map(a=>({...a}));
   st.money.budget.seeded3 = true; st.money.budget.pulled = '2026-10-02';
 }
 function seedBudget2(st){
@@ -5453,13 +5374,7 @@ function seedBudget2(st){
   const DISC = SEED_DISC;
   importTxns(DISC.map(([d,desc,amt])=>({d,desc,amt,acct:'Discover'})), st, true);
   st.money.budget.seeded2 = true; st.money.budget.pulled = '2026-10-02';
-  st.money.budget.accounts = [
-    {name:'Bank of America checking ····6413', bal:462.21, asOf:'2026-10-02', note:'connected'},
-    {name:'Discover it Card ····5057', bal:-1487.04, asOf:'2026-10-02', note:'connected · statement balance'},
-    {name:'Capital One Savor One', bal:null, asOf:'', note:'connected · first sync still running'},
-    {name:'Fidelity Roth IRA ····6464', bal:null, asOf:'', note:'connected · hidden by the connector\'s 2-account plan limit'},
-    {name:'PNC auto loan ····2671', bal:null, asOf:'', note:'connected · hidden by plan limit'},
-  ];
+  st.money.budget.accounts = SEED_ACCTS.a2.map(a=>({...a}));
 }
 const SCATS = {food:'Food & drink', groc:'Groceries', ride:'Rides & transit', shop:'Shopping', fun:'Going out & events', bills:'Rent, bills & fees', subs:'Subscriptions', health:'Health & pharmacy', care:'Personal care', cash:'ATM & cash', car:'Car & parking', pets:'Pets', travel:'Travel & lodging', work:'Work travel (deductible)', people:'Friends & P2P', other:'Other'};
 function spendCat(t){
@@ -5550,10 +5465,10 @@ function syncDatumDeductibles(st=S){
 }
 
 // b289: fees and chargebacks the agency takes out before it pays you (airfare, marketing fees, comp cards) — every statement, old and new, feeds the write-offs.
-// Your income here is what actually landed, so these are already left out of what you're taxed on in the app; they're listed because ONE's 1099 can include them.
+// Your income here is what actually landed, so these are already left out of what you're taxed on in the app; they're listed because the agency's 1099 can include them.
 function syncAgencyDeductibles(st=S){ const B=st.money?.budget; if (!B) return; const M=st.model||{}, all=[typeof ONE_STMT!=='undefined'?ONE_STMT:null, ...(M.stmts||[])].filter(Boolean), live=new Set();
   for (const x of all) for (const c of x.chg||[]){ const amt=Math.abs(+c.amt||0); if (!c.d||amt<0.5) continue; const key='one:'+c.d+'|'+Math.round(amt*100)+'|'+String(c.desc||'').slice(0,24).toUpperCase(); if (live.has(key)) continue; live.add(key);
-    let row=B.deductibles.find(r=>r.txn===key); if (!row) B.deductibles.push({id:uid(), txn:key, d:c.d, desc:String(c.desc||'Agency fee').slice(0,80), amt, acct:'ONE · out of a check', cat:'agency', ok:true, netted:true, note:''}); else { row.amt=amt; row.netted=true; } }
+    let row=B.deductibles.find(r=>r.txn===key); if (!row) B.deductibles.push({id:uid(), txn:key, d:c.d, desc:String(c.desc||'Agency fee').slice(0,80), amt, acct:(ME.ag+" · out of a check"), cat:'agency', ok:true, netted:true, note:''}); else { row.amt=amt; row.netted=true; } }
   B.deductibles=B.deductibles.filter(r=>!(typeof r.txn==='string'&&r.txn.startsWith('one:'))||live.has(r.txn)); }
 function addDeductible(t, st=S){
   const B = st.money.budget; if (B.deductibles.some(x=>x.txn===t.id)) return;
@@ -5738,7 +5653,7 @@ function mAll0(){
     const al=MALIAS.find(([re])=>re.test(e.c||'')); return {...e, c: al?al[1]:e.c, d, s:s2, start:d[0]||'', end, days:e.n||d.length||1}; });
 }
 const mShortRate = r => { const m=String(r).match(/(£|€|\$)?\s?\d[\d,.]*\s?(k|K)?(\s?(euros|eur))?/); return m ? (m[1]||(/£|€|euro/i.test(r)?'':'$'))+m[0].replace(/^(£|€|\$)?\s?/,'').replace(/\s?euros?/i,'€').trim() : r.slice(0,10); };
-const MALIAS = [[/^finish line/i,'Finish Line'],[/^calvin klein/i,'Calvin Klein'],[/^sgk/i,'SGK (Meijer)'],[/^atelier management/i,'Reuzel'],[/^fabian/i,'Fabian Couture'],[/^unknown \(ny/i,'NY trip (client ?)']];
+/* MALIAS: in the private seed block (b330) */
 const mGross = e => e.rn ? e.rn*e.days : 0;
 const mDates = e => { if(!e.d.length) return 'date ?'; const a=e.d[0], b=e.end; const y=a.slice(0,4)!==TODAY.slice(0,4)?', '+a.slice(0,4):''; return a===b?nice(a)+y : (e.d.length>2 && daysBetween(a,b)+1!==e.d.length ? e.d.map(nice).join(' · ') : nice(a)+' – '+nice(b))+y; };
 const mBadge = e => { const [l,c]=MT[e.t]||[e.t,'#94a3b8']; return `<span class="mm-b" style="--c:${c}">${l}</span>`; };
@@ -5747,7 +5662,7 @@ function mSet(id, s){ const M=mState(); if (M.st[id]===s) delete M.st[id]; else 
 /* ---- pipeline: option → confirmed → shot → invoiced → paid ---- */
 const PIPE = [['option','Option'],['confirmed','Confirmed'],['shot','Shot'],['invoiced','Invoiced'],['paid','Paid']];
 const PAID_THRU = '2025-08-25'; // you said this was the last job paid as of Sep 2026 — older work assumed settled
-const mNet = j => (j.rn || (/calvin/i.test(j.c)?5000:0)) * j.days * 0.8;
+const mNet = j => (j.rn || (ME.clientRe.test(j.c)?5000:0)) * j.days * 0.8;
 function mPipe(){ const k=_mVer+'|'+TODAY+'|'+Math.floor(Date.now()/600000); if (_pCacheV===k && _pCache) return _pCache; _pCacheV=k; return (_pCache=mPipe0()); }
 // a shoot day is done once its booked end time passes (no time given → 6pm)
 function shootOver(j){ const m=String(j.tm||'').match(/(\d{1,2}):(\d{2})\s*([ap])m\s*$/i), n=new Date(); let h=18, mi=0; if (m){ h=(+m[1]%12)+(/p/i.test(m[3])?12:0); mi=+m[2]; } return n.getHours()*60+n.getMinutes()>=h*60+mi; }
@@ -5768,7 +5683,7 @@ function mPipe0(){
   return out;
 }
 const agencyOwed = () => { try { return mOwed(mPipe()); } catch(e){ return 0; } };
-// what ONE owes now = last statement − checks since + every shoot day done since the statement (whole jobs, plus finished days of a job still going)
+// what the agency owes now = last statement − checks since + every shoot day done since the statement (whole jobs, plus finished days of a job still going)
 const mOwedParts = P => { const st=stmtNow(), after=agencyDeposits().filter(t=>t.d>st.asOf).reduce((a,t)=>a+t.amt,0), E=mAll(), L=[];
   for (const e of E){ const o=P[e.id]; if (!o||e.start<=st.asOf) continue; if (o.stage==='shot'||o.stage==='invoiced') L.push({e, amt:o.net, est:o.est}); else if (o.stage==='confirmed'&&o.doneDays) L.push({e, amt:o.net/Math.max(1,e.days)*o.doneDays, est:o.est, part:o.doneDays}); }
   const newer=L.reduce((a,x)=>a+x.amt,0); return {balance:st.balance, after, newer, L, owed:Math.max(0, st.balance-after+newer)}; };
@@ -5800,7 +5715,7 @@ function mSheet(id){
   const det=[['What',e.p],['Rate',e.r],['When',e.tm],['Where',e.loc],['Usage',e.u],['Travel',e.tr],['Booker',e.bk],['Paid',e.pd],['Notes',e.nt],['Agency',e.ag]].filter(([,v])=>v).map(([k,v])=>[k,String(v).replace(/\s*\((?:thread|threads?)\s[^)]*\)/gi,'')]);
   const curStage = P ? P.stage : (e.t==='option' ? (e.s==='booked'?'confirmed':'option') : '');
   const pipe = e.t==='job'||e.t==='option' ? `<div class="mm-pipe">${PIPE.map(([k,l],i)=>{ const idx=PIPE.findIndex(([x])=>x===curStage); return `<button class="${i<=idx?'on':''}" style="--c:${STC[k]}" ${e.t==='job'&&k!=='option'?`onclick="mPipeSet('${id}','${k}')"`:''}><i></i><span>${l}</span></button>`; }).join('')}</div>
-    ${P?`<div class="sub" style="font-size:12px;margin-top:-4px">${P.stage==='paid'?(P.on?`Paid ${nice(P.on)}, ${P.on.slice(0,4)} · ${esc(e.payId||'')} · ${money0(P.net)} to you`:'Before the statement period — assumed paid.'):P.stage==='invoiced'?`<b style="color:var(--warn)">Unpaid</b> · ${e.inv?esc(e.inv)+' · ':''}${money0(P.net)} owed to you · ${Math.round(daysBetween(e.start,TODAY)/30)} months waiting`:P.stage==='shot'&&P.notOnStmt?`Not on ONE's ${nice(stmtNow().asOf)} statement — ask ONE (or the agency that booked it) whether it was invoiced.`:P.stage==='shot'&&P.net?`≈ ${money0(P.net)} coming to you once ONE invoices it.`:''}</div>`:''}`:'';
+    ${P?`<div class="sub" style="font-size:12px;margin-top:-4px">${P.stage==='paid'?(P.on?`Paid ${nice(P.on)}, ${P.on.slice(0,4)} · ${esc(e.payId||'')} · ${money0(P.net)} to you`:'Before the statement period — assumed paid.'):P.stage==='invoiced'?`<b style="color:var(--warn)">Unpaid</b> · ${e.inv?esc(e.inv)+' · ':''}${money0(P.net)} owed to you · ${Math.round(daysBetween(e.start,TODAY)/30)} months waiting`:P.stage==='shot'&&P.notOnStmt?`Not on ${ME.ag}'s ${nice(stmtNow().asOf)} statement — ask ${ME.ag} (or the agency that booked it) whether it was invoiced.`:P.stage==='shot'&&P.net?`≈ ${money0(P.net)} coming to you once ${ME.ag} invoices it.`:''}</div>`:''}`:'';
   const outcome = e.end<TODAY && ['option','casting','selftape','test'].includes(e.t) ? `<div class="row" style="gap:6px"><button class="btn ghost sm ${e.s==='booked'?'on':''}" onclick="mSet('${id}','booked');mSheet('${id}')">Booked it</button><button class="btn ghost sm ${e.s==='nobook'?'on':''}" onclick="mSet('${id}','nobook');mSheet('${id}')">Didn't book</button></div>` : e.t==='selftape' ? `<div class="row" style="gap:6px"><button class="btn ${e.s==='sent'?'good':'ghost'} sm" onclick="mSet('${id}','sent');mSheet('${id}')">${e.s==='sent'?'✓ Sent':'Mark as sent'}</button></div>` : '';
   const noteBox = (e.t==='job'||e.t==='test') && e.start<=TODAY ? `<div class="mm-note"><div class="tag">Shoot note</div>
       <div class="mm-vibe">${['😬','😐','🙂','🔥','🐐'].map((v,i)=>`<button class="${N.v===i+1?'on':''}" onclick="mNote('${id}','v',${i+1})">${v}</button>`).join('')}</div>
@@ -5809,7 +5724,7 @@ function mSheet(id){
   m.className='modal'; m.innerHTML=`<div class="card mm-sheet">
     <div class="row between"><span class="row" style="gap:8px">${mBadge(e)}<span class="sub">${mDates(e)}</span></span><button class="x" onclick="mSheetClose()" aria-label="Close">✕</button></div>
     <h2 class="mm-sh">${esc(e.c)}</h2>
-    ${e.t==='job'&&mGross(e)?`<div class="mm-shr num">${money0(mGross(e))}<small>${e.days>1?` · ${e.days} days`:''} before ONE's cut</small></div>`:''}
+    ${e.t==='job'&&mGross(e)?`<div class="mm-shr num">${money0(mGross(e))}<small>${e.days>1?` · ${e.days} days`:''} before ${ME.ag}'s cut</small></div>`:''}
     ${pipe}${outcome}
     <div class="mm-kvs">${det.map(([k,v])=>`<div class="mm-kv"><span>${k}</span><span>${esc(v)}</span></div>`).join('')}</div>
     ${noteBox}
@@ -5850,7 +5765,7 @@ function mHistory0(E, P){
   if (mHist==='jobs'||mHist==='owed'){
     const L=jobs.filter(cf).filter(j=>mHist!=='owed'||['shot','invoiced'].includes(P[j.id]?.stage)).sort((a,b)=>b.start.localeCompare(a.start));
     body=[...new Set(L.map(j=>j.start.slice(0,4)))].map(y=>{ const ys=L.filter(j=>j.start.startsWith(y)); const hd=`<div class="mm-yh"><span class="tag">${y}</span><span class="sub num">${ys.reduce((a,j)=>a+j.days,0)} days${mHist==='owed'?` · ≈ ${money0(ys.reduce((a,j)=>a+(P[j.id].net-(P[j.id].part||0)),0))} owed`:''} ${y===TODAY.slice(0,4)||mHist==='owed'||mClient?'':'›'}</span></div>`, gr=(ys.length>6&&!mClient&&mHist!=='owed')?`<div class="mm-grid">${ys.slice(0,6).map(j=>mTile(j,P)).join('')}</div><details class="mm-more"><summary>Show ${ys.length-6} more</summary><div class="mm-grid">${ys.slice(6).map(j=>mTile(j,P)).join('')}</div></details>`:`<div class="mm-grid">${ys.map(j=>mTile(j,P)).join('')}</div>`; return y===TODAY.slice(0,4)||mHist==='owed'||mClient ? hd+gr : `<details class="mm-yd"><summary>${hd}</summary>${gr}</details>`; }).join('') || '<div class="empty">Nothing here.</div>';
-    if (mHist==='owed') body=`<div class="help keep" style="margin:0 4px 10px">From ONE's financial statement (${nice(stmtNow().asOf)}): every job here is invoiced but not paid yet.</div>`+body;
+    if (mHist==='owed') body=`<div class="help keep" style="margin:0 4px 10px">From ${ME.ag}'s financial statement (${nice(stmtNow().asOf)}): every job here is invoiced but not paid yet.</div>`+body;
   } else {
     const L=E.filter(e=>(e.t===mHist||(mHist==='casting'&&(e.t==='selftape'||e.t==='digitals'))||(mHist==='test'&&e.t==='fitting'))&&cf(e)).sort((a,b)=>b.start.localeCompare(a.start));
     body=[...new Set(L.map(e=>e.start.slice(0,4)))].map(y=>{ const ys=L.filter(e=>e.start.slice(0,4)===y); return `<div class="card sec mm-list"><div class="row between mm-lab"><span class="tag">${y||'No date'}</span><span class="sub num">${ys.length}</span></div>${ys.map(mRow).join('')}</div>`; }).join('') || '<div class="empty">Nothing here.</div>';
@@ -5885,15 +5800,15 @@ function mBook(E, P){
   const owed=mOwed(P), cnt=k=>Object.values(P).filter(o=>o.stage===k).length;
   const st=stmtNow(), un=E.filter(e=>P[e.id]&&P[e.id].stage==='invoiced').sort((a,b)=>a.start.localeCompare(b.start)), old=un[0], after=dep.filter(t=>t.d>st.asOf);
   const paidJobs=E.filter(e=>P[e.id]&&P[e.id].on).length, lag=(st.pays||[]).filter(p=>p.jobs[0]).map(p=>daysBetween(p.jobs[0].d,p.d)), avgLag=lag.length?Math.round(lag.reduce((a,b)=>a+b,0)/lag.length/30):0;
-  return `<div class="card sec st-card"><div class="row between"><span class="tag">ONE owes you</span><span class="sub" style="font-size:12px">statement ${nice(st.asOf)}</span></div>
+  return `<div class="card sec st-card"><div class="row between"><span class="tag">${ME.ag} owes you</span><span class="sub" style="font-size:12px">statement ${nice(st.asOf)}</span></div>
       <b class="num st-bal">${money0(owed)}</b>
       <div class="sub" style="font-size:13px">${un.length} jobs invoiced and unpaid${old?` · oldest ${parseD(old.start).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`:''}${avgLag?` · ~${avgLag} mo to pay`:''}</div>
       <div class="st-flow">${[['Owed Jan 1',st.opening,''],['+ Jobs & expenses',st.invoiced,''],['− Paid to you',-st.paid,'var(--good)'],['− Fees & travel',-st.charges,'var(--muted)'],['= Balance',st.balance,'var(--fg)'],...(()=>{ const O=mOwedParts(P); return O.newer>0.5||O.after>0.5?[...(O.newer>0.5?[[`+ Shoots since ${nice(st.asOf)}${O.L.some(x=>x.est)?' (~)':''}`,O.newer,'var(--accent)']]:[]),...(O.after>0.5?[['− Paid since',-O.after,'var(--good)']]:[]),['= Owed now',O.owed,'var(--fg)']]:[]; })()].map(([l,v,c])=>`<div><span>${l}</span><b class="num" style="${c?`color:${c}`:''}">${v<0?'−'+money0(-v).replace('−',''):money0(v)}</b></div>`).join('')}</div>
       <div class="row" style="gap:6px;flex-wrap:wrap;margin-top:10px"><button class="btn sm" onclick="mTab='now';mHist='owed';render()">See unpaid jobs</button><button class="btn ghost sm" onclick="stmtChase()">✉️ Copy a chase message</button><label class="btn ghost sm" style="cursor:pointer">📄 Upload statement<input type="file" accept="application/pdf" hidden onchange="stmtUpload(this)"></label></div>
       <textarea id="mmChase" class="inp" rows="8" hidden style="margin-top:8px;font-size:13px"></textarea>
       <div class="mm-pbar" style="margin-top:10px">${PIPE.slice(1).map(([k,l])=>`<span style="--c:${STC[k]}"><i></i>${l} <b class="num">${cnt(k)}</b></span>`).join('')}</div></div>
-    <details class="card sec fold mm-fold"><summary><span>Payments · what each covered</span><span class="sub">›</span></summary><div class="more-in"><div class="card sec mm-list"><div class="tag mm-lab">Payments · what each one covered</div>${(st.pays||[]).slice().reverse().map(p=>{ const bank=dep.find(t=>{ const x=daysBetween(p.d,t.d); return x>=0&&x<=5; }); return `<div class="st-pay"><div><b class="num">${money0(p.amt)}</b><small>${nice(p.d)} · ${esc(p.id)}${bank?' · ✓ in bank '+nice(bank.d):''}</small></div><span>${p.jobs.map(j=>`${esc(j.client.replace(/^CALVIN KLEIN$/,'Calvin Klein'))} · ${parseD(j.d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`).join('<br>')||'—'}${p.notes.length?`<em>${esc(p.notes.join(' · '))}</em>`:''}</span></div>`; }).join('')}</div></div></details>
-    <details class="card sec fold mm-fold"><summary><span>Fees & chargebacks</span><span class="sub">›</span></summary><div class="more-in"><div class="card sec mm-list"><div class="tag mm-lab">Fees & chargebacks</div>${(st.chg||[]).map(c=>`<div class="mm-pay"><span class="num">${nice(c.d)}</span><span class="sub">${esc(c.desc)}</span><b class="num">${money0(c.amt)}</b><span></span></div>`).join('')}<div class="help" style="padding:6px 10px">Travel charges offset the travel ONE added to those invoices. Marketing fee runs $60/month.</div></div></div></details>
+    <details class="card sec fold mm-fold"><summary><span>Payments · what each covered</span><span class="sub">›</span></summary><div class="more-in"><div class="card sec mm-list"><div class="tag mm-lab">Payments · what each one covered</div>${(st.pays||[]).slice().reverse().map(p=>{ const bank=dep.find(t=>{ const x=daysBetween(p.d,t.d); return x>=0&&x<=5; }); return `<div class="st-pay"><div><b class="num">${money0(p.amt)}</b><small>${nice(p.d)} · ${esc(p.id)}${bank?' · ✓ in bank '+nice(bank.d):''}</small></div><span>${p.jobs.map(j=>`${esc((String(j.client).toUpperCase()===ME.client.toUpperCase()?ME.client:j.client))} · ${parseD(j.d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`).join('<br>')||'—'}${p.notes.length?`<em>${esc(p.notes.join(' · '))}</em>`:''}</span></div>`; }).join('')}</div></div></details>
+    <details class="card sec fold mm-fold"><summary><span>Fees & chargebacks</span><span class="sub">›</span></summary><div class="more-in"><div class="card sec mm-list"><div class="tag mm-lab">Fees & chargebacks</div>${(st.chg||[]).map(c=>`<div class="mm-pay"><span class="num">${nice(c.d)}</span><span class="sub">${esc(c.desc)}</span><b class="num">${money0(c.amt)}</b><span></span></div>`).join('')}<div class="help" style="padding:6px 10px">Travel charges offset the travel ${ME.ag} added to those invoices. Marketing fee runs $60/month.</div></div></div></details>
     <div class="card sec"><div class="tag">${yr} so far</div>
       <div class="spc-rule" style="margin-top:8px"><div><b class="num">${money0(gy)}</b><small>booked${unk?` +${unk}?`:''}</small></div><div><b class="num">${money0(gy*0.8)}</b><small>≈ yours</small></div><div><b class="num" style="color:var(--good)">${money0(depY)}</b><small>in bank*</small></div></div>
       <div class="help" style="margin-top:8px">*Bank feed starts in April. ${unk} job${unk===1?'':'s'} this year had no rate in the email.</div></div>
@@ -5964,9 +5879,9 @@ function vModel(){
   const tabs=MT5;
   return `<div class="mm-hero sec">
       <div class="row between"><span class="tag">Modeling · since ${first.slice(0,4)}</span><span class="row" style="gap:6px"><button class="btn ghost sm" onclick="mAddOpen()">+ Add</button>${mcpLib?`<button class="btn ghost sm" ${mBusy?'disabled':''} onclick="mSync(true)">${mBusy?'…':'↻'}</button>`:''}</span></div>
-      <div class="mm-big"><b class="num">${days}</b><span>days on set<br><em>${ck} for Calvin Klein</em></span></div>
+      <div class="mm-big"><b class="num">${days}</b><span>days on set<br><em>${ck} for ${ME.client}</em></span></div>
       ${mcpLib||mState().syncAt?`<div class="sub" style="font-size:11.5px;margin-top:-4px">✉️ ${mState().syncAt?`Email checked ${new Date(mState().syncAt).toLocaleDateString('en-US',{month:'short',day:'numeric'})} ${new Date(mState().syncAt).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}${mState().syncN?` · ${mState().syncN} new`:''}`:'Email not checked yet'}</div>`:''}
-      ${(()=>{ const o=mOwed(P), un=E.filter(e=>P[e.id]&&P[e.id].stage==='invoiced').sort((a,b)=>a.start.localeCompare(b.start))[0]; return o>0?`<button class="mm-owe" onclick="mTab='book';render()"><span>ONE owes you <b class="num">${money0(o)}</b></span><small>${un?'oldest '+parseD(un.start).toLocaleDateString('en-US',{month:'short',year:'numeric'}):''} ›</small></button>`:''; })()}
+      ${(()=>{ const o=mOwed(P), un=E.filter(e=>P[e.id]&&P[e.id].stage==='invoiced').sort((a,b)=>a.start.localeCompare(b.start))[0]; return o>0?`<button class="mm-owe" onclick="mTab='book';render()"><span>${ME.ag} owes you <b class="num">${money0(o)}</b></span><small>${un?'oldest '+parseD(un.start).toLocaleDateString('en-US',{month:'short',year:'numeric'}):''} ›</small></button>`:''; })()}
       <form id="mmadd" hidden class="mm-add" onsubmit="return mAddSave(event)"><select class="inp" name="t">${Object.entries(MT).filter(([k])=>k!=='selftape'&&k!=='travel').map(([k,[l]])=>`<option value="${k}">${l}</option>`).join('')}</select><input class="inp" name="c" placeholder="Client" required><input class="inp" name="p" placeholder="What (e-com, campaign…)"><input class="inp" type="date" name="d1" value="${TODAY}"><input class="inp" type="date" name="d2" title="Last day (optional)"><input class="inp" name="r" placeholder="Rate e.g. 5k"><input class="inp" name="loc" placeholder="Where"><button class="btn">Save</button></form>
     </div>
     <div class="seg sec" style="display:flex;width:100%;overflow:hidden">${tabs.map(([k,l])=>`<button class="${mTab===k?'on':''}" style="flex:1;min-width:0;padding:9px 2px;font-size:13px" onclick="mTab='${k}';render()">${l}</button>`).join('')}</div>
@@ -5982,8 +5897,8 @@ function mAddSave(ev){ ev.preventDefault(); const f=ev.target, g=n=>f.querySelec
 const MMON={january:1,february:2,march:3,april:4,may:5,june:6,july:7,august:8,september:9,october:10,november:11,december:12};
 function mParse(th, body){
   const m=(th.messages||[])[0]||{}, subj=String(m.subject||'').replace(/^((re|fw|fwd):\s*)+/i,'');
-  const it=/itinerary/i.exec(subj) && /(\d{1,2})-([A-Z][a-z]{2})/.exec(subj); if (it){ const mo=MMON[Object.keys(MMON).find(k=>k.startsWith(it[2].toLowerCase()))]; if (mo){ const yy=+TODAY.slice(0,4), d0=`${yy}-${String(mo).padStart(2,'0')}-${String(+it[1]).padStart(2,'0')}`; return {id:'A'+th.id, th:th.id, t:'travel', s:'confirmed', c:'Flight', p:'Itinerary from ONE', d:[d0], ag:'ONE', url:th.viewUrl||m.viewUrl||'', auto:1}; } }
-  const tm=subj.match(/^\[?(cancelled)?\]?\s*(job|option|self[\s-]?tape(?:\s+request)?|casting\s+video|video\s+casting|e-?casting|casting|test|fitting|digitals?|go\s?&?\s?see)\b[\s:-]*(.+?)(\s*-\s*ONE (Men|Management.*))?$/i); if(!tm) return null;
+  const it=/itinerary/i.exec(subj) && /(\d{1,2})-([A-Z][a-z]{2})/.exec(subj); if (it){ const mo=MMON[Object.keys(MMON).find(k=>k.startsWith(it[2].toLowerCase()))]; if (mo){ const yy=+TODAY.slice(0,4), d0=`${yy}-${String(mo).padStart(2,'0')}-${String(+it[1]).padStart(2,'0')}`; return {id:'A'+th.id, th:th.id, t:'travel', s:'confirmed', c:'Flight', p:("Itinerary from "+ME.ag), d:[d0], ag:(ME.ag), url:th.viewUrl||m.viewUrl||'', auto:1}; } }
+  const tm=subj.match(/^\[?(cancelled)?\]?\s*(job|option|self[\s-]?tape(?:\s+request)?|casting\s+video|video\s+casting|e-?casting|casting|test|fitting|digitals?|go\s?&?\s?see)\b[\s:-]*(.+?)(\s*-\s*(?:\S+ )?(Men|Management.*))?$/i); if(!tm) return null;
   const tk=tm[2].toLowerCase(); let typ=/self|video|e-?cast/.test(tk)?'selftape':({job:'job',option:'option',casting:'casting',test:'test',fitting:'fitting',digital:'digitals',digitals:'digitals'}[tk]||'casting');
   // the full email when we have it (rates for every day of a multi-day booking live past the 200-character preview)
   const text=((body?String(body).replace(/\|/g,' ').replace(/\s+/g,' ')+' ':'')+(th.messages||[]).map(x=>String(x.snippet||'')).join(' ')).replace(/&#39;/g,"'").replace(/&amp;/g,'&');
@@ -6001,7 +5916,7 @@ function mParse(th, body){
   // unique values: each day's block repeats the whole rate list
   if (dayR.length>1){ rn=dayR.reduce((a,b)=>a+b,0)/Math.max(1,d.length); }  // rn is per day (net = rn × days × 80%)
   const tmOut = typ==='selftape' ? (/\bEOD\b|end of (?:the )?day/i.test(text)?'due end of day':(time.match(/to\s*(\d{1,2}:\d{2}\s*[ap]m)/i)?'due by '+time.match(/to\s*(\d{1,2}:\d{2}\s*[ap]m)/i)[1]:'due')) : time;
-  return {id:'A'+th.id, th:th.id, t:typ, s:/cancel/i.test(subj)?'cancelled':typ==='job'?'confirmed':'unknown', c, d, tm:tmOut, r:rate, rn:rn>=100?rn:undefined, ag:'ONE', url:th.viewUrl||m.viewUrl||'', auto:1};
+  return {id:'A'+th.id, th:th.id, t:typ, s:/cancel/i.test(subj)?'cancelled':typ==='job'?'confirmed':'unknown', c, d, tm:tmOut, r:rate, rn:rn>=100?rn:undefined, ag:(ME.ag), url:th.viewUrl||m.viewUrl||'', auto:1};
 }
 function mThreads(r){ let hit=null; const walk=(o,dep)=>{ if(hit||!o||dep>6) return; if (typeof o==='string'){ if(o.includes('"threads"')){ try{ walk(JSON.parse(o),dep+1);}catch(e){} } return; } if (typeof o!=='object') return; if (Array.isArray(o.threads)){ hit=o.threads; return; } for (const v of Object.values(o)) walk(v,dep+1); }; walk(r,0); return hit; }
 async function mSync(manual){
@@ -6119,7 +6034,7 @@ function renderReview(){
   steps.push(['Scorecard',`<div class="sr-grade" style="--g:${GCOL[sc.L]}"><b>${sc.L}</b><span>week grade<br><small>+${50+sc.bonus} XP when you lock it</small></span></div>
     <div class="stack" style="gap:6px">${TRACKS.map(t=>{ const cur=(rv.tracks||{})[t.key]||auto[t.key], mine=!!(rv.tracks||{})[t.key]; return `<div class="sr-tr"><span>${t.icon} ${t.name}${mine?'':' <small>auto</small>'}</span><div class="sel">${[['ok','🟢'],['warn','🟡'],['bad','🔴']].map(([v,ic])=>`<button class="${cur===v?'on':''}" onclick="srTrack('${t.key}','${v}')">${ic}</button>`).join('')}</div></div>`; }).join('')}</div>
     <div class="row" style="gap:6px;margin-top:12px"><span class="chip">🔁 review streak ${weekStreak(reviewDone)}w</span><span class="chip">💪 gym ${streaks().gym}w</span><span class="chip">📱 posting ${streaks().post}w</span></div>`]);
-  steps.push(['Reflect',[['best','best moment of the week? small counts.','the CK shoot · finally cleaned the bench'],['blocker','what got in the way? be honest. i remember.','travel ate my mornings'],['stop','what are we not doing again?','booking flights the night before']].map(([k,q,ph])=>`<div class="sr-q"><div class="quip say">${q}</div><textarea class="inp" rows="2" placeholder="${ph}" onchange="srSet('${k}',this.value)">${esc(rv[k]||'')}</textarea></div>`).join('')]);
+  steps.push(['Reflect',[['best','best moment of the week? small counts.',("the "+ME.clientS+" shoot · finally cleaned the bench")],['blocker','what got in the way? be honest. i remember.','travel ate my mornings'],['stop','what are we not doing again?','booking flights the night before']].map(([k,q,ph])=>`<div class="sr-q"><div class="quip say">${q}</div><textarea class="inp" rows="2" placeholder="${ph}" onchange="srSet('${k}',this.value)">${esc(rv[k]||'')}</textarea></div>`).join('')]);
   const nothing=!L.ex.length&&!L.stale.length&&!L.late.length&&!L.t3.length;
   steps.push(['Clean up',`${nothing?'<div class="empty">Nothing left over. Suspicious, but fine.</div>':''}
      ${L.ex.length?`<div class="tag" style="margin-bottom:6px">Unfinished · carry to next week?</div><div class="stack" style="margin-bottom:14px">${L.ex.map(i=>tog(rsCarry[i.id],esc(i.text),rsCarry[i.id]?'carry':'drop',`rsCarry['${i.id}']=!rsCarry['${i.id}']`)).join('')}</div>`:''}
@@ -6225,7 +6140,7 @@ function krCredit(src, text, track, on){
 /* ===================== Content: plan · pipeline · ideas from everything else · stats ===================== */
 const CSTAGES=[['idea','Idea'],['script','Script'],['film','Film'],['edit','Edit'],['posted','Posted']];
 const PILLARS=[['model','Modeling','📸','#38bdf8'],['datum','Datum','◆','#f4c84a'],['art','Art & music','🎨','#ec4899'],['life','Life','🌀','#22c55e']];
-const pillarOf = t => /model|shoot|casting|ck|calvin|grwm|fit|set|bts|runway|agency/i.test(t)?'model':/grill|datum|wax|cast|bench|polish|gold|silver|jewel/i.test(t)?'datum':/draw|sketch|art|paint|procreate|guitar|riff|music/i.test(t)?'art':'life';
+const pillarOf = t => /model|shoot|casting|ck|grwm|fit|set|bts|runway|agency/i.test(t)?'model':/grill|datum|wax|cast|bench|polish|gold|silver|jewel/i.test(t)?'datum':/draw|sketch|art|paint|procreate|guitar|riff|music/i.test(t)?'art':'life';
 const ideaStage = x => x.stage || (x.done?'film':'idea');
 let ctTab='plan';
 function ideaMove(id, dir){ const x=(S.ideas||[]).find(x=>x.id===id); if(!x) return; const i=CSTAGES.findIndex(([k])=>k===ideaStage(x)), n=CSTAGES[clamp(i+dir,0,CSTAGES.length-1)][0]; x.stage=n; x.done = ['film','edit','posted'].includes(n)?(x.done||TODAY):'';
@@ -6294,46 +6209,14 @@ function vContent(){
 
 
 /* ===================== Suggested OKRs: built from where you are, refreshed by Claude on demand ===================== */
-const K_=(text,target,unit,due,how)=>({text,target,unit:unit||'',due:due||'',how:how||''});
-const OKR_SUGGEST = {
- '2026-Q4': {theme:'Full-time model, real business owner', objectives:[
-  {track:'modeling',title:'Turn Calvin Klein regulars into a full calendar',why:'You quit the 9-5 — bookings are the salary now.',done:'12+ days on set, $50k booked, nothing unpaid without a chase.',krs:[
-    K_('Days on set',12,'','','Counted from Modeling bookings'),K_('Booked ($)',50000,'$','','Day rates of confirmed jobs this quarter'),K_('Castings attended',15,'','','Castings, tests and fittings in Modeling'),K_('checks received',6,'','','Ticks up when a check lands in Money'),
-    K_('Unpaid 2026 jobs reconciled with ONE (Oct 31)',1,'','2026-10-31','Tick a Top 3 like “reconcile ONE statements”'),K_('Measurements + new digitals sent to ONE NY (Oct 20)',1,'','2026-10-20'),K_('LA trip locked — dates + housing (Dec 15)',1,'','2026-12-15')]},
-  {track:'financial',title:'Stop the leak: spending in check, debt shrinking, taxes covered',why:'You average ~$2.5k per two weeks against a $250 plan, and $13.5k is owed.',done:'Most weeks under budget, Discover at $0, Jan 15 taxes already sitting in the buffer.',krs:[
-    K_('Weeks under spending budget',8,'','','Counted from Budget each week'),K_('Discover paid to $0 (Nov 30)',1,'','2026-11-30'),K_('Schneider 401(k) rolled over (Oct 31)',1,'','2026-10-31'),
-    K_('CPA intro calls (Nov 16)',2,'','2026-11-16'),K_('Nicor past-due cleared (Oct 29)',1,'','2026-10-29'),K_('Jan 15 estimate sitting in Tax Buffer (Dec 31)',1,'','2026-12-31')]},
-  {track:'grillz',title:'Datum MVP: finish my set, then sell the first ones',why:'One finished set is the proof everything else hangs on.',done:'Own set fitted, a friend set made, price sheet live, first paid orders in.',krs:[
-    K_('Own set cast & fitting (Oct 31)',1,'','2026-10-31'),K_('Friend prototype + price sheet (Nov 30)',1,'','2026-11-30'),K_('DBA · EIN · business checking (Nov 15)',1,'','2026-11-15'),
-    K_('Datum session days',30,'','','Bench or road sessions — the Datum habit'),K_('Paid orders',3,'','','Counted from Datum orders'),K_('Revenue',500,'$','','Delivered Datum orders')]},
-  {track:'content',title:'Post what you already live — 2 a week',why:'You are on CK sets and at the bench every week; none of it is posted.',done:'24 posts, 10 two-post weeks, at least 6 of them Datum.',krs:[
-    K_('Posts published',24,'','','Logged posts / ideas moved to Posted'),K_('Weeks with 2 posts',10,'','','Counted from your post log'),K_('Datum posts',6,'','','Posts tagged Datum'),K_('Combined followers',150,'','','New IG + TikTok followers this quarter')]},
-  {track:'fitness',title:'A routine that survives travel',why:'Away most weeks — the routine has to fit a suitcase.',done:'3 gym days most weeks, daily check-ins, every Sunday reviewed.',krs:[
-    K_('Gym sessions',30,'','','Gym habit'),K_('Check-ins',60,'','','Morning check-ins'),K_('Journal days',35,'','','Journal habit'),K_('Weekly reviews done',11,'','','Sunday Reviews locked')]},
-  {track:'relationships',title:'Build the circle (NYC + Chicago)',why:'Moving around a lot makes it easy to go a month without real people.',done:'Regular nights out, new faces, parents in the loop weekly.',krs:[
-    K_('Hangouts / events',8,'','','Tick a Top 3 that mentions a hangout or event'),K_('New people met',5),K_('Parent calls',10,'','','Tick “call parents” in Top 3')]},
- ]},
- '2027-Q1': {theme:'LA season, debt down, Datum earns',objectives:[
-  {track:'modeling',title:'LA season: new market, new clients',why:'January–February in LA, then London and Milan in spring.',done:'Booked in LA, new clients beyond CK, spring travel set.',krs:[
-    K_('Days on set',15,'','','Counted from Modeling bookings'),K_('Booked ($)',60000,'$','','Confirmed jobs this quarter'),K_('Castings attended',25,'','','Castings, tests and fittings'),K_('New clients booked',3),K_('Test shoots in LA',3),K_('London / Milan travel booked (Mar 15)',1,'','2027-03-15')]},
-  {track:'financial',title:'Debt down, cushion up, taxes clean',why:'2026 was the first full year self-employed — file it right.',done:'Discover gone, car loan shrinking, Q4 paid, 2026 return with the CPA.',krs:[
-    K_('Q4 estimated taxes paid (Jan 15)',1,'','2027-01-15'),K_('2026 return filed with CPA (Mar 31)',1,'','2027-03-31'),K_('Extra car-loan payments ($)',1500,'$'),K_('Emergency fund ($)',5000,'$'),K_('Weeks under spending budget',9,'','','Counted from Budget each week')]},
-  {track:'grillz',title:'Datum earns: first real customer wave',why:'Phase 3 — turn the finished sets into paid work.',done:'5 paid orders, $1.5k revenue, a place people can order from.',krs:[
-    K_('Paid orders',5,'','','Datum orders'),K_('Revenue',1500,'$','','Delivered orders'),K_('Order page / shop live (Feb 28)',1,'','2027-02-28'),K_('Datum session days',30,'','','Datum habit')]},
-  {track:'content',title:'LA content run',why:'New city, new backdrops — easiest quarter to post.',done:'26 posts, 12 two-post weeks, one collab.',krs:[
-    K_('Posts published',26,'','','Logged posts'),K_('Weeks with 2 posts',12,'','','Post log'),K_('Combined followers',300,'','','New IG + TikTok followers'),K_('Collab with a photographer',1)]},
-  {track:'fitness',title:'Routine on the road',why:'Same rules, new city.',done:'Gym 3× most weeks and every Sunday reviewed.',krs:[
-    K_('Gym sessions',32,'','','Gym habit'),K_('Journal days',45,'','','Journal habit'),K_('Weekly reviews done',13,'','','Sunday Reviews')]},
-  {track:'relationships',title:'An LA network',why:'Work in a new market comes from people.',done:'New friends and industry contacts you actually see.',krs:[
-    K_('New people met',8),K_('Hangouts / events',8),K_('Parent calls',12)]}
- ]}
-};
+function K_(text,target,unit,due,how){ return {text,target,unit:unit||'',due:due||'',how:how||''}; }   // hoisted: the seed block uses it
+/* OKR_SUGGEST: in the private seed block (b330) */
 function okrContext(q){
   const lines=[]; const E=(()=>{ try{return mAll();}catch(e){return [];} })(), jobs=E.filter(e=>e.t==='job'&&e.s!=='cancelled');
   const y=TODAY.slice(0,4), jy=jobs.filter(j=>j.start.startsWith(y));
   lines.push(`Today ${TODAY}. Planning ${isYr(q)?'ANNUAL':''} OKRs for ${q} (${isYr(q)?q+'-01-01 to '+q+'-12-31':qRange(q).join(' to ')}).`);
-  lines.push(`Modeling: ${jy.reduce((a,j)=>a+j.days,0)} days on set in ${y} (${jy.filter(j=>/calvin/i.test(j.c)).length} Calvin Klein), typical day rate $5k; agencies ONE (NY, Chicago, LA), Wilhelmina London; upcoming: ${E.filter(e=>e.end>=TODAY&&e.s!=='cancelled').slice(0,4).map(e=>e.t+' '+e.c+' '+e.start).join('; ')||'none'}. Quit his 9-5 in Sep 2026. Plan: LA Jan–Feb 2027, London/Milan spring 2027.`);
-  try { const F=flexNow(); lines.push(`Money: spending budget $${S.money.s.flexPerCheck}/check, recently spending far more; fixed bills ~$${Math.round(fixedMo())}/mo; debt ~ $13.5k (car loan ~$12k, Discover ~$1.5k); quarterly estimated taxes due; ${F?`this period spent $${Math.round(F.spent)} of $${F.earned}`:''}.`); } catch(e){}
+  lines.push(`Modeling: ${jy.reduce((a,j)=>a+j.days,0)} days on set in ${y} (${jy.filter(j=>ME.clientRe.test(j.c)).length} ${ME.client}); ${ME.modelCtx}; upcoming: ${E.filter(e=>e.end>=TODAY&&e.s!=='cancelled').slice(0,4).map(e=>e.t+' '+e.c+' '+e.start).join('; ')||'none'}. ${ME.planCtx}`);
+  try { const F=flexNow(); lines.push(`Money: spending budget $${S.money.s.flexPerCheck}/check, recently spending far more; fixed bills ~$${Math.round(fixedMo())}/mo; ${ME.debtCtx}; quarterly estimated taxes due; ${F?`this period spent $${Math.round(F.spent)} of $${F.earned}`:''}.`); } catch(e){}
   try { const D=ensureDatum(); lines.push(`Datum Grillz (handmade grillz startup): prototypes ${D.prototypes.map(p=>p.name+' at '+p.status).join(', ')||'none'}; ${D.orders.length} orders; revenue $${dRevenue()}.`); } catch(e){}
   lines.push(`Content: IG ${(S.ig||{}).followers||'?'} followers, TikTok ${(S.tk||{}).followers||'?'}; ${(S.logs||[]).filter(l=>l.kind==='post').length} posts logged; goal 2 posts/week.`);
   const cur=S.quarters[THIS_Q]; if (cur) lines.push(`Current quarter ${THIS_Q} progress: ${cur.objectives.map(o=>`${o.title} — ${Math.round(objPct(o)*100)}% [${o.krs.map(k=>`${k.text} ${k.current}/${k.target}`).join('; ')}]`).join(' | ')}`);
@@ -6352,7 +6235,7 @@ function openOkrSug(q){ if (okrSugQ!==q) okrChat=[]; okrSugQ=q; okrSug=okrSugFor
 function closeOkrSug(){ const m=document.getElementById('okrs'); if(m) m.remove(); }
 async function okrAsk(){
   if (!sampleLib||okrSugBusy) return; okrSugBusy=true; renderOkrSug();
-  const prompt=`You are an OKR coach for Tega, a 20-something full-time fashion model (Calvin Klein regular) who is also starting a handmade grillz business (Datum Grillz), posting content, and getting his finances in order.\n\nWhere he is right now:\n${okrContext(okrSugQ)}\n\n${isYr(okrSugQ)?`Write his ANNUAL OKRs for ${okrSugQ}: 6–8 objectives, each with 3–5 measurable key results for the whole year. Ambitious but believable — the app splits them into quarterly OKRs automatically, so use cumulative yearly targets. Ladder up to the 5-year milestones.`:`Write his OKRs for ${okrSugQ}: 5–7 objectives, each with 3–6 specific, measurable key results. Be concrete and realistic for one quarter given travel.`} Each objective gets a one-line "why" (grounded in the data above) and a one-line "done" (what success looks like). For one-off key results put the due date in the text like "(Nov 30)" and in "due" as YYYY-MM-DD. Prefer these exact key-result names when they fit, because the app counts them automatically: Days on set, Booked ($), Castings attended, Weeks under spending budget, Datum posts, Check-ins, Datum session days, Gym sessions, Journal days, Weekly reviews done, Paid orders, Revenue, Combined followers, Posts published, Weeks with 2 posts, Proposals sent, Client / agency outreach touches.\n\nReturn JSON: {"theme": string, "objectives": [{"track": one of ${TRACKS.map(t=>t.key).join('|')}, "title": string, "why": string, "done": string, "krs": [{"text": string, "target": number, "unit": "" or "$", "due": "" or "YYYY-MM-DD", "how": short note on how it is measured}]}]}`;
+  const prompt=`You are an OKR coach for Tega, a 20-something full-time fashion model (${ME.client} regular) who is also starting a handmade grillz business (Datum Grillz), posting content, and getting his finances in order.\n\nWhere he is right now:\n${okrContext(okrSugQ)}\n\n${isYr(okrSugQ)?`Write his ANNUAL OKRs for ${okrSugQ}: 6–8 objectives, each with 3–5 measurable key results for the whole year. Ambitious but believable — the app splits them into quarterly OKRs automatically, so use cumulative yearly targets. Ladder up to the 5-year milestones.`:`Write his OKRs for ${okrSugQ}: 5–7 objectives, each with 3–6 specific, measurable key results. Be concrete and realistic for one quarter given travel.`} Each objective gets a one-line "why" (grounded in the data above) and a one-line "done" (what success looks like). For one-off key results put the due date in the text like "(Nov 30)" and in "due" as YYYY-MM-DD. Prefer these exact key-result names when they fit, because the app counts them automatically: Days on set, Booked ($), Castings attended, Weeks under spending budget, Datum posts, Check-ins, Datum session days, Gym sessions, Journal days, Weekly reviews done, Paid orders, Revenue, Combined followers, Posts published, Weeks with 2 posts, Proposals sent, Client / agency outreach touches.\n\nReturn JSON: {"theme": string, "objectives": [{"track": one of ${TRACKS.map(t=>t.key).join('|')}, "title": string, "why": string, "done": string, "krs": [{"text": string, "target": number, "unit": "" or "$", "due": "" or "YYYY-MM-DD", "how": short note on how it is measured}]}]}`;
   try { const r=await sampleLib.json(prompt); const o=r&&(r.objectives?r:r.value||r.data||r.result); if(!o||!Array.isArray(o.objectives)||!o.objectives.length) throw 0;
     okrSug={theme:String(o.theme||''), src:'claude', objectives:o.objectives.slice(0,8).map(x=>({track:TRACKS.some(t=>t.key===x.track)?x.track:'personal', title:String(x.title||'').slice(0,90), why:String(x.why||'').slice(0,160), done:String(x.done||'').slice(0,160), krs:(x.krs||[]).slice(0,7).map(k=>({text:String(k.text||'').slice(0,90), target:Math.max(1,+k.target||1), unit:k.unit==='$'?'$':'', due:/^\d{4}-\d{2}-\d{2}$/.test(k.due||'')?k.due:'', how:String(k.how||'').slice(0,80)})).filter(k=>k.text)}))};
     okrDefaultPick(); }
@@ -6451,7 +6334,7 @@ function storiesCard(){
 }
 
 
-/* ===================== ONE financial statements: the source of truth for what's paid and owed ===================== */
+/* ===================== the agency financial statements: the source of truth for what's paid and owed ===================== */
 const MON3S={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
 const stD = s => { const m=/([A-Z][a-z]{2}) (\d{1,2}), (\d{4})/.exec(s||''); return m&&MON3S[m[1]] ? `${m[3]}-${String(MON3S[m[1]]).padStart(2,'0')}-${String(+m[2]).padStart(2,'0')}` : ''; };
 const stN = s => +String(s).replace(/[^\d.-]/g,'') || 0;
@@ -6481,9 +6364,9 @@ function parseStatement(raw){
 }
 
 
-// corrections the Oct 1 statement proved: "unknown NY trips" were CK days, the holiday casting was a 2-day job, and 4 CK days had no booking email
+// corrections the Oct 1 statement proved: "unknown NY trips" were top-client days, the holiday casting was a 2-day job, and 4 top-client days had no booking email
 const stmtNow = () => [ONE_STMT, ...((mState().stmts)||[])].filter(Boolean).sort((a,b)=>a.asOf.localeCompare(b.asOf)).pop();
-const stmtClient = c => /calvin/i.test(c)?'calvin':/fabian/i.test(c)?'fabian':String(c||'').toLowerCase().split(/[ /]/)[0];
+const stmtClient = c => ME.clientRe.test(c)?'top':String(c||'').toLowerCase().split(/[ /]/)[0];
 function stmtIndex(){ const all=[ONE_STMT, ...((mState().stmts)||[])], inv={}, paid={};
   for (const st of all){ for (const x of st.inv||[]) inv[stmtClient(x.client)+'|'+x.d]={...x, asOf:st.asOf}; for (const p of st.pays||[]) for (const j of p.jobs||[]) paid[stmtClient(j.client)+'|'+j.d]={pay:p.id, on:p.d, amt:p.amt, inv:j.inv}; }
   return {inv, paid}; }
@@ -6545,7 +6428,7 @@ function syncChecksFromStmt(){
       return true; }
     if (fresh.length){ let last=C.filter(c=>!c.got).map(c=>c.d).sort().pop()||TODAY; const slot=d=>{ const [y,m,dd]=d.split('-').map(Number); if (dd<15) return `${y}-${String(m).padStart(2,'0')}-15`; const e=new Date(y,m,0).getDate(); return dd<e?`${y}-${String(m).padStart(2,'0')}-${e}`:(m===12?`${y+1}-01-15`:`${y}-${String(m+1).padStart(2,'0')}-15`); };
       const grp={}; for (const x of fresh) (grp[x.inv] ||= []).push(x);
-      for (const [inv,L] of Object.entries(grp)){ last=slot(addDays(last,1)); const amt=L.reduce((a,x)=>a+x.net+(x.exp||0),0); C.push({id:uid(), d:last, amt:Math.round(amt*100)/100, note:`CK ${L.map(x=>nice(x.d)).join(', ')} · ${inv}`.replace(/^CK/, /calvin/i.test(L[0].client)?'CK':L[0].client), got:false}); ch=true; } }
+      for (const [inv,L] of Object.entries(grp)){ last=slot(addDays(last,1)); const amt=L.reduce((a,x)=>a+x.net+(x.exp||0),0); C.push({id:uid(), d:last, amt:Math.round(amt*100)/100, note:`${ME.clientS} ${L.map(x=>nice(x.d)).join(', ')} · ${inv}`.replace(new RegExp('^'+ME.clientS), ME.clientRe.test(L[0].client)?ME.clientS:L[0].client), got:false}); ch=true; } }
     return ch; } catch(e){ return false; }
 }
 function stmtReceived(year){ const st=stmtNow(), all=[ONE_STMT, ...((S.model&&S.model.stmts)||[])], seen=new Set(), rows=[];
@@ -6591,7 +6474,7 @@ function taxCard(){
   return `<div class="card sec tx-card"><div class="row between"><span class="tag">Taxes · since Jan 2026</span><span class="sub" style="font-size:12px">Jan 15 est. due</span></div>
     <div class="st-flow" style="margin-top:10px">${[['Modeling paid since Jan 1',rec],...(dInc?[['+ Datum sales',dInc]]:[]),['− write-offs',-ded],['× '+Math.round(s.taxRate*100)+'% on '+money0(taxable),need],['− estimated payments made',-paid],['− in your Tax Buffer',-buf],['= gap · 🐉 Tax Wyrm HP',gap]].map(([l,v])=>`<div><span>${l}</span><b class="num">${v<0?'−'+money0(-v).replace('−',''):money0(v)}</b></div>`).join('')}</div>
     ${ded?`<div class="help keep" style="margin-top:8px;color:var(--good)">Write-offs cut what you owe by ${money0(Math.min(rec+dInc,ded)*s.taxRate)}.</div>`:''}${rv?`<button class="btn sm ghost" style="margin-top:8px" onclick="dedN=20;setDedFilter('review');setTimeout(()=>document.getElementById('dedList')?.scrollIntoView({behavior:'smooth'}),60)">${rv} write-off${rv===1?'':'s'} to confirm → lowers the tax</button>`:''}
-    <div class="help" style="margin-top:8px">You're taxed when ONE actually pays you, not when you shoot — so the $${Math.round(agencyOwed()).toLocaleString()} they still owe is taxed in the year it lands. ${pre?`${money0(pre)} landed before September, when the waterfall's set-aside started. `:''}Ask the CPA how much of this your Schneider W-2 withholding already covers.</div>
+    <div class="help" style="margin-top:8px">You're taxed when ${ME.ag} actually pays you, not when you shoot — so the $${Math.round(agencyOwed()).toLocaleString()} they still owe is taxed in the year it lands. ${pre?`${money0(pre)} landed before September, when the waterfall's set-aside started. `:''}Ask the CPA how much of this your ${ME.employer} W-2 withholding already covers.</div>
     <form class="ct-add" style="margin-top:10px" onsubmit="return wyrmFeed(event)"><input class="inp" type="number" min="1" step="1" inputmode="decimal" placeholder="$ just set aside for taxes"><button class="btn sm">Set aside</button></form></div>`;
 }
 let debtExtra=null;
@@ -6599,7 +6482,7 @@ function debtCard(){
   const A=(S.money.budget?.accounts||[]).filter(a=>a.bal<0), s=S.money.s; if (!A.length) return '';
   const tally=(()=>{ try { const T=S.money.tips||{}; return 0; } catch(e){ return 0; } })();
   const extra = debtExtra!==null ? debtExtra : (S.money.debtExtra ?? 200);
-  const debts=A.map(a=>({name:a.name.replace(/ Card$/,''), bal:-a.bal, min:/auto|loan/i.test(a.name)?(+s.car||307.85):Math.max(35,Math.round(-a.bal*0.03)), apr:/auto|loan/i.test(a.name)?0.07:0.27})).sort((a,b)=>a.bal-b.bal);
+  const debts=A.map(a=>({name:a.name.replace(/ Card$/,''), bal:-a.bal, min:/auto|loan/i.test(a.name)?(+s.car||0):Math.max(35,Math.round(-a.bal*0.03)), apr:/auto|loan/i.test(a.name)?0.07:0.27})).sort((a,b)=>a.bal-b.bal);
   // snowball: smallest first, roll each payment into the next
   let month=0, freed=0; const done={}; const bals=debts.map(d=>d.bal);
   while (month<360 && bals.some(b=>b>0.5)){ month++; let pool=extra+freed; debts.forEach((d,i)=>{ if (bals[i]<=0.5) return; bals[i]+=bals[i]*d.apr/12; const pay=Math.min(bals[i], d.min); bals[i]-=pay; });
@@ -7192,10 +7075,10 @@ function statNow(k){ return statVal(k)+rpgFx(TODAY).reduce((a,f)=>a+((f.st||{})[
 const REP_T=[[0,'Neutral'],[500,'Friendly'],[1500,'Honored'],[3000,'Revered'],[6000,'Exalted']];
 function facName(c){ return String(c||'').replace(/\s*\(.*?\)\s*/g,' ').replace(/\s+via\s+.*/i,'').replace(/\s+/g,' ').trim(); }
 function factions(){ return rpgC('fac',()=>{ const by={}, E=liveE().filter(e=>e.t!=='travel').slice().sort((a,b)=>a.start.localeCompare(b.start));
-  for (const e of E){ if (/ONE Management/i.test(e.c)) continue; const n=facName(e.c), ph=/photographer/i.test(e.c); const F=(by[n] ||= {n, ph, rep:0, jobs:0, days:0, cast:0, opts:0, best:0, first:e.start, last:e.start});
+  for (const e of E){ if (ME.agRe.test(e.c)) continue; const n=facName(e.c), ph=/photographer/i.test(e.c); const F=(by[n] ||= {n, ph, rep:0, jobs:0, days:0, cast:0, opts:0, best:0, first:e.start, last:e.start});
     if (e.t==='job'){ F.jobs++; const dn=(e.d||[]).length||1; F.days+=dn; F.rep+=250+(F.jobs>1?150:0)+100*dn; } else if (e.t==='option'){ F.opts++; F.rep+=75; } else { F.cast++; F.rep+=50; }
     F.best=Math.max(F.best,+e.rn||0); if (e.start>F.last) F.last=e.start; }
-  const one={n:'ONE Management', agency:1, rep:E.filter(e=>/^ONE/i.test(e.ag||'')).length*25+S.money.checks.filter(c=>c.got).length*200};
+  const one={n:(ME.agency), agency:1, rep:E.filter(e=>ME.agRe.test(e.ag||'')).length*25+S.money.checks.filter(c=>c.got).length*200};
   const D=ensureDatum(), dc={n:'Datum clientele', datum:1, rep:D.orders.length*300+D.orders.filter(o=>['delivered','closed'].includes(o.status)).length*500};
   return {list:Object.values(by).sort((a,b)=>b.rep-a.rep), one, dc}; }); }
 function repTier(r){ let i=0; while (i<REP_T.length-1 && r>=REP_T[i+1][0]) i++; const lo=REP_T[i][0], hi=REP_T[i+1]?.[0]; return {i, name:REP_T[i][1], pct:hi?(r-lo)/(hi-lo):1, next:hi, nextName:REP_T[i+1]?.[1]}; }
@@ -7220,7 +7103,7 @@ const ZONES=[
   {k:'mil',n:'Milan',ic:'🏛️',x:336,y:64,re:/milan|milano/i}];
 const ZLV=[1,5,15,30,60];
 function zoneOfText(s){ for (const z of ZONES) if (z.re.test(s||'')) return z.k; return null; }
-function zoneOfE(e){ if (e.t==='option'||e.t==='travel'||e.t==='selftape') return null; const z=zoneOfText([e.loc,e.c].join(' ')); if (z) return z; if (!e.loc && /^ONE NY/i.test(e.ag||'')) return 'nyc'; if (!e.loc && /^ONE Chicago/i.test(e.ag||'')) return 'chi'; return null; }
+function zoneOfE(e){ if (e.t==='option'||e.t==='travel'||e.t==='selftape') return null; const z=zoneOfText([e.loc,e.c].join(' ')); if (z) return z; if (!e.loc && new RegExp('^'+ME.ag+' NY','i').test(e.ag||'')) return 'nyc'; if (!e.loc && new RegExp('^'+ME.ag+' Chicago','i').test(e.ag||'')) return 'chi'; return null; }
 function world(){ return rpgC('world',()=>{ const W={}; for (const z of ZONES) W[z.k]={...z, days:new Set(), jobs:0, nights:0, road:0, bench:0};
   for (const e of liveE()){ const z=zoneOfE(e); if (!z) continue; (e.d||[]).forEach(k=>{ if (k<=TODAY) W[z].days.add(k); }); if (e.t==='job') W[z].jobs++; }
   let E=[]; try { E=socAll(); } catch(e){} for (const e of E){ const z=zoneOfText(e.where+' '+e.name) || 'chi'; W[z].nights++; W[z].days.add(e.d); }
@@ -7547,15 +7430,7 @@ function fillQ4(){ const C=(S.circle ||= {ev:[],people:[]}); C.ev ||= []; C.peop
 
 /* ===================== Year OKR suggestions + cascade · b127 ===================== */
 const isYr = k => /^\d{4}$/.test(String(k||''));
-const YEAR_SUGGEST = {
- '2027': {theme:'The year it all becomes a business', objectives:[
-  {track:'modeling',title:'Three markets, $150K booked',why:'~30 Calvin Klein days at ~$5k in the last 12 months — the base is real. Now widen it past one client.',done:'$150K booked, 4+ new clients, worked LA and Europe.',krs:[K_('Booked ($)',150000,'$','','Day rates of confirmed jobs'),K_('Days on set',30,'','','From Modeling'),K_('New clients booked',4),K_('Castings attended',60,'','','From Modeling'),K_('Markets worked (LA, London, Milan)',3)]},
-  {track:'financial',title:'Debt-free, tax-proof, funded',why:'ONE owes you $85K and ~$14K of tax is due — the money is coming; the system has to catch it.',done:'No consumer debt, emergency fund full, every estimate paid on time.',krs:[K_('Tax set aside same day (checks)',20),K_('Quarterly estimates paid on time',4),K_('Emergency fund ($)',15347,'$'),K_('Car loan paid off (Sep 30)',1,'','2027-09-30'),K_('SEP-IRA contributions ($)',15000,'$'),K_('CPA files 2026 return (Apr 15)',1,'','2027-04-15')]},
-  {track:'grillz',title:'Datum Grillz: 20 orders and a storefront',why:'Your 5-year plan puts 20 orders, a gold option and Shopify in 2027.',done:'A store that takes money while you’re on set.',krs:[K_('Paid orders',20),K_('Revenue',8000,'$'),K_('Sets made end-to-end',12),K_('Shopify storefront live (Jun 30)',1,'','2027-06-30'),K_('Gold option launched (Sep 30)',1,'','2027-09-30')]},
-  {track:'content',title:'Own the angle: the model who makes grillz',why:'1,316 followers and 2 posts this quarter — the audience is there, the reps aren’t.',done:'2 posts a week all year and a Datum audience that buys.',krs:[K_('Posts published',100),K_('Weeks with 2 posts',40),K_('Datum posts',40),K_('Combined followers',2000),K_('Brand collab (Dec 31)',1,'','2027-12-31')]},,
-  {track:'fitness',title:'Camera-ready all year',why:'Your body is the job on set — gym was 0 days this quarter.',done:'3× a week, even on the road.',krs:[K_('Gym sessions',150),K_('Home-cooked meals',100)]},
-  {track:'relationships',title:'A real Chicago circle',why:'Most of this quarter’s hangouts happened while traveling.',done:'3–5 people you see every month.',krs:[K_('Hangouts / events',40),K_('New people met',15),K_('Friends at Close bond',3)]},
-  {track:'personal',title:'Honest, organized, consistent',why:'The weekly review is the engine of everything else.',done:'48 reviews, a journal habit, books finished.',krs:[K_('Weekly reviews done',48),K_('Journal days',200),K_('Books finished',6)]}]}};
+/* YEAR_SUGGEST: in the private seed block (b330) */
 function yearSugFor(y){ if (YEAR_SUGGEST[y]) return {...YEAR_SUGGEST[y], src:'built'}; const prev=S.years[String(+y-1)]; if (!prev) return null;
   return {theme:'Same lanes, a level up', src:'built', objectives:prev.objectives.filter(o=>o.title).map(o=>({track:o.track,title:o.title,why:'',done:'',krs:o.krs.map(k=>({text:k.text,target:+k.target>1?Math.ceil(k.target*1.25):1,unit:k.unit||'',how:''}))}))}; }
 const MON3Y={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
@@ -7646,8 +7521,8 @@ const ANIM_SLOTS=[
   ['room_day','Room · day','Empty room · you get placed in it','room',`Animate this room as a cozy ambient loop: clouds drift past the window, the plant sways, steam rises from the mug, dust floats in the light. The room is empty — no people. ${ANIM_STY} 8 seconds, seamless loop.`],
   ['room_night','Room · night','Empty room · after 8pm','room',`Animate this room at night as a cozy ambient loop: stars twinkle in the window, the desk lamp glows and flickers softly, steam rises from the mug. The room is empty — no people. ${ANIM_STY} 8 seconds, seamless loop.`],
   ['vault_idle','Vault · idle','World + Money','vault',`Animate this floating vault-door golem as a video-game boss idle loop: it floats up and down, its single eye looks left and right and blinks, the bolts turn slowly, gold coins orbit around it. ${ANIM_STY} 5 seconds, seamless loop.`],
-  ['vault_hit','Vault · hit','Plays once when ONE pays you','vault',`Animate this floating vault-door golem getting hit in a video game: it flashes white, shakes hard, a crack appears and a few coins spill out, then it settles back to the starting pose. ${ANIM_STY} 2 seconds.`],
-  ['vault_dead','Vault · defeated','When ONE has paid everything','vault',`Animate this floating vault-door golem being defeated: the door swings open, gold light and coins pour out, it slumps to the ground and a crown pops out on top. ${ANIM_STY} 4 seconds, end on the final frame.`],
+  ['vault_hit','Vault · hit',("Plays once when "+ME.ag+" pays you"),'vault',`Animate this floating vault-door golem getting hit in a video game: it flashes white, shakes hard, a crack appears and a few coins spill out, then it settles back to the starting pose. ${ANIM_STY} 2 seconds.`],
+  ['vault_dead','Vault · defeated',("When "+ME.ag+" has paid everything"),'vault',`Animate this floating vault-door golem being defeated: the door swings open, gold light and coins pour out, it slumps to the ground and a crown pops out on top. ${ANIM_STY} 4 seconds, end on the final frame.`],
   ['wyrm_idle','Tax Wyrm · idle','World + Money','wyrm',`Animate this coin-scaled serpent dragon coiled on its gold hoard as a video-game boss idle loop: its body ripples like a wave, smoke puffs from its nostrils, its forked tongue flicks, its eye glows. ${ANIM_STY} 5 seconds, seamless loop.`],
   ['wyrm_hit','Tax Wyrm · hit','Plays once when you set tax aside','wyrm',`Animate this coin-scaled serpent dragon getting slashed in a video game: it flashes white, recoils and hisses, coins scatter, then it returns to the starting pose. ${ANIM_STY} 2 seconds.`],
   ['wyrm_dead','Tax Wyrm · slain','When taxes are fully covered','wyrm',`Animate this coin-scaled serpent dragon being slain: a final roar, it collapses onto the coin pile, its eyes close and the smoke fades. ${ANIM_STY} 4 seconds, end on the final frame.`]];
@@ -9109,7 +8984,7 @@ let ciSleep = null;
 function coachData(){ const out=[], T=TODAY; const tryp=f=>{ try { const v=f(); if (v) out.push(v); } catch(e){} };
   tryp(()=>`Today is ${niceLong(T)}. Level ${levelFor(computeXP())}, ${dailyStreak()}-day streak.`);
   tryp(()=>{ const d=S.days[T]; return `Check-in: ${d&&d.checkin?`done, energy ${d.checkin.feel}/4${d.checkin.sleep!=null?`, slept ${SLEEP[d.checkin.sleep]}`:''}`:'not yet'}. Top 3: ${d?d.top3.filter(t=>t.text.trim()).map(t=>(t.done?'[done] ':'')+t.text).join('; ')||'not set':'not set'}.`; });
-  tryp(()=>`Money: ONE Management owes him ${money0(mOwed(mPipe()))}. Tax buffer holds ${money0(bal('tax'))}. Expected checks: ${S.money.checks.filter(c=>!c.got).slice(0,3).map(c=>`${money0(c.amt)} on ${c.d}`).join(', ')||'none'}.`);
+  tryp(()=>`Money: ${ME.agency} owes him ${money0(mOwed(mPipe()))}. Tax buffer holds ${money0(bal('tax'))}. Expected checks: ${S.money.checks.filter(c=>!c.got).slice(0,3).map(c=>`${money0(c.amt)} on ${c.d}`).join(', ')||'none'}.`);
   tryp(()=>{ const up=mAll().filter(e=>e.start>=T&&!['cancelled','released','declined','nobook'].includes(e.s)).sort((a,b)=>a.start.localeCompare(b.start)).slice(0,5); return `Bookings ahead: ${up.map(e=>`${e.t} for ${e.c} on ${e.start}${e.loc?' in '+e.loc:''}`).join('; ')||'none'}.`; });
   tryp(()=>`Deadlines in the next 2 weeks: ${dlAll().filter(x=>!x.done&&x.d<=addDays(T,14)).slice(0,6).map(x=>`${x.text} (${x.d})`).join('; ')||'none'}.`);
   tryp(()=>S.gym&&S.gym.setup&&S.gym.setup.done?`Gym: ${gWeekCount()}/${G_().setup.days} workouts this week, goal ${GGOAL[G_().setup.goal].n}. Last workout: ${(G_().sessions.slice(-1)[0]||{}).name||'none yet'}.`:'');
@@ -9145,7 +9020,7 @@ function agMoney(){ const L=[]; const T=t=>{ try { const v=t(); if (v) L.push(v)
   T(()=>{ const F=FI_(), A=fiActual(), M=fiThisMonth(); return `Financial independence plan (Mom's roadmap, $1.5M today's $ by 55): portfolio ${money0(A.v)} vs plan ${money0(fiPlanAt(TODAY.slice(0,7)))}; this month invested ${money0(M.got)} of ${money0(M.need)}; at this plan he reaches ${money0(fiAt55().today)} (today's $) at 55. Not financial advice — suggest a CPA for account choices.`; });
   T(()=>{ const R=sbRows(); return R.length?`On schedule (real accounts vs plan): ${R.map(r=>`${r.n} ${money0(r.v)} vs plan ${money0(r.plan)} → ${r.st==='on'?'on track':r.st+' '+money0(Math.abs(r.diff))}`).join('; ')}.`:''; });
   T(()=>{ const L=subsList(); return L.length?`Subscriptions & recurring bills (${money0(L.reduce((a,x)=>a+x.mo,0))}/mo): ${L.slice(0,15).map(x=>`${x.name} ${money0(x.amt)} ${x.cad}`).join('; ')}.`:''; });
-  T(()=>{ const O=oneComing(); return O?`ONE Management owes ${money0(O.owed)}; ${money0(O.booked)} more booked; hold ${money0(O.tax)} of that for tax.`:''; });
+  T(()=>{ const O=oneComing(); return O?`${ME.agency} owes ${money0(O.owed)}; ${money0(O.booked)} more booked; hold ${money0(O.tax)} of that for tax.`:''; });
   return L.join('\n'); }
 function agSchedule(){ try { return agendaFor(TODAY, addDays(TODAY,30)).map(x=>`${x.d} ${x.tag}: ${x.text}`).slice(0,45).join('\n')||'nothing scheduled'; } catch(e){ return ''; } }
 function agCtx(){ return `TODAY ${TODAY} (${niceLong(TODAY)}). Week ${THIS_WEEK}. Quarter ${THIS_Q}.\n\n${coachData()}\n\nMONEY\n${agMoney()}\n\nSCHEDULE (next 30 days)\n${agSchedule()}\n\nGOALS (ids in brackets)\n${agGoals()}\n\nOPEN QUESTS: ${(S.quests||[]).filter(q=>!q.done).map(q=>`[q ${q.id}] ${q.text} (${q.size})`).slice(0,15).join('; ')||'none'}
@@ -9181,7 +9056,7 @@ function agDo(a){ const A=a.args||a, t=a.tool||a.type;
 async function coachSend(t){ t=String(t||'').trim(); if(!t||coachBusy) return; const C=C_(); C.msgs.push({r:'u',t,at:Date.now()}); coachBusy=true; coachOpen();
   if (!sampleLib){ C.msgs.push({r:'a',t:'I can’t think right now — no connection. Try again in a bit.'}); coachBusy=false; commit({skipXp:true}); coachOpen(); return; }
   const hist=C.msgs.slice(-14).map(m=>(m.r==='u'?'Tega: ':'You: ')+m.t+(m.acts?.length?` [you did: ${m.acts.join('; ')}${m.undone?' — he undid it':''}]`:'')).join('\n');
-  const prompt=`You are Tega — the agent living inside Tega.exe, his life-OS app. He's a young fashion model (Calvin Klein regular, ONE Management, Chicago + NY), building a grillz business (Datum), posting content, lifting to stay lean, and getting his money in order (32.2% of income goes to the tax buffer). You can SEE everything below and you can CHANGE the app with actions. Talk like a smart, funny friend: direct, casual, short (under 80 words unless he asks for a plan or long text). Use only the real numbers below — never invent amounts or dates; if something isn't in the data, say you don't see it.
+  const prompt=`You are Tega — the agent living inside Tega.exe, his life-OS app. He's a young fashion model (${ME.client} regular, ${ME.agency}, Chicago + NY), building a grillz business (Datum), posting content, lifting to stay lean, and getting his money in order (32.2% of income goes to the tax buffer). You can SEE everything below and you can CHANGE the app with actions. Talk like a smart, funny friend: direct, casual, short (under 80 words unless he asks for a plan or long text). Use only the real numbers below — never invent amounts or dates; if something isn't in the data, say you don't see it.
 
 WHAT YOU CAN DO (actions):
 - add_objective {level:"quarter"|"year", period?:"2026-Q4"|"2027", track, title, why, done, krs:[{text,target,unit:""|"$",due:"YYYY-MM-DD"|""}]}
@@ -9230,23 +9105,23 @@ function mCard(){ const M=mState(); M.meas ||= {}; return (M.card ||= {imgs:[], 
 function mCardStats(){ const E=mAll(), jobs=E.filter(e=>e.t==='job'&&!['cancelled','released','declined','nobook'].includes(e.s)); const cnt={}; for (const j of jobs) cnt[j.c]=(cnt[j.c]||0)+j.days; return {days:fact('setdays'), clients:Object.entries(cnt).sort((a,b)=>b[1]-a[1]).map(([c])=>c)}; }
 function mCardView(){ const K=mCard(), M=mState(), st=mCardStats();
   return `<div class="cc sec"><div class="cc-imgs">${[0,1,2,3].map(i=>K.imgs[i]?`<div class="cc-i" style="background-image:url('${BLOBURL}${K.imgs[i]}')"><button class="x" onclick="mCardDel(${i})" aria-label="Remove photo">✕</button></div>`:`<label class="cc-i cc-add">＋<span>Photo</span><input type="file" accept="image/*" hidden onchange="mCardUp(${i},this)"></label>`).join('')}</div>
-    <div class="cc-name">${esc(K.name||'TEGA')}</div><div class="cc-agency">${esc(K.agency||'ONE Management')}</div>
+    <div class="cc-name">${esc(K.name||'TEGA')}</div><div class="cc-agency">${esc(K.agency||(ME.agency))}</div>
     <div class="cc-meas">${MEAS_KEYS.filter(([k])=>M.meas[k]).map(([k,l])=>`<div><small>${l}</small><b>${esc(M.meas[k])}</b></div>`).join('')||'<div class="sub" style="font-size:12px">Add measurements below</div>'}</div>
     <div class="cc-stats"><div><b class="num">${st.days}</b><small>days on set</small></div><div><b class="num">${st.clients.length}</b><small>clients</small></div></div>
     ${st.clients.length?`<div class="cc-cl">${st.clients.slice(0,8).map(c=>`<span>${esc(c)}</span>`).join('')}</div>`:''}</div>
   <div class="row sec" style="gap:8px"><button class="btn" onclick="mCardSave()">Save card</button><button class="btn ghost" onclick="mCardCopy()">Copy text</button></div>
-  <div class="card sec" style="display:grid;gap:10px"><label class="g-q"><span>Name on card</span><input class="inp" value="${esc(K.name)}" placeholder="TEGA" onchange="mCard().name=this.value.trim();commit({skipXp:true})"></label><label class="g-q"><span>Agency / contact</span><input class="inp" value="${esc(K.agency)}" placeholder="ONE Management · @yourhandle" onchange="mCard().agency=this.value.trim();commit({skipXp:true})"></label><span class="tag" style="margin-top:4px">Measurements</span><div class="mm-meas">${MEAS_KEYS.map(([k,l])=>`<label><small>${l}</small><input class="inp" value="${esc(M.meas[k]||'')}" placeholder="—" onchange="mMeas('${k}',this.value)"></label>`).join('')}</div></div>`; }
+  <div class="card sec" style="display:grid;gap:10px"><label class="g-q"><span>Name on card</span><input class="inp" value="${esc(K.name)}" placeholder="TEGA" onchange="mCard().name=this.value.trim();commit({skipXp:true})"></label><label class="g-q"><span>Agency / contact</span><input class="inp" value="${esc(K.agency)}" placeholder="${ME.agency} · @yourhandle" onchange="mCard().agency=this.value.trim();commit({skipXp:true})"></label><span class="tag" style="margin-top:4px">Measurements</span><div class="mm-meas">${MEAS_KEYS.map(([k,l])=>`<label><small>${l}</small><input class="inp" value="${esc(M.meas[k]||'')}" placeholder="—" onchange="mMeas('${k}',this.value)"></label>`).join('')}</div></div>`; }
 async function mCardUp(i, input){ const f=input.files&&input.files[0]; input.value=''; if(!f) return; if (!benchAssets) return toast('Photo upload isn’t available here'); toast('Uploading…');
   try { const b=typeof artShrink==='function'?await artShrink(f):f; const r=await benchAssets.upload(b, b.type?undefined:{type:'image/jpeg'}); mCard().imgs[i]=r.id; commit({skipXp:true}); toast('Added'); } catch(e){ toast('Upload failed — try again'); } }
 function mCardDel(i){ const K=mCard(); (K.old ||= []).push(K.imgs[i]); K.imgs[i]=null; commit({skipXp:true}); }
-function mCardText(){ const K=mCard(), M=mState(), st=mCardStats(); return `${K.name||'TEGA'} · ${K.agency||'ONE Management'}\n${MEAS_KEYS.filter(([k])=>M.meas[k]).map(([k,l])=>`${l} ${M.meas[k]}`).join(' · ')}\n${st.days} days on set${st.clients.length?' · '+st.clients.slice(0,6).join(', '):''}`; }
+function mCardText(){ const K=mCard(), M=mState(), st=mCardStats(); return `${K.name||'TEGA'} · ${K.agency||(ME.agency)}\n${MEAS_KEYS.filter(([k])=>M.meas[k]).map(([k,l])=>`${l} ${M.meas[k]}`).join(' · ')}\n${st.days} days on set${st.clients.length?' · '+st.clients.slice(0,6).join(', '):''}`; }
 function mCardCopy(){ const t=mCardText(); try { navigator.clipboard.writeText(t).then(()=>toast('Copied'),()=>gSheet(`<h2 class="g-sh-t">Copy this</h2><textarea class="inp" style="min-height:140px">${esc(t)}</textarea>`)); } catch(e){ gSheet(`<h2 class="g-sh-t">Copy this</h2><textarea class="inp" style="min-height:140px">${esc(t)}</textarea>`); } }
 async function mCardSave(){ const K=mCard(), M=mState(), st=mCardStats(), c=document.createElement('canvas'); c.width=1080; c.height=1500; const x=c.getContext('2d');
   x.fillStyle='#0b0b0d'; x.fillRect(0,0,1080,1500);
   const load=id=>new Promise(res=>{ if(!id) return res(null); const im=new Image(); im.crossOrigin='anonymous'; im.onload=()=>res(im); im.onerror=()=>res(null); im.src=BLOBURL+id; });
   const ims=await Promise.all([0,1,2,3].map(i=>load(K.imgs[i])));
   ims.forEach((im,i)=>{ const X=40+(i%2)*510, Y=40+Math.floor(i/2)*510, W=490, H=490; x.fillStyle='#1c1c20'; x.fillRect(X,Y,W,H); if(im){ const s=Math.max(W/im.width,H/im.height), w=im.width*s, h=im.height*s; x.save(); x.beginPath(); x.rect(X,Y,W,H); x.clip(); x.drawImage(im,X+(W-w)/2,Y+(H-h)/2,w,h); x.restore(); } });
-  x.fillStyle='#fff'; x.font='800 96px Inter, sans-serif'; x.fillText((K.name||'TEGA').toUpperCase(),40,1160); x.fillStyle='rgba(255,255,255,.6)'; x.font='500 34px Inter, sans-serif'; x.fillText(K.agency||'ONE Management',44,1215);
+  x.fillStyle='#fff'; x.font='800 96px Inter, sans-serif'; x.fillText((K.name||'TEGA').toUpperCase(),40,1160); x.fillStyle='rgba(255,255,255,.6)'; x.font='500 34px Inter, sans-serif'; x.fillText(K.agency||(ME.agency),44,1215);
   const ms=MEAS_KEYS.filter(([k])=>M.meas[k]); x.font='600 30px Inter, sans-serif'; ms.forEach(([k,l],i)=>{ const X=44+(i%3)*340, Y=1290+Math.floor(i/3)*70; x.fillStyle='rgba(255,255,255,.5)'; x.fillText(l.toUpperCase(),X,Y); x.fillStyle='#fff'; x.fillText(String(M.meas[k]),X+(l.length>5?150:130),Y); });
   x.fillStyle='rgba(255,255,255,.5)'; x.font='500 28px Inter, sans-serif'; x.fillText(`${st.days} days on set${st.clients.length?' · '+st.clients.slice(0,4).join(' · '):''}`,44,1470);
   const blob=await new Promise(r=>c.toBlob(r,'image/png'));
@@ -9467,7 +9342,7 @@ const KSRC = [
   ['Modeling','proposals','Proposals sent','📨','',(a,b)=>(S.logs||[]).filter(l=>l.kind==='proposal'&&l.d>=a&&l.d<=b).length],
   ['Modeling','tapesent','Self-tapes sent (from the vault)','🎬','',(a,b)=>(S.vault||[]).filter(x=>x.cat==='tape').reduce((n,x)=>n+(x.sends||[]).filter(d=>d>=a&&d<=b).length,0)],
   ['Modeling','setdays','Days on set','🎬','',(a,b)=>liveBookings().filter(e=>e.t==='job').reduce((s,e)=>s+(e.d||[]).filter(k=>k>=a&&k<=b&&k<=TODAY).length,0)],
-  ['Modeling','setdays:ck','Days on set for Calvin Klein','🎬','',(a,b)=>liveBookings().filter(e=>e.t==='job'&&/calvin/i.test(e.c||'')).reduce((s,e)=>s+(e.d||[]).filter(k=>k>=a&&k<=b&&k<=TODAY).length,0)],
+  ['Modeling','setdays:ck',("Days on set for "+ME.client),'🎬','',(a,b)=>liveBookings().filter(e=>e.t==='job'&&ME.clientRe.test(e.c||'')).reduce((s,e)=>s+(e.d||[]).filter(k=>k>=a&&k<=b&&k<=TODAY).length,0)],
   ['Modeling','jobs','Jobs','📸','',(a,b)=>liveBookings().filter(e=>e.t==='job'&&(e.d||[]).some(k=>k>=a&&k<=b&&k<=TODAY)).length],
   ['Modeling','booked','Booked ($)','💼','$',(a,b)=>liveBookings().filter(e=>e.t==='job').reduce((s,e)=>s+(e.rn||0)*e.d.filter(k=>k>=a&&k<=b).length,0)],
   ['Modeling','castings','Castings / fittings / tests','🎭','',(a,b)=>liveBookings().filter(e=>['casting','selftape','test','fitting'].includes(e.t)&&e.d.some(k=>k>=a&&k<=b&&k<=TODAY)).length],
@@ -10509,7 +10384,7 @@ function autoCloseWorkout(){ const g=S.gym; if (!g||!g.live||Date.now()-g.live.t
     if (n) { if (!autoCloseWorkout.q){ autoCloseWorkout.q=1; setTimeout(()=>{ try { gFinish(); autoNote('gym','Closed a workout left open'); } catch(e){} autoCloseWorkout.q=0; },0); } }
     else { g.trash ||= []; g.trash.push({...g.live, d:g.live.d||TODAY, deletedAt:TODAY, discarded:1}); g.live=null; autoNote('gym','Cleared an empty workout left open'); } } catch(e){ console.warn('autoclose',e); } }
 function autoToday(){ const L=(S.autoLog||[]).filter(x=>x.d===TODAY); if (!L.length) return ''; return `<div class="auto-l">✦ ${L.map(x=>esc(x.msg)).join(' · ')}</div>`; }
-// chase ONE: once a month, when the oldest unpaid job is 9+ months old, a draft is queued for the daily sync to put in Gmail
+// chase the agency: once a month, when the oldest unpaid job is 9+ months old, a draft is queued for the daily sync to put in Gmail
 function autoChase(){ try { const st=stmtNow(), P=mPipe(), E=mAll(), un=E.filter(e=>P[e.id]&&P[e.id].stage==='invoiced').sort((a,b)=>a.start.localeCompare(b.start)), old=un[0];
   if (!old || daysBetween(old.start,TODAY)<270) { S.chaseQ=null; return; }
   const body=`Hi Roza and Jawahar,\n\nPer my financial statement dated ${nice(st.asOf)}, ${st.asOf.slice(0,4)}, my account balance is ${money0(st.balance)}. The oldest unpaid job is ${old.c} on ${parseD(old.start).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}, and ${un.length} jobs are still outstanding.\n\nCould you share a payment schedule for the remaining balance? Since I'm modeling full time, consistent payments twice a month would really help.\n\nThank you,\nTega`;
@@ -11034,15 +10909,15 @@ function t3fit(el){ el.style.height='auto'; el.style.height=el.scrollHeight+'px'
 const STREAMS=[['model','Modeling','📸','#ff7ad9'],['datum','Datum','💎','#ffd166'],['cad','Side hustle','🚀','#c6ff4d'],['other','Other','➕','#a8b3c7']];
 const STREAM_OF=k=>STREAMS.find(x=>x[0]===k)||STREAMS[3];
 function incStream(t){ if (t.stream) return t.stream; const d=String(t.desc||'').toUpperCase();
-  if (/MODEL MANAGE|ONE MANAGEMENT|ACTIVE MODEL|MODELS INC/.test(d)) return 'model';
+  if (/MODEL MANAGE|ACTIVE MODEL|MODELS INC/.test(d) || ME.payRe.test(d) || ME.agRe.test(d)) return 'model';
   if (/SHOPIFY|ETSY|SQUARE|STRIPE|DATUM|GRILL/.test(d)) return 'datum';
   return 'other'; }
 const isIncomeTx = t => t.amt>0 && !['transfer','ignore'].includes(t.cat) && !/REWARD|CASH ?BACK|REFUND|INTEREST PAID|DIVIDEND/i.test(t.desc||'');
 function incomeBy(from, to){ const o={model:0,datum:0,cad:0,other:0}; const ords=datumOrdersIn(addDays(from,-14),addDays(to,14)), used=new Set(); for (const t of S.money.budget.txns) if (t.d>=from && t.d<=to && isIncomeTx(t)){ const k=incStream(t); if (k==='datum'){ const m=ords.find(x=>!used.has(x.id) && Math.abs((+x.price||0)-t.amt)<1); if (m){ used.add(m.id); } } o[k]+=t.amt; }
   for (const x of datumOrdersIn(from,to)) if (!used.has(x.id)) o.datum+=(+x.price||0); for (const t of agencyDeposits()) if (t.hand && t.d>=from && t.d<=to) o.model+=t.amt; try { for (const x of ensureHustle().income) if (x.d>=from && x.d<=to) o.cad+=(+x.amt||0); } catch(e){} return o; }
 // one list of agency money: what the bank shows + checks you typed in that the bank hasn't posted yet (every page reads this)
-function agencyDeposits(){ const T=(S.money.budget?.txns||[]).filter(t=>t.amt>0&&/MODEL MANAGE/i.test(t.desc)).map(t=>({d:t.d, amt:t.amt, desc:t.desc, id:t.id}));
-  for (const c of S.money.checks||[]) if (c.got && c.byHand && !c.verified){ const d=c.gotOn||c.d; if (!T.some(t=>Math.abs(daysBetween(t.d,d))<=6 && (Math.abs(t.amt-c.amt)<1))) T.push({d, amt:c.amt, desc:'1 MODEL MANAGE · in your bank, posting', hand:1}); }
+function agencyDeposits(){ const T=(S.money.budget?.txns||[]).filter(t=>t.amt>0&&ME.payRe.test(t.desc)).map(t=>({d:t.d, amt:t.amt, desc:t.desc, id:t.id}));
+  for (const c of S.money.checks||[]) if (c.got && c.byHand && !c.verified){ const d=c.gotOn||c.d; if (!T.some(t=>Math.abs(daysBetween(t.d,d))<=6 && (Math.abs(t.amt-c.amt)<1))) T.push({d, amt:c.amt, desc:ME.payer.toUpperCase()+' · in your bank, posting', hand:1}); }
   return T.sort((a,b)=>b.d.localeCompare(a.d)); }
 function setStream(id,k){ const t=S.money.budget.txns.find(t=>t.id===id); if(!t) return; t.stream=k; commit({skipXp:true}); }
 // Datum's own books: money in from Datum, money out on Datum (its write-offs)
@@ -11051,7 +10926,7 @@ function datumBooks(from, to){ const inc=incomeBy(from,to).datum, exp=S.money.bu
 function splitRows(r){ const cards=cardList().map(c=>c.name).join(' → ');
   return [['📊','Taxes',r.catchup>0.5?`Tax Buffer · 32.2% ${money0(r.taxBase)} + catch-up ${money0(r.catchup)}`:'Tax Buffer (Capital One)',r.tax,'#ff6b6b'],['🏠','Bills',r.billNames&&r.billNames.length?`due before next check: ${r.billNames.join(', ')} + groceries`:'groceries until next check · stays in checking',r.bills,'#a8b3c7'],['🛍️','Spending','yours',r.flex,'#7ee2ff'],
     ['🛡️','Emergency',r.draw?'covers the bills gap':'HYSA',r.draw?-r.draw:r.efAdd,'#2fbf71'],['💳','Credit cards',cards||'cards',r.cards,'#b98cff'],
-    ['🏡','House','HYSA bucket',r.house,'#f5c542'],['🌱',r.retLabel==='Roth'?'Roth IRA':'SEP IRA','Fidelity',r.ret,'#39ff9f']].filter(x=>Math.abs(x[3])>0.5); }
+    ['🏡','House','HYSA bucket',r.house,'#f5c542'],['🌱',r.retLabel==='Roth'?'Roth IRA':'SEP IRA',(ME.broker),r.ret,'#39ff9f']].filter(x=>Math.abs(x[3])>0.5); }
 function splitBar(rows,total){ return `<div class="pc-bar">${rows.filter(x=>x[3]>0).map(x=>`<i style="flex:${x[3]};background:${x[4]}"></i>`).join('')}</div>`; }
 function splitList(rows){ return `<div class="pc-list">${rows.map(([ic,l,where,v,c])=>`<div class="pc-r"><span class="pc-dot" style="background:${c}"></span><span class="pc-l"><b>${ic} ${l}</b><small>${esc(where)}</small></span><b class="num">${v<0?'−':''}${money0(Math.abs(v))}</b></div>`).join('')}</div>`; }
 function payCard(P){ const nx=P.rows[0]; if (!nx) return `<div class="card sec"><div class="empty">No modeling checks scheduled.</div></div>`;
@@ -11079,13 +10954,13 @@ function incomeMini(){ const m=TODAY.slice(0,7), mo=incomeBy(m+'-01',TODAY), yr=
   return `<div class="card sec"><div class="hdr"><h2>Income</h2><span class="sub">${parseD(m+'-01').toLocaleDateString('en-US',{month:'short'})} · ${THIS_Y}</span></div>
     <div class="im-list">${STREAMS.filter(([k])=>yr[k]>0.5||k!=='cad').map(([k,l,ic,c])=>`<div class="im-r"><span class="pc-dot" style="background:${c}"></span><span>${l}</span><b class="num">${money0(mo[k])}</b><span class="num sub">${money0(yr[k])}</span></div>`).join('')}</div>
     ${recent.length?`<details class="pc-edit"><summary>Latest deposits · fix a source</summary>${recent.map(t=>`<div class="row between" style="gap:8px;flex-wrap:nowrap;padding:6px 0;border-top:1px solid var(--line)"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px">${nice(t.d)} · ${esc(t.desc)}</span><select class="inp" style="width:auto;padding:4px 6px;font-size:12px" onchange="setStream('${t.id}',this.value)">${STREAMS.map(([k,l])=>`<option value="${k}" ${incStream(t)===k?'selected':''}>${l}</option>`).join('')}</select></div>`).join('')}</details>`:''}</div>`; }
-// Fidelity as a growth goal
+// the brokerage as a growth goal
 function invNow(){ return (S.money.budget.accounts||[]).filter(a=>a.bal!=null&&acctKind(a)==='invest').reduce((s,a)=>s+a.bal,0); }
 function invLog(){ const M=S.money; M.invHist ||= {}; const v=invNow(); if (v>0) M.invHist[TODAY]=Math.round(v*100)/100; }
 function growthCard(){ const M=S.money, G=(M.growth ||= {target:10000}), v=invNow(), pct=clamp(v/(G.target||1),0,1);
   const H=Object.entries(M.invHist||{}).sort(), ago=H.filter(([d])=>d<=addDays(TODAY,-30)).pop(), ch=ago?v-ago[1]:null;
   const cz=(()=>{ try { const r=projection().rows.find(r=>r.cardsLeft!=null&&r.cardsLeft<=0.5); return r?nice(r.d)+', '+r.d.slice(0,4):''; } catch(e){ return ''; } })();
-  return `<div class="card sec"><div class="hdr"><h2>🌱 Fidelity growth</h2><span class="sub num">${money0(v)} / <input class="inp num" type="number" inputmode="decimal" value="${G.target}" style="width:96px;padding:4px 8px;display:inline-block" onchange="S.money.growth.target=+this.value||10000;commit({skipXp:true})" aria-label="Growth target"></span></div>
+  return `<div class="card sec"><div class="hdr"><h2>🌱 ${ME.broker} growth</h2><span class="sub num">${money0(v)} / <input class="inp num" type="number" inputmode="decimal" value="${G.target}" style="width:96px;padding:4px 8px;display:inline-block" onchange="S.money.growth.target=+this.value||10000;commit({skipXp:true})" aria-label="Growth target"></span></div>
     <div class="bar" style="height:10px"><b style="width:${Math.round(pct*100)}%;background:var(--good)"></b></div>
     <div class="sub" style="margin-top:8px">${ch!=null?`${ch>=0?'+':'−'}${money0(Math.abs(ch))} in 30 days · `:''}${cardDebt()>0.5?`Roth deposits paused until the cards hit $0${cz?' ('+cz+')':''}`:'Roth deposits are on'}</div></div>`; }
 /* ===================== Financial independence (b258): Mom's roadmap — $1.5M in today's dollars by 55 ===================== */
@@ -11126,7 +11001,7 @@ function fiCard(){ try { const F=FI_(), A=fiActual(), ym=TODAY.slice(0,7), plan=
     <div class="fi-m"><div><b>${started?`This month: ${money0(M.got)} of ${money0(M.need)}`:`Starts ${nice(F.from+'-01')}`}</b><small>${(()=>{ const f=fiFundedFrom(); return f?`your money plan funds it from ${MON3[+f.slice(5,7)-1]} ${f.slice(0,4)} (after cards, taxes &amp; emergency fund) · `:'your money plan doesn’t reach it yet with the checks on file · '; })()}next raise ${MON3[+M.raiseOn.slice(5,7)-1]} ${M.raiseOn.slice(0,4)} → ${money0(fiMonthly(F,Math.max(0,ymDiff(F.from,M.raiseOn))))}/mo</small></div>${started&&M.got>=M.need?'<span class="chip" style="color:var(--good)">✓ done</span>':''}</div>
     <form class="row" style="gap:6px;margin-top:8px;flex-wrap:nowrap" onsubmit="return fiInvest(event)"><input class="inp num" name="amt" type="number" min="1" step="any" placeholder="$ invested" value="${started&&M.need>M.got?Math.round(M.need-M.got):''}" style="flex:1;min-width:0"><button class="btn sm">📈 Log</button></form>
     <details class="fi-more"><summary class="sub">Update balance · settings · Mom’s milestones</summary>
-      <form class="row" style="gap:6px;margin-top:8px;flex-wrap:nowrap" onsubmit="return fiBal(event)"><input class="inp num" name="v" type="number" min="0" step="any" placeholder="real balance from Fidelity" style="flex:1;min-width:0"><button class="btn ghost sm">Update</button></form>
+      <form class="row" style="gap:6px;margin-top:8px;flex-wrap:nowrap" onsubmit="return fiBal(event)"><input class="inp num" name="v" type="number" min="0" step="any" placeholder="real balance from ${ME.broker}" style="flex:1;min-width:0"><button class="btn ghost sm">Update</button></form>
       <div class="row" style="gap:6px;margin-top:8px;flex-wrap:nowrap;align-items:center"><span class="sub" style="font-size:12px;white-space:nowrap">Monthly to start</span><input class="inp num" type="number" min="0" value="${F.monthly}" onchange="fiSet('monthly',this.value)" style="flex:1;min-width:0"><span class="sub" style="font-size:12px;white-space:nowrap">Start</span><input class="inp num" type="number" min="0" value="${F.start}" onchange="fiSet('start',this.value)" style="flex:1;min-width:0"></div>
       <div class="row" style="gap:6px;margin-top:8px;flex-wrap:nowrap;align-items:center"><span class="sub" style="font-size:12px;white-space:nowrap">Start investing in</span><input class="inp" type="month" value="${F.from}" onchange="fiSet('from',this.value)" style="flex:1;min-width:0"></div>
       <div class="fi-ms">${[2027,2028,2029,2030,2031].map(y=>`<div><span>End of ${y}</span><b class="num">${money0(fiPlanAt(y+'-12'))}</b><small>${money0(fiMonthly(F,Math.max(0,ymDiff(F.from,y+'-06'))))}/mo</small></div>`).join('')}</div>
@@ -11149,7 +11024,7 @@ function goalsCard(b){ const s=S.money.s, M=S.money, G=(M.growth ||= {target:100
   return `<div class="card sec"><div class="hdr"><h2>Goals</h2><button class="btn ${mAdj?'':'ghost'} sm" onclick="mAdj=!mAdj;render()">${mAdj?'Done':'Edit'}</button></div>
     ${mAdj?`<div class="settings"><label>Emergency fund now<input class="inp num" type="number" value="${ef}" onchange="setMoney('efNow',this.value)"></label><label>House fund now<input class="inp num" type="number" value="${+s.houseNow||0}" onchange="setMoney('houseNow',this.value)"></label></div>`:''}
     ${row('🛡️','Emergency fund',ef,eft,'starts after the cards and taxes','emergency','var(--good)')}
-    ${row('🌱','Fidelity',inv,G.target,cardDebt()>0.5?'Roth deposits resume once the cards and taxes are done':'','growth','var(--accent2)')}
+    ${row('🌱',(ME.broker),inv,G.target,cardDebt()>0.5?'Roth deposits resume once the cards and taxes are done':'','growth','var(--accent2)')}
     ${(bal('house'))>0?row('🏡','House',bal('house'),0,'','house','var(--warn)'):''}</div>`; }
 function vMoneyTaxes(){ const b=moneyBits(), s=S.money.s, sh=taxShortApril(); return `${taxDebtCard()}${taxCard()}
   ${taxBehind()>0.5?`<div class="help sec keep" style="margin:-6px 4px 12px">Catch-up starts once the cards hit $0.</div>`:''}
@@ -11161,7 +11036,7 @@ function vMoneyOverview(){ const b=moneyBits(), F=flexNow(), m=TODAY.slice(0,7),
   return `${acctDash()}
     <div class="card sec"><div class="hdr"><h2>${parseD(m+'-01').toLocaleDateString('en-US',{month:'long'})}</h2><span class="sub">in vs out</span></div>
       <div class="home3"><div><b class="num" style="color:var(--good)">${money0(inTot)}</b><small>in</small></div><div><b class="num" style="color:var(--bad)">${money0(out)}</b><small>out</small></div><div><b class="num" style="color:${inTot-out<0?'var(--bad)':'var(--good)'}">${inTot-out<0?'−':'+'}${money0(Math.abs(inTot-out))}</b><small>net</small></div></div></div>
-    <div class="grid g2 sec ov-grid">${tile('income', nx?money0(nx.amt):'—', nx?'next check · '+nice(nx.d):'no check scheduled', 'var(--good)')}${tile('spending', F?money0(Math.max(0,F.left)):'—', 'safe to spend', F&&F.left<0?'var(--bad)':'')}${tile('plan', money0(cardDebt()), cz?'cards · $0 by '+cz:'on credit cards', 'var(--accent)')}${tile('plan', money0(invNow()), 'Fidelity · growth goal', '')}</div>`; }
+    <div class="grid g2 sec ov-grid">${tile('income', nx?money0(nx.amt):'—', nx?'next check · '+nice(nx.d):'no check scheduled', 'var(--good)')}${tile('spending', F?money0(Math.max(0,F.left)):'—', 'safe to spend', F&&F.left<0?'var(--bad)':'')}${tile('plan', money0(cardDebt()), cz?'cards · $0 by '+cz:'on credit cards', 'var(--accent)')}${tile('plan', money0(invNow()), (ME.broker+" · growth goal"), '')}</div>`; }
 
 // "It arrived": land the next check on the day it came, then re-plan every check after it every 2 weeks from that day
 // keep what's still owed the same, re-cut into equal checks every 14 days from the day this one landed
@@ -11190,7 +11065,7 @@ function nextCheckCard(P){ const nx=P.rows[0]; if (!nx) return `<div class="card
   return `<div class="card sec nc-card">
     <div class="tag">Next check</div><b class="nc-when">${dd<0?'Any day now':dd===0?'Today':nice(nx.d)}</b><div class="sub">${dd<0?`was expected ${nice(nx.d)} · shows up here once the bank posts it`:dd===0?'expected today':`expected in ${dd} days`}</div>
     <div class="nc-amt">Amount: <b>unknown until it lands</b></div>
-    <div class="nc-ref">${ll?`<span>Last check <b class="num">${money0(ll.amt)}</b> · ${nice(ll.gotOn||ll.d)}</span>`:''}${owe>0.5?`<span>ONE still owes you <b class="num">${money0(owe)}</b></span>`:''}</div>
+    <div class="nc-ref">${ll?`<span>Last check <b class="num">${money0(ll.amt)}</b> · ${nice(ll.gotOn||ll.d)}</span>`:''}${owe>0.5?`<span>${ME.ag} still owes you <b class="num">${money0(owe)}</b></span>`:''}</div>
     <div class="tag" style="margin:14px 0 6px">When it lands, in this order</div>
     <ol class="nc-steps">
       <li><span>📊</span><b>Taxes</b><em>32% of it</em><small>Tax Buffer</small></li>
@@ -11346,7 +11221,7 @@ function checksCard(P){ const rows=P.rows; if(!rows.length) return '';
     <div class="ec-list">${rows.slice(0,8).map(r=>{ const dd=daysBetween(TODAY,r.d); return `<div class="row between ec-r"><input class="inp" type="date" value="${r.d}" style="padding:6px 10px;font-size:14px;width:auto" onchange="setCheckDate('${r.id}',this.value)" aria-label="Expected date"><span class="row" style="gap:10px;flex-wrap:nowrap"><span class="sub" style="font-size:12px">${dd<0?'waiting on bank':'in '+dd+' days'}</span><button class="x" onclick="delCheck('${r.id}')" aria-label="Remove">✕</button></span></div>`; }).join('')}</div>
     <div class="help keep" style="margin-top:8px">Amounts aren't guessed — each check fills in from the bank when it lands.</div></div>`; }
 
-/* b221: land a check the day it hits the bank (bank feed lags ~4 days); ONE's "Payment" email is the heads-up */
+/* b221: land a check the day it hits the bank (bank feed lags ~4 days); the agency's "Payment" email is the heads-up */
 function payNoticeScan(ths){ for (const th of ths||[]) for (const m of (th.messages||[])){ const subj=String(m.subject||''), sn=String(m.snippet||''), from=String(m.sender||m.from||'');
     if (/onemanagement\.com/i.test(from) && /^\s*payment\s*$/i.test(subj) && /transferred to your bank/i.test(sn)){ const d=String(m.date||'').slice(0,10); if (/^\d{4}-\d{2}-\d{2}$/.test(d) && (!S.money.payNotice || d>S.money.payNotice.d)) S.money.payNotice={d, url:m.viewUrl||th.viewUrl||''}; } } }
 function landCheck(amt, d){ amt=Math.round((+amt||0)*100)/100; d=d||TODAY; if (!(amt>0)) return toast('Type the amount you see in the bank');
@@ -11360,7 +11235,7 @@ function landCheck(amt, d){ amt=Math.round((+amt||0)*100)/100; d=d||TODAY; if (!
 function landForm(){ return `<form class="ln-form" onsubmit="event.preventDefault();landCheck(this.a.value,this.d.value)"><span class="ln-dol">$</span><input name="a" class="inp num" type="number" inputmode="decimal" step="0.01" min="1" placeholder="amount" required aria-label="Amount in your bank"><input name="d" class="inp" type="date" value="${TODAY}" max="${TODAY}" aria-label="Day it arrived"><button class="btn sm">It's in my bank</button></form>`; }
 function payNoticeCard(){ const n=S.money.payNotice; if (!n || daysBetween(n.d,TODAY)>7) return '';
   if (S.money.checks.some(c=>c.got && (c.gotOn||c.d)>=n.d)) return '';
-  return `<div class="card sec pn-card"><div class="tag">💸 Payment sent</div><b class="pn-t">ONE sent a payment ${nice(n.d)}</b><div class="sub">Lands in 1–2 business days. Your bank app shows it days before this app does — type the amount when you see it and the split appears right away.</div>${landForm()}${n.url?`<a class="sub" style="display:inline-block;margin-top:8px" href="${n.url}" target="_blank" rel="noopener">Open the email (breakdown attached) ›</a>`:''}</div>`; }
+  return `<div class="card sec pn-card"><div class="tag">💸 Payment sent</div><b class="pn-t">${ME.ag} sent a payment ${nice(n.d)}</b><div class="sub">Lands in 1–2 business days. Your bank app shows it days before this app does — type the amount when you see it and the split appears right away.</div>${landForm()}${n.url?`<a class="sub" style="display:inline-block;margin-top:8px" href="${n.url}" target="_blank" rel="noopener">Open the email (breakdown attached) ›</a>`:''}</div>`; }
 function m221(){ const M=S.money; if (M.m221) return; M.m221=1;
   try { const has=M.checks.some(c=>c.got && (c.gotOn||c.d)>='2026-10-15');
     if (!has){ window._quietPay=1; landCheck(3940, '2026-10-19'); window._quietPay=0; document.getElementById('payday')?.remove(); }
@@ -11405,7 +11280,7 @@ function coinXP(){ let xp=0; try { const L=S.money.checks.filter(c=>c.got&&(c.go
 function coinChip(){ const C=coins(); if (!C) return ''; const up=C.banked>=0;
   return `<div class="coin-chip ${up?'up':'down'}"><span>🪙</span><div><b class="num">${up?'+':'−'}${money0(Math.abs(C.banked))}</b> ${up?'banked':'over pace'}<small>spending pace ${money0(C.per)}/day · through ${nice(C.thru)} · 5 XP per day under</small></div></div>`; }
 // ranks: real milestones, in order
-const MRANKS=[['🌊','Underwater','a card is over its limit'],['🏊','Surfaced','both cards under their limits'],['🔓','Debt-free','cards at $0'],['🧾','Covered','taxes caught up'],['🛡️','Cushioned','3 months of bills saved'],['📈','Compounding','Fidelity at your growth target']];
+const MRANKS=[['🌊','Underwater','a card is over its limit'],['🏊','Surfaced','both cards under their limits'],['🔓','Debt-free','cards at $0'],['🧾','Covered','taxes caught up'],['🛡️','Cushioned','3 months of bills saved'],['📈','Compounding',(ME.broker+" at your growth target")]];
 function moneyRank(){ const C=cardsAll(), s=S.money.s; const tests=[()=>C.every(c=>!(c.limit||CARD_LIM[c.name])||c.bal<=(c.limit||CARD_LIM[c.name])+1), ()=>C.every(c=>c.bal<=0.5), ()=>taxBehind()<=0.5, ()=>(bal('ef'))>=fixedMo()*3, ()=>invNow()>=(+(S.money.growth||{}).target||10000)];
   let i=0; while (i<tests.length && tests[i]()) i++; const nx=MRANKS[i+1];
   const hint=(()=>{ if (i===0){ const o=C.filter(c=>c.bal>(c.limit||CARD_LIM[c.name]||1e12)+1); return o.map(c=>`${c.name} ${money0(c.bal-(c.limit||CARD_LIM[c.name]))} over`).join(' · '); } if (i===1) return `${money0(C.reduce((a,c)=>a+c.bal,0))} left on cards`; if (i===2) return `${money0(taxBehind())} tax gap`; if (i===3) return `${money0(Math.max(0,fixedMo()*3-(bal('ef'))))} to go`; if (i===4) return `${money0(Math.max(0,(+(S.money.growth||{}).target||10000)-invNow()))} to go`; return ''; })();
@@ -11505,7 +11380,7 @@ function bossRoster(){ const R=rosterRows(), up=R.filter(r=>!r.dead).length;
     ${R.map(r=>`<button class="br-r ${r.dead?'dead':''}" style="--c:${r.c}" onclick="bossGo('${r.k==='cards'?'card-'+r.name:r.k}')"><span class="br-ic">${r.dead?'💀':r.ic}</span><span class="br-m"><span class="br-t"><b>${esc(r.name)}</b><em>${r.area}</em></span><i class="br-hp"><u style="width:${Math.max(r.dead?0:2,Math.round(r.pct*100))}%"></u></i><small>${r.dead?'Defeated':esc(r.phase)} · ${r.hp} / ${r.max}</small></span><span class="br-go">›</span></button>`).join('')}
     <div class="sub" style="margin-top:8px">Every boss runs on what you actually do. Monthly gates reset on the 1st — beat one before then for 300 XP.</div></div>`; }
 function bossSheet(k){ let html='';
-  if (k==='vault') html=raidCard('vault')+`<div class="help keep" style="padding:0 6px">The money ONE still owes you. Every agency check — typed in or found by the bank — is a hit.</div>`;
+  if (k==='vault') html=raidCard('vault')+`<div class="help keep" style="padding:0 6px">The money ${ME.ag} still owes you. Every agency check — typed in or found by the bank — is a hit.</div>`;
   else if (k==='wyrm') html=raidCard('wyrm');
   else if (k==='warden') html=wardenCard();
   else if (k==='cards') html=bossesCard();
@@ -11933,12 +11808,12 @@ function leftoverCard(P){ const L=leftover(); if (!L) return `<div class="card s
     <div class="help keep" style="margin-top:8px">Plan for this check minus what the bank shows spent. Leftover goes to the smallest card first.</div>${nextCheckFold(P)}</div>`; }
 
 /* b234: Money › Now in three cards. Rank, coins, quest and bank freshness share one header; next-check lives inside the leftover card. */
-// what ONE will pay you: owed for jobs already shot + booked jobs still ahead, and the tax to hold back when it lands
+// what the agency will pay you: owed for jobs already shot + booked jobs still ahead, and the tax to hold back when it lands
 function oneComing(){ try { const P=mPipe(), E=mAll(), owed=mOwed(P), up=E.filter(e=>P[e.id]&&P[e.id].stage==='confirmed'&&e.end>=TODAY).sort((a,b)=>a.start.localeCompare(b.start)), booked=up.reduce((a,e)=>a+P[e.id].net*(1-(P[e.id].doneDays||0)/Math.max(1,e.days)),0);
   return {owed, booked, up, tax:Math.round((owed+booked)*TAX_RATE_ONE)}; } catch(e){ return null; } }
 const TAX_RATE_ONE=0.322;
 function oneLine(){ const O=oneComing(); if (!O||(O.owed<1&&O.booked<1)) return ''; const nx=O.up[0];
-  return `<button class="mh-r mh-one" onclick="mTab='book';go('model')"><span>💼</span><b class="num">${money0(O.owed+O.booked)}</b><span>owed by ONE</span></button>`; }
+  return `<button class="mh-r mh-one" onclick="mTab='book';go('model')"><span>💼</span><b class="num">${money0(O.owed+O.booked)}</b><span>owed by ${ME.ag}</span></button>`; }
 function moneyHead(){ const R=moneyRank(), M=S.money, C=coins(), q=(S.quests||[]).find(q=>q.mq===isoWeek(TODAY)), th=bankThrough(), age=th?daysBetween(th,TODAY):null;
   if ((M.rankMax??-1)<R.i){ if (M.rankMax!=null) setTimeout(()=>{ confetti(); toast(`${R.r[0]} Rank up: ${R.r[1]}`); S.wins.push({id:uid(), d:TODAY, text:`${R.r[0]} Money rank: ${R.r[1]}`}); commit(); },300); M.rankMax=R.i; }
   return `<div class="card sec mh"><div class="row between" style="align-items:center"><div class="mr-steps">${MRANKS.map((r,j)=>`<i class="${j<R.i?'done':j===R.i?'on':''}" title="${r[1]}">${r[0]}</i>`).join('')}</div><button class="btn ghost sm" onclick="bankRefresh(true)" ${bankBusy?'disabled':''} title="Refresh bank">${bankBusy?'…':'↻'}</button></div>
@@ -11960,7 +11835,7 @@ function nextCheckFold(P){ const nx=P.rows[0]; if (!nx) return `<details class="
     <details class="pc-edit"><summary>Change expected date</summary><div class="row" style="gap:6px;margin-top:8px;flex-wrap:wrap"><input class="inp" type="date" value="${nx.d}" style="width:auto" onchange="setCheckDate('${nx.id}',this.value)" aria-label="Expected date"><button class="btn sm" id="landed-${nx.id}" onclick="verifyLanded('${nx.id}')">Check bank</button>${unverifiedId===nx.id?`<button class="btn ghost sm" onclick="markGot('${nx.id}',true)">Mark landed</button>`:''}</div></details></details>`; }
 function moneyLinks(){ const B=cardBosses(), live=B.filter(b=>!b.dead), hp=live.reduce((a,b)=>a+b.hp,0), s=S.money.s, end=addDays(TODAY,14);
   const due=[...BILLS,...CARDS].filter(b=>{ const paid=billPaidThisCycle(b), d=billDueThisMonth(b.day); return !paid && d<=end; }).reduce((a,b)=>a+(+s[b.key]||0),0);
-  return `<div class="ml-row sec"><button class="ml" onclick="go('bosses')"><span>⚔️</span><b>${live.length?money0(hp)+' HP':'cards slain'}</b><small>card bosses</small></button><button class="ml" onclick="setMoneyTab('accounts');setTimeout(()=>document.getElementById('billsAll')?.scrollIntoView({behavior:'smooth'}),60)"><span>🧾</span><b class="num">${money0(due)}</b><small>due in 14d</small></button><button class="ml" onclick="dFold.acc_goals=true;setMoneyTab('accounts');setTimeout(()=>document.getElementById('goalsAll')?.scrollIntoView({behavior:'smooth'}),60)"><span>🎯</span><b>Goals</b><small>EF · Fidelity</small></button></div>`; }
+  return `<div class="ml-row sec"><button class="ml" onclick="go('bosses')"><span>⚔️</span><b>${live.length?money0(hp)+' HP':'cards slain'}</b><small>card bosses</small></button><button class="ml" onclick="setMoneyTab('accounts');setTimeout(()=>document.getElementById('billsAll')?.scrollIntoView({behavior:'smooth'}),60)"><span>🧾</span><b class="num">${money0(due)}</b><small>due in 14d</small></button><button class="ml" onclick="dFold.acc_goals=true;setMoneyTab('accounts');setTimeout(()=>document.getElementById('goalsAll')?.scrollIntoView({behavior:'smooth'}),60)"><span>🎯</span><b>Goals</b><small>EF · ${ME.broker}</small></button></div>`; }
 
 /* b235: cloud history — the database keeps a copy of your state every ~2h for 30 days (and every overwrite it refused). Restore any of them. */
 let _hist=null, _histBusy=false;
@@ -12010,7 +11885,7 @@ function eatCard(){ const P=eatPeriods(); if (!P.length) return ''; eatP=Math.mi
         ${open?`<div class="eat-pl">${c.places.map(x=>`<div class="row between"><span>${esc(x.n)}${x.T.length>1?` <span class="sub">×${x.T.length}</span>`:''}</span><b class="num">${money0(x.tot)}</b></div><div class="eat-tx">${x.T.sort((a,b)=>b.d.localeCompare(a.d)).map(t=>`<span>${nice(t.d)} <b class="num">${money0(-t.amt)}</b>${c.k==='other'?`<select class="inp eat-sel" onchange="if(this.value==='_w')setTxnCat('${t.id}','deduct');else if(this.value==='_b')setTxnCat('${t.id}','fixed');else setTxnScat('${t.id}',this.value)" aria-label="Tag this charge"><option>tag…</option>${Object.entries(SCATS).filter(([k])=>!/^(other|groc|work|bills)$/.test(k)).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join('')}<option value="_b">Bill (not spending)</option><option value="_w">Write-off</option></select>`:''}</span>`).join('')}</div>`).join('')}</div>`:''}</div>`; }).join('')}</div>`:`<div class="empty">${p.cur?'No spending since this check landed yet.':'No spending in this period.'}</div>`}
     <div class="help keep" style="margin-top:8px">Tap a category to see each place and charge — tag anything in Other. Groceries, bills and write-offs don't count here.</div></div>`; }
 
-/* b239: Capital One Business Basic Checking — ONE pays in, tax money stays (it covers the $2,000 minimum), bills + spending are drawn to BofA */
+/* b239: Capital One Business Basic Checking — the agency pays in, tax money stays (it covers the $2,000 minimum), bills + spending are drawn to BofA */
 function bizS(){ const s=S.money.s; return (s.biz ||= {on:false, dep:false, floor:2000, fee:15, apy:3.5}); }
 function bizAcct(){ return (S.money.budget?.accounts||[]).find(a=>/business|basic checking|enhanced checking/i.test(a.name||'') && !/360/.test(a.name||'')) || null; }
 function bizBal(){ const a=bizAcct(); return a&&a.bal!=null ? a.bal : null; }
@@ -12026,12 +11901,12 @@ function bizLine(){ const B=bizS(); if (!B.on) return ''; const b=bizBal(); if (
 function bizToggle(k){ const B=bizS(); B[k]=!B[k]; if (k==='on'&&!B.on) B.dep=false; commit({skipXp:true}); }
 function bizCard(){ const B=bizS(), b=bizBal(), V=bizSim(), net=V.withSavings-V.fees-V.interest;
   return `<div class="card sec" id="bizAll"><div class="hdr"><h2>🏢 Business checking</h2><span class="sub">Capital One · Basic</span></div>
-    <div class="biz-steps">${[['on','Opened it',B.on],['dep','ONE pays into it',B.dep],['sep','SEP-IRA opened',!!S.money.s.sepFrom]].map(([k,l,on])=>`<button class="check ${on?'on':''}" onclick="${k==='sep'?'sepToggle()':`bizToggle('${k}')`}" ${k==='dep'&&!B.on?'disabled':''}><div class="box">${on?'✓':''}</div><div class="txt">${l}</div></button>`).join('')}</div>
+    <div class="biz-steps">${[['on','Opened it',B.on],['dep',(ME.ag+" pays into it"),B.dep],['sep','SEP-IRA opened',!!S.money.s.sepFrom]].map(([k,l,on])=>`<button class="check ${on?'on':''}" onclick="${k==='sep'?'sepToggle()':`bizToggle('${k}')`}" ${k==='dep'&&!B.on?'disabled':''}><div class="box">${on?'✓':''}</div><div class="txt">${l}</div></button>`).join('')}</div>
     ${B.on?`<div class="biz-bal"><b class="num">${b==null?'—':money0(b)}</b><span>${b==null?'link it in Era so the app can see it':b>=B.floor?'above the $2,000 minimum · no fee':`${money0(B.floor-b)} under the minimum · $15 fee this month`}</span></div><div class="lo-bar" style="margin:6px 0 10px"><i style="width:${b==null?0:Math.min(100,b/B.floor*100)}%;background:${b!=null&&b>=B.floor?'var(--good)':'var(--warn)'}"></i></div>`:''}
     <div class="tag" style="margin:4px 0 6px">Is it worth it? · next 12 months</div>
     <div class="lo-sum" style="border:0;padding:0;margin:0"><div><small>Fee months</small><b class="num">${V.feeMonths}</b><em>${money0(V.fees)} in fees</em></div><div><small>Interest given up</small><b class="num">${money0(V.interest)}</b><em>$2,000 not earning ${B.apy}%</em></div><div class="lo-safe"><small>vs paying the fee</small><b class="num" style="color:${net>=0?'var(--good)':'var(--bad)'}">${net>=0?'+':'−'}${money0(Math.abs(net))}</b><em>${net>=0?'cheaper':'costs more'}</em></div></div>
     <div class="biz-mo">${V.months.map(([k,v])=>`<i title="${k}: ${money0(v)}" style="height:${Math.max(6,v/B.floor*44)}px;background:${v>=B.floor-0.5?'var(--good)':'var(--warn)'}"></i>`).join('')}</div><div class="biz-ml"><span>${nice(V.months[0][0]+'-01').replace(/ \d+$/,'')}</span><span>green = above $2,000 · fee uses the 30/90-day average</span><span>${nice(V.months[11][0]+'-01').replace(/ \d+$/,'')}</span></div>
-    <div class="help keep" style="margin-top:8px">How it works: ONE pays into Business. Tax money tops Business up to $2,000 (it has to sit until the IRS anyway); the rest of the tax goes to Tax Buffer savings so it keeps earning. Bills + spending get drawn to BofA. Cards, savings and the SEP-IRA are paid straight from Business — the SEP pulls from Business at Fidelity, so mark the tax year each time.</div></div>`; }
+    <div class="help keep" style="margin-top:8px">How it works: ${ME.ag} pays into Business. Tax money tops Business up to $2,000 (it has to sit until the IRS anyway); the rest of the tax goes to Tax Buffer savings so it keeps earning. Bills + spending get drawn to BofA. Cards, savings and the SEP-IRA are paid straight from Business — the SEP pulls from Business at ${ME.broker}, so mark the tax year each time.</div></div>`; }
 
 let moneyTab = 'now';
 function setMoneyTab(t){ moneyTab=MONEY_ALIAS[t]||t; render(); }
@@ -12141,7 +12016,7 @@ function vDeduct(){
   <div class="card sec">
     <div class="row between" style="align-items:flex-start;gap:10px"><div><div class="tag">Confirmed deductible</div><h2 class="num" style="font-size:34px;font-weight:800;letter-spacing:-.04em;color:var(--good)">${money0(tot)}</h2></div><button class="btn sm" onclick="copyDeductibles()">Copy CSV for CPA</button></div>
     <div class="home3" style="margin-top:12px"><div><b class="num">${money0((tot-ag)*S.money.s.taxRate)}</b><small>off your tax</small></div><div><b class="num" style="${review.length?'color:var(--warn)':''}">${review.length}</b><small>to review</small></div><div><b class="num">${money0(totAll-tot)}</b><small>unconfirmed</small></div></div>
-    ${ag>0.5?`<div class="help keep" style="margin-top:10px">🧾 ${money0(ag)} of this is agency fees ONE took out before paying you (flights, marketing). They're already left out of your tax math here — they're listed so your CPA can subtract them if ONE's 1099 includes them.</div>`:''}
+    ${ag>0.5?`<div class="help keep" style="margin-top:10px">🧾 ${money0(ag)} of this is agency fees ${ME.ag} took out before paying you (flights, marketing). They're already left out of your tax math here — they're listed so your CPA can subtract them if ${ME.ag}'s 1099 includes them.</div>`:''}
     ${infold('dcat','By category',`${byCat.length}`,`<div class="stack" style="gap:6px">${byCat.map(([k,v])=>`<div class="row between" style="font-size:14px"><span>${DCATS[k]}</span><b class="num">${money0(v)}</b></div>`).join('')||'<div class="empty">Nothing confirmed yet.</div>'}</div>`)}
     ${infold('dq','By quarter','for estimated payments',`<div class="stack" style="gap:6px">${Object.entries(byQ).sort().map(([q,v])=>`<div class="row between" style="font-size:14px"><span>${q}</span><b class="num">${money0(v)}</b></div>`).join('')||'<div class="empty">—</div>'}</div>`)}
     ${infold('dadd','Add one by hand','cash fares, receipts',`<form onsubmit="return addDedManual(event)" class="row" style="gap:6px;flex-wrap:wrap"><input id="ddD" type="date" class="inp" value="${TODAY}"><input id="ddDesc" class="inp" style="flex:1;min-width:140px" placeholder="e.g. Uber home → ORD"><input id="ddAmt" class="inp num" style="width:90px" placeholder="$"><select id="ddCat" class="inp">${Object.entries(DCATS).map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select><select id="ddAcct" class="inp">${accts.map(a=>`<option>${a}</option>`).join('')}</select><button class="btn" type="submit">+ Add</button></form>`)}
@@ -12151,7 +12026,7 @@ function vDeduct(){
     ${vis.length?`<div class="row between" style="gap:8px;margin-bottom:8px;flex-wrap:nowrap"><span class="help" style="min-width:0">Tap a circle to confirm, or press and drag down to do a run. Tap a row to edit.</span><button class="btn ghost sm" style="white-space:nowrap" onclick="dedBulk(${dedFilter!=='ok'})">${dedFilter==='ok'?'Unconfirm all':'Confirm all'}</button></div>`:''}
     <div onpointermove="dedMove(event)" onpointerup="dedUp()" onpointercancel="dedUp()">${show.map(x=>{ const m=x.d.slice(0,7), hdr = m!==cur ? `<div class="row between" style="margin:12px 2px 6px"><span class="tag">${parseD(m+'-01').toLocaleDateString('en-US',{month:'long',year:'numeric'})}</span><span class="tag num">${money0(msum[m])}</span></div>` : ''; cur=m; const open=dedOpen===x.id, datum=String(x.txn||'').startsWith('datum:');
       return hdr+`<div class="txr ${open?'open':''}"><div class="dedh"><div class="check ${x.ok?'on':''}" data-ded="${x.id}" style="padding:6px;background:none;border:0;touch-action:none" onpointerdown="dedDown(event,'${x.id}')" role="checkbox" aria-checked="${!!x.ok}" aria-label="Confirm"><div class="box">${x.ok?'✓':''}</div></div><button class="txh" onclick="dedOpen=dedOpen==='${x.id}'?null:'${x.id}';render()"><span class="txd"><b>${esc(x.desc)}</b><small>${nice(x.d)} · ${esc(x.acct||'')} · ${DCATS[x.cat]||x.cat}${x.note?' · '+esc(x.note):''}</small></span><b class="num">$${x.amt.toFixed(2)}</b></button></div>
-        ${open?`<div class="txe"><label>Category<select class="inp" onchange="setDed('${x.id}','cat',this.value)">${Object.entries(DCATS).map(([k,l])=>`<option value="${k}" ${x.cat===k?'selected':''}>${l}</option>`).join('')}</select></label><label>Note<input class="inp" value="${esc(x.note||'')}" placeholder="trip / job" onchange="setDed('${x.id}','note',this.value)"></label>${String(x.txn||'').startsWith('one:')?'<span class="sub">From your ONE statement — upload a new statement to update it.</span>':datum?'<span class="sub">◆ Mirrors Datum → Money; change it there.</span>':`<button class="btn danger sm" onclick="delDed('${x.id}')">Delete</button>`}</div>`:''}</div>`; }).join('') || `<div class="empty">${dedFilter==='review'?'Nothing to review. Everything is confirmed.':'Nothing here yet.'}</div>`}</div>
+        ${open?`<div class="txe"><label>Category<select class="inp" onchange="setDed('${x.id}','cat',this.value)">${Object.entries(DCATS).map(([k,l])=>`<option value="${k}" ${x.cat===k?'selected':''}>${l}</option>`).join('')}</select></label><label>Note<input class="inp" value="${esc(x.note||'')}" placeholder="trip / job" onchange="setDed('${x.id}','note',this.value)"></label>${String(x.txn||'').startsWith('one:')?("<span class=\"sub\">From your "+ME.ag+" statement — upload a new statement to update it.</span>"):datum?'<span class="sub">◆ Mirrors Datum → Money; change it there.</span>':`<button class="btn danger sm" onclick="delDed('${x.id}')">Delete</button>`}</div>`:''}</div>`; }).join('') || `<div class="empty">${dedFilter==='review'?'Nothing to review. Everything is confirmed.':'Nothing here yet.'}</div>`}</div>
     ${vis.length>dedN?`<button class="btn ghost sm" style="margin-top:10px;width:100%;justify-content:center" onclick="dedN+=20;render()">Show more · ${vis.length-dedN} left</button>`:''}
     <div class="help" style="margin-top:10px">Only confirmed rows lower your tax gap. Rides default to "Uber / Lyft (other)" — switch them to the ORD or LGA category so the CPA sees the trip pattern.</div>
   </div>`;
@@ -12239,7 +12114,7 @@ function matchLanded(id, tid){ if(!tid) return; const c=S.money.checks.find(c=>c
 // agency deposits seen in the bank feed → land the matching scheduled check, or add the deposit if nothing was scheduled
 function detectDeposits(txs, keyAcct){
   const M=S.money; M.depTids ||= {}; let n=0;
-  const deps=txs.filter(x=>x && !x.is_pending && +x.amount>0 && x.transaction_id && keyAcct[x.account_group_key]==='BofA' && /MODEL MANAGE/i.test(x.description||'')).sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  const deps=txs.filter(x=>x && !x.is_pending && +x.amount>0 && x.transaction_id && keyAcct[x.account_group_key]==='BofA' && ME.payRe.test(x.description||'')).sort((a,b)=>String(a.date).localeCompare(String(b.date)));
   for (const x of deps){
     if (M.depTids[x.transaction_id]) continue; M.depTids[x.transaction_id]=1;
     const d=String(x.date).slice(0,10), amt=+x.amount; if(!/^\d{4}-\d{2}-\d{2}$/.test(d)) continue;
@@ -12249,7 +12124,7 @@ function detectDeposits(txs, keyAcct){
     const open=M.checks.filter(c=>!c.got), near=(a,b)=>Math.abs(daysBetween(a.d,d))-Math.abs(daysBetween(b.d,d));
     let hit=open.filter(c=>Math.abs(c.amt-amt)<=2 && Math.abs(daysBetween(c.d,d))<=60).sort(near)[0] || open.filter(c=>Math.abs(daysBetween(c.d,d))<=10).sort(near)[0];
     if (hit){ if (Math.abs(hit.amt-amt)>2) hit.expAmt=hit.amt; hit.amt=amt; hit.got=true; hit.gotOn=d; hit.verified=true; hit.note=(hit.note||'')+' · ✓ bank'; }
-    else { hit={id:uid(), d, amt, note:'1 Model Management · from bank', got:true, gotOn:d, verified:true, unsched:true}; M.checks.push(hit); M.checks.sort((a,b)=>a.d.localeCompare(b.d)); }
+    else { hit={id:uid(), d, amt, note:ME.payer+' · from bank', got:true, gotOn:d, verified:true, unsched:true}; M.checks.push(hit); M.checks.sort((a,b)=>a.d.localeCompare(b.d)); }
     try { if (!M.s.payFrom || d>M.s.payFrom) replanBiweekly(hit, d, M.s.payAmt||4000); } catch(e){ console.warn('replan',e); }
     hit.split=splitFor(hit); hit.done={}; hit.landedAt ||= TODAY; delete hit.dismissed;
     const kr=S.quarters[quarterOf(d)]?.objectives.find(o=>o.track==='modeling')?.krs.find(k=>/checks received/i.test(k.text)&&!k.src); if(kr) kr.current++;
@@ -12283,7 +12158,7 @@ function moneyBits(){
   const rowsHtml = P.rows.map(r=>{ const m=r.d.slice(0,7); const hdr = m!==curMo ? `<tr class="mo"><td colspan="9">${parseD(r.d).toLocaleDateString('en-US',{month:'long',year:'numeric'})}</td></tr>` : ''; curMo=m;
     return hdr+`<tr><td>${nice(r.d)}</td><td class="r num">${money0(r.amt)}</td><td class="r num">${money0(r.tax)}</td><td class="r num">${money0(r.bills)}</td><td class="r num">${money0(r.flex)}</td><td class="r num ${r.draw?'neg':''}">${r.draw?money0(-r.draw):'+'+money0(r.efAdd)}${r.house?` <span class="sub">🏠${money0(r.house)}</span>`:''}</td><td class="r num">${r.ret?money0(r.ret)+' '+r.retLabel:'—'}</td><td class="r num">${money0(r.efBal)}</td><td class="sub" style="white-space:normal;min-width:160px">${esc(r.note)} <button class="btn ghost sm" id="landed-${r.id}" onclick="verifyLanded('${r.id}')">landed?</button>${unverifiedId===r.id?`<button class="btn sm" style="margin-left:4px" onclick="markGot('${r.id}',true)">mark anyway</button>`:''}</td></tr>`; }).join('');
   return {P, nextPay, efFull, sinceSep, paidTot,
-    stmt: `${(()=>{ const st=stmtNow(), open=P.future.reduce((a,c)=>a+c.amt,0), diff=Math.round(open-st.balance); return `<div class="help sec keep" style="margin:-6px 4px 10px">${Math.abs(diff)<5?`✓ Matches ONE's ${nice(st.asOf)} statement ($${Math.round(st.balance).toLocaleString()})`:`Expected checks total ${money0(open)} vs ${money0(st.balance)} on ONE's ${nice(st.asOf)} statement`}</div>`; })()}`,
+    stmt: `${(()=>{ const st=stmtNow(), open=P.future.reduce((a,c)=>a+c.amt,0), diff=Math.round(open-st.balance); return `<div class="help sec keep" style="margin:-6px 4px 10px">${Math.abs(diff)<5?`✓ Matches ${ME.ag}'s ${nice(st.asOf)} statement ($${Math.round(st.balance).toLocaleString()})`:`Expected checks total ${money0(open)} vs ${money0(st.balance)} on ${ME.ag}'s ${nice(st.asOf)} statement`}</div>`; })()}`,
     taxFold: `<div class="card sec" style="padding:4px 18px">
     ${infold('wtax','Tax payments',nextPay?`${money0(nextPay.pay)} due ${nice(nextPay.d)}`:'',`<div class="scroll"><table class="tbl"><tr><th>Due</th><th>Covers</th><th class="r">Pay</th></tr>${P.payouts.map(p=>`<tr><td>${nice(p.d)}, ${p.d.slice(0,4)}</td><td>${esc(p.label)}</td><td class="r num">${money0(p.pay)}</td></tr>`).join('')}</table></div>
       <div class="help keep" style="margin-top:10px">Next IRS/Illinois date: <b>${nextDue?nice(nextDue[0])+', '+nextDue[0].slice(0,4):'—'}</b> · ${nextDue?esc(nextDue[1]):''}. Split ~80% federal / 20% Illinois.</div>
@@ -12304,7 +12179,7 @@ function depositHtml(r){ return `<div class="flow">
   <div class="fl"><small>→ Emergency</small><b class="num" style="color:var(--good)">${r.draw?money0(-r.draw):money0(r.efAdd)}</b><i>HYSA</i></div>
   ${r.cards?`<div class="fl"><small>→ Credit cards</small><b class="num" style="color:var(--accent)">${money0(r.cards)}</b><i>${esc(cardList().map(c=>c.name).join(' → ')||'cards')}</i></div>`:''}
   ${r.house?`<div class="fl"><small>→ House</small><b class="num">${money0(r.house)}</b><i>HYSA bucket</i></div>`:''}
-  <div class="fl"><small>→ ${r.retLabel}</small><b class="num">${money0(r.ret)}</b><i>Fidelity</i></div>
+  <div class="fl"><small>→ ${r.retLabel}</small><b class="num">${money0(r.ret)}</b><i>${ME.broker}</i></div>
   ${r.cu?`<div class="fl"><small>→ 2026 tax gap</small><b class="num">${money0(r.cu)}</b><i>for April</i></div>`:''}
 </div>`; }
 function calcDeposit(e){ e.preventDefault(); const amt=+document.getElementById('depAmt').value||0; const s=S.money.s; document.getElementById('depOut').innerHTML=depositHtml(waterfall(amt,{ef:bal('ef'),buf:bal('tax'),cush:0,house:0,cards:cardDebt(),behind:taxBehind(),nLeft:1+S.money.checks.filter(x=>!x.got&&x.d<TAX_CATCHUP_BY).length},TODAY)); return false; }
@@ -12316,7 +12191,7 @@ let mcpLib = null, unverifiedId = null;
 let bankBusy=false, bankTriedDay='', bankTriedAt=0, bankErr='';
 function bankStale(){ return Date.now()-(S.money.budget.syncedAt||0)>3600e3 && Date.now()-bankTriedAt>3600e3; }
 const instAcct = i => /bank of america/i.test(i||'') ? 'BofA' : /discover/i.test(i||'') ? 'Discover' : /capital one/i.test(i||'') ? 'Capital One Savor' : null;
-function acctLabel(x){ const i=x.institution||'', n=x.name||''; if (/bank of america/i.test(i)) return 'BofA'; if (/discover/i.test(i)) return 'Discover'; if (/capital one/i.test(i)) return /savor/i.test(n)?'Capital One Savor':'Capital One '+n.replace(/^360 /,''); if (/pnc/i.test(i)) return 'PNC '+n; if (/fidelity/i.test(i)) return 'Fidelity '+n; return (i.split(/\s|-/)[0]||'Bank')+' '+n; }
+function acctLabel(x){ const i=x.institution||'', n=x.name||''; if (/bank of america/i.test(i)) return 'BofA'; if (/discover/i.test(i)) return 'Discover'; if (/capital one/i.test(i)) return /savor/i.test(n)?'Capital One Savor':'Capital One '+n.replace(/^360 /,''); if (/pnc/i.test(i)) return 'PNC '+n; if (/fidelity/i.test(i)) return (ME.broker+" ")+n; return (i.split(/\s|-/)[0]||'Bank')+' '+n; }
 const isDebt = t => /credit|loan|mortgage/i.test(t||'');
 const acctKind = a => (isDebt(a.type) || (!a.type && a.bal<0)) ? 'debt' : /broker|invest|retire|ira|401/i.test((a.type||'')+' '+(a.name||'')) ? 'invest' : 'cash';
 function bankErrText(code){ return code==='server_not_connected' ? 'The finance connector (Era Context) isn\'t added for this view — add it in Claude Settings → Connectors.' : code==='needs_reauth' ? 'The finance connector needs to be reconnected in Claude Settings → Connectors.' : (code==='not_granted'||code==='not_in_manifest'||code==='consent_required') ? 'Bank access wasn\'t allowed for this page, so balances can\'t update. Tap Refresh to be asked again.' : (code==='blocked_by_policy'||code==='approval_required') ? 'Your organization blocks this page from reading bank data.' : code==='empty' ? 'The finance connector returned no accounts.' : 'Couldn\'t reach your bank data just now — showing the last saved numbers.'; }

@@ -8,7 +8,10 @@
 # Never prints the data.
 import sys, os, re, base64, hashlib, subprocess
 B, E = '/*SEED:BEGIN*/', '/*SEED:END*/'
-STUB = (B + "const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], "
+STUB = (B + "const ME={client:'your top client', clientS:'Top client', clientRe:/(?!)/, agency:'your agency', ag:'Agency', agRe:/(?!)/, payer:'Agency', payRe:/(?!)/, employer:'your old employer', broker:'your brokerage', modelCtx:'', planCtx:'', debtCtx:''};"
+        "const SEED_ACCTS={bills:{}, dl:[], roth:0, a1:[], a2:[]}, DEADLINES_SEED=[], OKR_SUGGEST={}, YEAR_SUGGEST={}, MALIAS=[];"
+        "const SEED_INIT=(kr,obj)=>({v:2, updatedAt:0, vision:{statement:'', milestones:[]}, years:{[THIS_Y]:{objectives:[]}}, quarters:{[THIS_Q]:{objectives:['modeling','grillz','content','financial','personal','relationships','fitness','learning'].map(t=>obj(t,'Goal',[kr('Key result',10,'')])), review:{}}}, weeklyTemplate:[], habits:[{id:'gym',name:'Gym',icon:'💪'},{id:'content',name:'Filmed / posted',icon:'📱'},{id:'expense',name:'Logged expenses',icon:'💰'},{id:'datum',name:'Bench session',icon:'◆'},{id:'read',name:'Read 30 min',icon:'📖'},{id:'journal',name:'Journal',icon:'✍️'},{id:'morning',name:'Morning routine',icon:'🌅'},{id:'guitar',name:'Guitar / art',icon:'🎸'}], weeks:{}, days:{}, wins:[], badges:{}, evo:{}, rewards:{review4:'',gym4:'',post4:'',fullstack:'',closer:''}, money:{s:{taxRate:0.3,rent:0,car:0,grocW:0,elec:0,gas:0,ins:0,net:0,efMonthly:0,retMonthly:0,cushionMonthly:0,flexPerCheck:0,efMonths:6,rothLimit:7500,efNow:0,taxBufNow:0,rothYtd:0}, checks:[], taxPaid:[]}});"
+        "const SEED_STUB=1, MODEL_SEED=[], MODEL_PAY=[], MODEL_AGENTS=[], MODEL_FIX={}, MODEL_STMT_ADD=[], TRAVEL_ADD=[], HIST_SEED={BofA:[],Discover:[]}, FID_SEED=[], SOCIAL_SEED=[], BILLS=[], GM=id=>'', SEED_BOFA=[], SEED_DISC=[], "
         "ONE_STMT={from:'2026-01-01',asOf:'2026-01-01',balance:0,opening:0,invoiced:0,paid:0,charges:0,check:0,inv:[],pays:[],chg:[],file:''};" + E)
 
 def block(s):
