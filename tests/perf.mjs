@@ -125,6 +125,19 @@ for (const v of ['social', 'today', 'money']) {
   ok(`swipe ${v}: next tab keeps your scroll`, r.y0 > 50 && Math.abs(r.y - r.want) < 4, `was ${Math.round(r.y0)} → ${Math.round(r.y)}`);
 }
 
+// b330: past the last tab — or on a page with no tabs — a swipe carries on to the next page in the bottom bar; a short drag springs back
+{ const canT = await page.evaluate(() => { try { new Touch({ identifier: 0, target: document.body, clientX: 0, clientY: 0 }); return true; } catch (e) { return false; } });
+  if (canT) { const r = await page.evaluate(async () => { const wait = ms => new Promise(r => setTimeout(r, ms)), raf = () => new Promise(r => requestAnimationFrame(r)), out = {};
+      const fling = async (dx, steps = 6) => { scrollTo(0, 0); await wait(100); const W = innerWidth, y = innerHeight * 0.7; let tgt = null, yy = y; for (let k = 0; k < 10 && !tgt; k++) { const el = document.elementFromPoint(W * 0.5, yy); if (el && el.closest('#view') && !el.closest('input,textarea,select,button,a,[data-noswipe],.seg,canvas')) tgt = el; else yy -= 40; }
+        if (!tgt) return false; const T = (type, x) => { const t = new Touch({ identifier: 2, target: tgt, clientX: x, clientY: yy }); tgt.dispatchEvent(new TouchEvent(type, { touches: type === 'touchend' ? [] : [t], targetTouches: type === 'touchend' ? [] : [t], changedTouches: [t], bubbles: true, cancelable: true })); };
+        const x0 = W * 0.5; T('touchstart', x0); for (let k = 1; k <= steps; k++) { T('touchmove', x0 + dx * k / steps); await raf(); } await wait(120); T('touchend', x0 + dx); await wait(700); return true; };
+      try { evoSnooze = true; closeEvo(); } catch (e) { } document.getElementById('lvs')?.remove();
+      location.hash = 'gym'; await wait(400); out.noTabs = !swInfo(); await fling(-60, 24); out.spring = view === 'gym' && !document.getElementById('view').style.transform;
+      await fling(-230); out.next = view === 'money';
+      moneyTab = 'taxes'; render(); await wait(300); await fling(-230); out.end = view === 'money';   // money is the last page
+      moneyTab = 'now'; render(); await wait(300); await fling(230); out.prev = view === 'gym';
+      location.hash = 'today'; await wait(300); return out; });
+    ok('swipe: past the last tab (or on a page with no tabs) it goes to the next page; short drags spring back; the ends stay put', Object.values(r).every(Boolean), JSON.stringify(r)); } }
 // a real finger drag (Chromium; WebKit's test build refuses to build a Touch): mid-scroll, the next tab is right there beside the finger —
 // no empty gap where a page should be; letting go early springs back to the same tab; a long drag lands on the next one
 const canTouch = await page.evaluate(() => { try { new Touch({ identifier: 0, target: document.body, clientX: 0, clientY: 0 }); return true; } catch (e) { return false; } });   // WebKit has Touch but won't build one

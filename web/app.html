@@ -10676,12 +10676,20 @@ function pgDissolve(o, r){ try { if (!o||!r||matchMedia('(prefers-reduced-motion
   o.style.cssText=`position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;margin:0;pointer-events:none;z-index:1;opacity:1;transition:opacity .17s ease-out`;
   (document.getElementById('app')||document.body).appendChild(o); requestAnimationFrame(()=>requestAnimationFrame(()=>{ o.style.opacity='0'; })); setTimeout(()=>o.remove(),280); return true; } catch(e){ return false; } }
 let _swGesture=false;
+/* b330: one swipe rule everywhere — swipe moves through the tabs under the header; past the last (or first) tab, or on a page with no
+   tabs, it carries on to the next page in the bottom bar. The page follows your finger; let go past a quarter of the screen to switch. */
+const NAV_ORDER=['today','life','model','content','datum','gym','money'];
+const navSec=v=>v==='today'||GOALS.some(([k])=>k===v)?'today':LIFE.some(([k])=>k===v)?'life':NAV_ORDER.includes(v)?v:null;
+function swPageNext(dir){ const i=NAV_ORDER.indexOf(navSec(view)); if (i<0) return null; return NAV_ORDER[i+dir]||null; }
+function swPageGo(dir, d){ const to=swPageNext(dir), v=document.getElementById('view'); if (!to||!v) return false; const W=innerWidth;
+  v.style.transition=`transform .2s ${SW_EASE}, opacity .2s`; v.style.transform=`translate3d(${-dir*W}px,0,0)`; v.style.opacity='0';
+  setTimeout(()=>{ _pgLast=null; go(to); scrollTo(0,0); const n=document.getElementById('view'); if (n && n.animate) n.animate([{transform:`translate3d(${dir*W*.35}px,0,0)`,opacity:0},{transform:'none',opacity:1}],{duration:260,easing:SW_EASE}); try { nat('haptic','light'); } catch(e){} }, 190); return true; }
 const swPure=b=>!/\bS\s*[.[]|commit|save|Set\(/.test(b.getAttribute('onclick')||'');   // a tab button that only changes what you see
 (function(){ let sx=null, sy=0, lock=null, I=null, v=null, lastX=0, lastT=0, vel=0, lastD=0, parts=null, oi=0, pend=0, peekOK=false;
   const blocked=el=>{ for (let e=el; e && e!==document.body; e=e.parentElement){ if (e.matches&&e.matches('input,textarea,select,[contenteditable],canvas,[data-noswipe],.nav')) return true;
       const cs=getComputedStyle(e); if (cs.touchAction==='none'||cs.touchAction==='pan-x') return true; if (/(auto|scroll)/.test(cs.overflowX) && e.scrollWidth>e.clientWidth+2) return true; } return false; };
   const overlay=()=>[...document.querySelectorAll('#g-sheet,.modal,#navqa,#ci,#lvs.show,#g-live,#lockscr,#yg-ov')].some(x=>x.offsetWidth>0&&getComputedStyle(x).visibility!=='hidden'&&getComputedStyle(x).display!=='none');
-  const has=dir=>{ const j=oi+dir; return j>=0 && j<I.B.length; };
+  const has=dir=>{ if (!I) return false; const j=oi+dir; return j>=0 && j<I.B.length; }; let pgMode=false;
   // render the neighbour beside the current content (once per side); switching sides puts the original back first
   const peek=dir=>{ if (pend) return; const j=oi+dir, b=I.B[j]; if (!b) return;
     if (_swPair && _swPair.pre && _swPair.side!==dir){ const R=_swPair; if (R.g) R.g.remove(); _swPair=null; swClear(R.v); }   // a copy: just drop it
@@ -10692,21 +10700,26 @@ const swPure=b=>!/\bS\s*[.[]|commit|save|Set\(/.test(b.getAttribute('onclick')||
     cur.B[j].click();
     setTimeout(()=>{ if (pend===dir && !_swPair){ pend=0; _swMode=null; _swAnim=0; _swOnReady=null; _swBusy=false; swSnap(document.getElementById('view')); } }, 1500); };   // the tab never rendered: put things back
   document.addEventListener('touchstart', e=>{ if (sx!=null || _swGesture) lostEnd(); sx=null; lock=null; if (e.touches.length>1||_swBusy||_swPair) return; const t=e.touches[0]; if (t.clientX<24) return;
-    if (!e.target.closest||!e.target.closest('#view')||overlay()||blocked(e.target)) return; I=swInfo(); if (!I) return;
-    v=document.getElementById('view'); oi=I.i; parts=null; pend=0; peekOK=I.B.every(swPure); sx=lastX=t.clientX; sy=t.clientY; lastT=performance.now(); vel=0; lastD=0; }, {passive:true});
+    if (!e.target.closest||!e.target.closest('#view')||overlay()||blocked(e.target)) return; I=swInfo(); if (!I && !navSec(view)) return;
+    v=document.getElementById('view'); oi=I?I.i:0; parts=null; pend=0; pgMode=false; peekOK=!!I && I.B.every(swPure); sx=lastX=t.clientX; sy=t.clientY; lastT=performance.now(); vel=0; lastD=0; }, {passive:true});
   document.addEventListener('touchmove', e=>{ if (sx==null) return; const t=e.touches[0], dx=t.clientX-sx, dy=t.clientY-sy;
     if (lock==null){ if (Math.hypot(dx,dy)<9) return; lock=Math.abs(dx)>Math.abs(dy)*1.15?'x':'y'; if (lock==='y'){ sx=null; return; } }
     e.preventDefault(); _swGesture=true; _swMoveT=Date.now(); clearTimeout(wd); wd=setTimeout(()=>{ if (_swGesture && Date.now()-_swMoveT>=2400) lostEnd(); }, 2500); const now=performance.now(); vel=(t.clientX-lastX)/Math.max(1,now-lastT); lastX=t.clientX; lastT=now;
-    const want=dx<0?1:-1, d=has(want)?dx:dx*0.28; lastD=d; _swDx=d;
+    const want=dx<0?1:-1, pg=!has(want) && !_swPair && !pend && !!swPageNext(want), d=has(want)||pg?dx:dx*0.28; lastD=d; _swDx=d;
+    if (pg){ if (!pgMode){ pgMode=true; swClear(v); } v.style.transition='none'; v.style.transform=`translate3d(${d}px,0,0)`; v.style.opacity=String(1-Math.min(.5,Math.abs(d)/innerWidth)); _swLive.add(v); return; }
+    if (pgMode){ pgMode=false; v.style.transform=''; v.style.opacity=''; }
     if (peekOK && has(want) && Math.abs(dx)>4) peek(want);
     if (_swPair && _swPair.side===want) swPairAt(d);
-    else if (!_swPair){ if (!parts){ parts=swParts(v, I.bar); if (!parts.length) parts=[v]; } swMove(parts, d); }
+    else if (!_swPair){ if (!parts){ parts=I?swParts(v, I.bar):[]; if (!parts.length) parts=[v]; } swMove(parts, d); }
     else swPairAt(Math.sign(_swPair.side)===-Math.sign(d)?d:0); }, {passive:false});
   let relArgs=null;
   const release=()=>{ const [dx,fl]=relArgs||[0,false]; relArgs=null; const R=_swPair, side=dx<0?1:-1, go=R && R.side===side && (Math.abs(dx)>innerWidth*0.25||fl) && !(getSelection&&String(getSelection()).length);
     if (R) swPairEnd(go, vel); else { _swBusy=false; swSnap(v); } };
   const end=()=>{ _swGesture=false; if (sx==null||lock!=='x'){ sx=null; return; } const dx=lastX-sx; sx=null; const fling=Math.abs(vel)>0.45&&Math.sign(vel)===Math.sign(dx);
+    if (pgMode){ pgMode=false; const dir=dx<0?1:-1; _swLive.delete(v); if ((Math.abs(dx)>innerWidth*0.25||fling) && !(getSelection&&String(getSelection()).length) && swPageGo(dir, dx)) { lastD=0; return; }
+      v.style.transition=`transform .3s ${SW_EASE}, opacity .3s`; v.style.transform=''; v.style.opacity=''; setTimeout(()=>{ v.style.transition=''; },320); lastD=0; return; }
     if (peekOK){ relArgs=[dx,fling]; if (pend>0) return; /* the neighbour is still rendering — released when it lands */ if (pend<0){ const w=setInterval(()=>{ if (!pend){ clearInterval(w); release(); } },16); return; } release(); lastD=0; return; }
+    if (!I){ swSnap(v); lastD=0; return; }
     // tabs that change data when tapped: nothing renders until you let go (the b298 path)
     if ((Math.abs(dx)>innerWidth*0.25||fling) && !(getSelection&&String(getSelection()).length)) { if (!swipeTab(dx<0?1:-1, lastD)) swSnap(v); } else swSnap(v); lastD=0; };
   document.addEventListener('touchend', end, {passive:true}); document.addEventListener('touchcancel', end, {passive:true});
