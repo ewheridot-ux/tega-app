@@ -752,6 +752,9 @@ html[data-skin] .btn,html[data-skin] .tag,html[data-skin] .seg button,html[data-
 html[data-skin="crt"] .btn{font-weight:700;letter-spacing:.04em;line-height:1.2}html[data-skin="crt"] .tag{letter-spacing:.12em;font-weight:700;font-size:11.5px}html[data-skin="crt"] .seg button,html[data-skin="crt"] .chip{letter-spacing:.06em;font-weight:600}
 html[data-skin="crt"] h3{font-weight:600;font-size:15px}
 .toast .tx{display:inline-block;margin-left:8px;padding:2px 9px;border-radius:99px;background:var(--c);color:#0b0b0b;font-weight:800;font-size:12.5px;font-family:var(--ui,Inter,sans-serif);vertical-align:1px}.toast.xp{padding:6px}.toast.xp .tx{margin:0;font-size:14px;padding:5px 12px}
+.sh-sec{margin-top:14px}.sh-goal{display:flex;align-items:center;gap:12px;width:100%;margin-top:6px;padding:12px 14px;border:0;border-radius:14px;background:var(--card2);color:var(--fg);font:inherit;text-align:left;cursor:pointer}.sh-goal b{font-size:24px;font-weight:800}.sh-goal span{font-size:13px;color:var(--muted)}
+.sh-rows{display:grid;gap:4px;margin-top:6px}.sh-r{display:grid;grid-template-columns:84px 1fr auto;align-items:center;gap:10px;width:100%;padding:9px 12px;border:0;border-radius:12px;background:var(--card2);color:var(--fg);font:inherit;text-align:left;cursor:pointer;box-shadow:inset 3px 0 0 var(--c)}
+.sh-r b{font-size:14px}.sh-pips{display:flex;gap:4px;flex-wrap:wrap}.sh-pips i{width:14px;height:14px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--c);opacity:.7}.sh-pips i.on{background:var(--c);opacity:1}.sh-pips small{font-size:12px;color:var(--muted)}.sh-r em{font-style:normal;font-size:12.5px;font-weight:700;color:var(--muted)}
 /* @css-insert: new style blocks go right above this line, always between whole rules */
 .linkbtn.ph-undo{display:block;margin-top:8px;font-size:12px;color:var(--muted)}.ph-next{font-size:12.5px;color:var(--muted);margin-top:10px}
 .pxe{width:1.2em;height:1.2em;image-rendering:pixelated;vertical-align:-.22em;display:inline-block;object-fit:contain}
@@ -7342,8 +7345,19 @@ function seasonOpen(){ const se=season(), T=seasonTrack(), SB=seasonBoss(), cq=c
     <div class="sb-card ${SB.dead?'dead':''}"><div class="sb-ic">${SB.dead?'💀':SB.ic}</div><div class="sb-in"><small>SEASON BOSS</small><b>${SB.n}</b><div class="sb-bar"><i style="width:${Math.round(SB.pct*100)}%"></i></div>
       <small>${SB.dead?`Defeated${SB.killed?' '+nice(SB.killed):''} · trophy, title, +300 XP`:SB.hp?`${SB.hits} of ${SB.need} key results needed · each one you finish hits it`:'Set this quarter’s goals and it appears'}</small></div></div>
     ${cq?`<div class="st-cq"><span>${cl.ic}</span><div><b>${esc(cq.label)}</b><small>${cl.name} class quest · ${Math.min(cq.n,cq.target)}/${cq.target}</small><div class="sb-bar cq"><i style="width:${Math.round(Math.min(1,cq.n/cq.target)*100)}%"></i></div></div></div>`:''}
-    <button class="btn ghost sm" style="margin-top:12px" onclick="gSheetClose();go('quarter')">This quarter’s goals ›</button>`);
+    ${seasonHubMore()}`);
   setTimeout(()=>{ const t=document.getElementById('st-track'), on=t?.children[Math.max(0,T.tier-1)]; if (t&&on) t.scrollLeft=on.offsetLeft-t.clientWidth/2+on.clientWidth/2; },50); }
+/* b330: the Season hub — one quarter, one screen: goals, every area's season branch and its relic, the boss, the other bosses.
+   Each row is a doorway (tap → the page that owns the numbers), so nothing is tracked twice. */
+function seasonHubMore(){ try { const Q=S.quarters?.[THIS_Q]||{objectives:[]}, K=(Q.objectives||[]).flatMap(o=>o.krs||[]), hit=K.filter(k=>krPct(k)>=1).length, avg=K.length?Math.round(K.reduce((a,k)=>a+krPct(k),0)/K.length*100):0;
+  const rows=AREAS.map(A=>{ const sn=tSeason(A.k), dn=sn.nodes.filter(x=>x.done).length, [nm,ic]=tSeaName(THIS_Q);
+    return `<button class="sh-r" style="--c:${A.c}" onclick="gSheetClose();tAreaTab='tree';charGo('skills','${A.k}')"><b>${esc(A.n.split(' ')[0])}</b><span class="sh-pips">${sn.nodes.map(x=>`<i class="${x.done?'on':''}"></i>`).join('')||'<small>no goals yet</small>'}</span><em>${sn.relic?`${ic} won`:sn.nodes.length?`${dn}/${sn.nodes.length}`:'＋'}</em></button>`; }).join('');
+  const B=(()=>{ try { const L=bossList(); return {up:L.filter(b=>!b.dead).length, n:L.length}; } catch(e){ return null; } })(), rel=tRelics().filter(r=>r.q===THIS_Q).length;
+  return `<div class="sh-sec"><div class="row between"><span class="tag">Goals</span><button class="linkbtn" onclick="gSheetClose();go('quarter')">OKRs ›</button></div>
+      <button class="sh-goal" onclick="gSheetClose();go('quarter')"><b class="num">${avg}%</b><span>${hit} of ${K.length} key results hit · ${(Q.objectives||[]).length} goals</span></button></div>
+    <div class="sh-sec"><div class="row between"><span class="tag">Season branches</span><span class="sub">${rel} relic${rel===1?'':'s'} this season</span></div><div class="sh-rows">${rows}</div>
+      <div class="sub" style="font-size:12px;margin-top:6px">Each area's goals this quarter. Hit them all → a relic for good: +1 point and +5% XP there.</div></div>
+    ${B?`<button class="sh-goal" style="margin-top:10px" onclick="gSheetClose();go('bosses')"><b class="num">${B.up}</b><span>boss${B.up===1?'':'es'} awake of ${B.n} · fight them with real work ›</span></button>`:''}`; } catch(e){ return `<button class="btn ghost sm" style="margin-top:12px" onclick="gSheetClose();go('quarter')">This quarter’s goals ›</button>`; } }
 // ---- season recap: first open of a new quarter ----
 function seasonRecapCheck(force){ try { const R=R_(), [y,n]=THIS_Q.split('-Q').map(Number), prev=force||(n===1?`${y-1}-Q4`:`${y}-Q${n-1}`); if (!force && (R.recapSeen===prev || prev<quarterOf(GOLD_START))) return;
   const T=seasonTrack(prev), SB=seasonBoss(prev), pn=+prev.split('-Q')[1], wks=qWeeks(prev), best=wks.map(w=>[w,weekXp(w)]).sort((a,b)=>b[1]-a[1])[0];
